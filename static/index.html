@@ -1,0 +1,84 @@
+<html lang="en" class='no-skin'>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta charset="utf-8">
+	<title>JETCALC v2.0</title>
+
+	<meta name="description" content="Мета">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+	<link rel="stylesheet" href="/build/lib.min.css">
+	
+	<!-- <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"  data-apikey="19d876836126e83e5ed48c8971006e16"></script> -->
+
+	<script src='/build/lib.min.js'></script>
+	<script src="/src/parser.js"></script>
+	<script src="/src/customBindings.js"></script>
+	<script src="/src/jt-lib.js"></script>	
+	<script src="/index.js"></script>
+	<script src="/modules/index.js"></script>
+	<script src="/src/admin.js"></script>
+	<script src="/src/updated/editors.js"></script>
+	<script src="/src/updated/document/TreeReparser.js"></script> 	
+
+	<!-- И серверный и клиентский проверщик прав -->
+	<script src="/modules/permissions/check.js"></script>
+	<!-- Финальный оверрайд стилей -->
+	<link rel="stylesheet" href="/index.css">
+
+
+	<script type="text/javascript">
+		document.write("<base href='" + window.location.protocol + "//" + document.location.host + "/' />");
+	</script>
+</head>
+
+<body class="loading">
+	<div class="throbberblock" data-bind='css:{active:ModuleManager.IsLoading()}'></div>
+	<span src="./build/index.html"></span>
+
+	<!-- ko if:!MSite.Me() || MSite.Me().DoResetPass() -->
+		<!-- ko foreach:ModuleManager.GuestPages() -->
+			<div class="screen" data-bind="page: $data" ></div>
+		<!-- /ko -->
+	<!-- /ko -->
+	<!-- ko if:MSite.Me() && !MSite.Me().DoResetPass()-->
+	<div class="screen"></div>
+		<!-- ko template:'header' --><!-- /ko -->
+		<div class="main-container" >
+			<!-- ko template: 'leftmenu' --><!-- /ko -->
+			<div class="main-content">
+				<div class="page-content">
+					<div class="main-content-inner">
+						<!-- ko template:'breadcrumbs' --><!-- /ko -->
+						<div class="page-content-area full-area" >
+							<div data-bind='page:{id:"start"}' style='display:none'>
+								<div class="ace-settings-container">
+									<!-- ko foreach:ModuleManager.HomePage() -->
+										<!-- ko template:'hpbutton_'+$data.id --><!-- /ko -->
+									<!-- /ko -->
+								</div>							
+								<!-- ko foreach:ModuleManager.HomePage() -->
+									<!-- ko if:ModuleManager.Modules[$data.class_name].IsAvailable() -->
+									<div class='row'>
+										<!-- ko template:'app_'+$data.id --><!-- /ko -->
+									</div>
+									<!-- /ko -->
+								<!-- /ko -->
+							</div>
+							<!-- ko foreach:ModuleManager.Pages() -->
+							<div class="screen" data-bind="page: $data, css:{isloading:ModuleManager.IsLoading}" ></div>
+							<!-- /ko -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+			<!-- ko template: 'rightmenu' --><!-- /ko -->
+		</div>
+	</div>
+	<!-- /ko -->
+	
+</body>
+</html>

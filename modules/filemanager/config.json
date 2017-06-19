@@ -1,0 +1,14 @@
+{
+  "id": "filemanager",
+  "title": "Файлы",
+  "icon": "fa-sliders",
+  "type":"documentpage",
+  "badge":"Counter",
+  "class_name":"FileManager",
+  "is_enabled": true,
+  "initial_load":true,
+  "places":{
+      "documentpage"  : true
+  },  
+  "sort_index": 70
+}

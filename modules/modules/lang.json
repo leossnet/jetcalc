@@ -1,0 +1,14 @@
+{
+	"modules":"Подключаемые модули",
+	"RepoOwner":"Репозиторий",
+	"GitLogin":"Пользователь",
+	"Password":"Пароль",
+	"DoBundle":"Склейка.Файлов",
+	"IsModulesAdmin":"Git.Плагины",
+	"IsModelsAdmin":"Git.Модели",
+	"usecron":"Автом.Синхр",
+	"all":"все",
+	"open":"открытые",
+	"closed":"закрытые",
+	"ChooseModules":"Выбор модулей"
+}

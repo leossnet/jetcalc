@@ -1,0 +1,21 @@
+<div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MObj'>
+    <!-- ko template:'tb_simple_loader' --><!-- /ko -->
+    <!-- ko template:'model_edit_buttons' --><!-- /ko -->
+    <!-- ko template:'model_edit_search' --><!-- /ko -->    
+</div>
+
+<div class="row adminbody" data-bind="with:MObj">
+		<div class='row'><!-- ko template: 'inline_error' --><!-- /ko -->
+            
+        <!-- ko template:'model_edit' --><!-- /ko -->
+        </div>
+</div>
+
+<div class="bottomPannel" data-bind="with:MObj">
+	<ul class="toolPanel nav nav-tabs background-blue">
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-building-o',title:'Объекты учета',mode:'Objs'}} --><!-- /ko -->           
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-folder-open',title:'Типы объектов',mode:'ObjTypes'}} --><!-- /ko -->      
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-folder-open',title:'Классы объектов',mode:'ObjClasses'}} --><!-- /ko -->    	
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-folder-open',title:'Группы',mode:'Grps'}} --><!-- /ko -->     
+	</ul>
+</div>

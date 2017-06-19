@@ -1,0 +1,37 @@
+<div class="intab-container">
+    <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MColEditor'>
+        <div class="btn-group">
+          <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Сохранить данные',click:SaveChanges">
+            <i class="ace-icon fa fa-save"></i>
+          </a>
+          <a class='btn btn-sm btn-warning btn-white ' data-bind="title:'Отменить все изменения',click:RollBack">
+            <i class="ace-icon fa fa-undo"></i>
+          </a>
+          <!-- ko template:'tb_simple_loader' --><!-- /ko -->
+        </div>
+        <div class="btn-group">
+            <!-- ko template:'tb_colapse_expand' --><!-- /ko -->      
+        </div>
+        <div class="btn-group">
+            <!-- ko template:{name:'tb_mode_switch',data:{icon:'fa-indent',title:'Основные настройки',mode:'MainFields'}} --><!-- /ko -->      
+            <!-- ko template:{name:'tb_mode_switch',data:{icon:'fa-filter',title:'Фильтрация',mode:'Filter'}} --><!-- /ko -->      
+        </div>
+        <div class="btn-group">    
+            <!-- ko template:{name:'tb_mode_switch',data:{icon:'fa-hashtag',title:'Формулы',mode:'Formula'}} --><!-- /ko -->   
+        </div>
+        <div class="btn-group">    
+            <!-- ko template:'tb_input_report_switch' --><!-- /ko -->   
+        </div>
+    </div>
+    <!-- ko template:'contextBar' --><!-- /ko -->
+    <!-- ko with: MColEditor.Error -->
+     <div class="alert alert-danger"><span data-bind="text:$data"></span></div>
+    <!-- /ko --> 
+
+
+    <div class='handsonContainer' >
+        <div class="handsontable single" ></div>    
+    </div>
+</div>    
+
+

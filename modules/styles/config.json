@@ -1,0 +1,10 @@
+{
+  "id": "styles",
+  "title": "Стили",
+  "icon": "fa-user-secret",
+  "is_enabled": true,
+  "class_name": "Styles",
+  "type":"simple",
+  "initial_load":true,
+  "places":{}
+}

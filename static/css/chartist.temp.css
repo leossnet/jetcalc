@@ -1,0 +1,101 @@
+
+.chart .heading{
+  /*font-size   : 17px;*/
+  font-weight : normal;
+  font-family : "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  text-align  : center;
+  color       : #2B498F;
+}
+
+.chart .description{
+  font-size   : 12px;
+  font-weight : normal;
+  font-family : "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  text-align  : center;
+  color       : #949494;
+}
+
+/*Line chart*/
+.ct-chart .ct-series.ct-series-a .ct-line {
+  stroke: #45806B;
+}
+.ct-chart .ct-series.ct-series-b .ct-line {
+  stroke: #FFFB68;
+}
+.ct-chart .ct-series.ct-series-c .ct-line {
+  stroke: #FE97A7;
+  stroke-dasharray: 10px 5px;
+}
+
+.ct-chart .ct-series.ct-series-a .ct-point {
+  stroke: #45806B;
+}
+.ct-chart .ct-series.ct-series-b .ct-point {
+  stroke: #FFFB68;
+}
+.ct-chart .ct-series.ct-series-c .ct-point {
+  stroke: #FE97A7;
+}
+
+.ct-chart .ct-label{
+  stroke: #59818B;
+  font-size: 10px;
+}
+
+/*Stacked bar*/
+.chart.stackedBar .ct-chart .ct-series.ct-series-a .ct-bar {
+  stroke: #6AB678;
+}
+.chart.stackedBar .ct-chart .ct-series.ct-series-b .ct-bar {
+  stroke: #DCF78E;
+}
+.chart.stackedBar .ct-chart .ct-series.ct-series-c .ct-bar {
+  stroke: #84EBE7;
+}
+.chart.stackedBar .ct-chart .ct-series.ct-series-d .ct-bar {
+  stroke: #988DEB;
+}
+.chart.stackedBar .ct-chart .ct-series.ct-series-e .ct-bar {
+  stroke: #FC8781;
+}
+
+/*MultiLineBar*/
+
+.chart.multiLineBar .ct-chart .ct-series.ct-series-a .ct-bar {
+  stroke: #BEBFBA;
+  stroke-width: 45px;
+}
+.chart.multiLineBar .ct-chart .ct-series.ct-series-b .ct-bar {
+  stroke: #3DE4DF;
+  stroke-width: 45px;
+}
+
+$ct-series-colors: (#d70206, #F05B4F, #F4C63D, #453D3F) !default;
+
+.ct-legend {
+    padding: 0;
+    font-family: sans-serif;
+   
+    li {
+        position: relative;
+        padding-left: 1.3em;
+        margin-bottom: 0.3em;
+        list-style-type: none;
+    }
+
+    li::before {
+        height: 1em;
+        width: 1em;
+        position: absolute;
+        top: 0.1em;
+        left: 0;
+        content: '';
+        border-radius: 1em;
+    }
+
+     @for $i from 0 to length($ct-series-colors) {
+          .ct-series-#{$i}::before {
+            background-color: nth($ct-series-colors, $i + 1);
+        }
+    }
+}

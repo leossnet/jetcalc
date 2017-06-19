@@ -1,0 +1,17 @@
+{
+  "id": "login",
+  "title": "Вход/Регистрация",
+  "icon": "fa-user",
+  "is_enabled": true,
+  "class_name": "Login",
+  "type":"singlepage",
+  "initial_load":true,
+  "guest_load":true,
+  "places":{
+    "topmenu":true
+  },
+  "pages": [
+  	{"id":"profile","title":"Профиль","breadcrumbs":{"path":"/profile","title":"Профиль"}},
+  	{"id":"login","guest":true}
+  ]
+}

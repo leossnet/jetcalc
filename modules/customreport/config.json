@@ -1,0 +1,20 @@
+{
+  "id": "customreport",
+  "title": "Настройка отчета",
+  "icon": "fa-table",
+  "type":"documentpage",
+  "class_name":"CustomReport",
+  "is_enabled": true,
+  "sort_index": 30,
+  "places":{
+      "documentpage"  : true
+  },  
+  "permissions" : [
+      "IsCustomReportPublicTuner",
+      "IsCustomReportAdmin"
+  ],
+  "permissionsComments" : {
+  		"IsCustomReportPublicTuner":"Сохранение доступных для всех отчетов",
+      "IsCustomReportAdmin":"Удаление и просмотр чужих отчетов"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "rows",
+  "title": "Ряды",
+  "icon": "fa-list-ul",
+  "class_name": "Rows",
+  "beforeShow": "MRows.BeforeShow",
+  "is_enabled": true,
+  "type":"adminpage",
+  "places":{
+      "adminpage"  : true
+  },
+  "permissions" : [
+  		"IsRowEditor"
+  ],
+   "permissionsModels":{
+      "IsRowEditor":["row","measure","format","tag","style"]
+  },
+  "sort_index":50
+}

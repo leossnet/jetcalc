@@ -1,0 +1,29 @@
+table.openperiods td.closed input[type=checkbox].ace+.lbl::before{
+	color:maroon;
+}
+table.openperiods td.closed input[type=checkbox].ace+.lbl::before{
+	color:green;
+}
+table.openperiods td.closed  {
+	background: #FAF0EF;
+	text-align: center;
+}
+table.openperiods td  {
+    padding: 2px!important;
+    vertical-align: -webkit-baseline-middle;
+    padding-top: 5px!important;
+}
+table.openperiods td.opened {
+	background: #DAE9D8;
+	text-align: center;
+}
+.middle_check{
+	vertical-align: middle!important;
+    height: 100%;
+    text-align: center;
+}
+input.small_input{
+	padding: 2px;
+    line-height: 21px;
+    font-size: 13px;
+}

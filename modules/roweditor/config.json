@@ -1,0 +1,15 @@
+{
+  "id": "roweditor",
+  "title": "Настройка рядов",
+  "icon": "fa-table",
+  "type":"documentpage",
+  "places":{
+      "documentpage"  : true
+  },
+  "class_name":"RowEditor",
+  "is_enabled": true,
+  "sort_index": 50,
+  "permissions" : [
+  		"IsRowTuner"
+  ]
+}

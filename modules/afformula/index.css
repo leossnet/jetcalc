@@ -1,0 +1,10 @@
+.handsontable td.IsAFCorrect {
+    text-align: right;
+    color:#188A00!important;
+    background-color: #FAFFF9;
+}
+.handsontable td.IsAFWrong {
+    text-align: right;
+    color:#B74635!important;
+    background-color: #FDF5F2;
+}

@@ -1,0 +1,16 @@
+<script id="breadcrumbs" type="text/html">
+	<!-- ko with:MBreadCrumbs.Pages -->
+	<div class="breadcrumbs breadcrumbs-fixed" data-bind='css:MBreadCrumbs.Css()'>
+		<ul class="breadcrumb" data-bind='foreach:$data'>
+			<li><a data-bind="page-href:$data.path,html:$data.title,css:{'multiline':ko.unwrap($data.title).indexOf('<br')>=0}"></a></li>
+		</ul>
+		<!-- ko with:_.last($data) -->
+			<!-- ko with: $data.subtitle -->
+				<ul class="breadcrumb pull-right">
+					<li><a data-bind="lang: $data"></a></li>	
+				</ul>
+			<!-- /ko -->
+		<!-- /ko -->
+	</div>				
+	<!-- /ko -->
+</script>

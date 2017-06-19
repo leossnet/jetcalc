@@ -1,0 +1,140 @@
+.sidebar+.main-content{
+    margin-left: 0px!important;
+}
+
+#navbar,#sidebar-left {display:none!important;}
+.noscreen {
+    display: block;
+}
+
+div.breadcrumbs,div.settingsRow,div.buttons-container {
+    display: none;
+}
+body {
+    height: 100%!important;
+    overflow: visible!important;
+    float: none!important;
+}
+
+div {
+    overflow: visible!important;
+    float: none!important;
+}
+
+.navbar-fixed-top+.main-container {
+    padding: 0;   
+}
+
+.handsontable.single{
+    float    : none!important;
+    height   : 100%!important;
+    margin   : 0;
+    padding  : 0;
+    overflow : visible;
+    display: block;
+    position: relative!important;
+/*position: absolute;*/
+/*top: 0;*/
+/*left: 0;*/
+}
+
+.tableContainer {
+    /*height   : 100%!important;*/
+    overflow : visible!important;
+    float    : none!important;
+    display: block;
+}
+
+.page-content-area {
+    margin: 0;
+    padding: 0;
+    overflow: visible!important;
+}
+.page-content-area.full-area {
+    margin: 0;
+}
+
+
+.handsontable table tr{
+    /*-webkit-region-break-inside: avoid;*/
+    /*page-break-inside: avoid;*/
+}
+
+.handsontable table {
+    overflow: visible;
+    display: block;
+    position: relative!important;
+}
+
+div.page-break{
+    display: block;
+    position: relative;
+    page-break-after: always;
+}
+.page-break{
+    display: block;
+    position: relative!important;
+    page-break-after: always;
+}
+body {
+    -webkit-transform: scale(1)!important;  /* Saf3.1+, Chrome */           
+    -moz-transform: scale(1)!important;  /* FF3.5+ */              
+    -ms-transform: scale(1)!important;  /* IE9 */               
+    -o-transform: scale(1)!important;  /* Opera 10.5+ */                  
+    transform: scale(1)!important;        
+}
+div.page {
+    page-break-after: always!important;
+    /*page-break-inside: avoid!important;*/
+    /*position: relative!important;*/
+    /*display: block!important;*/
+    /*-webkit-region-break-inside: avoid;*/
+    /*-webkit-region-break-after: always;*/
+    /*vertical-align: top!important;*/
+}
+.modal.fade{display: none!important;}
+.modal.fade{display: none!important;}
+ 
+ .infostring{display: none!important;}
+ .toolPanel,.toolH{display: none!important;}
+
+
+.TopDocument{
+    margin-bottom: 10px;
+}
+
+.TopDocument div.DocName{
+    text-align: center;
+    width: 100%;
+    margin-top: 13px;
+    font-size: 19px;
+    font-weight: bold;
+ }
+
+.TopDocument div.DocContext{
+    text-align: center;
+    width: 100%;
+    margin-top: 13px;
+    font-size: 15px;
+}
+.TopDocument div.DocNum{
+    position: absolute;
+    right: 10px;
+    color: gray;
+    top: 10px;
+    font-size: 15px;    
+}
+.BottomDocument{
+    margin-top:10px;
+    position: relative;
+    bottom: 0px;
+}
+.DocPages{
+    color: gray;
+    font-size: 15px;    
+}
+
+div.page {
+    margin-bottom:100px;
+
+}

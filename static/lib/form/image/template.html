@@ -1,0 +1,22 @@
+<div class="modal fade" id="userPhoto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-bind="click: m_image.cancelCropPhoto"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">
+                    <i class="fa fa-lock"></i>
+                    Загрузка фотографии
+                </h4>
+            </div>
+            <!-- ko if: $parent[$data]() -->
+                <div class="modal-body" style="height: 400px;">
+                    <img class="middle" id='user_avatar' data-bind="attr: {'src': $parent[$data]()},crop: {imageData: $parent[$data]()}" >
+                </div>
+            <!-- /ko -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bind="click: m_image.cropPhoto.bind(null,$parent[$data])">Save</button>
+                <button type="button" class="btn btn-default" data-bind="click: m_image.cancelCropPhoto">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

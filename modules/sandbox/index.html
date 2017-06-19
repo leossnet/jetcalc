@@ -1,0 +1,39 @@
+<div class='row' data-bind='with:MSandBox'>
+	<div class='col-xs-6' data-bind='with:ObjectsToSave'>
+	<!-- ko foreach:_.keys($data) -->
+		<h3 data-bind='text:$data'></h3>
+		<!-- ko foreach:$parent[$data] -->
+			<!-- ko foreach:_.keys($data) -->
+			<h4 class="blue" data-bind='text:$data'></h4>
+				<!-- ko foreach:_.keys($parent[$data]) -->
+				<div class="profile-user-info">
+					<div class="profile-info-row">
+						<div class="profile-info-name" data-bind='text:$data'></div>
+						<!-- ko with:$parents[1][$parent][$data] -->
+						<div class="profile-info-value">
+							<div class='OldValue orange ' data-bind='text:(($data.old+"").length)?$data.old+"":"Не заполнено"'></div>
+							<div class='NewValue green' data-bind='text:(($data.new+"").length)?$data.new+"":"Не заполнено"'></div>
+						</div>
+						<!-- /ko -->
+					</div>		
+				</div>
+				<!-- /ko -->
+			<!-- /ko -->
+		<!-- /ko -->
+	<!-- /ko -->
+	</div>
+	<div class='col-xs-6'>
+		<h4 class="blue">Комментарий к изменениям</h4>
+		<textarea data-bind='value:CommitComment,valueUpdate :"keyup"' placeholder='Обязателен к заполнению (минимум 10 символов)' style='width:100%;height:200px;'></textarea>
+		<div style='margin-top:20px;'>
+		<button class="btn btn-white btn-info btn-bold" data-bind='attr:{"disabled":MSandBox.CommitComment().length<10},click:ApplyChanges'>
+			<i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>
+			Внести изменения
+		</button>&nbsp;
+		<button class="btn btn-white btn-default btn-round" data-bind='click:ClearChanges'>
+			<i class="ace-icon fa fa-times red2"></i>
+			Очистить изменения
+		</button>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,27 @@
+div.breadcrumbs.breadcrumbs-fixed.Opened{
+	background:#ffe5e1; 
+}
+div.breadcrumbs.breadcrumbs-fixed.Closed{
+	background:#fdf6e2;
+}
+div.breadcrumbs.breadcrumbs-fixed.Agreed{
+	background:#E3F4E3;
+}
+a.btn.btn-sm.btn-white.Closed>i,a.btn.btn-sm.btn-white.Closed>span{
+	color:#F2BB46;
+}
+a.btn.btn-sm.btn-white.Opened>i,a.btn.btn-sm.btn-white.Opened>span{
+	color:#CA5952;
+}
+a.btn.btn-sm.btn-white.Agreed>i,a.btn.btn-sm.btn-white.Agreed>span{
+	color:#59A84B;
+}
+
+.table-bordered>tbody>tr td.skipped{background:#F8F8F8;color:#CFCFCF;}
+.table-bordered>tbody>tr td.failed{background:#ffeaf5;color:#AF1D14;}
+.table-bordered>tbody>tr td.passed{background:#E3F4E3;}
+.btn-group.disabled a.btn.btn-sm.btn-white{
+	pointer-events: none!important;
+	color:gray!important;
+	background: transparent!important;
+}

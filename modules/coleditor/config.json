@@ -1,0 +1,17 @@
+{
+  "id": "coleditor",
+  "title": "Настройка колонок",
+  "icon": "fa-table",
+  "type":"documentpage",
+  "class_name":"ColEditor",
+  "is_enabled": true,
+  "sort_index": 60,
+  "places":{
+      "documentpage"  : true
+  },
+  "permissions" : [
+  		"IsHeaderTuner",
+  		"IsColsetTuner",
+  		"IsColEditor"
+  ]
+}

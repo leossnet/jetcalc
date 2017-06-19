@@ -1,0 +1,230 @@
+<script id="tb_debugformula" type="text/html">
+     <!-- ko if:MDebugFormula.IsDebugAvailable() -->
+     <div class="btn-group">
+        <a class="btn btn-sm btn-primary btn-white" data-bind="title:'Отладка <u>F4</u> или <u>Alt+Click</u>',click:MDebugFormula.DebugCell" > 
+          <i class="fa fa-bug" ></i>
+        </a>
+     </div>
+    <!-- /ko -->
+</script>
+
+
+<script id="condition_editor" type="text/html">
+    <!-- ko with:ConditionEditor -->
+    <div class='row'>
+        <div class='col-xs-10 col-m-p-0'>
+            <textarea class='formula_editor' data-bind='value:Formula,condition:Formula'></textarea>
+            <p class="alert parser_error" data-bind='css:{"alert-success":isOk(),"alert-danger":!isOk()},text:!isOk()?ParserResult():"Ок"' class='FormulaDebug'></p>
+            <div class="space"></div>
+        </div>
+        <div class='col-xs-2 col-m-p-0 context_fields'>
+            <!-- ko foreach:Params -->
+            <div class='context_selector_param' data-bind='text:$data'>
+
+            </div>
+            <!-- /ko -->
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-xs-12'>
+            <div id="formulaExpand" class="col-md-12" style="line-height: 3;word-spacing: 3;" data-bind='with:"Value"'>
+                <!-- ko with: FormulaEditor.koTree -->
+                     <span class = "label label-info label-white" style="vertical-align: middle;" data-bind = "html: FormulaEditor.GetNodeText($data,$parents)" >
+                     </span><span class = "mathsing" style="vertical-align: middle;">&nbsp;=</span>
+                    <!-- ko template: 'formulaTree' --><!-- /ko -->
+                <!-- /ko -->
+                <div class="space"></div>
+                <hr>
+            </div>
+            <!-- ko if:FormulaEditor.IsSpiltted() -->
+            <div id="formulaExpand" class="col-md-12" style="line-height: 3;word-spacing: 3;" data-bind='with:"Text"'>
+                <!-- ko with: FormulaEditor.koTree -->
+                     <span class = "label label-info label-white" style="vertical-align: middle;" data-bind = "html: FormulaEditor.GetNodeText($data,$parents)" >
+                     </span><span class = "mathsing" style="vertical-align: middle;">&nbsp;=</span>
+                     <!-- ko template: 'formulaTree' --><!-- /ko -->
+                <!-- /ko -->
+            </div>
+            <!-- /ko -->
+        </div>
+    </div>
+    <!-- /ko -->
+</script>
+
+
+<script id="formula_editor" type="text/html">
+    <!-- ko with:FormulaEditor -->
+    <div class='row'>
+        <div class='col-xs-10 col-m-p-0'>
+            <div class="wysiwyg-toolbar btn-toolbar toolH" >
+                <div class="btn-group">
+                    <a class="btn btn-sm btn-primary btn-white" data-bind="title:'Печатать',click:FormulaEditor.PrintFormula" > 
+                        <i class="fa fa-print" ></i>
+                    </a>
+                    <a class="btn btn-sm btn-primary btn-white" data-bind="css:{'disabled':FormulaEditor.History().length<2},title:'Вернуть значение',click:FormulaEditor.NavigateBack" > 
+                        <!-- ko ifnot:FormulaEditor.IsLoading() -->
+                        <i class="fa fa-undo" ></i>
+                        <!-- /ko -->
+                        <!-- ko if:FormulaEditor.IsLoading() -->
+                        <i class="fa fa-spin fa-spinner" ></i>
+                        <!-- /ko -->
+                    </a> 
+                    <a class="btn btn-sm btn-primary btn-white" data-bind="title:'Разделить',css:{'active':FormulaEditor.IsSpiltted()},click:FormulaEditor.SplitView" > 
+                        <i class="fa fa-columns" ></i>
+                    </a>
+                </div>
+                <div class="btn-group">
+                    <a class="btn btn-sm btn-success btn-white" data-bind="title:'Расчитать',click:FormulaEditor.CalculateFormula" > 
+                        <i class="fa fa-play" ></i>
+                    </a>
+                </div>                
+                
+            </div>
+            <textarea class='formula_editor' data-bind='value:Formula,formula:Formula'></textarea>
+            <p class="alert parser_error" data-bind='css:{"alert-success":isOk(),"alert-danger":!isOk()},text:!isOk()?ParserResult():"Ок"' class='FormulaDebug'></p>
+            <div class="space"></div>
+        </div>
+        <div class='col-xs-2 col-m-p-0 context_fields'>
+            <!-- ko foreach:_.keys($data.CellContext) -->
+            <div class='context_selector'>            
+                <input type='text' data-bind="attr:{placeholder:Tr('formula',$data)},
+                                              value:$parent.CellContext[$data],
+                                              model_autocomplete:{model:$parent.ContextModels[$data]}">
+                </input>
+            </div>
+            <!-- /ko -->
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-xs-12'>
+            <div id="formulaExpand" class="col-md-12" style="line-height: 3;word-spacing: 3;" data-bind='with:"Value"'>
+                <!-- ko with: FormulaEditor.koTree -->
+                     <span class = "label label-info label-white" style="vertical-align: middle;" data-bind = "html: FormulaEditor.GetNodeText($data,$parents)" >
+                     </span><span class = "mathsing" style="vertical-align: middle;">&nbsp;=</span>
+                    <!-- ko template: 'formulaTree' --><!-- /ko -->
+                <!-- /ko -->
+                <div class="space"></div>
+                <hr>
+            </div>
+            <!-- ko if:FormulaEditor.IsSpiltted() -->
+            <div id="formulaExpand" class="col-md-12" style="line-height: 3;word-spacing: 3;" data-bind='with:"Text"'>
+                <!-- ko with: FormulaEditor.koTree -->
+                     <span class = "label label-info label-white" style="vertical-align: middle;" data-bind = "html: FormulaEditor.GetNodeText($data,$parents)" >
+                     </span><span class = "mathsing" style="vertical-align: middle;">&nbsp;=</span>
+                     <!-- ko template: 'formulaTree' --><!-- /ko -->
+                <!-- /ko -->
+            </div>
+            <!-- /ko -->
+        </div>
+    </div>
+    <!-- /ko -->
+</script>
+
+
+<div class="modal fade " id="debugFormula" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document" data-bind='if:FormulaEditor.IsPopupShowned'>
+    <div class="modal-content" style='min-width:1024px;min-height:800px;overflow: auto;' data-bind="if: FormulaEditor.koTree">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" data-bind="html: CxCtrl.DocTitle"></h4>
+        </div>
+        <div class="modal-body" data-bind='with:FormulaEditor'>
+            <div class='col-xs-8 noselect'>
+                <!-- ko template:'formula_editor' --><!-- /ko -->
+            </div>
+            <div class='col-xs-4' data-bind='with:FormulaEditor.Info'>
+                    <table  class='layouttable infotable'>
+                    <tbody>
+                    <tr><td class='header_cell'>Ряд</td></tr>
+                    <tr><td style='font-weight: bold' data-bind='text:RowName'></td></tr>
+                    <tr><td class='header_cell'>Колонка</td></tr>
+                    <tr><td style='font-weight: bold' data-bind='text:ColName'></td></tr>
+                    <tr><td class='header_cell'>Период</td></tr>
+                    <tr><td style='font-weight: bold' data-bind='text:Catalogue.Get("period",Period)'></td></tr>
+                    <!-- ko ifnot:What -->
+                    <tr><td class='header_cell'>Тип ячейки</td></tr>
+                    <tr><td>Первичная</td></tr>
+                    <!-- /ko -->
+                    <tr><td  class='header_cell'>Ячейка</td></tr>
+                    <tr><td data-bind='text:CellName'></td></tr>
+                    <tr><td  class='header_cell'>Документ</td></tr>
+                    <tr><td data-bind='text:Catalogue.Get("doc",Doc)'></td></tr>
+                    <!-- ko if:RowFormula.length -->
+                    <tr><td class='header_cell'>Формула в ряду</td></tr>
+                    <tr><td data-bind='text:RowFormula,click:MDebugFormula.UseRowFormula' class='use'></td></tr>
+                    <!-- /ko -->
+                    <!-- ko if:ColFormula.length -->
+                    <tr><td class='header_cell'>Формула в колонке</td></tr>
+                    <tr><td data-bind='text:ColFormula,click:MDebugFormula.UseColFormula' class='use'></td></tr>
+                    <!-- /ko -->
+                    <!-- ko if:RowMarks.length -->
+                    <tr><td  class='header_cell'>Метки ряда</td></tr>
+                    <tr><td data-bind='text:RowMarks.join(", ")'></td></tr>
+                    <!-- /ko -->
+                    <!-- ko if:ColMarks.length -->
+                    <tr><td  class='header_cell'>Метки колонки</td></tr>
+                    <tr><td data-bind='text:ColMarks.join(", ")'></td></tr>
+                    <!-- /ko -->
+                    <!-- ko if:What -->
+                    <tr><td class='header_cell'>Используем</td></tr>
+                    <tr><td data-bind='text:What'></td></tr>
+                    <tr><td class='header_cell'>Потому,что</td></tr>
+                    <tr><td data-bind='text:Text'></td></tr>
+                    <!-- /ko -->
+                    <!-- ko ifnot:What -->
+                    <tr><td class='header_cell'>Тип ячейки</td></tr>
+                    <tr><td>Первичная</td></tr>
+                    <!-- /ko -->
+                    </tbody>
+                </table>
+                
+            </div>
+		</div>
+    </div>
+  </div>
+</div>
+
+
+<script id="formulaTree" type="text/html">
+    <!-- ko if: ($data.Children() && $data.Children().length) -->
+        <!-- ko foreach: $data.Children() -->
+            <!-- ko if:  (Type() == 'Text')-->
+                <!-- ko template: 'formulaText' --><!-- /ko -->
+            <!-- /ko -->
+            <!-- ko if: (Type() == 'Node') -->
+                <!-- ko template: 'formulaNode' --><!-- /ko -->
+            <!-- /ko -->
+        <!-- /ko -->
+    <!-- /ko -->
+</script>
+
+<script id="formulaText" type="text/html">
+    <span class = "mathsing" style="vertical-align: middle;" data-bind = "text: $data['Text']" >
+    </span>
+</script>
+
+<script id="formulaPRM" type="text/html">
+    <span class = "label label-success" data-bind = "click: FormulaEditor.nodeClick, html: FormulaEditor.GetNodeText($data,$parents),event: { mouseover: FormulaEditor.SetHovered, mouseout: FormulaEditor.SetUnHovered },css: {'label-hover': IsHovered() || IsSelected(), 'label-outer':FormulaEditor.IsAnotherDoc($data)}">
+    </span>
+</script>
+
+<script id="formulaNode" type="text/html">
+    <!-- ko if: ($data.Formula() == 'PRM') -->
+        <!-- ko template: 'formulaPRM' --><!-- /ko -->
+    <!-- /ko -->
+    <!-- ko ifnot: ($data.Formula() == 'PRM') -->
+        <!-- ko if:IsToggled -->
+            <span class = "label label-info" data-bind="click: FormulaEditor.nodeClick,html:FormulaEditor.GetNodeText($data,$parents), event: { mouseover: FormulaEditor.SetHovered, mouseout: FormulaEditor.SetUnHovered  },css: {'label-hover': IsHovered() || IsSelected(), 'label-outer':FormulaEditor.IsAnotherDoc($data)}" ></span>
+        <!-- /ko -->
+        <!-- ko ifnot: IsToggled -->
+            <br>
+            <span class="label label-xlg label-light" >
+                <span class = "label label-info" data-bind="click: FormulaEditor.nodeClick,html: FormulaEditor.GetNodeText($data,$parents),event: { mouseover: FormulaEditor.SetHovered, mouseout: FormulaEditor.SetUnHovered  },css: {'label-hover': IsHovered() || IsSelected(), 'label-white':!IsToggled(), 'label-outer':FormulaEditor.IsAnotherDoc($data)}" ></span>
+                <!-- ko ifnot: IsToggled -->
+                        <span class="label label-warning label-white">=</span>
+                        <!-- ko template: 'formulaTree' -->
+                        <!-- /ko -->
+                <!-- /ko -->
+            </span>
+        <!-- /ko -->
+    <!-- /ko -->
+</script>

@@ -1,0 +1,21 @@
+{
+  "id": "periods",
+  "title": "Периоды",
+  "icon": "fa-calendar",
+  "class_name": "Periods",
+  "is_enabled": true,
+  "initial_load" :true,
+  "type":"adminpage",
+  "places":{
+      "adminpage"  : true
+  },
+  "permissions" : [
+      "IsPeriodEditTunner","IsPeriodMapTunner","IsPeriodGrpsTunner","IsPeriodTunner","IsPeriodAFTunner"
+  ],
+  "permissionsModels":{
+      "IsPeriodGrpsTunner":["periodgrp"],
+      "IsPeriodTunner":["period"],
+      "IsPeriodAFTunner":["periodautofill"]
+  },
+  "sort_index":20
+}

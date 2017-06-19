@@ -1,0 +1,16 @@
+{
+  "id": "documentation",
+  "title": "Документация",
+  "icon": "fa-sliders",
+  "class_name":"Documentation",
+  "is_enabled": true,
+  "sort_index": 80,
+  "places":{
+      "documentpage"  : true,
+      "toolbutton"  : true
+  },
+  "params":"has_tool_button",
+  "permissions" : [
+  		"IsDocumentationWriter"
+  ]
+}

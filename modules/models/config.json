@@ -1,0 +1,12 @@
+{
+  "id": "models",
+  "title": "Модели",
+  "icon": "fa-user-secret",
+  "is_enabled": true,
+  "class_name": "Models",
+  "type":"simple",
+  "places":{},
+  "initial_load":true,
+  "start_load":true,
+  "guest_load":true
+}

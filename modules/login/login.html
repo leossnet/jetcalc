@@ -1,0 +1,61 @@
+<!-- ko ifnot:MLogin.IsLoginInProgress() -->
+	<!-- ko with:MLogin --> 
+		<div class="login-layout" style="height: 100%;position: absolute;width: 100%;" >
+			<div class="main-container">
+				<div class="main-content">
+					<div class="row">
+						<div class="col-sm-10 col-sm-offset-1">
+							<div class="login-container" data-bind='css:$data.Mode()' > 
+								<!-- ko template:'login_requisites_logo' --><!-- /ko -->
+								<div class="space-6"></div>
+								<div class="position-relative">				
+									<div class="login-box widget-box no-border visible">
+										<div class="widget-body">												
+												<!-- ko if:$data.Mode()=="Login" -->
+													<!-- ko template:"guest_page_login" --><!-- /ko -->
+												<!-- /ko -->		
+												<!-- ko if:$data.Mode()=="Recover" -->
+													<!-- ko template:"guest_page_recover" --><!-- /ko -->
+												<!-- /ko -->		
+												<!-- ko if:$data.Mode()=="SetPassword" -->
+													<!-- ko template:"guest_page_setpassword" --><!-- /ko -->
+												<!-- /ko -->		
+												<!-- ko if:$data.Mode()=="Signup" -->
+													<!-- ko template:"guest_page_signup" --><!-- /ko -->
+												<!-- /ko -->
+												<!-- ko if:$data.Mode()=="ResetEmailSent" -->
+													<!-- ko template:"guest_page_reset_sent" --><!-- /ko -->
+												<!-- /ko -->													
+												<!-- ko if:$data.Mode()=="SignupEmailSent" -->
+													<!-- ko template:"guest_page_signup_sent" --><!-- /ko -->
+												<!-- /ko -->
+												<!-- ko if:$data.Mode()=="WrongRequestConfirmCode" -->
+													<!-- ko template:"guest_page_signup_error" --><!-- /ko -->
+												<!-- /ko -->
+												<!-- ko if:$data.Mode()=="WrongResetConfirmCode" -->
+													<!-- ko template:"guest_page_reset_error" --><!-- /ko -->
+												<!-- /ko -->
+												<!-- ko if:$data.Mode()=="RequestMailIsConfirmed" -->
+													<!-- ko template:"guest_page_signup_success" --><!-- /ko -->
+												<!-- /ko -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- ko template:'login_requisites' --><!-- /ko -->
+				</div>
+			</div>
+		</div>		
+	<!-- /ko -->
+<!-- /ko -->
+<!-- ko if:MLogin.IsLoginInProgress() -->
+	<div class='col-xs-4'></div>
+	<div class='col-xs-4'>
+	<div class="alert alert-warning" style='top: 200px;position: absolute;'>
+		Пожалуйста, подождите. Идет проверка прав доступа...
+	</div>
+	</div>
+	<div class='col-xs-4'></div>  
+<!-- /ko -->

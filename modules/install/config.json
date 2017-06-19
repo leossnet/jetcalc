@@ -1,0 +1,9 @@
+{
+  "id": "install",
+  "title": "Стартовый",
+  "icon": "fa-code-fork",
+  "is_enabled": true,
+  "class_name": "Install",
+  "initial_load":true,
+  "guest_load":true
+}

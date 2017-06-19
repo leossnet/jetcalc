@@ -1,0 +1,10 @@
+{
+  "id": "permissions",
+  "title": "Права",
+  "icon": "fa-user-secret",
+  "is_enabled": true,
+  "class_name": "Permissions",
+  "type":"simple",
+  "places":{},
+  "initial_load":true
+}

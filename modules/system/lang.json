@@ -1,0 +1,11 @@
+{
+	"system":"Настройки системы",
+	"IsSystemSettingsEditor":"Глобальные настройки",
+	"Logo":"Логотип",
+	"TechPhone":"Телефон",
+	"PortalName":"Название",
+	"Servers":"Сервера",
+	"Mails":"Почтовые адреса",
+	"UseRealMail":"Исп.Настоящие.Адреса",
+	"TechMail":"Почта"
+}

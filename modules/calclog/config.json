@@ -1,0 +1,16 @@
+{
+  "id": "calclog",
+  "title": "Лог вычислений",
+  "icon": "fa-code-fork",
+  "is_enabled": true,
+  "type":"adminpage",
+  "class_name":"CalcLog",
+  "places":{
+      "adminplugin"  : true
+  },  
+  "permissions" : [
+  		"IsCalcLogWatcher"
+  ],
+  "initial_load":true,  
+  "sort_index":1
+}

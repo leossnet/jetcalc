@@ -1,0 +1,31 @@
+{
+  "id": "users",
+  "title": "Пользователи",
+  "icon": "fa-user-secret",
+  "is_enabled": true,
+  "class_name": "Users",
+  "type":"adminpage",
+  "places":{
+  	  "profiletab" : true,
+      "topmenu" : true,
+  	  "adminpage"  : true
+  },
+  "permissions" : [
+    "IsLoginAsTester", 
+    "IsDocPermissionAssigner", 
+    "IsFunctionAssigner",
+    "IsFunctionEditor",
+    "IsDocPermissionEditor",
+    "IsExtendedDocPermissionEditor",
+    "IsRequestApprover",
+    "IsUserAcceptor"
+  ],
+  "permissionsModels":{
+    "IsRequestApprover":["request"],
+    "IsUserAcceptor":["user"],
+    "IsDocPermissionEditor":["permit"],
+    "IsFunctionEditor":["task"]
+  },
+  "initial_load":false,
+  "sort_index":1
+}

@@ -1,0 +1,23 @@
+<!-- ko with:MSite.Me -->
+<div class='row' style='margin-top:10px;'>
+	<div class='col-sm-4'>
+		<!-- ko template:{
+				name:'small_form_with_header',
+				data:{Name:'',Fields:MLogin.ProfileFields,Model:MSite.Me}
+		} --><!-- /ko -->
+		<div class="space-6"></div>
+		<button class="btn btn-sm btn-info btn-white" data-bind="click: MLogin.ChangePasswordModal">
+			<div class="pull-left">
+				<i class="fa fa-key"></i>
+				<span> Изменить пароль</span>
+			</div>
+		</button>
+		<button class="btn btn-sm btn-success btn-white" data-bind="click: MLogin.UpdateProfile">
+			<div class="pull-left">
+				<i class="fa fa-floppy-o"></i>
+				<span> Обновить профиль</span>
+			</div>
+		</button>
+	</div>
+</div>
+<!-- /ko -->

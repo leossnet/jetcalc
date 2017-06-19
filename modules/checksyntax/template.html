@@ -1,0 +1,48 @@
+<script id="app_checksyntax" type="text/html">
+	<div class="widget-box transparent" data-bind="with: MCheckSyntax">
+	<!-- ko if:$data.IsAvailable() -->
+		<div class="widget-header widget-header-flat">
+			<h4 class="widget-title lighter"><i class="ace-icon fa fa-code-fork"></i>Формулы</h4>
+		</div>
+		<div class="widget-body" style="display: block;">
+			<div class="widget-main padding-4" style="height:auto">
+				<a style="cursor:pointer;" data-bind="click:LoadInfo,css:{'unclickable':IsLoading}" class="btn btn-white btn-success">
+					<i class="ace-icon fa fa-check bigger-60" data-bind="css:{'faa-burst animated':IsLoading}"></i>Проверка синтаксиса
+				</a>
+				<a style="cursor:pointer;" data-bind="click:UpdateFormula,css:{'unclickable':IsUpdating}" class="btn btn-white btn-warning">
+					<i class="ace-icon fa fa-random bigger-60" data-bind="css:{'faa-burst animated':IsUpdating}"></i>Обновить формулы
+				</a>
+			</div>
+			<div class="widget-main padding-4" style="height:auto" >
+				<!-- ko if:NoErrors() -->
+				<div class="alert alert-block alert-success">
+						Ошибок не найдено!
+				</div>		
+				<!-- /ko -->
+				<table class='table table-striped table-bordered table-hover dataTable' data-bind='with:Errors'>
+					<tbody data-bind='foreach:$data'>
+						<tr>
+							<td data-bind='text:$index'></td>
+							<td data-bind='text:$data.Code'></td>
+							<td data-bind='text:$data.Formula'></td>
+							<td data-bind='text:$data.Error' style='white-space: pre;font-family: monospace;'></td>
+						</tr>
+					</tbody>
+				</table>
+				<table class='table table-striped table-bordered table-hover dataTable updateFormula' data-bind='with:Updated'>
+					<thead data-bind='if:$data.length'>
+							<th>№</th>
+							<th>Результат</th>
+					</thead>
+					<tbody data-bind='foreach:$data'>
+						<tr>
+							<td data-bind='text:$index'></td>
+							<td data-bind='html:$data.Formula,click:$parents[1].CellClick'></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- /ko -->
+	</div>
+</script>

@@ -1,0 +1,416 @@
+<script id="progress_bar" type="text/html">
+    <div class='progressBar' data-bind='if:$data.ProgressBarOn()'>
+        <div class="progress">
+            <div class="progress-bar" data-bind='{
+                    css:{
+                        "progress-bar-success":$data.ProgressCurrentLine()==1,
+                        "progress-bar-warning":$data.ProgressCurrentLine()==2,
+                        "progress-bar-danger":$data.ProgressCurrentLine()==3
+                    },
+                    attr:{
+                        "data-percent":$data.Progress()+"%",
+                        "style":"width:"+$data.Progress()+"%"
+                    }
+                }'>
+            </div>
+        </div>
+        <div class="progress-lines" data-bind='text:$data.ProgressCurrentLine()+"/"+$data.ProgressLines()'> </div>
+        <div class="progress-message" data-bind='text:$data.ProgressMessage'></div>
+    </div>
+</script>
+
+<script id="form_ref" type="text/html">
+	<!-- ko component: {
+	    name: "combobox-editor",
+	   	params:{
+				field:$parent[$data],
+				fieldname:$data,
+				refmodel:$parent.Types[$data].Model,
+				mainmodel:$parent.ModelName
+			},
+	} -->
+	<!-- /ko -->
+	<a class="btn btn-sm btn-primary btn-white comboboxbtn" data-bind="click: ModelTableEdit.AddRefModel.bind(null,$data,$parent[$data],$parent.Types[$data].Model),css: {'disabled': !PermChecker.ModelAccess($parent.Types[$data].Model}">
+		<i class="fa fa-plus"></i>
+	</a>
+</script>
+
+<script id="form_checkbox" type="text/html">
+	<div class="checkbox">
+		<input class="ace ace-checkbox-2" type="checkbox" data-bind="checked: $parent[$data]">
+		<span class="lbl"></span>
+	</div>
+</script>
+
+<script id="form_text" type="text/html">
+    <input class="col-xs-12" type="text" data-bind="value: $parent[$data],attr:{'placeholder':Lang.Tr($data)},mask:$parent.Mask[$data],valueUpdate:'afterkeydown'">
+</script>
+
+<script id="text_icon" type="text/html">
+	<i class='fa fa-icon preview-icon orange' data-bind='css:$parent[$data]'></i>&nbsp;<input class="col-xs-12 icon-editor" type="text" data-bind="value: $parent[$data],attr:{'placeholder':Lang.Tr($data)},valueUpdate:'afterkeydown'">
+</script>
+
+<script id="form_password" type="text/html">
+	<input class="col-xs-12" type="password" data-bind="value: $parent[$data]">
+</script>
+
+<script id="form_number" type="text/html">
+	<input class="col-xs-12" type="number" data-bind="value: $parent[$data]">
+</script>
+
+<script id="form_date" type="text/html">
+	<input class="col-xs-12" type="text" data-bind="datepicker: $parent[$data], attr:{'placeholder':Lang.Tr($data)}, mask: '99-99-9999', 
+		config: {
+			format:'DD-MM-YYYY',
+			formatDate:'DD-MM-YYYY',
+			timepicker:false,
+			lang:'ru'
+		}" />
+</script>
+
+<script id="form_image" type="text/html">
+	<label class="ace-file-input ace-file-multiple">
+		<input type="file" name="file-input" data-bind="FileUpload: {FilePlace: $parent[$data]}">
+	</label>
+</script>
+
+
+
+<script id="form_file" type="text/html">
+    <div>
+        <label>
+            <input type="file" data-bind="FileUpload:{FilePlace:$parent[$data]}"/>
+        </label>
+    </div>
+</script>
+
+
+
+
+<script id="form_array" type="text/html">
+	<!-- ko with:$parent[$data] -->
+		<!-- ko foreach: $data -->
+		    <div style='margin-top:5px;'>
+		    	<input type='text' data-bind='value:$parent[$index()]'></input>
+			    <a data-bind="title:'Удалить',click:function(){$parents[2][$parents[1]].splice($index(),1);}">
+			        <span ><i class="fa fa-icon fa-times bigger-130" ></i></span>
+			    </a>
+		    </div>
+		<!-- /ko -->
+	<!-- /ko -->
+	<a class='addLinkModel' data-bind="click:function(){$parent[$data].push('');}">Добавить</a>
+</script>
+
+
+
+
+<script id="header" type="text/html">
+<!-- header -->
+<div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="navbar" id="navbar">
+            <button type="button" class="navbar-toggle menu-toggler pull-left" data-target="#sidebar-left" data-bind="css: {'menu-min':  LeftMenu.IsMenuToggled, click:  LeftMenu.ToggleMenu}">
+                <span class="sr-only"></span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+            </button>
+            <div class="navbar-header pull-left">
+                <a class="navbar-brand" data-bind='page-href:"/"'>
+                    <small>
+                        <i class="fa fa-cogs"></i>
+                        JETCALC v1.0
+                    </small>
+                </a>
+            </div>
+            <div class="navbar-buttons navbar-header pull-right" role="navigation">
+                <ul class="nav ace-nav">
+                    <!-- ko foreach:ModuleManager.TopMenu() -->
+                            <!-- ko template:$data.id+'_topmenu' --><!-- /ko -->
+                    <!-- /ko -->
+                </ul>
+            </div>
+        </div>
+    </div>
+<!-- header -->
+</script>
+
+<script id="footer" type="text/html">
+    <div class="footer"><div class="footer-inner"><div class="footer-content"></div></div></div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"><i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i></a> 
+</script>
+
+<script id="rightmenu" type="text/html">
+    <div id="sidebar-right"  class="sidebar responsive sidebar-fixed sidebar-scroll" data-sidebar="true" data-sidebar-scroll="true"     data-sidebar-hover="false"  data-bind="css: {'min': RightMenu.IsMenuToggled()},resize:RightMenu.IsMenuToggled">
+        <ul class="nav nav-list right-list noselect">
+        <!-- ko if:ModuleManager.IsLoaded() -->
+            <!-- ko foreach: ModuleManager.RightMenu() -->
+                <!-- ko template:$data.id+'_right_menu' --><!-- /ko -->
+            <!-- /ko -->
+        <!-- /ko -->
+        </ul>       
+        <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+            <i class="ace-icon fa" data-bind="click: RightMenu.ToggleMenu,css: {
+                'fa-angle-double-down'   : RightMenu.IsMenuToggled(),
+                'fa-angle-double-up' :!RightMenu.IsMenuToggled()}"></i>
+        </div>
+    </div>
+</script>
+
+
+
+<script id="admin_leftmenu" type="text/html">
+<!-- ko if:MBreadCrumbs.CheckPath('adminpage') -->
+    <!-- ko if:ModuleManager.IsLoaded() -->
+        <!-- ko foreach: ModuleManager.AdminPage() -->
+            <!-- ko if:ModuleManager.Modules[$data.class_name].IsAvailable() -->
+            <li class='submenu-level-0' data-bind="page-href: '/adminpage/' + $data.id, css: { active: MBreadCrumbs.CheckPath($data.id) }, attr: {id: 'leftmenu_' + $data.id}">
+                <a>
+                    <i class="menu-icon fa" data-bind="css: $data.icon"></i>
+                    <span class="menu-text" data-bind='text: $data.title'></span>
+                </a>
+            </li>
+            <!-- /ko -->
+        <!-- /ko -->
+    <!-- /ko -->
+<!-- /ko -->
+</script>
+
+<script id="leftmenu" type="text/html">
+    <div id="sidebar-left"  class="sidebar responsive sidebar-fixed sidebar-scroll" data-sidebar="true" data-sidebar-scroll="true"  data-sidebar-hover="false"  data-bind="css: {'min': LeftMenu.IsMenuToggled()},resize:LeftMenu.IsMenuToggled">
+        <ul class="nav nav-list left-list noselect">
+        <!-- ko if:ModuleManager.IsLoaded() -->
+            <!-- ko foreach: ModuleManager.LeftMenu() -->
+                <!-- ko template:$data.id+'_left_menu' --><!-- /ko -->
+            <!-- /ko -->
+            <!-- ko template:'admin_leftmenu' --><!-- /ko -->       
+        <!-- /ko -->
+        </ul>
+        
+        <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+            <i class="ace-icon fa" data-bind="click: LeftMenu.ToggleMenu,css: {
+                'fa-angle-double-down'   : LeftMenu.IsMenuToggled(),
+                'fa-angle-double-up' :!LeftMenu.IsMenuToggled()}"></i>
+        </div>
+    </div>
+</script>
+
+
+<script id="form_group" type="text/html">
+    <div class="form-group" >
+        <label class="col-sm-4 control-label no-padding-right" data-bind="lang: ($parent.modelname()+'.'+$data)"></label>
+        <div class="col-sm-8">
+            <!-- ko template: m_reference.getInputType($parent.properties[$data]) --><!-- /ko -->
+        </div>
+    </div>
+</script>
+
+<script id="form_file" type="text/html">
+    <div>
+        <label>
+            <input type="file" data-bind="FileUpload:{FilePlace:$parent[$data]}"/>
+        </label>
+    </div>
+</script>
+
+
+
+
+
+
+
+<script id="tb_mode_switch_li" type="text/html">
+    <li data-bind='css:{active:$data.mode==$parent.Mode()}'>
+    <a  data-bind="click:$parent.Mode.bind(null,$data.mode)">
+          <i class="ace-icon fa " data-bind="css:$data.icon"></i>&nbsp;<span data-bind='text:$data.title'></span>
+          <!-- ko if:$data.badge -->
+            <span class="badge badge-danger" data-bind='text:$data.badge'></span>
+          <!-- /ko -->
+    </a>
+    </li>
+</script>
+
+
+<script id="inline_error" type="text/html">
+    <!-- ko with:$data.Error -->
+        <div class="alert alert-danger"><span data-bind="text:$data"></span></div>
+    <!-- /ko -->
+</script>
+
+
+
+<script id="small_form_with_header" type="text/html">
+    <div>
+    <!-- ko if:$data.Name && $data.Name.length -->
+    <h3 class="row header smaller lighter blue" data-bind='lang:$data.Name'></h3>
+    <!-- /ko -->
+    <!-- ko with:$data.Model -->
+    <div class="profile-user-info profile-user-info-striped"  style='margin-bottom: 3px;position: relative;'>
+        <!-- ko if:console.log($parent) --><!-- /ko -->
+        <!-- ko if:$parent.Remove -->
+        <div class="profile-info-toolbuttons pull-right action-buttons noselect">
+            <a class="white" data-bind="title:'Удалить',click:$parent.Remove">
+                <span><i class="fa fa-icon fa-times bigger-130"></i></span>
+            </a>
+        </div>    
+        <!-- /ko -->
+        <!-- ko foreach: $parent.Fields  -->
+        <div class="profile-info-row">
+            <div class="profile-info-name" data-bind="model:$parent.modelname,lang:$data"></div>
+            <div class="profile-info-value">
+                <!-- ko template: $parent.Template($data) --><!-- /ko -->
+            </div>
+        </div>  
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+    </div>
+</script>
+
+
+<script id="edit_links" type="text/html">
+    <div class="dd" > <!-- data-bind='draggable:{}' -->
+    <!-- ko if:$data.Name && $data.Name.length -->
+    <h3 class="row header smaller lighter blue" data-bind='lang:$data.Name'></h3>
+    <!-- /ko -->
+    <!-- ko with:$data.Model -->
+        <!-- ko if:!$data['Link_'+$parent.LinkModel]().length -->
+            <div class='emptyLinks'>Ссылок - нет</div>
+        <!-- /ko -->
+        <ol class="dd-list" data-bind="foreach:$data['Link_'+$parent.LinkModel]">
+            <li class="dd-item" data-bind="attr:{'data-id':$index()}">
+                <div class="profile-user-info profile-user-info-striped " style='margin-bottom: 3px;'>
+                    <div class='profile-info-toolbuttons pull-right action-buttons noselect'>
+                        <a class='white' data-bind="title:'Удалить',click:ModelEdit.RemoveLink.bind($parent,$parents[1].LinkModel,$data)">
+                            <span ><i class="fa fa-icon fa-times bigger-130" ></i></span>
+                        </a>
+                        <a class='white' data-bind="title:'Изменить',click:$data.IsEdit.bind(null,!$data.IsEdit())">
+                            <span ><i class="fa fa-icon fa-pencil bigger-130" ></i></span>
+                        </a>
+                    </div>
+                    <!-- ko foreach: LinkEditorHelper.FilterEditFields($parents[1].MainModel,$parents[1].LinkModel,$parents[1].FieldParams)  -->
+                        <div class="profile-info-row" data-bind="css:{'not-edited':!$parent.IsEdit()}">
+                            <div class="profile-info-name" data-bind="model:$parent.modelname,lang:$data"></div>
+                            <div class="profile-info-value">
+                                <!-- ko if:$parent.IsEdit() -->
+                                    <!-- ko template: $parent.Template($data) --><!-- /ko -->
+                                <!-- /ko -->
+                                <!-- ko ifnot:$parent.IsEdit() -->
+                                    <!-- ko if:$parent.Types[$data].Type=='Boolean' -->
+                                    <div class="checkbox">
+                                        <input class="ace ace-checkbox" type="checkbox" disabled  data-bind="checked: $parent[$data]">
+                                        <span class="lbl"></span>
+                                    </div>
+                                    <!-- /ko -->
+                                    <!-- ko ifnot:$parent.Types[$data].Type=='Boolean' || $parent.Types[$data].Type=="Select" -->
+                                        <span data-bind='text:$parent[$data]'></span>
+                                    <!-- /ko -->                                    
+
+                                    <!-- ko if:$parent.Types[$data].Type=="Select"  -->
+                                        <!-- ko template:{name:'catalogue_withcode',data:{model:$parent.Types[$data].Model,id:$parent[$data]()}} --><!-- /ko -->
+                                    <!-- /ko -->                                    
+                                <!-- /ko -->
+                            </div> 
+                        </div>  
+                    <!-- /ko -->
+                </div>
+            </li>
+        </ol>
+        <a class='addLinkModel' data-bind="click:ModelEdit.AddLink.bind($parent.Model,$parent.LinkModel)">Добавить ссылку</a>
+    <!-- /ko -->
+    </div>  
+</script>
+
+
+<script id="tb_input_report_switch" type="text/html">
+    <a class='btn btn-sm btn-white btn-success ' data-bind="click:CxCtrl.ToggleIsInput">
+      <span data-bind='text:CxCtrl.IsInput()?"Режим ввода":"Режим отчета"'></span>
+    </a>
+</script>
+
+<script id="tb_simple_loader" type="text/html">
+  <!-- <div class="btn-group">
+    <a class='btn btn-sm btn-success btn-white ' data-bind="title:'Состояние загрузки',css:{disabled:!$data.IsLoading()}">
+        <i class="fa  fa-spinner" data-bind="css:{'fa-spin':$data.IsLoading()}"></i>
+    </a>
+  </div>
+  -->
+</script>
+
+<script id="editor_buttons" type="text/html">
+    <div class='modalbuttons' data-bind='with:EditorRegistrator'>
+      <button class="btn btn-white btn-info" data-bind='click:Cancel'><i class="ace-icon fa fa-times red2"></i><span data-bind='lang:"close"'></span></button>
+      <button class="btn btn-white btn-success"  data-bind='click:Apply'><i class="ace-icon fa fa-floppy-o bigger-120 green"></i><span >Применить</span></button>
+    </div>
+</script>
+
+<script id="save_changes" type="text/html">
+   <div class="btn-group">
+      <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Сохранить данные',click:SaveChanges">
+        <i class="ace-icon fa fa-save"></i>
+      </a>
+    </div>
+</script>
+
+<script id="tb_mode_switch" type="text/html">
+    <a class='btn btn-sm btn-primary btn-white' data-bind="title:$data.title,click:$parent.Mode.bind(null,$data.mode),css:{active:$data.mode==$parent.Mode()}">
+      <!-- ko if:$data.mode=='Summ' -->
+          <i class="ace-icon fa fa-text">Σ</i>
+      <!-- /ko -->
+      <!-- ko if:$data.mode=='Formula' -->
+          <i class="ace-icon fa fa-text">f(x)</i>
+      <!-- /ko -->
+      <!-- ko ifnot:$data.mode=='Summ' || $data.mode=='Formula' -->
+          <i class="ace-icon fa " data-bind="css:$data.icon"></i>
+        <!-- /ko -->
+      </a>
+</script>
+
+<div id="link_editor_modal" class="modal fade" data-bind="with: EditorRegistrator">
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-body" style='margin-bottom: 50px;'>
+                <div data-bind="if: EditorRegistrator.CurrentEditor() === 'link'">
+                    <div data-bind="with: EditorRegistrator.EditRow" style='margin-bottom:50px;'>
+                        <!-- ko template:{
+                           name:'edit_links',
+                           data:{Name:$parent.EditField(), MainModel:$parent.Table(), LinkModel:$parent.EditField().replace('Link_', ''), Model:$parent.EditRow}
+                         } --><!-- /ko -->
+                    </div>
+                    <!-- ko template:'editor_buttons' --><!-- /ko -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="formula_editor_modal" class="modal fade" data-bind="with: EditorRegistrator">
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-body" style='margin-bottom: 50px;'>
+                <div data-bind="if: EditorRegistrator.CurrentEditor() === 'formula'">
+                    <h3 class="row header smaller lighter blue" data-bind='lang:$data.EditField'></h3>
+                    <div data-bind='if:EditorRegistrator.IsActive()'>
+                        <!-- ko template:'formula_editor' --><!-- /ko -->
+                    </div>
+                    <!-- ko template:'editor_buttons' --><!-- /ko -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="condition_editor_modal" class="modal fade" data-bind="with: EditorRegistrator">
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-body" style='margin-bottom: 50px;'>
+                <div data-bind="if: EditorRegistrator.CurrentEditor() === 'condition'">
+                    <h3 class="row header smaller lighter blue" data-bind='lang:$data.EditField'></h3>
+                    <div data-bind='if:EditorRegistrator.IsActive()'>
+                        <!-- ko template:'condition_editor' --><!-- /ko -->
+                    </div>
+                    <!-- ko template:'editor_buttons' --><!-- /ko -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

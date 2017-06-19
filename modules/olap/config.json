@@ -1,0 +1,11 @@
+{
+  "id": "olap",
+  "title": "Olap",
+  "icon": "fa-chart",
+  "class_name":"Olap",
+  "is_enabled": true,
+  "places":{
+      "documentpage"  : true
+  },  
+  "sort_index": 20
+}

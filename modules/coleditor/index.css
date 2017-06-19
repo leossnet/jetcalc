@@ -1,0 +1,18 @@
+td.removed_by_filter{
+	color:#aaa!important;
+	background-color: #EEEEEE!important;
+}
+td.removed_by_filter.guilty_cell{
+	color:#B74635!important;
+	background-color: #F1D0CD!important;
+}
+td.removed_by_filter.guilty_cell_border{
+	color: #6d6464!important;
+	box-shadow: inset 0px 0px 0px 2px rgba(255, 0, 0, 0.54);
+}
+
+td.error_cell_highlight{
+	color:#B74635!important;
+	background-color: #FBF1F0!important;
+}
+

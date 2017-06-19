@@ -1,0 +1,89 @@
+<div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MFileManager'>
+  <div class="btn-group">
+    <a class='btn btn-sm btn-success btn-white' data-bind="title:'Добавить файл',click: ShowAddAttachDialog">
+      <i class="ace-icon fa fa-paperclip"></i>
+    </a>
+     <!-- ko template:'tb_simple_loader' --><!-- /ko -->
+  </div>
+  <div class="btn-group">
+      <!-- ko template:'tb_colapse_expand' --><!-- /ko -->      
+  </div>
+  <!-- ko with:ChoosenAttach -->
+  <div class="btn-group" >
+    <a class='btn btn-sm btn-warning btn-white inacvtive half-inacvtive' data-bind="title:'Скачать файл',attr:{href:'/api/gfs/download/'+$data.HashCode()}">
+      <i class="ace-icon fa fa-cloud-download"></i>
+    </a>
+    <!-- ko if:$data.PDF() -->
+    <a class='btn btn-sm btn-success btn-white' data-bind="title:'Просмотр',click: $parent.Preview">
+      <i class="ace-icon fa fa-picture-o"></i>
+    </a>
+    <!-- /ko -->
+  </div>
+  <!-- 
+  <div class="btn-group">
+  <a class='btn btn-sm btn-danger btn-white inacvtive half-inacvtive' data-bind="title:'Удалить файл',click: $parent.RemoveAttach">
+      <i class="ace-icon fa fa-trash-o"></i>
+    </a>
+  </div>
+  -->
+  <!-- /ko -->
+
+</div>
+
+
+<div  data-bind="with:MFileManager">
+  <div class='row'>
+    <!-- ko with: Error -->
+      <!-- ko if:!$parent.IsAttachShow() -->
+      <div class="alert alert-danger">
+          <span data-bind="text:$data"></span>
+      </div>
+      <!-- /ko --> 
+    <!-- /ko --> 
+    <!-- ko ifnot:IsEmptyTable() -->
+    <div class='handsonContainer' style='background-color: initial;'>
+        <div class="handsontable single" class='nowrap'></div>    
+    </div>
+    <!-- /ko --> 
+    <!-- ko if:IsEmptyTable() -->
+      <div class="alert alert-info">
+          Файлы - не добавлены
+      </div>
+    <!-- /ko --> 
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="attachDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document" data-bind='with:MFileManager'>
+      <div class="modal-content">
+        <div class="modal-body" >
+          <div class='row'>
+            <div class='col-xs-6'  data-bind='with:$data.NewAttach'>
+              <!-- ko template:{
+                  name:'small_form_with_header',
+                  data:{Name:'Описание',Fields:['File','NameFile','SNameFile','NumDoc','CodeFileType','Comment'],Model:$data}
+              } --><!-- /ko -->
+            </div>
+            <div class='col-xs-6' data-bind='with:$data.NewAttachData'>
+              <!-- ko template:{
+                  name:'small_form_with_header',
+                  data:{Name:'Контекст',Fields:['CodeDoc','YearData','CodePeriod','CodeObj'],Model:$data}
+              } --><!-- /ko -->
+              <button class="btn btn-white btn-info" style='margin-top:10px;margin-bottom:10px;float:right;' data-bind='click:$parent.AddAttach'>
+                <i class="ace-icon fa fa-floppy-o bigger-120 blue"></i>Сохранить
+              </button>
+            </div>
+          </div>
+            <!-- ko with: Error -->
+            <div class="alert alert-danger">
+                <span data-bind="text:$data"></span>
+            </div>
+            <!-- /ko --> 
+
+      </div>
+    </div>
+  </div>
+</div>
+

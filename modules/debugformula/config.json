@@ -1,0 +1,13 @@
+{
+  "id": "debugformula",
+  "title": "Файлы",
+  "icon": "fa-sliders",
+  "class_name":"DebugFormula",
+  "is_enabled": true,
+  "places":{
+     "toolbutton"  : true
+  },
+  "permissions" : [
+  		"IsFormulaDebugger"
+  ]
+}

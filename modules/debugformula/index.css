@@ -1,0 +1,124 @@
+#formulaExpand .label{
+    vertical-align: middle;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+#formulaExpand .label.label-xlg{
+    margin-left: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    height: auto;
+    white-space: normal;
+    text-align: left;
+}
+
+#formulaExpand .label.label-xlg > .label.label-xlg{
+    /*padding-top: 3px;*/
+    /*padding-bottom: 3px;*/
+    /*margin-top: 0px;*/
+    /*margin-bottom: 0px;*/
+    height: auto;
+    background-color: white;
+}
+.mathsing{
+    font-weight: bold;
+}
+.label.label-white{
+    border-left-width: 1px;
+   transition-delay: 100ms;
+}
+.label-info, .label.label-info, .label-success, .label.label-success{
+    border:1px solid transparent;
+    transition-delay: 250ms;
+}
+.label.label-hover{
+    background-color: #D15B47!important;
+}
+.label.label-white.label-hover{
+    background-color: #D15B47!important;
+    color:#F4DAD5;
+}
+
+.label.label-outer{
+    border:1px solid maroon;
+}
+li.summ_li{
+    float: right;
+    padding: 8px;
+    background: #F9F9F9;
+    margin-top: 2px;
+    color:#438EB9;
+    font-weight: bold;
+}
+
+
+input.autocomplete{
+	font-size: 12px;
+    display: inline-block;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    padding-left: 3px;
+}
+input.autocomplete.tt-hint{
+	display:none;
+}
+table.layouttable {
+	width: 100%;
+}
+table.layouttable td{
+    padding:1px;
+    border:1px solid #F2F2F2;
+}
+table.layouttable.infotable td{
+    padding:3px;
+    word-break:break-all;
+    font-size: 12px;
+}
+table.layouttable.infotable.bordered td{
+	border:1px solid #CFCFCF;
+}
+span.twitter-typeahead{
+	width:100%;
+}
+.tt-suggestion {
+    padding: 3px 12px 4px;
+    font-size: 12px;
+    line-height: 15px;
+    border: 1px solid #CFCFCF;
+    border-top: 0px;
+    background: white;
+}
+table.layouttable.infotable td.header_cell{
+    color:#CFCFCF;
+}
+
+span.label .sup{
+    top: 0px;
+    color: white;
+    padding: 4px;
+    font-size: 12px;
+    border: 1px solid #CFCFCF;
+    background: #FCEAC5;
+}
+span.label-info.label .sup{
+    color: #232323;
+    border-color: #3A87AD;
+}
+span.label-success.label .sup{
+    color: #232323;
+    border-color:#82AF6F;
+}
+textarea.formula_editor{
+    width:100%;
+    min-height: 100px;
+}
+table.layouttable.infotable .use:hover{
+    color:navy;
+}
+table.layouttable.infotable .use{
+    cursor: pointer;
+    position: relative;
+    color:blue;
+}

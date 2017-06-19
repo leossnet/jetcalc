@@ -1,0 +1,215 @@
+<script id="toolPanelPage" type="text/html">
+  <li data-bind="css:{'active': (CxCtrl.PageName() == $data)}">
+        <a data-bind="click: CxCtrl.AfterTypeShow.bind(null,$data)">
+            <span data-bind="model:'docview',lang:$data"></span>
+            <!-- ko if:$parent.badge -->
+            <span class="badge badge-danger" data-bind="text:ModuleManager.Modules[$parent.class_name][$parent.badge]"></span>
+            <!-- /ko -->
+        </a>
+  </li>
+</script>
+
+<script id="toolPanel" type="text/html">
+  <ul class="toolPanel nav nav-tabs background-blue padding-12">
+    <!-- ko if:ModuleManager.DocTabs -->
+      <!-- ko foreach:ModuleManager.DocTabs() -->
+        <!-- ko if:ModuleManager.CheckAvailable($data) -->
+          <!-- ko with:$data.id -->
+            <!-- ko template:'toolPanelPage' --><!-- /ko -->
+          <!-- /ko -->
+        <!-- /ko -->
+      <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if:false --> <!-- Переделать на плагин -->
+      <!-- ko with:DocumentForm.SelectedSumm -->
+      <li class='summ_li' data-bind='text:$data'></li>
+      <!-- /ko -->
+    <!-- /ko -->
+  </ul>
+</script>
+
+<script id="mode_round_expand" type="text/html">
+    <div class="btn-group">
+      <a class="btn btn-sm btn-white btn-primary" data-bind="title:'Полное отображение строк',click: BlankDocument.ChangeModeExpandRow,css:{'active': BlankDocument.ModeExpandRow()}" >
+              <i class="fa fa-expand "></i>
+      </a>
+      <a class="btn btn-sm btn-white btn-success" data-bind="title:'Выделять дробные значения',click: BlankDocument.ChangeModeRound,css:{'active': !BlankDocument.ModeRound()}"  >
+        <i class="fa fa-text fa-comm">0.0</i>
+      </a>
+    </div>
+</script>
+
+<script id="tb_colapse_expand" type="text/html">
+  <div class="btn-group">
+    <a class="btn btn-sm btn-white btn-primary" data-bind="title:'Свернуть строки',click: $data.CollapseAllRows" >
+      <i class="fa fa-plus-square-o "></i>
+    </a>
+    <a class="btn btn-sm btn-white btn-primary" data-bind="title:'Развернуть строки',click: $data.ExpandAllRows" >
+      <i class="fa fa-minus-square-o "></i>
+    </a>
+  </div>
+</script>
+
+<script id="calculate_button" type="text/html">
+    <div class="btn-group">
+      <button class='btn btn-sm btn-white' data-bind="title:'Информация о расчете', css:{'btn-success':$data.CacheIsUsed(),'btn-warning' : !$data.CacheIsUsed()},click:$data.DebugTime, enable: !$data.IsLoading()">
+        <!-- ko if: $data.IsLoading() -->
+          <i class="fa fa-spin fa-spinner"></i>
+        <!-- /ko -->
+        <!-- ko if: !$data.IsLoading() -->
+          <i class="fa" data-bind="text: $data.TimeLabel"></i>
+        <!-- /ko -->
+      </button>
+      <button class='btn btn-sm btn-warning btn-white btn-primary' data-bind="title:(!CxCtrl.UseCache())?'Пересчитать без кэша <u>Ctrl+F9</u>':'Пересчитать <u>F9</u>',css:{'btn-warning':!CxCtrl.UseCache(),'btn-success':CxCtrl.UseCache()},enable: !$data.IsLoading(),click:$data.Reset">
+        <i class="fa fa-refresh"></i>
+      </button>
+    </div>
+</script>
+
+<div class="modal fade" id="debugModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Информация о расчете</h4>
+      </div>
+      <!-- ko with:BlankDocument.DebugLabels -->
+      <div class="modal-body" data-bind="foreach:$data" style="word-wrap:break-word;line-height: 20px;">
+          <div data-bind='text:$data'></div>
+      </div>
+      <!-- /ko -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="lang:'close'"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script id="fav_item" type="text/html">
+      <li>
+          <a data-bind="click: $data.click">
+            <input name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" data-bind="checked: MFavorites.IsInFavorites($data.type, $data.code),click:MFavorites.ModifyFavorites.bind(null,$data.type, $data.code),clickBubble: false">
+            <span  class="lbl"></span>
+            <!-- ko if:$data.icon -->
+              <i class='fa fa-icon favicon'  data-bind='css:$data.icon'></i>
+            <!-- /ko -->
+            <!-- ko if:$data.text -->
+            <span data-bind="html: $data.text"></span>
+            <!-- /ko -->
+            <!-- ko ifnot:$data.text -->
+              <!-- ko template:{name:'catalogue',data:{model:$data.model,id:$data.code}} --><!-- /ko -->
+            <!-- /ko -->
+            <!-- ko if:$data.subobjs && $data.subobjs.length -->
+            <span data-bind='text:$data.subobjs.length' style='float: right;color: #CFCFCF;'></span>
+            <!-- /ko -->
+         </a>
+      </li>
+</script>
+
+
+<script id="tb_period" type="text/html">
+    <a class="btn btn-sm btn-white btn-primary dropdown-toggle" data-toggle="dropdown">
+        <span data-bind="text:CxCtrl.CodePeriod()+'. '"></span>
+        <!-- ko template:{name:'catalogue',data:{model:'period',id:CxCtrl.CodePeriod()}} --><!-- /ko -->
+        <i class="fa fa-angle-down icon-on-right fa-light"></i>
+    </a>
+    <ul class="dropdown-menu dropdown-light dropdown-caret">
+      <!-- ko foreach:_.keys(MPeriods.DefaultPeriods()) -->
+        <li class="dropdown-hover">
+          <a tabindex="-1" class="clearfix">
+            <span class="pull-left" data-bind="model:periodgrp,lang: $data"></span>
+            <i class="fa fa-caret-right pull-right"></i>
+          </a>
+          <ul class="dropdown-menu pull-right">
+            <!-- ko with:MPeriods.DefaultPeriods -->
+              <!-- ko foreach:$data[$parent] -->
+                <li>
+                  <a data-bind="click: CxCtrl.Update.bind(null,'period',$data)">
+                    <span data-bind="text: $data+'. '"></span>
+                    <!-- ko template:{name:'catalogue',data:{model:'period',id:$data}} --><!-- /ko -->
+                  </a>
+                </li>
+              <!-- /ko -->
+            <!-- /ko -->
+          </ul>
+        </li>
+      <!-- /ko -->
+    </ul>
+</script>
+
+<script id="tb_year" type="text/html">
+    <a class="btn btn-sm btn-white btn-primary dropdown-toggle" data-toggle="dropdown">
+      <span data-bind="text: CxCtrl.Year()"></span>
+      <i class="fa fa-angle-down icon-on-right fa-light"></i>
+    </a>
+    <ul class="dropdown-menu dropdown-light dropdown-caret">
+        <!-- ko foreach:Catalogue.GetAll('year') -->
+        <li>
+          <a data-bind="click: CxCtrl.Update.bind(null,'year',$data.id)">
+            <span data-bind="text: $data.name"></span>
+          </a>
+        </li>
+       <!-- /ko -->
+   </ul>
+</script>
+
+
+<script id="tb_subperiods" type="text/html">
+  <!-- ko if: !CxCtrl.IsKvart() -->
+        <a class='btn btn-sm btn-white btn-info' data-bind="title:'Отображать месячные планы',click:CxCtrl.ToggleShowMonthPlan" >
+          <i class="fa " data-bind="css:{'fa-calendar-plus-o':CxCtrl.IsShowMonthPlan(),'fa-calendar-minus-o':!CxCtrl.IsShowMonthPlan()}"></i>
+        </a>
+  <!-- /ko -->
+      <a class="btn btn-sm btn-white btn-success" data-bind="click: CxCtrl.Update.bind(null,'subperiod',null),css:{'half-inactive':CxCtrl.Override.CodePeriod() && CxCtrl.Override.CodePeriod()!=CxCtrl.CodePeriod()}">
+        <span data-bind='text:CxCtrl.CodePeriod()+". "'></span>
+        <!-- ko template:{name:'catalogue',data:{model:'period',id:CxCtrl.CodePeriod()}} --><!-- /ko -->
+      </a>
+  <!-- ko foreach:CxCtrl.SubPeriods() -->
+        <a class="btn btn-sm btn-white" data-bind="click: CxCtrl.Update.bind(null,'subperiod',$data),css:{'btn-yellow':$data.anotherYear,'btn-grey':!$data.anotherYear,'half-inactive':CxCtrl.Override.CodePeriod()!=$data.code}"  >
+          <span data-bind='text:$data.code+". "'></span>
+          <!-- ko template:{name:'catalogue',data:{model:'period',id:$data.code}} --><!-- /ko -->
+        </a>
+  <!-- /ko -->
+</script>
+
+<script id="contextBar" type="text/html">
+    <div class="wysiwyg-toolbar btn-toolbar toolH Context">
+      <!-- ko template: 'tb_aggregate_small' --><!-- /ko -->
+      <div class="btn-group" data-bind="visible:CxCtrl.PageName() != 'designrows'">
+          <!-- ko template:'tb_period' --><!-- /ko -->
+      </div>
+      <div class="btn-group">
+        <!-- ko template:'tb_year' --><!-- /ko -->
+      </div>
+      <div class="btn-group" >
+      <!-- ko template:'tb_subperiods' --><!-- /ko -->
+      </div>
+    </div>
+    <!-- ko template: 'tb_aggregate_pannel' --><!-- /ko -->
+</script>
+
+
+
+<script id="plugin_buttons" type="text/html">
+      <!-- ko foreach:ModuleManager.DocumentToolButtons() -->
+         <!-- ko template:'tb_'+$data.id --><!-- /ko -->
+      <!-- /ko -->
+</script>
+
+<script id="infobar" type="text/html">
+<table class='InfoTable' data-bind='with:BlankDocument'>
+  <tr>
+  <td class='FormulaSymbol'><i>&fnof;<sub>x</sub></i></td>
+  <!-- ko if:$data.LastCell() -->
+    <!-- ko if:$data.LastCellDoc()!=CxCtrl.CodeDoc() -->
+      <td class="CellDoc" data-bind='text:LastCellDoc'></td>
+    <!-- /ko -->
+    <td class="CellType" data-bind='text:LastCellType,css:LastCellType'></td>
+    <td class="CellName" data-bind='text:LastCell'></td>
+    <td class='FormulaValue' tabindex=1  data-bind='text:LastCellFormula'></td>
+  <!-- /ko -->
+  <td></td>
+  </tr>
+</table>
+</script>

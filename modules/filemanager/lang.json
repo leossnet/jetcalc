@@ -1,0 +1,14 @@
+{
+	"Name":"Название",
+	"CodeFileTypes":"Тип файла",
+	"DateDoc":"Дата добавления",
+	"CodeUser":"Пользователь",
+	"Comment":"Комментарий",
+	"CodeFileType":"Код.Тип.Док",
+	"NameFile":"Название",
+	"File":"Файл",
+	"SNameFile":"Название(сокр)",
+	"NumDoc":"№",
+	"CodeFileType":"Тип",
+	"Comment":"Комментарий"
+}

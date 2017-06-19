@@ -1,0 +1,23 @@
+<script id="favorites_left_menu" type="text/html">
+	<!-- ko ifnot:MBreadCrumbs.CheckPath('adminpage') -->
+			<!-- ko with:MFavorites.UserFavs.CodeDoc -->
+				<!-- ko foreach:$data -->
+					<li class='submenu-level-0 highlight' data-bind="click: CxCtrl.AfterPageShow.bind(null,$data),css:{active:CxCtrl.CodeDoc()==$data && MBreadCrumbs.CheckPath('docview')}">
+						<a ><i class="menu-icon fa  orange" data-bind="css:{'fa-bookmark':CxCtrl.CodeDoc()==$data && MBreadCrumbs.CheckPath('docview'),'fa-bookmark-o':CxCtrl.CodeDoc()!=$data || (CxCtrl.CodeDoc()==$data && !MBreadCrumbs.CheckPath('docview'))}"></i>
+							<span class="menu-text" '>
+								<!-- ko template:{name:'catalogue',data:{model:'doc',id:$data}} --><!-- /ko -->
+							</span>
+						</a>
+					</li>
+				<!-- /ko -->
+			<!-- /ko -->
+	<!-- /ko -->
+</script>
+
+<script id="tb_favorite" type="text/html">
+  <div class="btn-group">
+    <a class="btn btn-sm btn-white btn-yellow" data-bind="title:'Добавить в избранное',click: MFavorites.ModifyFavorites.bind(null,'CodeDoc', CxCtrl.CodeDoc()), css: {'active': MFavorites.IsInFavorites('CodeDoc', CxCtrl.CodeDoc())}">
+          <i class="fa fa-star"></i>
+    </a>
+  </div>
+</script>

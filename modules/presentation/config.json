@@ -1,0 +1,12 @@
+{
+  "id": "presentation",
+  "title": "Презентация",
+  "icon": "fa-table",
+  "type":"documentpage",
+  "class_name":"Presentation",
+  "is_enabled": true,
+  "places":{
+      "documentpage"  : true
+  },  
+  "sort_index": 10
+}

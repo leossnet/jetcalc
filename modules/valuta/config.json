@@ -1,0 +1,21 @@
+{
+  "id": "valuta",
+  "title": "Валюта",
+  "icon": "fa-money",
+  "class_name": "Valuta",
+  "is_enabled": true,
+  "type":"adminpage",
+  "places":{
+      "adminpage"  : true
+  },
+  "permissions" : [
+      "IsValutaTuner",
+  		"IsValutaRateOperator"
+  ],
+  "permissionsModels":{
+      "IsValutaTuner":["valuta"],
+      "IsValutaRateOperator":["valutarate"]
+  },
+  "initial_load":true,
+  "sort_index":30
+}

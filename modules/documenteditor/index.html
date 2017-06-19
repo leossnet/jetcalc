@@ -1,0 +1,115 @@
+<div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MDocumentEditor'>
+    <div class="btn-group">
+      <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Сохранить данные',click:SaveChanges">
+        <i class="ace-icon fa fa-save"></i>
+      </a>
+      <a class='btn btn-sm btn-warning btn-white ' data-bind="'Отменить все изменения',click:RollBack">
+        <i class="ace-icon fa fa-undo"></i>
+      </a>
+    </div>
+    <div class="btn-group">
+    	<!-- ko template:{name:'tb_mode_documenteditor',data:{icon:'fa-sitemap',title:'Корневые узлы',mode:'RootRows'}} --><!-- /ko -->	  
+    	<!-- ko template:{name:'tb_mode_documenteditor',data:{icon:'fa-folder-open-o',title:'Расположение',mode:'Placement'}} --><!-- /ko -->	  
+    	<!-- ko template:{name:'tb_mode_documenteditor',data:{icon:'fa-key',title:'Права',mode:'Responsables'}} --><!-- /ko -->	  
+    </div>
+    <div class="btn-group">    
+    	<!-- ko template:{name:'tb_mode_documenteditor',data:{icon:'fa-filter',title:'Дочерние объекты учета',mode:'ChildObjs'}} --><!-- /ko -->	  
+    </div>
+    <div class="btn-group">    
+    	<!-- ko template:{name:'tb_mode_documenteditor',data:{icon:'fa-sliders',title:'Настройки отчета',mode:'ReportSettings'}} --><!-- /ko -->	  
+    </div>
+    <div class="btn-group">  
+    	<!-- ko template:{name:'tb_mode_documenteditor',data:{icon:'fa-map-signs',title:'БизТран',mode:'Bistran'}} --><!-- /ko -->	  
+    </div>
+</div>
+
+
+
+<div  data-bind="with:MDocumentEditor">
+	<!-- ko with: Error -->
+	<div class="alert alert-danger"><span data-bind="text:$data"></span></div>
+	<!-- /ko --> 
+<div class='scrollable_page' style='padding-bottom: 100px;'>
+	<div class='col-xs-6 scrollable_col' >
+		<!-- ko if:Mode()=='Placement' -->
+			<!-- ko template:{
+					name:'small_form_with_header',
+					data:{Name:'Расположение',Fields:['CodeModel','IndexDoc'],Model:Document}
+			} --><!-- /ko -->
+			<!-- ko template:{
+					name:'edit_links',
+					data:{Name:'', MainModel:'doc', LinkModel:'docfolderdoc', Model:Document}
+			} --><!-- /ko -->
+			<!-- ko template:{
+					name:'edit_links',
+					data:{Name:'Зависимые документы', MainModel:'doc', LinkModel:'docpacket', Model:Document}
+			} --><!-- /ko -->
+		<!-- /ko --> 
+		<!-- ko if:Mode()=='RootRows' -->
+			<!-- ko template:{
+					name:'small_form_with_header',
+					data:{Name:'Настройки отображения',Fields:['IsShowRoots'],Model:Document}
+			} --><!-- /ko -->	
+			<!-- ko template:{
+					name:'edit_links',
+					data:{Name:'Выбор корневых узлов', MainModel:'doc', LinkModel:'docrow', Model:Document}
+			} --><!-- /ko -->			
+			<!-- ko template:{
+					name:'edit_links',
+					data:{Name:'Выбор заголовков', MainModel:'doc', LinkModel:'docheader', Model:Document}
+			} --><!-- /ko -->
+		<!-- /ko --> 
+		<!-- ko if:Mode()=='ReportSettings' -->
+
+			<!-- ko template:{
+					name:'small_form_with_header',
+					data:{Name:'Настройки параметров',Fields:['IsActiveCondition'],Model:Document}
+			} --><!-- /ko -->	
+
+			<!-- ko template:{
+					name:'edit_links',
+					data:{Name:'Список ключей', MainModel:'doc', LinkModel:'docparamkey', Model:Document}
+			} --><!-- /ko -->	
+		<!-- /ko --> 
+		<!-- ko if:Mode()=='Responsables' -->
+			<!-- Ответственные -->
+			<!-- ko template:{
+					name:'small_form_with_header',
+					data:{Name:'Права',Fields:['CodeRole','FirstYear','IsDesigner','IsTester'],Model:Document}
+			} --><!-- /ko -->			
+			<!-- ko template:{
+					name:'edit_links',
+					data:{Name:'Подписи', MainModel:'doc', LinkModel:'doclabel', Model:Document}
+			} --><!-- /ko -->
+		<!-- /ko --> 
+		<!-- ko if:Mode()=='ChildObjs' -->
+			<!-- Дочерние объекты -->
+			<!-- ko template:{
+					name:'small_form_with_header',
+					data:{Name:'Дочерние объекты учета',Fields:['HasChildObjs','IsDivObj','IsObjToRow','IsShowParentObj',"IsObjTree"],Model:Document}
+			} --><!-- /ko -->
+			<!-- ko template:{
+					name:'edit_links',
+					data:{Name:'Фильтрация объектов учета', MainModel:'doc', LinkModel:'docobjtype', Model:Document}
+			} --><!-- /ko -->
+		<!-- /ko --> 	
+		<!-- ko if:Mode()=='Bistran' -->
+		<!-- ko template:{
+				name:'small_form_with_header',
+				data:{Name:'БизТран документ',Fields:['IsBiztranDoc','UseProd','UseOrg','UseDogovor','UseDogovorArt'],Model:Document}
+		} --><!-- /ko -->
+			<!-- ko template:{
+					name:'edit_links',
+					data:{Name:'Счета документа', MainModel:'doc', LinkModel:'docbill', Model:Document}
+			} --><!-- /ko -->
+		<!-- /ko --> 
+	</div>
+	<div class='col-xs-6 scrollable_col'>
+		<!-- ko template:{
+				name:'small_form_with_header',
+				data:{Name:'Основные параметры',Fields:MDocumentEditor.DocFields,Model:Document}
+		} --><!-- /ko -->
+	</div>
+</div>
+
+</div>

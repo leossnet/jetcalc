@@ -1,0 +1,8 @@
+ul.dropdown-menu li{
+    cursor: pointer;
+}
+ul.dropdown-menu a, ul.dropdown-menu.pull-right a span{
+    font-weight: 400;
+    color: #333;
+    text-decoration: none;
+}

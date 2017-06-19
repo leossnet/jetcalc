@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+#
+# Pre-commit hooks
+PATH="/usr/local/bin:$PATH"
+echo "AUTO-GRUNT"
+grunt default

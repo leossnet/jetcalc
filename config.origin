@@ -1,0 +1,109 @@
+var environment = process.env.NODE_ENV;
+
+if (!environment) environment = "development";
+
+var cpus = require('os').cpus().length;
+process.setMaxListeners(0)
+
+global.__base = __dirname + "/";
+
+var config = {
+	development: {
+		  rabbitmq         : 'amqp:jet:jetparole12j@127.0.0.1'
+		, rabbitmqPort     : 15672
+		, rabbitPrefix     : "jet"
+		, cookieConfig     : {
+	        secret            : "ugmk secret",
+    	    key               : "ugmk.sid",
+        	cookie            : { domain:'.jt.jetstyle.ru', httpOnly: true, maxAge: null},
+	        maxAge            : 24*60*60*1000,
+    	    secure            : true,
+        	saveUninitialized : true,
+        	resave            : true
+    	}
+		, portalname       : "http://ugmk_dev.jt.jetstyle.ru"
+		, adminmail        : "dkoviazin@gmail.com"
+		, adminphone       : "+79226052265"
+		, company          : "UGMK"
+		, staticDir        : __dirname+'/static'
+		, dir              :__dirname
+		, port             : 4129
+		, modulebundle     : true		
+		, debugRecording   : true
+		, debugPeriodsNum  : 7
+		, mongoUrl         : "mongodb://localhost/ugmk_dev"
+		, mongoCacheUrl    : "mongodb://localhost/ugmk_dev_cache"
+		, agendaConnect    : 'mongodb://localhost/agenda_ugmk_dev'
+		, mochaConnect     : 'mongodb://localhost/mocha_dev'
+		, gridfs           : {
+			host:'localhost',
+			dbname:'ugmk_files'
+		}
+		, silent 	       : false
+		, debugRequests    : true
+		, errorCatch       : false
+		, cpus       	   : cpus
+		, useMultiThread   : true
+		, redis            : {}
+		, db               : 'postgres'
+		//, db               : 'mssql'
+		, dbconfig         : {
+			mssql:{
+				userName:'ASSOI_USER',
+				password:'Cegth,s,hf12j',
+				server:'10.66.80.31',
+				adapter:'mssql',
+				protocol:'xml',
+				debugSql:false,
+				options:{
+					 database:'assoi0909',
+					 port: 1433,
+					 encrypt: true,
+			    	 connectionTimeout: 300000,
+			    	 requestTimeout: 300000
+				}
+			},
+			postgres:{
+				user: 'postgres',
+				password: 'postgres',
+				host: 'localhost',
+				adapter:'postgres',
+				protocol: 'json',
+				database:'assoi',
+				debugSql: false,
+				options: {
+					database:'assoi',
+					port: 5432
+				}
+			}
+		}
+		, mongoSessionsDB : {
+		  	  db               : 'ugmk_dev_sessions'
+			, host             : 'localhost'
+			, autoReconnect    : true
+			, safe             : false
+		},
+		mailer : {
+			transport: {
+				service: 'Yandex',
+				auth: {
+					user: 'assoi.ugmk',
+					pass: 'derparole12j'
+				}
+			},
+			from  : {
+					name: "Оповещения ASSOI",
+					email:"assoi.ugmk@yandex.ru"
+			}
+		}
+	},
+	staging: {
+	},
+	production: {
+	}
+}
+
+
+
+module.exports = config[environment];
+module.exports.rawConfig = config;

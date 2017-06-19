@@ -1,0 +1,19 @@
+{
+  "id": "obj",
+  "title": "Объекты учета",
+  "icon": "fa-hospital-o",
+  "class_name": "Obj",
+  "beforeShow": "MObj.BeforeShow",
+  "is_enabled": true,
+  "type":"adminpage",
+  "places":{
+      "adminpage"  : true
+  },
+  "permissions" : [
+  		"IsObjTunner"
+  ],
+  "permissionsModels":{
+      "IsObjTunner":["objtype","objclass","obj","grp"]
+  },
+  "sort_index":70
+}

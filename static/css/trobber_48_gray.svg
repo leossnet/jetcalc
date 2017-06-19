@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="50px" height="50px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+	<defs>
+		<style>
+			#rect	{ fill:#999999 }
+			#one	{ opacity:0.7 }
+			#two	{ opacity:0.1 }
+			#three	{ opacity:0.15 }
+			#four	{ opacity:0.2 }
+			#five	{ opacity:0.25 }
+			#six	{ opacity:0.30 }
+			#seven	{ opacity:0.35 }
+			#eight	{ opacity:0.4 }
+			#nine	{ opacity:0.45 }
+			#ten	{ opacity:0.55 }
+			#eleven	{ opacity:0.6 }
+			#twelve	{ opacity:0.65 }
+		</style>
+		<rect id="rect" rx="2" ry="2" width="4" height="12.5" />
+	</defs>
+<g>
+	<g transform="rotate( 0, 25, 25 )">
+		<use x="23" y="1" xlink:href="#rect" id="one"/>
+		<use x="23" y="36.5" xlink:href="#rect" id="seven"/>
+	</g>
+	<g transform="rotate( 30, 25, 25 )">
+		<use x="23" y="1" xlink:href="#rect" id="two"/>
+		<use x="23" y="36.5" xlink:href="#rect" id="eight"/>
+	</g>
+	<g transform="rotate( 60, 25, 25 )">
+		<use x="23" y="1" xlink:href="#rect" id="three"/>
+		<use x="23" y="36.5" xlink:href="#rect" id="nine"/>
+	</g>
+	<g transform="rotate( 90, 25, 25 )">
+		<use x="23" y="1" xlink:href="#rect" id="four"/>
+		<use x="23" y="36.5" xlink:href="#rect" id="ten"/>
+	</g>
+	<g transform="rotate( 120, 25, 25 )">
+		<use x="23" y="1" xlink:href="#rect" id="five"/>
+		<use x="23" y="36.5" xlink:href="#rect" id="eleven"/>
+	</g>
+	<g transform="rotate( 150, 25, 25 )">
+		<use x="23" y="1" xlink:href="#rect" id="six"/>
+		<use x="23" y="36.5" xlink:href="#rect" id="twelve"/>
+	</g>
+	<animateTransform attributeName="transform" type="rotate" values="30,25,25; 60,25,25; 90,25,25; 120,25,25; 150,25,25; 180,25,25; 210,25,25; 240,25,25; 270,25,25; 300,25,25; 330,25,25; 360,25,25;" dur="0.8s" calcMode="discrete" repeatCount="indefinite"/>
+</g>
+</svg>

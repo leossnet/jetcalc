@@ -1,0 +1,8 @@
+{
+  "id": "socket",
+  "title": "Сокет канал",
+  "icon": "fa-code-fork",
+  "is_enabled": true,
+  "class_name": "Socket",
+  "initial_load":true
+}

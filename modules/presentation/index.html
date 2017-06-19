@@ -1,0 +1,239 @@
+<script id="config_form" type="text/html">
+    <div>
+        <!-- ko if:$data.Name && $data.Name.length -->
+        <h3 class="row header smaller lighter blue" data-bind='text:$data.Name'></h3>
+        <!-- /ko -->
+        <!-- ko with:$data.Model -->
+        <div class="profile-user-info profile-user-info-striped" style='margin-bottom: 3px;'>
+            <div class="profile-info-row">
+                <div class="profile-info-name">Заголовок</div>
+                <div class="profile-info-value">
+                    <input class="col-xs-12" type="text" data-bind="value:MPresentation.CurrentSlotTitle">
+                </div>
+            </div>
+            <!-- ko foreach: $parent.Fields  -->
+            <div class="profile-info-row">
+                <div class="profile-info-name" data-bind="model:$parent.ModelName,lang:$data"></div>
+                <div class="profile-info-value">
+                    <!-- ko template: $parent.Template($data) -->
+                    <!-- /ko -->
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+    </div>
+</script>
+
+<div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MPresentation'>
+    <!-- ko template:'tb_favorite' -->
+    <!-- /ko -->
+    <div class="btn-group">
+        <a class='btn btn-sm btn-primary btn-white' data-bind="title:'Сохранить',click:SaveChanges">
+            <i class="ace-icon fa fa-save"></i>
+        </a>
+        <a class='btn btn-sm btn-primary btn-white' data-bind="title:'Перезагрузить',click:LoadData">
+            <i class="ace-icon fa fa-refresh"></i>
+        </a>
+    </div>
+    <div class="btn-group">
+        <a class='btn btn-sm btn-primary btn-white' data-bind="title:'Экспорт в html',click:ToWeb">
+            <i class="ace-icon fa fa-globe"></i>
+        </a>
+        <a class='btn btn-sm btn-primary btn-white' data-bind="title:'Экспорт в pdf',click:ToPdf">
+            <i class="ace-icon fa fa-file-pdf-o"></i>
+        </a>
+    </div>
+    <div class="btn-group">
+        <a class='btn btn-sm btn-primary btn-white' data-bind="title:'Настройка презентации',click:ChangeSettings">
+            <i class="ace-icon fa fa-wrench"></i>
+        </a>
+        <a class='btn btn-sm btn-primary btn-white' data-bind="title:'Настройка слайда',click:SlideSettings">
+            <i class="ace-icon fa fa-list-alt"></i>
+        </a>
+    </div>
+    <div class="btn-group">
+        <a class='btn btn-sm btn-primary btn-white' data-bind="title:'Очистить файловый кэш',click:ClearCache">
+            <i class="ace-icon fa fa-trash"></i>
+        </a>
+    </div>
+    <!-- ko template:'tb_aggregate_simple' -->
+    <!-- /ko -->
+    <span data-bind="visible:MPresentation.Warning, html: MPresentation.Warning" class="changes_warning"></span>
+</div>
+<div id="tmp-img-div" style="display:none"></div>
+<div data-bind="with: MPresentation.Presentation()" class="deck">
+    <!-- ko alias: 'deck' -->
+    <div class="deck-content">
+        <div class="deck-slides spacer"></div>
+        <div class="deck-slides">
+            <ul data-bind="foreach: { data: MPresentation.Presentation().data.info.slides(), as: 'slide' }">
+                <li>
+                    <button class="slide-remove" data-bind="
+                            visible: $index() > 0,
+                            click: MPresentation.Presentation().removeSlide.bind(MPresentation.Presentation(), $index())">
+                            <i class="fa fa-times"
+                                aria-hidden="true"></i>
+                        </button>
+                    <button class="slide-mvup" data-bind="
+                            visible: $index() > 0,
+                            click: MPresentation.Presentation().moveSlide.bind(MPresentation.Presentation(), $index(), true)">
+                            <i class="fa fa-chevron-up"
+                                aria-hidden="true"></i>
+                        </button>
+                    <button class="slide-mvdown" data-bind="
+                            visible: $index() < MPresentation.Presentation().data.info.slides().length - 1,
+                            click: MPresentation.Presentation().moveSlide.bind(MPresentation.Presentation(), $index(), false)">
+                            <i class="fa fa-chevron-down"
+                                aria-hidden="true"></i>
+                        </button>
+                    <button class="slide-number" data-bind="text: $index() + 1">
+                        </button>
+                    <div data-bind="
+                                attr:{class:'slide-view min ' + slide.data.info.attr.class()},
+                                click:MPresentation.Presentation().activeSlideI.bind(null, $index())">
+                        <div class="slide-header" data-bind="visible: slide.data.info.header.enabled">
+                            <span data-bind="text: slide.data.info.title"></span>
+                            <span></span>
+                        </div>
+                        <div class="slide-fragments" data-bind="
+                                    foreach: {
+                                        data: slide.data.info.slots,
+                                        as: 'fragment'
+                                    },
+                                    css: {
+                                        headered: slide.data.info.header.enabled,
+                                        footered: slide.data.info.footer.enabled
+                                    }">
+                            <div data-bind="attr: { style: fragment.getBGStyle() }">
+                                <div data-bind="ifnot:fragment.data.info.loading">
+                                    <div class="fragment-html" data-bind="html: fragment.data.info.html,attr: {style: fragment.getPreviewStyle()}"></div>
+                                </div>
+                                <div data-bind="if:fragment.data.info.loading">
+                                    <div class="fragment-html" data-bind="html: fragment.getLoading()"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-footer" data-bind="visible: slide.data.info.footer.enabled">
+                            <div data-bind="text: slide.data.info.footer.text"></div>
+                            <div data-bind="text: MPresentation.Presentation().getFooter( $index() )"></div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <button data-bind="click: MPresentation.Presentation().addSlide.bind(MPresentation.Presentation(), null)">
+                    <i class="fa fa-plus"
+                        aria-hidden="true"></i>
+                </button>
+        </div>
+        <div class="slide" data-bind="with: MPresentation.Presentation().getSlide()">
+            <div class="slide-frame">
+                <div data-bind="
+                            attr: { class: 'slide-view ' + MPresentation.Presentation().getSlide().data.info.attr.class() }" style="width: 80%; height:80%; margin-left:10%">
+                    <div class="slide-header" data-bind="visible: MPresentation.Presentation().getSlide().data.info.header.enabled">
+                        <span>
+                                <input type="text"
+                                    placeholder="заголовок слайда"
+                                    data-bind="value: MPresentation.Presentation().getSlide().data.info.title">
+                            </span>
+                        <span></span>
+                    </div>
+                    <div id="main-slide" class="slide-fragments" data-bind="
+                                foreach: {
+                                    data: MPresentation.Presentation().getSlide().data.info.slots,
+                                    as: 'fragment'
+                                },
+                                css: {
+                                    headered: MPresentation.Presentation().getSlide().data.info.header.enabled,
+                                    footered: MPresentation.Presentation().getSlide().data.info.footer.enabled
+                                }">
+                        <div data-bind="attr: { style: fragment.getBGStyle() }">
+                            <div data-bind="text: fragment.data.info.title()"></div>
+                            <div class="fragment-html" data-bind="visible: fragment.data.info.html, html: fragment.data.info.html"></div>
+                            <div class="fragment-overlay" data-bind="click: MPresentation.Presentation().getSlide().openConfig.bind(MPresentation.Presentation().getSlide(),fragment )">
+                                <i class="fa fa-cog" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slide-footer" data-bind="visible: MPresentation.Presentation().getSlide().data.info.footer.enabled">
+                        <div></div>
+                        <div data-bind="text: MPresentation.Presentation().getFooter( MPresentation.Presentation().activeSlideI())"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
+    </div>
+    <!-- /ko -->
+</div>
+
+
+<div id="slot_config_modal" class="modal fade">
+    <div class="modal-dialog" data-bind='with:MPresentation'>
+        <div class="modal-content">
+            <div class="modal-body">
+                <!-- ko template:{
+                name:'config_form',
+				data:{Name:'Настройки фрагмента',Fields:MPresentation.SlotEditableFields,Model:MPresentation.CurrentSlotModel}
+			   } -->
+                <!-- /ko -->
+                <br>
+                <button class="btn btn-blue btn-sm" data-bind="click:MPresentation.Presentation().getSlide().saveActiveFragment">
+					<i class="ace-icon fa fa-floppy-o"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="presentation_settings_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <!-- ko template:{
+					name:'small_form_with_header',
+					data:{Name:'Настройки презентации',Fields:MPresentation.PresentEditableFields,Model:MPresentation.PresentModel}
+			     } -->
+                <!-- /ko -->
+                <br>
+                <button class="btn btn-blue btn-sm" data-bind="click:MPresentation.SaveSettings">
+					<i class="ace-icon fa fa-floppy-o"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="slide_settings_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3 class="row header smaller lighter blue">Настройки Слайда</h3>
+                <div class="profile-user-info profile-user-info-striped" style='margin-bottom: 3px;'>
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">Макет</div>
+                        <div class="profile-info-value">
+                            <select class="selectize-input items full has-options has-items" data-bind="options: Object.keys(PresentationOptions.layouts), value: MPresentation.CurrentSlideLayout"></select>
+                        </div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">Header</div>
+                        <div class="profile-info-value">
+                            <input class="col-xs-12" type="text" data-bind="value:MPresentation.Presentation().getSlide().data.info.header.text">
+                        </div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-name">Footer</div>
+                        <div class="profile-info-value">
+                            <input class="col-xs-12" type="text" data-bind="value:MPresentation.Presentation().getSlide().data.info.footer.text">
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <button class="btn btn-blue btn-sm" data-bind="click:MPresentation.SaveSlideSettings">
+					<i class="ace-icon fa fa-floppy-o"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

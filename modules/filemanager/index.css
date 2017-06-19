@@ -1,0 +1,165 @@
+iframe.attachIframe{
+    border: 0px;top: 0;bottom: 0;left: 0;right: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+span.link-icon:before,
+span.link-icon.link-file[href]:before {
+    content: "\f016"; /* generic file icon */
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translate(0, 0);
+    width: 20px;
+    text-align: right;
+    margin-right: 10px;
+}
+span[name$=".txt"].link-icon:before,
+span.link-icon.link-text[href]:before {
+    content: "\f0f6"; /*Text*/
+}
+span[name$=".pdf"].link-icon:before,
+span.link-icon.link-pdf[href]:before {
+    content: "\f1c1"; /*PDF*/
+    color:#F83E3E;
+}
+span[name$=".doc"].link-icon:before,
+span[name$=".docx"].link-icon:before,
+span.link-icon.link-word[href]:before {
+    content: "\f1c2"; /*Word*/
+    color:#3266CC;
+}
+span[name$=".xls"].link-icon:before,
+span[name$=".xlsx"].link-icon:before,
+span.link-icon.link-excel[href]:before {
+    content: "\f1c3"; /*Excel*/
+    color:#80AF63;
+}
+span[name$=".ppt"].link-icon:before,
+span[name$=".pptx"].link-icon:before,
+span.link-icon.link-powerpoint[href]:before {
+    content: "\f1c4"; /*Powerpoint*/
+}
+span[name$=".gif"].link-icon:before,
+span[name$=".jpg"].link-icon:before,
+span[name$=".jpeg"].link-icon:before,
+span[name$=".png"].link-icon:before,
+span[name$=".bmp"].link-icon:before,
+span[name$=".tif"].link-icon:before,
+span.link-icon.link-image[href]:before {
+    content: "\f1c5"; /*Image*/
+    color:orange;
+}
+span[name$=".zip"].link-icon:before,
+span[name$=".zipx"].link-icon:before,
+span[name$=".rar"].link-icon:before,
+span[name$=".tar"].link-icon:before,
+span[name$=".gz"].link-icon:before,
+span[name$=".dmg"].link-icon:before,
+span[name$=".iso"].link-icon:before,
+span.link-icon.link-archive[href]:before {
+    content: "\f1c6"; /*Archive*/
+    color:#F1D550;
+}
+span[name$=".wav"].link-icon:before,
+span[name$=".mp3"].link-icon:before,
+span[name$=".fla"].link-icon:before,
+span[name$=".flac"].link-icon:before,
+span[name$=".ra"].link-icon:before,
+span[name$=".rma"].link-icon:before,
+span[name$=".aif"].link-icon:before,
+span[name$=".aiff"].link-icon:before,
+span[name$=".aa"].link-icon:before,
+span[name$=".aac"].link-icon:before,
+span[name$=".aax"].link-icon:before,
+span[name$=".ac3"].link-icon:before,
+span[name$=".au"].link-icon:before,
+span[name$=".ogg"].link-icon:before,
+span[name$=".avr"].link-icon:before,
+span[name$=".3ga"].link-icon:before,
+span[name$=".flac"].link-icon:before,
+span[name$=".mid"].link-icon:before,
+span[name$=".midi"].link-icon:before,
+span[name$=".m4a"].link-icon:before,
+span[name$=".mp4a"].link-icon:before,
+span[name$=".amz"].link-icon:before,
+span[name$=".mka"].link-icon:before,
+span[name$=".asx"].link-icon:before,
+span[name$=".pcm"].link-icon:before,
+span[name$=".m3u"].link-icon:before,
+span[name$=".wma"].link-icon:before,
+span[name$=".xwma"].link-icon:before,
+span.link-icon.link-audio[href]:before {
+    content: "\f1c7"; /*Audio*/
+}
+span[name$=".avi"].link-icon:before,
+span[name$=".mpg"].link-icon:before,
+span[name$=".mp4"].link-icon:before,
+span[name$=".mkv"].link-icon:before,
+span[name$=".mov"].link-icon:before,
+span[name$=".wmv"].link-icon:before,
+span[name$=".vp6"].link-icon:before,
+span[name$=".264"].link-icon:before,
+span[name$=".vid"].link-icon:before,
+span[name$=".rv"].link-icon:before,
+span[name$=".webm"].link-icon:before,
+span[name$=".swf"].link-icon:before,
+span[name$=".h264"].link-icon:before,
+span[name$=".flv"].link-icon:before,
+span[name$=".mk3d"].link-icon:before,
+span[name$=".gifv"].link-icon:before,
+span[name$=".oggv"].link-icon:before,
+span[name$=".3gp"].link-icon:before,
+span[name$=".m4v"].link-icon:before,
+span[name$=".movie"].link-icon:before,
+span[name$=".divx"].link-icon:before,
+span.link-icon.link-video[href]:before {
+    content: "\f1c8"; /*Video*/
+}
+span[name$=".css"].link-icon:before,
+span[name$=".js"].link-icon:before,
+span[name$=".py"].link-icon:before,
+span[name$=".git"].link-icon:before,
+span[name$=".py"].link-icon:before,
+span[name$=".cpp"].link-icon:before,
+span[name$=".h"].link-icon:before,
+span[name$=".ini"].link-icon:before,
+span[name$=".config"].link-icon:before,
+span.link-icon.link-code[href]:before {
+    content: "\f1c9"; /*code*/
+}
+span[name$=".exe"].link-icon:before,
+span[name$=".jar"].link-icon:before,
+span[name$=".dll"].link-icon:before,
+span[name$=".bat"].link-icon:before,
+span[name$=".pl"].link-icon:before,
+span[name$=".scr"].link-icon:before,
+span[name$=".msi"].link-icon:before,
+span[name$=".app"].link-icon:before,
+span[name$=".deb"].link-icon:before,
+span[name$=".apk"].link-icon:before,
+span[name$=".jar"].link-icon:before,
+span[name$=".vb"].link-icon:before,
+span[name$=".prg"].link-icon:before,
+span[name$=".sh"].link-icon:before,
+span.link-icon.link-exe[href]:before {
+    content: "\f085"; /*Executable*/
+}
+
+span[name$=".com"].link-icon:before,
+span[name$=".net"].link-icon:before,
+span[name$=".org"].link-icon:before,
+span[name$=".edu"].link-icon:before,
+span[name$=".gov"].link-icon:before,
+span[name$=".mil"].link-icon:before,
+span[name$=".ru"].link-icon:before,
+span.link-icon.link[href]:before {
+    content: "\f0c1"; /*link*/
+}

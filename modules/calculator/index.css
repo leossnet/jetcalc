@@ -1,0 +1,78 @@
+.handsontable td.IsControlPoint {
+    background-color: #FDF9C4;
+    color: maroon;
+    font-weight: bold;
+    text-align: right;
+}
+.handsontable td.IsEditablePrimary,.handsontable td.IsPrimary.IsEditablePrimary {
+    text-align: right;
+    background-color: #E6FFE1;
+    color:#0E5100
+}
+
+.handsontable td.IsEditablePrimary.IsLocked, .handsontable td.IsPrimary.IsLocked{
+    text-align: right;
+    color: #87650C;
+    background-color: #FCF2DA;
+}
+.handsontable td.IsCell{
+    text-align: right;
+} 
+.handsontable td.IsSum {
+    font-weight: 400;
+}
+.handsontable td.IsPrimary  {
+    color:blue;
+}
+.handsontable td.IsEditablePrimary.IsChanged{
+    background-color: #FFE6E6;
+}
+.handsontable td.IsEditablePrimary.IsChanged.IsChangedBySave,.handsontable td.IsEditablePrimary.IsChangedBySave{
+    background-color: #D1FFC6;
+}
+
+.handsontable td.IsChangedBySave{
+    background-color: #E0F3FF;
+}
+
+
+
+
+.CellDoc{
+    width: 1%;
+    background-color: maroon;
+    color: white;
+    padding: 0 4px 0 4px;
+    white-space: nowrap;
+}
+.CellType.PRM{
+    background-color: green;
+}
+.CellType.AF{
+    background-color: #B74635;
+}
+.CellType.FRM{
+    background-color: #ff892a;
+}
+.CellType{
+    width: 1%;
+    color: white;
+    padding: 0 4px 0 4px;
+    white-space: nowrap;
+}
+.CellName{
+	width: 1%;
+    background-color: #FCFCFC;
+    color: #716e6e;
+    padding: 0 4px 0 4px;
+    white-space: nowrap;
+}
+.hidden{
+    display: none!important;
+}
+
+i.fa.favicon{
+    color: orange;
+    font-size: 15px;
+    vertical-align: middle;
+}

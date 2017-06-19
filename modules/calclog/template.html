@@ -1,0 +1,70 @@
+<script id="app_calclog" type="text/html">
+	<div class="widget-box transparent" data-bind='with:MCalcLog'>
+		<div class="widget-header widget-header-flat">
+			<h4 class="widget-title lighter"><i class="ace-icon fa fa-calculator"></i>Расчетчик</h4>
+		</div>
+		<div class="widget-body" style="display: block;">
+			<div class="widget-main padding-4" style='height:auto' >
+				<div class="space-6"></div>
+				<div class="col-sm-4">
+					<div class="infobox infobox-green" style="width: 100%;" data-bind="css:{'infobox-green':$data.Queues()<5,'infobox-orange2':($data.Queues()<10 && $data.Queues()>=5),'infobox-red':$data.Queues()>=10}">
+						<div class="infobox-icon">
+							<i class="ace-icon fa fa-database"></i>
+						</div>
+						<div class="infobox-data" >
+							<span class="infobox-data-number" data-bind="text: $data.Queues"></span>
+							<div class="infobox-content" style="max-width: 100%;">Документов в очереди</div>
+						</div>
+							<a style='cursor:pointer;position: absolute;right: 5px;' data-bind="click:$data.ClearCache,css:{'unclickable':$data.IsClearCacheInProgress()}" class="btn btn-white btn-danger"  style='font-size: 13px;'>
+								<i class="ace-icon fa fa-trash bigger-60 " data-bind="css:{'faa-burst animated':$data.IsClearCacheInProgress()}"></i>
+								Очистить кэш
+							</a>
+					</div>
+				</div>
+				<div class="col-sm-8 pull-right">
+					<!-- ko foreach:Channels() -->
+					<div class="infobox  infobox-small infobox-dark" style='width:30px;height:30px;margin:5px;' data-bind='css:{"infobox-green":$data.State=="Ready","infobox-orange":$data.State=="Busy"}'>
+						<div class="infobox-progress"></div>
+					</div>
+					<!-- /ko -->
+				</div>
+				<div class="space-6"></div>
+				<div class="col-sm-12" style="margin-top: 20px;">
+					<table class="table table-bordered table-striped" data-bind="with: Log">
+						<thead class="thin-border-bottom">
+							<tr>
+								<th>Дата</th>
+								<th>Пользователь</th>
+								<th>Документ</th>
+								<th>Период</th>
+								<th>Организация</th>
+								<th>Длительность</th>
+							</tr>
+						</thead>
+
+						<tbody data-bind="foreach: $data">
+							<tr data-bind="css:{'success':$data.cache,'warning':!$data.cache}">
+								<td data-bind="text: date" width='120'></td>
+								<td  width='180'>
+									<!-- ko template:{name:'catalogue',data:{model:'user',id:User}} --><!-- /ko -->
+								</td>
+								<td  width='200'>
+									<!-- ko template:{name:'catalogue',data:{model:'doc',id:CodeDoc}} --><!-- /ko -->
+								</td>
+								<td  width='100'>
+									<!-- ko template:{name:'catalogue',data:{model:'period',id:CodePeriod}} --><!-- /ko -->
+									<span data-bind='text:Year'></span>
+								</td>
+								<td >
+									<!-- ko template:{name:'catalogue',data:{model:'obj',id:CodeObj}} --><!-- /ko -->
+								</td>
+								<td data-bind="text: time||''" width='80'></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</script>

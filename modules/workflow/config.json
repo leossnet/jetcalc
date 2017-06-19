@@ -1,0 +1,18 @@
+{
+  "id": "workflow",
+  "title": "Система блокировок",
+  "icon": "fa-code-fork",
+  "is_enabled": true,
+  "class_name": "Workflow",
+  "params": "has_tool_button",
+  "places":{
+      "toolbutton"  : true
+  },  
+  "permissions":[
+  		"IsOverKPBlocker",
+  		"IsOverPeriodBlocker",
+  		"IsOverDocBlocker",
+  		"IsOverFilesBlocker"
+  ],
+  "initial_load":true
+}

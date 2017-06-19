@@ -1,0 +1,15 @@
+{
+  "id": "modules",
+  "title": "Модули",
+  "icon": "fa-th-large",
+  "is_enabled": true,
+  "class_name": "Modules",
+  "places": {
+      "adminpage": true
+  },  
+  "permissions" : [
+      "IsModulesAdmin",
+      "IsModelsAdmin"
+  ],
+  "sort_index":1100
+}

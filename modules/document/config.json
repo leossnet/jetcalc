@@ -1,0 +1,18 @@
+{
+  "id": "document",
+  "title": "Документы",
+  "icon": "fa-file-o",
+  "class_name": "Document",
+  "is_enabled": true,
+  "type":"adminpage",
+  "places":{
+      "adminpage"  : true
+  },
+  "permissions" : [
+  		"IsDocumentCreator"
+  ],
+   "permissionsModels":{
+      "IsDocumentCreator":["role","docfolder","label","doctype","doc"]
+  },
+  "sort_index":60
+}

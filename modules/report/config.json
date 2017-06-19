@@ -1,0 +1,11 @@
+{
+  "id": "report",
+  "title": "Отчет",
+  "icon": "fa-chart",
+  "class_name":"Report",
+  "is_enabled": true,
+  "sort_index": 10,
+  "places":{
+      "documentpage"  : true
+  }
+}

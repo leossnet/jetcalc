@@ -1,0 +1,15 @@
+{
+  "id": "adminpage",
+  "title": "Администрирование",
+  "icon": "fa-wrench",
+  "is_enabled": true,
+  "class_name": "AdminPage",
+  "places":{
+      "topmenu"  : true,
+      "singlepage"  : true
+  },
+  "sort_index":3,
+  "pages":[
+    {"id": "adminpage", "breadcrumbs":{"path":"/adminpage","title":"Администрирование"}}
+  ]
+}

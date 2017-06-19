@@ -1,0 +1,10 @@
+{
+  "id": "calculator",
+  "title": "Расчетчик",
+  "icon": "fa-code-fork",
+  "is_enabled": true,
+  "class_name": "BlankDocument",
+  "pages":[
+  		{"id":"docview"}
+  ]
+}

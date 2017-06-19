@@ -1,0 +1,15 @@
+{
+  "id": "documenteditor",
+  "title": "Редактирование документа",
+  "icon": "fa-sliders",
+  "class_name":"DocumentEditor",
+  "is_enabled": true,
+  "sort_index": 40,
+  "places":{
+      "documentpage"  : true
+  },  
+  "permissions" : [
+  		"IsDocumentDesigner"
+  ],
+  "initial_load":true
+}

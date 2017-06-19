@@ -1,0 +1,21 @@
+{
+  "id": "columns",
+  "title": "Колонки",
+  "icon": "fa-columns",
+  "class_name": "Columns",
+  "is_enabled": true,
+  "type":"adminpage",
+  "places":{
+      "adminpage"  : true
+  },
+  "permissions" : [
+  		"IsColumnEditor",
+      "IsColsetEditor",
+      "IsHeaderEditor"
+  ],
+   "permissionsModels":{
+      "IsColumnEditor":["col"],
+      "IsColsetEditor":["colset","colsetcol"],
+      "IsHeaderEditor":["header"]
+  }
+}

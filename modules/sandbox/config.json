@@ -1,0 +1,17 @@
+{
+  "id": "sandbox",
+  "title": "Режим Песочница",
+  "icon": "fa-chain-broken",
+  "class_name":"SandBox",
+  "is_enabled": true,
+  "beforeShow":"MSandBox.LoadSandboxObjects",
+   "places":{
+      "topmenu"   : true,
+      "adminpage" : false
+  },
+  "sort_index":2,
+  "initial_load":true,
+  "pages":[
+     {"id":"commit"}
+   ]
+}

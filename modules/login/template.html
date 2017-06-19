@@ -1,0 +1,242 @@
+<script id="login_topmenu" type="text/html">
+	<li class="light-blue" data-bind="with:MSite.Me">
+		<a data-toggle="dropdown" class="dropdown-toggle">
+			<span data-bind="user_avatar:$data.UserPhoto"></span>
+			<span class="label onlinestatus" data-bind='css:{"label-success":MSocket.IsOnline(),"label-warning":!MSocket.IsOnline()}'> </span>
+			<span class="user-info">
+				<span data-bind="text:$data.NameUser"></span>
+				<small data-bind="text:$data.JobTitle"></small>
+			</span>
+			<i class="ace-icon fa fa-caret-down"></i>
+		</a>
+		<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close" >
+			<li>
+				<a data-bind='page-href:"/profile"'><i class="ace-icon fa fa-user"></i>Профиль</a>
+			</li>
+			<li class="divider"></li>
+			<li>
+				<a data-bind="click:MLogin.Logout"><i class="ace-icon fa fa-power-off"></i>Выход</a>
+			</li>
+		</ul>
+	</li>
+</script>
+
+
+<script id="guest_page_login" type="text/html">
+	<div class="widget-main">
+		<h4 class="header blue lighter bigger">Авторизация Логин/Пароль</h4>
+		<div class="space-6"></div>
+		<form data-bind="submit:Login">
+			<fieldset>
+				<label class="block clearfix" >
+					<span class="block input-icon input-icon-right">
+						<input name="loginUsername" class="form-control" data-bind="value:LoginUser" placeholder="Пользователь" autofocus  required />
+						<i class="ace-icon  fa fa-envelope"></i>
+					</span>
+				</label>
+				<label class="block clearfix">
+					<span class="block input-icon input-icon-right">
+						<input type="password" name="loginPassword" class="form-control" data-bind="value:Password" placeholder="Пароль" required />
+						<i class="ace-icon fa fa-lock"></i>
+					</span>
+				</label>
+				<!-- ko template:"guest_page_error" --><!-- /ko -->
+				<div class="space"></div>
+				<label class="inline">
+					<input type="checkbox" class="ace" data-bind="checked:AlienDevice">
+					<span class="lbl"> Чужой компьютер</span>
+				</label>
+						<button type="submit" class="pull-right btn btn-sm btn-primary btn-white"><span>Войти</span></button>
+				<div class="space-4"></div>
+			</fieldset>
+		</form>
+	</div>
+	<!-- ko template:{name:"guest_page_footer",data:['Recover','Signup']} --><!-- /ko -->		
+</script>
+
+<script id="guest_page_setpassword" type="text/html">
+	<div class="widget-main">
+		<h4 class="header orange lighter bigger">Установка нового пароля</h4>
+		<div class="space-6"></div>
+		<form data-bind="submit:$data.SetPassword">
+			<fieldset>
+				<label class="block clearfix">
+					<span class="block input-icon input-icon-right">
+						<input autocomplete="off" class="form-control" data-bind="value:$data.NewPassword,PasswordStrength:$data.NewPassword,valueUpdate:'afterkeydown'" placeholder="Новый пароль" autofocus type='password' required>
+					</span>
+				</label>
+				<label class="block clearfix">
+					<span class="block input-icon input-icon-right">
+						<input name="loginPasswordRepeat" class="form-control" data-bind="value:$data.NewPasswordRepeat" placeholder="Повторите пароль" type='password'   required>
+					</span>
+				</label>
+				<!-- ko template:"guest_page_error" --><!-- /ko -->
+				<div class="space"></div>
+				<div class="clearfix">
+					<button type="submit" class="width-70 pull-right btn btn-sm btn-primary btn-white">Сменить пароль</button>
+				</div>
+				<div class="space-4"></div>
+			</fieldset>
+		</form>      
+	</div>
+</script>
+
+<script id="guest_page_recover" type="text/html">
+	<div class="widget-main">
+		<h4 class="header blue lighter bigger">Восстановление пароля</h4>
+		<div class="space-6"></div>
+		<form data-bind="submit:$data.Recover">
+			<fieldset>
+				<label class="block clearfix" >
+					<span class="block input-icon input-icon-right">
+						<input name="loginEmail" class="form-control" data-bind="value:$data.Mail" placeholder="Email" autofocus  required>
+						<i class="ace-icon  fa fa-envelope"></i>
+					</span>
+				</label>
+				<!-- ko template:"guest_page_error" --><!-- /ko -->
+				<div class="space"></div>
+				<div class="clearfix">
+					<button type="submit" class="width-50 pull-right btn btn-sm btn-success btn-white">Выслать ссылку</button>
+				</div>
+				<div class="space-4"></div>
+			</fieldset>
+		</form>
+		<!-- /ko -->
+	</div>
+	<!-- ko template:{name:"guest_page_footer",data:['Login','Signup']} --><!-- /ko -->		
+</script>
+
+<script id="guest_page_reset_sent" type="text/html">
+	<div class="widget-main">
+		<h4 class="header blue lighter bigger">Восстановление пароля</h4>
+		<div class="space-6"></div>
+		<div class='mailprompt' data-bind='lang:"mailpromt"'></div>
+	</div>
+	<!-- ko template:{name:"guest_page_footer",data:['Login','Signup']} --><!-- /ko -->		
+</script>
+
+<script id="guest_page_reset_error" type="text/html">
+	<div class="widget-main">
+		<h4 class="header blue lighter bigger">Восстановление пароля</h4>
+		<div class="space-6"></div>
+		<div class='mailprompt' data-bind='lang:"mailerrorpromt"'></div>
+	</div>
+	<!-- ko template:{name:"guest_page_footer",data:['Login','Signup']} --><!-- /ko -->		
+</script>
+
+<script id="guest_page_signup_sent" type="text/html">
+	<div class="widget-main">
+		<h4 class="header blue lighter bigger">Заявка на регистрацию</h4>
+		<div class="space-6"></div>
+		<div class='mailprompt' data-bind='lang:"signuppromt"'></div>
+	</div>
+	<!-- ko template:{name:"guest_page_footer",data:['Login','Recover']} --><!-- /ko -->		
+</script>		
+
+<script id="guest_page_signup_success" type="text/html">
+	<div class="widget-main">
+		<h4 class="header blue lighter bigger">Заявка на регистрацию</h4>
+		<div class="space-6"></div>
+		<div class='mailprompt' data-bind='lang:"signuppromtsuccess"'></div>
+	</div>
+	<!-- ko template:{name:"guest_page_footer",data:['Login','Recover']} --><!-- /ko -->		
+</script>						
+
+<script id="guest_page_signup_error" type="text/html">
+	<div class="widget-main">
+		<h4 class="header blue lighter bigger">Заявка на регистрацию</h4>
+		<div class="space-6"></div>
+		<div class='mailprompt' data-bind='lang:"signuperrorpromt"'></div>
+	</div>
+	<!-- ko template:{name:"guest_page_footer",data:['Login','Recover']} --><!-- /ko -->		
+</script>
+
+<script id="guest_page_error" type="text/html">
+	<div class="has-error" data-bind="with:MLogin.Error">
+		<div class="help-block col-xs-12 col-sm-reset inline" data-bind="model:'login',lang:$data"></div>
+	</div>	
+</script>
+
+
+
+<script id="guest_page_signup" type="text/html">
+	<div class="widget-main">
+		<div class='row'>
+			<div class='col-xs-6'>
+				<!-- ko template:{
+					name:'small_form_with_header',
+					data:{Name:'Заявка на регистрацию',Fields:$data.RequestFields,Model:$data.Request}
+				} --><!-- /ko -->
+				<div class='alert alert-warning'>
+					Все поля в форме (кроме Комментария) - обязательны для заполнения.
+				</div>
+				<!-- ko template:"guest_page_error" --><!-- /ko -->
+				<button type="submit" class="pull-right btn btn-sm btn-success btn-white" data-bind='click:Signup'>Отправить заявку</button>
+			</div>
+			<div class='col-xs-6'>
+			<h3 class="row header smaller lighter blue" data-bind="lang:$data.Name">Инструкция по заполнению</h3>
+			<div class='registerprompt'>
+				<ol>
+					<li>
+						Заполните форму заявки. В поле Организация укажите предприятие либо дивизион, к данным которого нужно получить доступ, в текстовом виде.
+					</li>
+					<li>
+						Для того, чтобы ваша заявка поступила в обработку, вам необходимо будет подтвердить указанный адрес электронной почты.
+					</li>
+					<li>
+						После подтверждения почтового адреса, администратор назначит права для вашей учетной записи и вышлет на ваш почтовый адрес ссылку для завершения регистрации.
+					</li>
+				</ol>
+			</div>			
+			</div>
+		</div>
+	</div>
+	<!-- ko template:{name:"guest_page_footer",data:['Login','Recover']} --><!-- /ko -->
+</script>
+
+<script id="guest_page_footer" type="text/html">
+	<div class="toolbar clearfix row">
+		<!-- ko foreach:$data -->
+			<div class='col-xs-6' >
+				<a data-bind='click:$parents[1].Mode' style='color:#F7F7F7'>
+					<span data-bind='model:"login",text:Tr($data)'></span>
+				</a>
+			</div>											
+			<!-- /ko -->
+		<!-- /ko -->
+	</div>
+</script>
+
+<div class="modal fade" id="passChangeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" data-bind='with:MLogin'>
+    <div class="modal-content">
+  	  <div class="widget-main">
+		<h4 class="header orange lighter bigger">Установка нового пароля</h4>
+		<div class="space-6"></div>
+		<form data-bind="submit:$data.ChangePassword">
+			<fieldset>
+				<label class="block clearfix">
+					<span class="block input-icon input-icon-right">
+						<input autocomplete="off" class="form-control" data-bind="value:$data.NewPassword,PasswordStrength:$data.NewPassword,valueUpdate:'afterkeydown'" placeholder="Новый пароль" autofocus type='password' required>
+					</span>
+				</label>
+				<label class="block clearfix">
+					<span class="block input-icon input-icon-right">
+						<input name="loginPasswordRepeat" class="form-control" data-bind="value:$data.NewPasswordRepeat" placeholder="Повторите пароль" type='password'   required>
+					</span>
+				</label>
+				<!-- ko template:"guest_page_error" --><!-- /ko -->
+				<div class="space"></div>
+				<div class="clearfix">
+					<button type="submit" class="pull-right btn btn-sm btn-primary btn-white">Сменить пароль</button>
+				</div>
+				<div class="space-4"></div>
+			</fieldset>
+		</form>      
+	</div>
+    </div>
+  </div>
+</div>
+
+
+	

@@ -1,0 +1,12 @@
+{
+  "id": "chart",
+  "title": "График",
+  "icon": "fa-chart",
+  "type":"documentpage",
+  "class_name":"Chart",
+  "is_enabled": true,
+   "places":{
+      "documentpage"  : true
+  },  
+  "sort_index": 20
+}

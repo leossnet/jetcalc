@@ -1,0 +1,18 @@
+{
+	"document":"Документ",
+	"IsExtended":"Дополн.",
+	"NameRole":"Нзв.Роли",
+	"Docs":"Список",
+	"Folders":"Папки",
+	"NameDocFolder":"Нзв.Папки",
+	"CodeLabel":"Код.Подписи",
+	"Link_docfolderdoc":"Папки расположения",
+	"Link_docrow":"Корневые узлы",
+	"NameLabel":"Нзв.Подписи",
+	"SNameLabel":"Кр.Нзв.Подписи",
+	"NameDocType":"Нзв.Типа",
+	"CodeParentDocFolder":"Код.Рдт.Папки",
+	"IndexDocFolder":"Индекс",
+	"Icon":"Иконка",
+	"IsDocumentCreator":"Управление документами"
+}

@@ -1,0 +1,111 @@
+.m10_p5{
+    margin: 10px;
+    padding: 5px;
+}
+tr.selected td{
+	background-color: #FFF4D2!important;
+}
+td.tdnowrap{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 1px;
+}
+
+tr.clickable{
+	cursor: pointer;
+}
+tr.subheader{
+	background-color:#D9EDF7!important;
+	color:#31708F; 
+}
+table.permission-table tr{
+	
+}
+table.permission-table td,table.permission-table th{
+	padding:5px;
+}
+.permsSelector .btn-colorpicker{
+	width:15px;
+	height: 15px;
+}
+
+.permsSelector .colorpick-btn.None{
+    border: 1px solid #ddd;
+}
+
+.permsSelector .colorpick-btn.DoRead{
+    background-color: #16a765;
+}
+.permsSelector .colorpick-btn.DoWrite{
+    background-color: #4986e7;
+}
+.permsSelector .colorpick-btn.DoBlock{
+    background-color: #ffad46;
+}
+
+.permsSelector .dropdown-menu {
+    min-width: 110px;
+}
+
+.permsSelector.dropdown-colorpicker>.dropdown-menu {
+    
+}
+.label.label-empty{background-color: white;border:1px solid #CFCFCF;}
+.permits .label{width:15px!important;height:15px!important;font-size: 5px;}
+.permissionLegend .legendRow{margin-top:10px;}
+.permissionLegend .legendRow .info{position: absolute;}
+.permissionLegend .label{margin-right:10px;}
+
+tr.permit{
+	color: #828282!important;
+}
+tr.permit.private{
+	color: #A94442!important;
+}
+tr.permit.public{
+	color: #87B87F!important;
+}
+.btn-permit-add{
+	text-transform: none;
+	margin:5px;
+}
+.float-right{
+	float:right;
+}
+.split-bottom{
+	padding-bottom: 20px;
+    border-bottom: 1px solid #F0F0F0;
+    margin-bottom: 20px;
+}
+
+.btn-group input.nav-search-input{
+    padding: 1px;
+    line-height: 19px;
+    margin: 0px;
+    vertical-align: middle;
+    padding-left: 25px;
+    font-size: 13px;
+}
+div.btn-group>.input-icon>.ace-icon {
+	top: -4px;
+}
+
+.permitRow{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 300px;
+    overflow: hidden;
+
+}
+.permitRow div.dropdown.permsSelector{
+    display: inline;
+}
+
+.scrollable_col{
+    height: 90%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 30px!important;
+}
+

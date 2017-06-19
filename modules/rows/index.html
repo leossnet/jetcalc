@@ -1,0 +1,23 @@
+<div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MRows'>
+    <!-- ko template:'tb_simple_loader' --><!-- /ko -->
+    <!-- ko template:'model_edit_buttons' --><!-- /ko -->
+	<!-- ko template:'model_edit_search' --><!-- /ko -->        
+</div>
+
+<div class="row adminbody" data-bind="with:MRows">
+	<div  class='scrollable_page admin_page' >
+		<div class='row'><!-- ko template: 'inline_error' --><!-- /ko --></div>
+		<!-- ko template:'model_edit' --><!-- /ko -->
+
+	</div>
+</div>
+
+<div class="bottomPannel" data-bind="with:MRows">
+	<ul class="toolPanel nav nav-tabs background-blue">
+		<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-sitemap',title:'Корневые узлы',mode:'Root'}} --><!-- /ko -->    	
+		<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-dashboard',title:'Единицы измерения',mode:'Measure'}} --><!-- /ko -->    	
+		<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-hashtag',title:'Формат',mode:'Format'}} --><!-- /ko -->    	
+		<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-css3',title:'Стиль',mode:'Style'}} --><!-- /ko -->    	
+		<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-tag',title:'Тэги',mode:'Tags'}} --><!-- /ko -->    	
+	</ul>
+</div>

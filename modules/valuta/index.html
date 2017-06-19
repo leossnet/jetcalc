@@ -1,0 +1,67 @@
+<div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MValuta'>
+	<!-- ko if:Mode()=='Valutas' -->
+	    <!-- ko template:'tb_simple_loader' --><!-- /ko -->
+	    <!-- ko template:'model_edit_buttons' --><!-- /ko -->
+	    <!-- ko template:'model_edit_search' --><!-- /ko -->
+	<!-- /ko -->
+	<!-- ko if:Mode()=='ValutaRates' -->
+    <!-- ko template:'save_changes' --><!-- /ko -->
+ 		<div class="btn-group">
+            <a class="btn btn-sm btn-white btn-primary dropdown-toggle" data-toggle="dropdown">
+              <span data-bind="text: $data.Year()"></span>
+              <i class="fa fa-angle-down icon-on-right fa-light"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-light dropdown-caret">
+                <!-- ko foreach:Catalogue.GetAll('year') -->
+                <li>
+                  <a data-bind="click: $parent.UpdateYear.bind(null,$data.id)">
+                    <span data-bind="text: $data.name"></span>
+                  </a>
+                </li>
+               <!-- /ko -->
+           </ul>
+       </div>
+ 		<div class="btn-group">
+            <a class="btn btn-sm btn-white btn-primary dropdown-toggle" data-toggle="dropdown">
+              <span data-bind="text: $data.RateValuta()"></span>
+              <i class="fa fa-angle-down icon-on-right fa-light"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-light dropdown-caret">
+                <!-- ko foreach:$data.Valutas() -->
+                <li>
+                  <a data-bind="click: $parent.UpdateRateValuta.bind(null,$data.CodeValuta)">
+                    <span data-bind="text: $data.SNameValuta"></span>
+                  </a>
+                </li>
+               <!-- /ko -->
+           </ul>
+       </div>
+       <div class="btn-group">
+            <a class="btn btn-sm btn-white btn-primary" data-bind='click:MValuta.Sync'>
+              <i class="fa fa-refresh"></i>
+              <span data-bind='lang:"CBRF"'></span>
+            </a>
+       </div>
+       
+       
+	<!-- /ko -->
+</div>
+
+<div class="row adminbody" data-bind="with:MValuta">
+	<div  class='scrollable_page admin_page' >
+		<div class='row'><!-- ko template: 'inline_error' --><!-- /ko --></div>
+		<!-- ko if:Mode()=='Valutas' -->
+			<!-- ko template:'model_edit' --><!-- /ko -->
+		<!-- /ko -->
+		<!-- ko if:Mode()=='ValutaRates' -->
+ 		<div class="valutarate" ></div>    
+		<!-- /ko -->
+	</div>
+</div>
+
+<div class="bottomPannel" data-bind="with:MValuta">
+	<ul class="toolPanel nav nav-tabs background-blue">
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-money',title:'Валюта',mode:'Valutas'}} --><!-- /ko -->    	
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-line-chart',title:'Курсы валют',mode:'ValutaRates'}} --><!-- /ko -->    	
+	</ul>
+</div>

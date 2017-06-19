@@ -1,0 +1,19 @@
+{
+  "id": "workflowsettings",
+  "title": "Процессы",
+  "icon": "fa-handshake-o",
+  "class_name": "WorkFlowSettings",
+  "beforeShow": "MWorkFlowSettings.BeforeShow",
+  "is_enabled": true,
+  "type":"adminpage",
+  "places":{
+      "adminpage"  : true
+  },
+  "permissions" : [
+  		"IsWorkFlowTunner"
+  ],
+  "permissionsModels":{
+      "IsWorkFlowTunner":["route","routecheckperiod","routefiletype","routeperiod","routerefperiod","docpacket","state","filetype"]
+  },
+  "sort_index":40
+}

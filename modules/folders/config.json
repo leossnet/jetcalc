@@ -1,0 +1,16 @@
+{
+  "id": "folders",
+  "title": "Список документов",
+  "icon": "fa-code-fork",
+  "is_enabled": true,
+  "class_name": "Folders",
+  "places":{
+      "leftmenu"  : true
+  },  
+  "initial_load":true, 
+  "permissions":[
+  		"IsDesigner",
+  		"IsTester"
+  ]
+  ,"sort_index":5
+}

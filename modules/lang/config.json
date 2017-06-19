@@ -1,0 +1,10 @@
+{
+  "id": "lang",
+  "title": "Список документов",
+  "icon": "fa-code-fork",
+  "is_enabled": true,
+  "class_name": "Lang",
+  "type":"leftmenu",
+  "initial_load":true,
+  "guest_load":true
+}

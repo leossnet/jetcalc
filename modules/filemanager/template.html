@@ -1,0 +1,17 @@
+<div class="modal fade" id="attachPreviewPdf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document" data-bind='with:MFileManager'>
+    <div class="modal-content" data-bind='with:ChoosenAttach' style='width: 1024;height: 600;'>
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" data-bind='text:$data.NameFile'></h4>
+      </div>    
+      <div class="modal-body" >
+          <div class='row' style='height: 100%;'>
+            <!-- ko if:$parent.IsPDFPreview() -->
+             <iframe data-bind="attr:{src:'/api/gfs/'+$data.PDF()}" class='attachIframe'></iframe>
+            <!-- /ko -->
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

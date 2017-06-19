@@ -1,0 +1,10 @@
+{
+  "id": "breadcrumbs",
+  "title": "Хлебные крошки",
+  "icon": "fa-code-fork",
+  "is_enabled": true,
+  "class_name": "BreadCrumbs",
+  "initial_load":true,
+  "start_load":true,
+  "guest_load":true
+}

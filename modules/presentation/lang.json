@@ -1,0 +1,10 @@
+{
+	"IsLoop":"Зациклить",
+    "IsShowNavigation":"Показывать навигацию",
+    "IsAutoPlay":"Автовоспроизведение",
+    "AutoPlayInterval":"Интервал автовоспроизведения",
+    "CodePresentThema":"Тема",
+    "CodePresentTransitType":"Смена слайдов",
+    "PresentHeader":"Header",
+    "PresenFooter":"Footer"
+}

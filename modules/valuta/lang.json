@@ -1,0 +1,22 @@
+{
+	"IsValutaTuner":"Настройка валют",
+	"IsValutaRateOperator":"Курсы валют",
+	"CodeReportValuta":"Валюта 1",
+	"CodeReportValuta1":"Валюта 2",
+	"CodeReportValuta2":"Валюта 3",
+	"SNameValuta":"Название(кр)",
+	"ValutaRates":"Курсы валют",
+	"CodeValutaRate":"Код.Курса.Влт",
+	"Period":"Период",
+	"Valutas":"Справочник валют",
+	"CBRF":"Данные центробанка",
+	"CBRCode":"Код.Центробанка",
+	"IsReportValuta":"Отч.Валюта",
+	"IsReportValuta1":"Альт.Валюта1",
+	"IsReportValuta2":"Альт.Валюта2",
+	"KolEdValuta":"Кол-во",
+	"NoConversion":"Без.Конверсии",
+	"IsNone":"ПоУмолчанию",
+	"CodeValuta":"Код.Валюты",
+	"NameValuta":"Нзв.Валюты"
+}

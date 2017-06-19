@@ -1,0 +1,9 @@
+<script id="adminpage_topmenu" type="text/html">
+	<!-- ko if:AdminPage.IsAvailableFlag() -->
+	<li class="grey" data-bind="title:'Управление'">
+		<a data-bind="page-href:'/adminpage'" class="dropdown-toggle" id="adminpagebtn">
+			<i class="ace-icon fa fa-cogs" style="margin-top:12px;"></i>
+		</a>
+	</li>
+	<!-- /ko -->
+</script>

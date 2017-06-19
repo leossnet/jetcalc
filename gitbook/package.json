@@ -1,0 +1,12 @@
+{
+  "name": "gitbook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "plugins": ["-sharing"],
+  "author": "Dmitry Koviazin <dkoviazin@gmail.com> (https://www.facebook.com/dmitry.koviazin)",
+  "license": "ISC"
+}

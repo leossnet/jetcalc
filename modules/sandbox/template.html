@@ -1,0 +1,17 @@
+<script id='sandbox_topmenu' type="text/html">
+	<!-- ko with:MSandBox -->
+		<!-- ko if:ToSave() -->
+			<li class="noselect" data-bind="title:'Песочница',css:{'purple isOn':On(),'light-blue isOff':!On()}">
+				<a data-bind="click:Switch" class="dropdown-toggle">
+					<i class="ace-icon fa" style="margin-top:12px;" data-bind="css:{'fa-toggle-on':On(),'fa-toggle-off':!On()}"></i>
+				</a>
+			</li>
+			<li class="green noselect" data-bind="title:'Изменено объектов',css:{'isOn':On(),'isOff':!On()}">
+				<a class="dropdown-toggle" data-bind="page-href:'/adminpage/sandbox'" >
+					<i class="ace-icon fa fa-floppy-o" style="margin-top:12px;"></i>
+					<span class="badge badge-success" data-bind="text:ToSave"></span>
+				</a>
+			</li>
+		<!-- /ko -->
+	<!-- /ko -->
+</script>

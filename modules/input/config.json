@@ -1,0 +1,12 @@
+{
+  "id": "input",
+  "title": "Форма ввода",
+  "icon": "fa-chart",
+  "type":"documentpage",
+  "places":{
+      "documentpage"  : true
+  },
+  "class_name":"Input",
+  "is_enabled": true,
+  "sort_index": 20
+}

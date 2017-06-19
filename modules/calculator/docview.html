@@ -1,0 +1,22 @@
+<div data-bind="page: {id: '?', deep: true, nameParam: CxCtrl.CodeDoc, breadcrumbs: {path:'/', title:CxCtrl.DocTitle, subtitle: CxCtrl.PrintNumDoc}, afterShow:CxCtrl.AfterPageShow.bind(null,null)},css:{isloading:ModuleManager.IsLoading}">
+    <style id='LayoutCss'></style>
+    <!-- ko if:ModuleManager.IsLoaded() -->
+      <!-- ko if: MPrint.IsPrint() -->
+        <div data-bind="page: {id: '?', sourceOnShow: '/modules/print/index.html'}"></div>
+      <!-- /ko -->
+      <!-- ko ifnot: MPrint.IsPrint() -->
+        <div class="tabbable tabs-below">
+          <div class="tab-content">
+            <!-- ko foreach:ModuleManager.DocPagesWithParams() -->
+              <!-- ko if:ModuleManager.CheckAvailable($data) -->
+              <div class="tab-pane" data-bind="css:{'active': (CxCtrl.PageName() == $data.id)}">
+                <div data-bind="page: $data"></div>
+              </div>
+              <!-- /ko -->
+            <!-- /ko -->
+          </div>
+          <!-- ko template: 'toolPanel' --><!-- /ko -->
+        </div>
+       <!-- /ko -->
+    <!-- /ko -->
+</div>

@@ -1,0 +1,71 @@
+<div data-bind="page: {id: 'start', beforeShow:AdminPage.PageShow,   beforeHide:AdminPage.PageHide}">
+
+<!-- ko if:ModuleManager.Choosed() == 'adminpage' -->
+	<!-- ko foreach:ModuleManager.AdminPageInner() -->
+		<!-- ko if:ModuleManager.Modules[$data.class_name].IsAvailable() -->
+		<div class='row'>
+			<!-- ko template:'app_'+$data.id --><!-- /ko -->
+		</div>
+		<!-- /ko -->
+	<!-- /ko -->
+<!-- /ko -->
+
+<!-- ko if:false -->
+<!-- Вынести в модули -->
+
+<div class='row'>
+	<div class="widget-box transparent">
+		<div class="widget-header widget-header-flat">
+			<h4 class="widget-title lighter"><i class="ace-icon fa fa-database"></i>База данных</h4>
+		</div>
+		<div class="widget-body" style="display: block;">
+			<!-- ko with:m_admin.sqlProgress -->
+			<div class="col-xs-12">
+			    <br>
+			    <div class="progress progress-striped active">
+			        <div class="progress-bar progress-bar-success" data-bind="style: {'width': $data.step()+'%'}"></div>
+			    </div>
+			    <div class="progress progress-striped active">
+			        <div class="progress-bar progress-bar-warning" data-bind="style: {'width': $data.task()+'%'}"></div>
+			    </div>
+			    <div class='progress status' style='padding: 5px;height: 25px;background: white;border: 1px solid #CFCFCF;'>
+			    	<div class="message" data-bind='text:$data.text'>Синхронизация мета данных</div>
+			    </div>
+			</div>
+			<!-- /ko -->
+			<!-- ko with:m_admin.commitsInfo -->
+			<div class="col-xs-12">
+				<!-- ko foreach:$data -->
+					<p class='sqlString' data-bind='text:$data+";"'></p>
+				<!-- /ko -->
+			</div>
+			<!-- /ko -->
+			<div class="widget-main padding-4" style='height:auto'>
+				<a style='cursor:pointer;' data-bind="click:m_admin.syncMs,css:{'unclickable':m_admin.isSyncMs()}" class="btn btn-white btn-success"  style='font-size: 13px;'>
+					<i class="ace-icon fa fa-refresh bigger-60" data-bind="css:{'fa-spin':m_admin.isSyncMs()}"></i>Синхронизация с MSSQL
+				</a>
+				<a style='cursor:pointer;' data-bind="click:m_admin.showCommits" class="btn btn-white btn-info"  style='font-size: 13px;'>
+					<i class="ace-icon fa fa-calendar bigger-60"></i>История изменений
+				</a>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /ko -->
+
+
+
+
+
+</div>
+
+<!-- ko foreach:ModuleManager.AdminPagesWithParams() -->
+	<div class="screen adminpage" data-bind="page: $data,css:{isloading:ModuleManager.IsLoading}" ></div>
+<!-- /ko -->
+
+
+
+
+
+

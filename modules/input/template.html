@@ -1,0 +1,87 @@
+<script id="inputToolBar" type="text/html">
+    <div class="wysiwyg-toolbar btn-toolbar toolH" >
+      <!-- ko template:'tb_favorite' --><!-- /ko -->
+      <!-- ko template:'calculate_button' --><!-- /ko -->
+      <div class="btn-group">
+         <a class="btn btn-sm btn-white btn-success" data-bind="title:'Сохранить данные <u>Ctrl+S</u>',css: {'disabled':!MInput.Changes().length},click:MInput.SaveChanges">
+            <i class="fa fa-save"></i>
+          </a>
+          <a class="btn btn-sm btn-white btn-success btn-warning" data-bind="title:'Отменить все изменения', css:{'disabled':!MInput.Changes().length}, click:MInput.Undo">
+            <i class="fa fa-undo"></i>
+          </a>
+      </div>      
+      <!-- ko template:'tb_print' --><!-- /ko -->
+      <!-- ko template:'tb_colapse_expand' --><!-- /ko -->
+      <!-- ko template:'mode_round_expand' --><!-- /ko -->
+        <!-- <div class="btn-group">
+          <button class="btn btn-sm btn-warning btn-white" data-bind="title:'Вопросы по документу',click:m_form.chat.Toggle" >
+            <i class="fa fa-comment-o" ></i>
+          </button>
+        </div> 
+        -->
+      <!-- ko template:'plugin_buttons' --><!-- /ko -->
+    </div>
+</script>
+
+
+
+<!-- htable history info-->
+<div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">История ввода данных</h4>
+      </div>
+      <div class="modal-body">
+        <!-- ko if:MInput.HistoryData().length -->
+          <table class="table table-striped table-bordered dataTable" data-bind='with:MInput.HistoryData'>
+            <thead>
+              <tr>
+                <th data-bind="attr:{'colspan':CxCtrl.PageName()=='input'?2:1}">Значение</th><th>Дата</th><th>Автор</th>
+              </tr>
+            </thead>
+            <tbody data-bind='foreach:$data'>
+              <tr>
+                <!-- ko if:CxCtrl.PageName()=='input' -->
+                <td style="width: 10px;" >
+                  <div class="action-buttons">
+                      <!-- ko if:($data.CalcValue+'').length -->
+                      <a class="blue" data-bind="click: MInput.PasteValue.bind(null,$data.CalcValue)">
+                        <i class="fa fa-clipboard bigger-130" aria-hidden="true"></i>
+                      </a>
+                      <!-- /ko -->
+                      <!-- ko ifnot:($data.CalcValue+'').length -->
+                      <a class="blue" data-bind="click: MInput.PasteValue.bind(null,$data.Value)">
+                        <i class="fa fa-clipboard bigger-130" aria-hidden="true"></i>
+                      </a>
+                      <!-- /ko -->
+                  </div>
+                </td>
+                <!-- /ko -->
+                <td>
+                  <!-- ko if:($data.CalcValue+'').length -->
+                  <b data-bind='text:$data.CalcValue'></b>
+                  <!-- /ko -->
+                  <!-- ko ifnot:($data.CalcValue+'').length -->
+                  <b data-bind='text:Math.round($data.Value)'></b>
+                  <!-- /ko -->
+                </td>
+                <td data-bind='text:moment(_.first($data.DateEdit.split("."))).format("DD.MM.YYYY HH:mm:ss")'></td>
+                <td data-bind='text:$data.NameUser'></td>
+              </tr>
+            </tbody>
+          </table>
+        <!-- /ko -->
+        <!-- ko ifnot:MInput.HistoryData().length -->
+        <div class="alert alert-warning">
+            Данных по истории изменения - нет.
+        </div>
+        <!-- /ko -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="lang: 'close'"></button>
+      </div>
+    </div>
+  </div>
+</div>

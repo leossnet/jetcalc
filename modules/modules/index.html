@@ -1,0 +1,233 @@
+<div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MModules'>
+    <!-- ko template:'tb_simple_loader' --><!-- /ko -->
+
+    <!-- ko if:$data.Mode()=='ChooseModels' -->
+    <div class="btn-group">
+        <!-- ko if:MModules.Selected() -->
+        <a class='btn btn-sm btn-info btn-white' data-bind="click:$data.BuildModel" >
+            <i class="ace-icon fa fa-stack-overflow"></i>
+            Комплектация модели
+        </a>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+    <!-- ko if:$data.Mode()=='Settings' -->
+        <!-- ko template:'save_changes' --><!-- /ko -->
+        <div class="btn-group">
+            <a class='btn btn-sm btn-info btn-white' data-bind="click:$data.FindGitModules" >
+                <i class="ace-icon fa fa-refresh"></i>
+                Синхронизация модулей
+            </a>
+        </div>
+        <div class="btn-group">
+            <a class='btn btn-sm btn-info btn-white' data-bind="click:$data.SyncPriveleges" >
+                <i class="ace-icon fa fa-refresh"></i>
+                Синхронизация прав
+            </a>
+        </div>
+    <!-- /ko -->
+    <!-- ko if:$data.Mode()=='Issues' -->
+        <div class="btn-group" data-bind='foreach:["all","open","closed"]'>
+            <a class='btn btn-sm btn-info btn-white' data-bind="click:$parent.SetIssueState,model:'modules',lang:$data,css:{active:_.isEqual($data,$parent.IssueState())}" >
+            </a>
+        </div>        
+    <!-- /ko -->
+</div>
+
+
+<div class="row adminbody" data-bind="with:MModules" style='margin-top:50px;'>
+    <div>
+        <div class='row'><!-- ko template: 'inline_error' --><!-- /ko --></div>
+        
+        <!-- ko if:$data.Mode()=='ChooseModules' || $data.Mode()=='ChooseModels' -->
+        <div class="col-sm-6 infobox-container" data-bind='foreach:$data.GitModules'>
+            <div class="infobox unselectable" data-bind='click:MModules.SelectModule,css:{"infobox-green isselected":MModules.IsSelected($data),"infobox-blue":!MModules.IsSelected($data),"notinstalled":!$data.IsInstalled()}'>
+                <div class="infobox-icon" data-bind='svgencoded:$data.Icon'></div>
+                <div class="infobox-data" >
+                    <div class="infobox-data-number" data-bind='text:$data.ShortName'></div>
+                    <div class="infobox-content" data-bind='text:$data.Description'></div>
+                </div>
+                <!-- ko if:$data.IsInstalled() && !_.isEqual($data.InstalledVersion(),$data.Version()) -->
+                    <div class="stat stat-success"></div>
+                <!-- /ko -->
+            </div>            
+        </div>
+        <div class="col-sm-6 scrollable_col" data-bind='with:MModules.Selected'>
+            <div class='module-fullview'>
+                <div class='mgstatus mgadminlink' >
+                    <!-- ko ifnot:$data.IsInstalled() -->
+                        <div class='status notinstalled'>Не установлен</div>
+                        <a class='action doinstall' data-bind='click:MModules.InstallGitModule'>Установить</a>
+                    <!-- /ko -->
+                    <!-- ko if:$data.IsInstalled() -->
+                        <div class='status enabled'>Установлен</div>
+                        <a class='action update'  data-bind='click:MModules.UpdateGitModule'>Обновить</a>
+                        <a class='action uninstall' data-bind='click:MModules.UnInstallGitModule'>Удалить</a>
+                    <!-- /ko -->
+                </div>
+                <div class='mgicon' data-bind='svgencoded:$data.Icon'></div>
+                
+                    <div class='mgversion' >
+                        <!-- ko if:$data.IsInstalled() -->
+                            <span data-bind='text:$data.InstalledVersion'></span>
+                            <!-- ko ifnot:_.isEqual($data.InstalledVersion(),$data.Version()) -->
+                                (доступна <span data-bind='text:$data.Version'></span>)
+                            <!-- /ko -->
+                        <!-- /ko -->
+                        <!-- ko ifnot:$data.IsInstalled() -->
+                            <span  data-bind='text:$data.Version'></span>
+                        <!-- /ko -->
+                    </div>
+
+                <div class='mgreadme' data-bind='html:$data.ReadMe'></div>
+            </div>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if:MModules.Mode()=="Issues" -->
+            <div class='row'>
+                <div class="col-xs-12 col-sm-10 scrollable_col" >
+                    <!-- ko if:MModules.Issues().length -->
+                        <!-- ko foreach:MModules.Issues() -->                
+                            <!-- ko template:'msissue' --><!-- /ko -->
+                        <!-- /ko -->
+                    <!-- /ko -->
+                    <!-- ko ifnot:MModules.Issues().length  -->
+                        <!-- ko ifnot:MModules.IsLoading() -->
+                            <div class="well">
+                                Ошибок не найдено
+                            </div>                    
+                        <!-- /ko -->
+                    <!-- /ko -->
+                </div>
+            </div>
+
+        <!-- /ko --> 
+
+        <!-- ko if:$data.Mode()=='Settings' -->
+        	<div class='row'>
+                <div class="col-sm-6">
+
+                </div>
+                <div class="col-sm-6 " data-bind='with:MModules.Settings'>
+                    <!-- ko template:{
+                        name:'small_form_with_header',
+                        data:{Name:'Настройки GitHub',Fields:["usecron","RepoOwner","GitLogin","Password"],Model:$data}
+                    } --><!-- /ko -->                
+                    <!-- ko template:{
+                        name:'small_form_with_header',
+                        data:{Name:'Настройки Модулей',Fields:["DoBundle"],Model:$data}
+                    } --><!-- /ko -->                
+                </div>
+        	</div>
+        <!-- /ko -->
+    </div>
+</div>
+
+
+
+<div class="bottomPannel" data-bind="with:MModules">
+	<ul class="toolPanel nav nav-tabs background-blue">
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-database',title:'Выбор моделей',mode:'ChooseModels'}} --><!-- /ko -->        
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-th-large',title:'Выбор модулей',mode:'ChooseModules'}} --><!-- /ko -->    	
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-bug',title:'Трэкер ошибок',mode:'Issues'}} --><!-- /ko -->    	
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-wrench',title:'Настройки',mode:'Settings'}} --><!-- /ko -->    	
+	</ul>
+</div>
+
+
+
+
+
+<script id="msissue" type="text/html">
+  <ul class="milestones milestones-bordered-bottom">
+    <li class='relative'>
+      <h3 >
+          <span data-bind='text:Title'></span>
+          <!-- ko ifnot:_.isEmpty($data.Module()) -->
+          <span class='label  label-yellow label-module' data-bind='text:_.last($data.Module().split("jetcalc_"))'></span>
+          <!-- /ko -->
+      </h3>
+      <span class='msissue-date' >
+          <span data-bind='text:$data.UserName'></span> 
+          <span data-bind='moment:{date:$data.DateAdded,format:"DD.MM.YYYY"}'></span>
+      </span>
+      <a class='msissue-outer-link f-right' target='bugview' data-bind="attr:{href:$data.Url}">
+        <i class="fa fa-external-link"></i>
+      </a>
+      <div class='mslabels' data-bind='foreach:$data.Labels'>
+        <span class='label arrowed-right' data-bind='text:$data,css:MModules.Labels[$data]'></span>
+      </div>
+    </li>
+    <li>
+      <!-- ko if:$data.State()=='open' -->
+        <i class="milestone-danger fa fa-bug"></i>
+      <!-- /ko -->
+      <!-- ko if:$data.State()=='closed' -->
+        <i class="milestone-success fa fa-check"></i>
+      <!-- /ko -->
+      <span class='msissue-body' data-bind='html:$data.Body'></span>
+    </li>
+    <li>
+      <div   data-bind='foreach:$data.Comments()'>
+        <div class='relative'>
+            <div class='mscomments-info'> <span class='msissue-comment-user' data-bind='text:$data.UserName'></span> <span data-bind='moment:{date:$data.Date,format:"fromNow"}'></span></div>
+             <div data-bind='html:$data.Text'></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</script>
+
+
+
+<div class="modal fade" id="modelChoosePopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <!-- ko with: MModules.ModelsContent -->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" style='overflow: auto;'>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Выбор состава модели</h4>
+        </div>
+        <div class="modal-body">
+            <!-- ko foreach:_.keys($data) -->
+            <h4 data-bind='lang:$data'></h4>
+            <table class='table table-striped table-bordered table-hover dataTable'>
+              <tbody data-bind='foreach:$parent[$data]'>
+                  <tr>
+                    <td width="50px">
+                        <input class="ace ace-checkbox-2" type="checkbox" data-bind="checked: $data.Choosed" />
+                            <span class="lbl"></span>
+                        </td>
+                    <td>
+                        <span data-bind="text: $data[_.last(_.keys($data))]"></span>
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+            <!-- /ko -->
+        </div>
+        <div class="modal-footer">
+            <a style="cursor:pointer;" data-bind="click:MModules.ChooseAll" class="btn btn-white btn-success">
+              <i class="ace-icon fa fa-check bigger-60"></i>Выбрать все
+            </a>
+            <a style="cursor:pointer;" data-bind="click:MModules.ApplyModelChange" class="btn btn-white btn-info">
+              <i class="ace-icon fa fa-check bigger-60"></i>Применить
+            </a>
+        </div>
+    </div>
+  </div>
+ <!-- /ko -->
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

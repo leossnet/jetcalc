@@ -1,0 +1,6 @@
+.no-skin .nav-list>li .submenu>li.active:not(.open)>a{
+	background-color: #ffefe1;
+}
+li.active i.fa.fa-icon.fa-circle.fa-dot.left-block-icon{
+	color:orange;
+}

@@ -1,0 +1,74 @@
+<script id="tb_workflow" type="text/html">
+	<div class="btn-group" data-bind='with:Workflow.Actions,css:{disabled:!Workflow.IsBlockAllowed()}'>
+		<!-- ko foreach:$data -->
+		<a class='btn btn-sm btn-white' data-bind='css:$data.CodeFinalState,click:Workflow.Execute' >
+			<i class="fa fa-lock"></i>&nbsp;<span  data-bind='text:$data.NameRoute'></span>
+		</a>
+		<!-- /ko -->
+		<!-- ko if:$data.length -->
+		<a class='btn btn-sm btn-white btn-info' data-bind='click:Workflow.ShowHistory,title:"Показать историю"' >
+			<i class="fa fa-info-circle"></i>&nbsp;<span ></span>
+		</a>
+		<!-- /ko -->
+	</div>
+</script>
+
+
+
+<div class="modal fade" id="workflowInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Информация о смене статуса</h4>
+      </div>			  
+	      <div class="modal-body">
+			<table class="table table-bordered table-striped" data-bind="with: Workflow.ExecuteInfo">
+				<tbody data-bind="foreach: _.keys($data)">
+					<tr><td colspan=2 data-bind='lang:$data'></td></tr>
+					<tr data-bind="css:$parent[$data].Status">
+						<td data-bind="lang: $parent[$data].Status,css:$parent[$data].Status" style='white-space: nowrap'></td>
+						<td data-bind='text:$parent[$data].Info'></td>
+					</tr>
+				</tbody>
+			</table>      
+		  	<div class="modalbuttons">
+		  		<!-- ko if:Workflow.CheckPermissions() -->
+	      		<button class="btn btn-white btn-danger" data-bind="click:Workflow.ForceSave">
+	      			<i class="ace-icon fa fa-floppy-o bigger-120 red"></i><span data-bind="lang:'forsesave'"></span>
+	      			<!-- ko with:Workflow.CurrentAction -->
+	      			<span data-bind="text:$data.NameRoute"></span>
+	      			<!-- /ko -->
+	      		</button>
+	      		<!-- /ko -->
+	   		</div>
+	      </div>
+	  </div>
+	</div>
+</div>
+
+<div class="modal fade" id="workflowHistory" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">История смены статуса</h4>
+      </div>			  
+	      <div class="modal-body">
+			<table class="table table-bordered table-striped" data-bind="with: Workflow.History">
+				<tbody data-bind="foreach: $data">
+					<tr>
+						<td><!-- ko template:{name:'catalogue',data:{model:"state",id:$data["CodeStateFrom"]}} --><!-- /ko --></td>
+						<td><i class='fa fa-icon fa-long-arrow-right green'></i></td>
+						<td><!-- ko template:{name:'catalogue',data:{model:"state",id:$data["CodeStateTo"]}} --><!-- /ko --></td>
+						<td><!-- ko template:{name:'catalogue_withcode',data:{model:"period",id:$data["CodePeriod"]}} --><!-- /ko --></td>
+						<td data-bind='text:$data["YearData"]'></td>
+						<td><!-- ko template:{name:'catalogue',data:{model:"user",id:$data["UserEdit"]}} --><!-- /ko --></td>
+						<td data-bind='date:{value:$data["DateEdit"],format:"YYYY-MM-DD HH:mm"}'></td>
+					</tr>
+				</tbody>
+			</table>      
+	      </div>
+	  </div>
+	</div>
+</div>

@@ -1,0 +1,33 @@
+.addLinkModel {
+    color: #CFCFCF;
+    text-decoration: underline;
+    float: right;
+}
+.profile-info-value{
+	position: relative;
+}
+.profile-info-value .fa.fa-icon.orange.preview-icon{
+	position: absolute;
+    left: 15px;
+    top: 5px;
+    font-size: 20px;
+}
+.profile-info-value input.icon-editor{
+	margin-left: 40px;
+    width: 150px;
+}
+.progress-lines{
+    float: right;
+    font-size: 18px;
+    font-weight: bold;
+}
+.progress-message{
+    padding: 10px;
+    border: 1px solid #FAFAFA;
+    float: left;
+    color: gray;
+    width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

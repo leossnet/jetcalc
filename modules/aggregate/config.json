@@ -1,0 +1,10 @@
+{
+  "id": "aggregate",
+  "title": "Список объектов",
+  "icon": "fa-code-fork",
+  "is_enabled": true,
+  "class_name": "Aggregate",
+  "initial_load":true, 
+  "type":"toolpanel",
+  "initial_load":true
+}

@@ -1,0 +1,12 @@
+{
+  "id": "favorites",
+  "title": "Избранное",
+  "icon": "fa-code-fork",
+  "is_enabled": true,
+  "class_name": "Favorites",
+  "places":{
+      "leftmenu"  : true
+  },  
+  "initial_load" : true,
+  "sort_index":2
+}

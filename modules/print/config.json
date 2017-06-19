@@ -1,0 +1,7 @@
+{
+  "id": "print",
+  "title": "Форма печати",
+  "icon": "fa-chart",
+  "class_name":"Print",
+  "is_enabled": true
+}

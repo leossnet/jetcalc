@@ -1,0 +1,16 @@
+body > div {
+    border: none!important;
+    page-break-after: always;
+    page-break-inside: avoid;
+    page-break-before: avoid;
+}
+
+* {
+    font-weight: normal!important;
+    background-color: white!important;
+    color: black!important;
+}
+
+.fa {
+    display: none!important;
+}

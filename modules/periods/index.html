@@ -1,0 +1,131 @@
+<div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MPeriods'>
+    <!-- ko template:'tb_simple_loader' --><!-- /ko -->
+    <!-- ko if:$data.IsModelEdit() -->
+    	<!-- ko template:'model_edit_buttons' --><!-- /ko -->
+    	<!-- ko template:'model_edit_search' --><!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if:Mode()=='PeriodEdit' -->
+        <div class="btn-group">
+            <a class="btn btn-sm btn-white btn-primary dropdown-toggle" data-toggle="dropdown">
+              <span data-bind="text: $data.Year()"></span>
+              <i class="fa fa-angle-down icon-on-right fa-light"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-light dropdown-caret">
+                <!-- ko foreach:Catalogue.GetAll('year') -->
+                <li>
+                  <a data-bind="click: $parent.UpdateYear.bind(null,$data.id)">
+                    <span data-bind="text: $data.name"></span>
+                  </a>
+                </li>
+               <!-- /ko -->
+           </ul>
+       </div>
+       <!-- ko template:'save_changes' --><!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if:Mode()=='PeriodMap' -->
+        <!-- ko template:'save_changes' --><!-- /ko -->
+    <!-- /ko -->
+</div>
+
+<div class="row adminbody" data-bind="with:MPeriods">
+	<div  >
+		<div class='row'><!-- ko template: 'inline_error' --><!-- /ko --></div>
+		<!-- ko if:$data.IsModelEdit() -->
+			<!-- ko template:'model_edit' --><!-- /ko -->
+		<!-- /ko -->
+        <!-- ko if:Mode()=='PeriodMap' -->
+        <div class='row' >
+            <table class="table table-striped table-bordered table-hover dataTable no-footer small-paddings" style='width: initial;margin: 10px;margin-bottom: 100px;'>
+                <tbody data-bind='foreach:MPeriods.MainPeriods'>
+                    <tr>
+                        <td data-bind='text:$data.CodePeriod'></td>
+                        <td data-bind='text:$data.NamePeriod'></td>
+                        <td >
+                            <table class="table openperiods table-striped table-bordered table-hover dataTable no-footer" style='min-width: 600px;'>
+                                <thead data-bind='if:MPeriods.LinkPeriods()[$data.CodePeriod()]().length'>
+                                    <tr>
+                                        <td>Индекс</td><td>Код.Периода</td><td>Смещ.Год</td><td>Опциональный</td><td></td>
+                                    </tr>
+                                </thead>
+                                <tbody >
+                                    <!-- ko foreach:MPeriods.LinkPeriods()[$data.CodePeriod()] -->
+                                    <tr>
+                                        <td><input type="text"  class='small_input' data-bind='value:$data.IndexReportPeriod'></input></td>
+                                        <td  style='min-width: 200px' >
+                                            <combobox-editor params="field:$data.CodeReportPeriod,fieldname:'Код.Периода',refmodel:'period',mainmodel:'reportperiods'">
+                                            </combobox-editor>
+
+                                        </td>
+                                        <td><input type="text" class='small_input' data-bind='value:$data.ReportYear'></input></td>
+                                        <td class='middle_check'><input type="checkbox"  class='ace ace-checkbox-2' data-bind='checked:$data.IsOptional'>
+                                            <span class="lbl"></span>
+                                        </input></td>
+                                        <td class='middle_check'>
+                                            <a data-bind="click:MPeriods.RemoveLinkPeriod.bind($data,$parent.CodePeriod())"><i class="fa fa-icon fa-times"></i></a>
+                                        </td>
+                                    </tr>                                    
+                                    <!-- /ko -->
+                                    <tr>
+                                        <td colspan=5>
+                                            <a class="addLinkModel" data-bind="click:MPeriods.AddLinkPeriod.bind(null,$data.CodePeriod())">Добавить период</a>
+                                        </td>
+                                    </tr>                                    
+                                </tbody>
+                            </table>                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- /ko -->
+        <!-- ko if:Mode()=='PeriodEdit' -->
+        <div class='row' data-bind='with:$data.Table'>
+            <!-- ko foreach: _.keys($data) -->
+            <div class='widget-box transparent'>
+                <div class="widget-header widget-header-flat"><h4 class="widget-title lighter">
+                    <!-- ko template:{name:'catalogue',data:{model:'periodgrp',id:$data}} --><!-- /ko -->
+                </h4></div>
+                <div class="widget-body" data-bind="with:$parent[$data]">
+                    <table class="table openperiods table-striped table-bordered table-hover dataTable no-footer" style='width: initial;'>
+                        <thead><tr>
+                            <th style='width:400px'>Роль</th>
+                            <!-- ko foreach:_.keys($data) -->
+                                <th>
+                                <!-- ko template:{name:'catalogue',data:{model:'period',id:$data}} --><!-- /ko -->
+                                (<span data-bind='text:$data'></span>)  
+                                </th>
+                            <!-- /ko -->
+                        </tr></thead>
+                        <tbody data-bind='foreach:MPeriods.Roles()'>
+                            <tr>
+                                <td >
+                                    <!-- ko template:{name:'catalogue_withcode',data:{model:'role',id:$data}} --><!-- /ko -->
+                                </td>
+                                <!-- ko foreach:_.keys(MPeriods.Table()[$parents[1]]) -->
+                                    <td  data-bind='css:$parents[1][$data][$parent]? "opened":"closed" '>
+                                        <label class="middle">
+                                            <input class="ace" type="checkbox" data-bind='checked:$parents[1][$data][$parent]'/>
+                                            <span class="lbl"></span>
+                                        </label>
+                                    </td>
+                                <!-- /ko -->
+                            </tr>
+                        </tbody>
+                    </table>                    
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>         
+        <!-- /ko -->
+	</div>
+</div>
+
+<div class="bottomPannel" data-bind="with:MPeriods">
+	<ul class="toolPanel nav nav-tabs background-blue">
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar',title:'Периоды',mode:'Periods'}} --><!-- /ko -->    	
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-folder-open-o',title:'Группы Периодов',mode:'PeriodGrps'}} --><!-- /ko -->    	
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-check-o',title:'Отк.Периоды',mode:'PeriodEdit'}} --><!-- /ko -->    	
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Доп.Периоды',mode:'PeriodMap'}} --><!-- /ko -->       
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-minus-o',title:'АвтоПрокачка.Периоды',mode:'PeriodAutoFill'}} --><!-- /ko -->    	
+	</ul>
+</div>

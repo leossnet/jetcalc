@@ -1,0 +1,138 @@
+.infobox>.infobox-data {
+    line-height: 16px;
+    min-width:150px;
+    padding-left: 5px;
+    top: -5px;
+}
+.infobox>.infobox-data>.infobox-data-number{
+    font-size: 15px;
+    text-transform: capitalize;
+}
+.infobox-container{
+    text-align: left;
+}
+.infobox .infobox-content {
+    font-size: 11px;
+    line-height: 11px;
+    margin-top: 5px;
+    color: #c1bfbf;
+}
+.infobox{
+    cursor: pointer;
+}
+.infobox>.stat {
+    top:5px;
+    right:2px;
+}
+.infobox.notinstalled .infobox-content,.infobox.notinstalled .infobox-icon{
+    opacity: .4;
+}
+.infobox.notinstalled .infobox-data-number{
+	color:#CFCFCF;
+}
+
+.infobox.infobox-green.isselected{
+    background-color: #F2F7F0;
+}
+
+.module-fullview{
+    border: 1px solid #efefef;
+    padding: 10px;
+}
+.module-fullview>.mgversion{
+    font-size: 15px;
+    font-weight: bold;
+    width: 40px;
+    padding: 5px;
+    white-space: nowrap;
+}
+.module-fullview>.mgicon{
+    width: 70px;
+    height: 70px;
+    float: right;
+    border: 1px solid #CFCFCF;
+    padding: 10px;
+    border-radius: 100%;
+}
+.module-fullview>.mgreadme{
+    line-height: 20px;
+}
+.mgstatus{
+    margin-bottom: 5px;
+}
+.mgstatus .status{
+    padding: 5px;
+    display: inline-block;
+}
+.mgstatus .status.notinstalled{
+    color:#D15B47;
+}
+.mgstatus .status.notenabled{
+    color:#DA5430;
+}
+.mgstatus .status.enabled{
+    color:#82AF6F;
+}
+.mgadminlink a.action{
+    border:1px solid #FAFAFA;
+    padding: 5px;
+    display: inline-block;
+    text-decoration: none;
+    opacity: .8;
+}
+.mgadminlink a.action:hover{
+    opacity: 1;
+}
+.mgadminlink a.action.doinstall{
+    background-color:#82AF6F;   
+    color:white;
+}
+.mgadminlink a.action.uninstall{
+    background-color:#D15B47;   
+    color:white;
+}
+.mgadminlink a.action.update{
+    background-color:#CB6FD7;   
+    color:white;    
+}
+.mgadminlink a.action.turnoff{
+    background-color:#D15B47;   
+    color:white;    
+}
+.mgadminlink a.action.turnon{
+    background-color:#82AF6F;   
+    color:white;    
+}
+.msissue-body{
+    font-size: 15px;
+    line-height: 20px;
+}
+h3 .label-module{
+    vertical-align: middle;
+    text-transform: capitalize;
+}
+.mslabels .label.label-success.arrowed-right:after {
+    right: -11px;
+    top: -1px;
+}
+.msissue-comment-user{
+    font-weight: bold;
+    color: #438eb9;
+}
+.relative{
+    position: relative;
+}
+.msissue-comment-date,.msissue-date{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    padding: 2px;
+    color: #CFCFCF;    
+}
+.msissue-date{
+    color:gray;
+}
+.mscomments-info{
+    color:gray;
+    margin-bottom: 5px;
+}

@@ -1,0 +1,24 @@
+select.htSelectEditor{
+  padding:0;
+}
+.htCore span.label.label-info.label-white.middle{
+    margin: 1px;
+    padding: 1px;
+    border: 1px solid #4e7a8f;
+    line-height: 15px;
+    font-size: 10px;
+    height: initial;
+    vertical-align: initial;
+}
+.htCheckboxRendererInput{
+	opacity: 0.3;
+}
+.htCheckboxRendererInput:checked{
+	opacity: 1;
+}
+.fa-stack-1x, .fa-stack-2x {
+    left: 12px;
+    top: 0px;
+    font-size: 7px;
+    color:orange;
+}

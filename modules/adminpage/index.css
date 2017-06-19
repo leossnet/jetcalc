@@ -1,0 +1,12 @@
+.adminpage .wysiwyg-toolbar.btn-toolbar.toolH{
+	position: fixed;
+	width: 100%;
+	top: 87px;
+}
+.adminpage .bottomPannel{
+	position: fixed;
+	width: 100%;
+}
+.adminpage .adminbody{
+	margin-top:35px;
+}

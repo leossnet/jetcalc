@@ -1,0 +1,9 @@
+{
+  "id": "context",
+  "title": "Контекст",
+  "icon": "fa-user-secret",
+  "is_enabled": true,
+  "class_name": "CxCtrl",
+  "type":"simple",
+  "places":{}
+}

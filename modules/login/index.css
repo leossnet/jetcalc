@@ -1,0 +1,61 @@
+.mailprompt{
+	line-height: 22px;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+input[type=password].p-none{
+	background-color: #FFFFFF;
+} 
+input[type=password].p-veryweak{
+	background-color: #F2DEDE;
+} 
+input[type=password].p-weak{
+	background-color: #F2DEDE;
+} 
+input[type=password].p-medium{
+	background-color: #FCF8E3;
+} 
+input[type=password].p-strong{
+	background-color: #DFF0D8;
+}
+.login-container.Signup{
+	width: 100%;
+}
+.profile-user-info.profile-user-info-striped{
+	background: white;
+}
+.registerprompt{
+	background: white;
+    line-height: 25px;
+    font-size: 15px;
+    padding: 15px;
+}
+.registerprompt li{
+	margin-bottom: 15px;
+}
+.registerprompt .attention{
+	color:maroon;
+}
+span.ace-file-input.ace-file-multiple>.ace-file-container>.ace-file-name   {
+	position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+.onlinestatus{
+    position: absolute;
+    left: 4px;
+    bottom: 5px;
+    height: 3px;
+    width: 15px;
+    line-height: 3px;
+    font-size: 3px;
+    height: 15px;
+    border-radius: 100%;
+    border: 2px solid white!important;
+}
+div.profile-info-value span.ace-file-container{
+    width: 150px;
+    height: 150px;
+}

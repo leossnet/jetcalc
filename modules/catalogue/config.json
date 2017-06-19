@@ -1,0 +1,8 @@
+{
+  "id": "catalogue",
+  "title": "Перевод",
+  "icon": "fa-calendar",
+  "class_name": "Catalogue",
+  "is_enabled": true,
+  "initial_load":true
+}

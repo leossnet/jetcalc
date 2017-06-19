@@ -1,0 +1,16 @@
+{
+  "id": "bitbucket",
+  "title": "Отслеживание репозитория",
+  "icon": "fa-code-fork",
+  "is_enabled": true,
+  "type":"adminpage",
+  "class_name":"BitBucket",
+  "places":{
+      "adminplugin"  : true
+  },  
+  "permissions" : [
+  		"IsGitAdmin"
+  ],
+  "initial_load":true,  
+  "sort_index":6
+}

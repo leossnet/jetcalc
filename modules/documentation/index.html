@@ -1,0 +1,64 @@
+<div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MDocumentation'>
+    <div class="btn-group" >
+    <!-- ko ifnot:EditMode() -->
+      <!-- ko ifnot:HasPage() -->
+        <a class='btn btn-sm btn-success btn-white ' data-bind="title:'Создать документ', click:NewPage">
+              <i class="ace-icon fa fa-file-text-o"></i>
+        </a>
+      <!-- /ko -->
+      <!-- ko if:HasPage() -->
+        <a class='btn btn-sm btn-success btn-white ' data-bind="title:'Редактировать документ', click:EditMode.bind(null,true)">
+              <i class="ace-icon fa fa-pencil-square-o"></i>
+        </a>
+      <!-- /ko -->
+    <!-- /ko -->
+      <a class='btn btn-sm btn-success btn-white ' data-bind="title:'Сохранить документ', click: SavePage">
+        <i class="ace-icon fa fa-save"></i>
+      </a>
+      <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Отменить изменения', click:LoadPage">
+        <i class="ace-icon fa fa-undo"></i>
+      </a>
+    </div>
+    <!-- ko with:MdeEditor.controls -->
+    <div class="btn-group" data-bind='if:$data.length'>
+        <label class='btn btn-sm btn-primary btn-white ' data-bind="title:'Вставить картинку'">
+          <input type="file" data-bind="documentationImage: {}" style='display:none;'/>
+          <i class="ace-icon fa fa-image" ></i>
+        </label>
+      <!-- ko foreach:$data -->
+        <a class='btn btn-sm btn-primary btn-white ' data-bind="title:$data.title, click:$data.action.bind(null,MdeEditor.editor)">
+          <i class="ace-icon " data-bind='css:$data.className'></i>
+        </a>
+      <!-- /ko -->
+    </div>
+    <!-- /ko -->
+    <div class="btn-group">
+       <a class='btn btn-sm btn-success btn-white ' data-bind="title:'Скачать PDF', attr:{href:$data.base+'/pdf'}">
+          <i class="ace-icon fa fa-file-pdf-o" ></i>
+       </a>
+       <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Скачать EPUB', attr:{href:$data.base+'/epub'}">
+          <i class="ace-icon fa fa-file-code-o" ></i>
+       </a>
+    </div>
+</div>
+
+<div class="intab-container"  data-bind="with:MDocumentation">
+  <!-- ko with: Error -->
+  <div class="alert alert-danger"><span data-bind="text:$data"></span></div>
+  <!-- /ko --> 
+  <div class='handsonContainer' style='background-color:transparent;' data-bind='with:MDocumentation'>
+    <!-- ko ifnot:EditMode() -->
+      <!-- ko ifnot:HasPage() -->
+        <div class='documentation_info'>Документации по данному разделу - пока нет</div>
+      <!-- /ko -->
+      <!-- ko if:HasPage() -->
+        <!-- ko with:Preview --> 
+            <div style='margin-left: 20px;' data-bind='html:$data'></div>
+        <!-- /ko -->          
+      <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if:EditMode() -->
+      <textarea data-bind='value:Page.Text,simplemde:Page.Text'></textarea>
+    <!-- /ko -->      
+  </div>
+</div>  

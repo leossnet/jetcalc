@@ -1,0 +1,208 @@
+<div class="intab-container" data-bind='with:MChart'>
+    <!-- ko template: 'chartToolBar' -->
+    <!-- /ko -->
+    <!-- ko template: 'contextBar' -->
+    <!-- /ko -->
+    <!-- ko template: 'inline_error' -->
+    <!-- /ko -->
+    <div class='handsonContainer'>
+        <div class="handsontable single chart"></div>
+    </div>
+    <div class='row'>
+        <div class='col-xs-8'>
+            <div class="handsonContainer" style="background-color: white;">
+                <div id='graphPreviewContainer'></div>
+            </div>
+        </div>
+        <div class='col-xs-4' style="height:80%;overflow-y:scroll">
+            <div class="graphAccordion accordion-style1 panel-group accordion-style2" style="margin-top:5px;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle">
+                                <h4 class="blue smaller small_header">
+                                    <span>Тип графика</span>
+                                </h4>
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse ">
+                        <div class="panel-body">
+                            <!-- ko foreach:['area', 'pie', 'radar', 'bar-line'] -->
+                            <span class='graph-choose' data-bind='css:{"current":MChart.Type()==$data},click:MChart.SetType'><img data-bind='attr:{"src":"/modules/chart/types/"+$data+".png"}'></img></span>
+                            <!-- /ko -->
+                        </div>
+                    </div>
+                </div>
+                <div data-bind="visible:MChart.Type() != 'radar'" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle ">
+                                <h4 class="blue smaller small_header">
+                                    <span>Настройка цвета</span>
+                                </h4>
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse ">
+                        <div class="panel-body">
+                            <table class='table table-bordered'>
+                                <thead>
+                                    <th>цвет</th>
+                                    <th>название</th>
+                                </thead>
+                                <tbody data-bind='foreach:_.keys(MChart.Colors())'>
+                                    <tr>
+                                        <td width=50px>
+                                            <select class='colorpicker' data-bind='value:MChart.Colors()[$data],options:MChart.PossibleColors,colorpicker_custom:{}'></select>
+                                        </td>
+                                        <td data-bind='text:$data'></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div data-bind="visible:MChart.Type() == 'radar'" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle ">
+                                <h4 class="blue smaller small_header">
+                                    <span>Настройка цвета</span>
+                                </h4>
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse ">
+                        <div class="panel-body">
+                            <table class='table table-bordered'>
+                                <thead>
+                                    <th>цвет</th>
+                                    <th>название</th>
+                                </thead>
+                                <tbody data-bind='foreach:_.keys(MChart.ColColors())'>
+                                    <tr>
+                                        <td width=50px>
+                                            <select class='colorpicker' data-bind='value:MChart.ColColors()[$data],options:MChart.PossibleColors,colorpicker_custom:{}'></select>
+                                        </td>
+                                        <td data-bind='text:$data'></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div data-bind="visible:MChart.Type() != 'radar' && MChart.Type() != 'area' && MChart.Type() != 'pie'" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle ">
+                                <h4 class="blue smaller small_header">
+                                    <span>Настройка данных</span>
+                                </h4>
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse ">
+                        <div class="panel-body">
+                            <table class='table table-bordered'>
+                                <thead>
+                                    <th>название</th>
+                                    <th data-bind='visible:MChart.Type()=="bar-line"'>тип</th>
+                                    <th style="width:50px" data-bind='visible:MChart.Type()=="bar-line"'>индекс оси y</th>
+                                </thead>
+                                <tbody data-bind='foreach:_.keys(MChart.Colors())'>
+                                    <tr>
+                                        <td data-bind='text:$data'></td>
+                                        <td data-bind='visible:MChart.Type()=="bar-line"'><select data-bind="value:MChart.RowTypes()[$data], options:MChart.RuPossibleRowTypes"></select></td>
+                                        <td data-bind='visible:MChart.Type()=="bar-line"'><input style="width:50px" type="number" min="1" max="2" data-bind="value:MChart.AxisIndexes()[$data]" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div data-bind="visible:MChart.Type() != 'radar' && MChart.Type() != 'pie'" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle ">
+                                <h4 class="blue smaller small_header">
+                                    <span>Настройка линий</span>
+                                </h4>
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse ">
+                        <div class="panel-body">
+                            <table class='table table-bordered'>
+                                <thead>
+                                    <th>название</th>
+                                    <th style="width:50px" data-bind='visible:MChart.Type()=="bar-line" || MChart.Type()=="area"'>пунктир</th>
+                                </thead>
+                                <tbody data-bind='foreach:_.keys(MChart.Colors())'>
+                                    <tr data-bind="visible:MChart.RowTypes()[$data]()!='столбец' || MChart.Type()=='area'">
+                                        <td data-bind='text:$data'></td>
+                                        <td style="vertical-align:middle;text-align:center;width:50px" data-bind='visible:MChart.Type()=="bar-line" || MChart.Type()=="area"'>
+                                            <input type="checkbox" data-bind="checked:MChart.Dotted()[$data]" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div data-bind="visible:MChart.Type() != 'radar' && MChart.Type() != 'area' && MChart.Type() != 'pie'" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle ">
+                                <h4 class="blue smaller small_header">
+                                    <span>Настройка столбцов</span>
+                                </h4>
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse ">
+                        <div class="panel-body">
+                            <table class='table table-bordered'>
+                                <thead>
+                                    <th>название</th>
+                                    <th style="width:50px" data-bind='visible:MChart.Type()=="bar-line"'>индекс колонки</th>
+                                </thead>
+                                <tbody data-bind='foreach:_.keys(MChart.Colors())'>
+                                    <tr data-bind="visible:MChart.RowTypes()[$data]()=='столбец'">
+                                        <td data-bind='text:$data'></td>
+                                        <td data-bind='visible:MChart.Type()=="bar-line"'>
+                                            <input style="width:50px" type="number" min="1" data-bind="value:MChart.SBIndexes()[$data]" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle ">
+                                <h4 class="blue smaller small_header">
+                                    Настройка графика
+                                </h4>
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse ">
+                        <div class="panel-body">
+                            <p data-bind="visible:MChart.Type()!='radar'"><input type="checkbox" data-bind="checked:MChart.ShowGridX"> Показывать сетку по горизонтали</p>
+                            <p data-bind="visible:MChart.Type()!='radar'"><input type="checkbox" data-bind="checked:MChart.ShowGridY"> Показывать сетку по вертикали</p>
+                            <p data-bind="visible:MChart.Type()=='radar'"><input type="checkbox" data-bind="checked:MChart.ShowGridY"> Показывать сетку</p>
+                            <p>Положение легенды <select data-bind="value:MChart.RuLegendPosition, options:MChart.PossibleLegendPositions"></select> </p>
+                            <p><input type="checkbox" data-bind="checked:MChart.Interaction"> Интерактивный график</p>
+                            <p><input type="checkbox" data-bind="checked:MChart.ShowValues"> Подписывать значения</p>
+                            <p data-bind="visible:MChart.Type()=='radar'"><input type="checkbox" data-bind="checked:MChart.DrawNull"> Рисовать 0</p>
+                            <p data-bind="visible:MChart.Type()=='area'"><input type="checkbox" data-bind="checked:MChart.AreaSpline"> Сглаживать</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

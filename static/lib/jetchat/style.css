@@ -1,0 +1,158 @@
+#messages {
+	/*	border-top: 1px solid #CDCDCD;*/
+	padding: 1em 0;
+}
+
+.jetteam-chat {
+	background: #fff;
+	padding: 1em;
+}
+
+.jetteam-chat .userpic {
+	display: block;
+	width: 3em;
+	height: 3em;
+	background-size: cover;
+	border-radius: 50%;
+	/*    float: left;*/
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.jetteam-chat .comment {
+	/*	background-color: rgba(0, 0, 0, 0.03);*/
+	/*	margin-top: 1em;*/
+	/*	padding: 0.5em 0.1em;*/
+}
+
+.jetteam-chat .comment .self > div {
+	/*	padding: 0.3em 1em;*/
+}
+
+.jetteam-chat .comment .self .heading .toggle {
+	margin-right: 0.5em;
+}
+
+.jetteam-chat .comment .self .heading .user {
+	/*    font-weight: 900;*/
+	color: #4B99DE;
+}
+
+.jetteam-chat .comment .self .heading .info {
+	/*    font-style: oblique;*/
+	color: #999;
+}
+
+.jetteam-chat .comment .self .body {
+	/*    font-size: 1.3em;*/
+	color: #333;
+	padding: 0.3em 0em;
+	line-height: 1.4em;
+	max-width: 50em;
+}
+
+.jetteam-chat .comment .self {
+	padding-left: 4em;
+	position: relative;
+	margin-bottom: 1em;
+}
+.jetteam-chat .comment .self.flat{
+	padding-left: 0.5em;
+}
+
+.jetteam-chat .comment .children.old {
+	padding: 0.5em 0.5em 0.5em 3.5em;
+}
+.jetteam-chat .comment .children{
+	padding: 0;
+}
+
+.jetteam-chat .comment .self .footing .voting {
+	color: #ccc;
+	display: none;
+}
+
+.jetteam-chat .replylink {
+	text-decoration: initial;
+	/* font-weight: 700; */
+	/* color: #778C92; */
+	/* color: #4B99DE; */
+	color: #999;
+	font-size: 0.9em;
+}
+.jetteam-chat .replylink:hover {
+	color: #666;
+}
+
+.jetteam-chat .comment .self:hover >.footing> .voting {
+	display: inline
+}
+
+.jetteam-chat .comment .self .footing .voting i:hover {
+	color: #999;
+}
+
+.jetteam-chat .comment-reply {margin-top: 1em}
+.jetteam-chat .rating {}
+
+.jetteam-chat .rating.pos {
+	color: green
+}
+
+.jetteam-chat .rating.neg {
+	color: maroon
+}
+
+.jetteam-chat .sendbtn {
+	background: #54B2EA;
+	padding: 0.7em 1em;
+	display: inline-block;
+	/* float: right; */
+	margin-top: .5em;
+	border-radius: 2px;
+	color: #fff;
+	cursor: pointer
+}
+
+.jetteam-chat .sendbtn:hover {
+	background: #3D9AD2;
+}
+
+.jetteam-chat .comment .self i {
+	cursor: pointer;
+	margin-left: 0.2em;
+}
+
+.jetteam-chat .textarea {
+	background-color: white;
+	border: 1px solid gray;
+	min-height: 5em;
+	max-width: 50em;
+	overflow: auto;
+	/*	width: 20em;*/
+	padding: 0.3em;
+	resize: horizontal;
+	/*	overflow: hidden;*/
+	/*	display: inline;*/
+	box-sizing: border-box;
+	width: 100%;
+	background-color: #fff;
+	white-space: pre-wrap;
+	font-size: 1em;
+	padding: 1em;
+	resize: none;
+	border-radius: 2px;
+	background-clip: padding-box;
+	word-wrap: break-word;
+	border: 1px solid #e1e4e6;
+	box-shadow: 0 0 1px rgba(0, 0, 0, .01), 0 2px 1px rgba(0, 0, 0, .04);
+	transition-property: height;
+	transition-duration: .25s;
+}
+
+[contenteditable=true]:empty:before{
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+	color: #aaa
+}

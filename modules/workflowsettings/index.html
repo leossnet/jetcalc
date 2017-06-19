@@ -1,0 +1,26 @@
+<div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MWorkFlowSettings'>
+    <!-- ko template:'tb_simple_loader' --><!-- /ko -->
+    <!-- ko template:'model_edit_buttons' --><!-- /ko -->
+    <!-- ko template:'model_edit_search' --><!-- /ko -->
+</div>
+
+<div class="row adminbody" data-bind="with:MWorkFlowSettings">
+	<div  class='scrollable_page admin_page' >
+		<div class='row'><!-- ko template: 'inline_error' --><!-- /ko --></div>
+		
+		<!-- ko template:'model_edit' --><!-- /ko -->
+
+	</div>
+</div>
+
+<div class="bottomPannel" data-bind="with:MWorkFlowSettings">
+	<ul class="toolPanel nav nav-tabs background-blue">
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-briefcase',title:'Состояния',mode:'States'}} --><!-- /ko -->    	
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-random',title:'Маршруты',mode:'Routes'}} --><!-- /ko -->    	
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-o',title:'Периоды маршрутов',mode:'AvPeriods'}} --><!-- /ko -->
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-o',title:'Зависимые периоды',mode:'CheckPeriods'}} --><!-- /ko -->
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-o',title:'Связанные периоды',mode:'RefPeriods'}} --><!-- /ko -->
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-paperclip',title:'Файлы',mode:'Attaches'}} --><!-- /ko -->
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-image',title:'Типы файлов',mode:'FileTypes'}} --><!-- /ko -->
+	</ul>
+</div>

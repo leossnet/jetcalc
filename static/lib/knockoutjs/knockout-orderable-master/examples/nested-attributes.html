@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Example with nested attributes | knockout.bindings.orderable.js </title>
+	<link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet">
+	<link href="./css/examples.css" rel="stylesheet">
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.2.0/knockout-min.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.3.4/knockout.mapping.js"></script>
+	<script type="text/javascript" src="../knockout.bindings.orderable.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			vm = ko.mapping.fromJS({
+				people: [
+					{firstName: "Mike", lastName: "Smith", pet: { type: "cat", name: "Mia" }},
+					{firstName: "Ben", lastName: "Miller", pet: { type: "dog", name: "Henry" }},
+					{firstName: "Rebecca", lastName: "Abbarno", pet: { type: "cat", name: "Klara" }},
+				]
+			});
+			ko.applyBindings(vm);
+		});
+	</script>
+</head>
+<body>
+	
+	<table class="table">
+		<thead>
+			<th><a href="#" data-bind="orderable: {collection: 'people', field: 'firstName'}">First Name</a></th>
+			<th><a href="#" data-bind="orderable: {collection: 'people', field: 'lastName'}">Last Name</a></th>
+			<th><a href="#" data-bind="orderable: {collection: 'people', field: 'pet.type', defaultField: true, defaultDirection: 'desc'}">Pet type</a></th>
+			<th><a href="#" data-bind="orderable: {collection: 'people', field: 'pet.name'}">Pet name</a></th>
+		</thead>
+		<tbody data-bind="foreach: people">
+			<tr>
+				<td data-bind="text: firstName"></td>
+				<td data-bind="text: lastName"></td>
+				<td data-bind="text: pet.type"></td>
+				<td data-bind="text: pet.name"></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

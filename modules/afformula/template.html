@@ -1,0 +1,18 @@
+<script id="tb_afformula" type="text/html">
+	
+	<!-- ko if:MAFFormula.IsSaveAvailable() -->
+	<div class="btn-group">
+		<!-- ko ifnot:MAFFormula.IsLoading() -->
+        <a class="btn btn-sm btn-warning btn-white" data-bind="title:'Прокачка данных',click:MAFFormula.Update" > 
+          <i class="fa fa-save" ></i>
+        </a>
+        <!-- /ko -->
+		<!-- ko if:MAFFormula.IsLoading() -->
+        <a class="btn btn-sm btn-info btn-white" data-bind="title:'Данные сохраняются'" > 
+          <i class="fa fa-save faa-burst animated" ></i>
+        </a>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+   	
+</script>

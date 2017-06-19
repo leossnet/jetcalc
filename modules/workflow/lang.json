@@ -1,0 +1,15 @@
+{
+	"skipped":"Пропущена",
+	"failed":"Не пройдена",
+	"passed":"Пройдена",
+	"forsesave":"Принудительно",
+	"CheckFiles":"Проверка файлов",
+	"CheckPeriods":"Зависимые периоды",
+	"CheckDocuments":"Зависимые документы",
+	"CheckControlPoints":"Контрольные точки",
+	"workflow":"Блокировка",
+	"IsOverKPBlocker":"Обход кт",
+	"IsOverPeriodBlocker":"Обход периодов",
+	"IsOverDocBlocker":"Обход документов",
+	"IsOverFilesBlocker":"Обход файлов"
+}

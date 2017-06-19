@@ -1,0 +1,16 @@
+.table {
+	width: 400px;
+}
+
+th a {
+	display: block;
+}
+
+.desc {
+	background: url(../img/desc.png) top right no-repeat;
+}
+
+.asc {
+	background: url(../img/asc.png) top right no-repeat;
+}
+
