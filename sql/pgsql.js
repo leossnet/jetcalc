@@ -1,5 +1,7 @@
 var Base = require(__base+"sql/base.js");
-var Config  = require(__base+"config.js").dbconfig.pgsql;
+var Config  = require(__base+"config.js").dbconfig.postgres;
+
+
 
 var _ = require ("lodash");
 
