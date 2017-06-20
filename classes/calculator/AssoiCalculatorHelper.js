@@ -379,6 +379,7 @@ var Unmapper = function(Context, InfoCacher){
 	 	}
 	 	if (Math.abs(R.Year)<1000) R.Year = parseInt(Cell.Year)+R.Year;
 		if (R.Period.indexOf('-')>=0){
+			console.log(self.Info.Data.Period["-1"]);
 			R.Period = self.Info.Data.Period[R.Period][Cell.Period];	
 		}	
 		var ObjModifiers = ['toobj','tomainobj','consobj','consgrp','toparentobj','torootobj','<<','<<<']
@@ -1159,15 +1160,15 @@ var Evaluator = function(Unmapper){
 
 	self.getCells = function(What2Ask,Primaries,done){
 		if (!config.dbsqlmap){
-			console.log("getCellsSimple");
 			What2Ask.forEach(function(F,i){
 				if (F=='UserEdit') What2Ask[i] = "CodeUser";
-			})			
-			db.getCellsSimple(What2Ask,Primaries,done);
+			})		
+			db.GetCells(What2Ask,Primaries,function(err,data){
+				return done(err,data || []);
+			});
 		} else {
-			db.getCells(What2Ask,Primaries,done);
+			db.GetCells(What2Ask,Primaries,done);
 		}
-		
 	}
 	
 	self.LoadPrimaries = function(Primaries,done){
@@ -1181,12 +1182,20 @@ var Evaluator = function(Unmapper){
 		if (!Primaries.length) return done();		
 		var What2Ask = ['CodeCell','CalcValue','Comment','UserEdit','DateEdit'];
 		What2Ask.push(self.Field);
-		self.getCells(What2Ask,Primaries,function(err,ResultCells){
+		self.getCells(What2Ask,Primaries,function(err,ResultCellsArray){
+
+			console.log("GOT",ResultCells);
+			var ResultCells = {};
+			ResultCellsArray.forEach(function(RC){
+				ResultCells[RC.CodeCell] = RC;
+			})
+
 			if (err) {
 				Unmapper.Err.Critical("GETCELLS","ERR: "+err);
 				return done (err);
 			}
 			if (!ResultCells) return done ('Нет ответа от SQL сервера');
+
 			Primaries.forEach(function(PC){
 				var Value2Set  = 0, IsRealNull = false, CalcValue = null, Comment = null, UserEdit = null, DateEdit = null;
 				if (ResultCells[PC] ){

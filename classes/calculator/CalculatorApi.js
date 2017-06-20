@@ -447,15 +447,9 @@ router.put('/api/cells', function(req,res){
 			}
 			ToSaveReparsed[CellName]  = {
 				CodeCell:CellName,
-				CodePeriod:In[2],
-				CodeObj:In[4],
-				CodeRow:In[0],
-				CodeCol:In[1],
-				Comment:ToSave[CellName].Comment?ToSave[CellName].Comment:'',
-				Year:parseInt(In[3]),
-				UserEdit:req.user.LoginUser,
 				CodeUser:req.user.CodeUser,
-				CalcValue:(IsCalcValue)?Value:'',
+				Comment:ToSave[CellName].Comment?ToSave[CellName].Comment:'',
+				CalcValue:(IsCalcValue)?Value:'',				
 				Value:(IsCalcValue)?RValue:Value,
 				CodeValuta:Context.CodeValuta
 			};
@@ -464,10 +458,10 @@ router.put('/api/cells', function(req,res){
 
 		var setCells = function(Cells2Save,done){
 			if (config.dbsqlmap){
-				db.setCells(Cells2Save,done);
+				db.SetCells(Cells2Save,done);
 			} else {
 				console.log("setCellsSimple",Cells2Save);
-				db.setCellsSimple(Cells2Save,done);
+				db.SetCells(Cells2Save,done);
 			}
 		}
 

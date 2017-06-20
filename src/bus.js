@@ -1,5 +1,3 @@
-var mongoose = require('mongoose');
-var _ = require("lodash");
 var event = require('events').EventEmitter;
 
 
@@ -15,3 +13,5 @@ var Bus = (new function(){
 
 	return self;
 })
+
+module.exports = Bus;

@@ -133,7 +133,7 @@
         <i class="fa fa-angle-down icon-on-right fa-light"></i>
       </a>
       <ul class="dropdown-menu dropdown-light dropdown-caret">
-          <!-- ko foreach: CxCtrl.Valutas() -->
+          <!-- ko foreach: MValuta.GetValutas() -->
             <li>
               <a data-bind="click: CxCtrl.Update.bind(null,'valuta',$data)">
                 <span data-bind="text: $data"></span>

@@ -31,6 +31,12 @@ var MValuta = (new function() {
     self.ReportValuta1  = ko.observable();
     self.ReportValuta2  = ko.observable();
 
+
+    self.GetValutas = function(){
+        //[_.find(MAggregate.AllObjs(),{CodeObj:CxCtrl.CodeObj()}).CodeValuta,
+        return _.compact(_.uniq([self.ReportValuta(),self.ReportValuta1(),self.ReportValuta2()]));
+    }
+
     self.Valutas = ko.observableArray();
 
     self.RateValuta = ko.observable();

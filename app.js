@@ -21,7 +21,9 @@ var  config      = require('./config.js')
 , UserActivity   = require('./src/audit.js')
 , timeToLive     = 24*60*60*1000
 , PermitLoad     = require('./src/permloader.js')
-, QueryString = require('querystring');
+, QueryString = require('querystring')
+, Bus = require('./src/bus.js');
+
 
 
 
