@@ -1,5 +1,5 @@
 var Base = require(__base+"sql/base.js");
-var Config  = require(__base+"config.js").dbconfig.postgres;
+var Config  = require(__base+"config.js").dbconfig.pgsql;
 
 
 
