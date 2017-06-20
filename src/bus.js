@@ -8,11 +8,10 @@ var Bus = (new function(){
 
 	self.Events = new event();
 
-	self.on = self.Events.on;
-	self.off = self.Events.off;
+	self.On = self.Events.on;
+	self.Off = self.Events.off;
 
-	self.emit = self.Events.off;
-
+	self.Emit = self.Events.emit;
 
 	return self;
 })
