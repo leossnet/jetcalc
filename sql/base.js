@@ -3,7 +3,6 @@ var _ = require("lodash");
 var Base = function(config){
 	var self = this;
 
-
 	self.Config = config;
 	self.Protocol = self.Config.protocol;
 	self.Pool = null;
