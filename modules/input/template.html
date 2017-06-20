@@ -68,7 +68,7 @@
                   <!-- /ko -->
                 </td>
                 <td data-bind='text:moment(_.first($data.DateEdit.split("."))).format("DD.MM.YYYY HH:mm:ss")'></td>
-                <td data-bind='text:$data.NameUser'></td>
+                <td data-bind='html:Catalogue.GetHtml("user",$data.CodeUser)'></td>
               </tr>
             </tbody>
           </table>
@@ -80,7 +80,7 @@
         <!-- /ko -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="lang: 'close'"></button>
+        <button type="button" class="btn btn-default btn-white" data-dismiss="modal" data-bind="lang: 'close'"></button>
       </div>
     </div>
   </div>

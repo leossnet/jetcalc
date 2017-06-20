@@ -6,6 +6,7 @@ module.exports = {
 		"settings":{
 			  TechMail          : {type: String, default:''}
   			, PortalName        : {type: String, default:''}
+  			, SystemName        : {type: String, default:'JetCalc v1.0'}
   			, TechPhone         : {type: String, default:'',mask:"+7 (999) 999-9999"}
   			, Logo              : {type: String, default:'',template:"form_image"} 
   			, Servers           : {type: Array, default:[]} 

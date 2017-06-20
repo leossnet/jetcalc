@@ -823,10 +823,7 @@ router.get('/api/calculator/updateformula', function(req,res,next){
 
 
 router.post('/api/cell/history', function(req,res){	
-	var Context = getContext(req.body.Context,req.session.sandbox,req.user.CodeUser);	
-	var CellParts = (req.body.Cell+'').match(/\$(.*?)\@(.*?)\.P(.*?)\.Y(.*?)\#(.*?)\?/).splice(1);
-	var Cell2Ask = {Year:CellParts[3],CodePeriod:CellParts[2],CodeObj:CellParts[4],CodeRow:CellParts[0],CodeCol:CellParts[1]};
-	db.getCellHistory(Cell2Ask,function(err,data){
+	db.GetCellsHistory(['CodeCell','Value','CalcValue',"CodeUser","DateEdit","Comment"],[req.body.Cell],function(err,data){
 		return res.json(data);
 	})
 })

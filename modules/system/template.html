@@ -1,7 +1,7 @@
 <script id="login_requisites" type="text/html">
 	<div class=row style='margin-top:50px;color:gray;line-height: 20px;' data-bind='with:MSystem.Settings'>
 		<div style='position: absolute;left:40%'>
-			<div >Служба технической поддержки JETCALC v1.0</div>
+			<div >Служба технической поддержки <span data-bind='text:$data.SystemName'></span></div>
 			<div >тел.: <span data-bind='text:$data.TechPhone'></span></div>
 			<div >e-mail: <a data-bind='text:$data.TechMail,attr:{href:"mailto:"+$data.TechMail()}'></a></div>
 		</div>
@@ -16,7 +16,7 @@
 				<img style='max-width: 70px; max-height: 100px;' data-bind='attr:{src:"/api/gfs/"+$data}'></img>
 			<!-- /ko -->
 			</td><td style='width: 100%;text-align: center;'>
-				<h1 ><span class="red">JETCALC v1.0 </span><span style='color:#a23522!important' data-bind='text:$data.PortalName'></h1>
+				<h1 ><span class="red" data-bind='text:$data.SystemName'></span><span style='color:#a23522!important;margin-left:10px;' data-bind='text:$data.PortalName'></h1>
 				<h4 class="blue"><a href='http://jet.team/'>© JetTeam 2017</a></h4>
 			</td></tr>
 		</table>

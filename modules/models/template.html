@@ -115,7 +115,9 @@
                 <a class="navbar-brand" data-bind='page-href:"/"'>
                     <small>
                         <i class="fa fa-cogs"></i>
-                        JETCALC v1.0
+                        <!-- ko with:MSystem.Settings -->
+                        <span data-bind='text:$data.SystemName'></span>
+                        <!-- /ko -->
                     </small>
                 </a>
             </div>

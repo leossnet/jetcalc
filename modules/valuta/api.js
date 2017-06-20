@@ -12,7 +12,7 @@ var ValutaHelper = (new function(){
 
 	self.Periods = function(done){
 		mongoose.model("period")
-			.find({IsReportPeriod:1},"-_id CodePeriod NamePeriod EndDateText")
+			.find({IsFormula:false},"-_id CodePeriod NamePeriod EndDateText")
 			.isactive()
 			.sort({IsFormula:-1,MCount:1,BeginDate:1})
 			.lean()

@@ -151,6 +151,7 @@ var MRowEditor = (new function() {
     	self.RenderTimer = setTimeout(function(){
     		self.RenderTable();
     		self.RenderTimer = null;
+    		//self.table.updateSettings({minSpareRows:100})
     	},200);
     }
 
@@ -556,7 +557,7 @@ var MRowEditor = (new function() {
 	        fixedColumnsLeft: 3,
 	        cellsParams:{},	 
 	        levels:RowsInfo,
-	        minSpareRows:_.isEmpty(self.Rows) ? 100:0,
+	        minSpareRows:_.isEmpty(self.Rows) ? 100:100,
 	        tree:{
 	            data:TreeArr,
 	            icon:function(){},
