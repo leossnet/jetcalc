@@ -1,52 +1,53 @@
-var environment = process.env.NODE_ENV;
+//var environment = process.env.NODE_ENV;
+//if (!environment) 
 
-if (!environment) environment = "development";
+var environment = "development";
 
 var cpus = require('os').cpus().length;
-process.setMaxListeners(0)
-
+process.setMaxListeners(0);
 global.__base = __dirname + "/";
+var main = "jetcalcdemo";
 
 var config = {
 	development: {
-		  rabbitmq         : 'amqp:jet:jetparole12j@127.0.0.1'
-		, rabbitmqPort     : 15672
-		, rabbitPrefix     : "jet"
-		, cookieConfig     : {
-	        secret            : "ugmk secret",
-    	    key               : "ugmk.sid",
-        	cookie            : { domain:'.jt.jetstyle.ru', httpOnly: true, maxAge: null},
-	        maxAge            : 24*60*60*1000,
-    	    secure            : true,
-        	saveUninitialized : true,
-        	resave            : true
-    	}
-		, portalname       : "http://ugmk_dev.jt.jetstyle.ru"
+		 rabbitmq         : 'amqp:jet:jetparole12j@127.0.0.1'
+		,rabbitmqPort     : 15672
+		,rabbitPrefix     : main+"_"
+		,cookieConfig     : {
+	    	    secret            : main+" secret",
+		    key               : main+".sid",
+        	    cookie            : { path:'/', httpOnly: true, maxAge: null},
+	    	    maxAge            : 24*60*60*1000,
+    		    secure            : true,
+        	    saveUninitialized : true,
+        	    resave            : true
+    		}
+		, portalname       : "http://jetcalc.jt.jetstyle.ru"
 		, adminmail        : "dkoviazin@gmail.com"
 		, adminphone       : "+79226052265"
-		, company          : "UGMK"
+		, company          : "JETTECH"
 		, staticDir        : __dirname+'/static'
 		, dir              :__dirname
-		, port             : 4129
-		, modulebundle     : true		
+		, port             : 2018
+		, modulebundle     : false
 		, debugRecording   : true
 		, debugPeriodsNum  : 7
-		, mongoUrl         : "mongodb://localhost/ugmk_dev"
-		, mongoCacheUrl    : "mongodb://localhost/ugmk_dev_cache"
-		, agendaConnect    : 'mongodb://localhost/agenda_ugmk_dev'
-		, mochaConnect     : 'mongodb://localhost/mocha_dev'
+		, mongoUrl         : "mongodb://localhost/"+main
+		, mongoCacheUrl    : "mongodb://localhost/"+main+"_cache"
+		, agendaConnect    : 'mongodb://localhost/'+main+"_agenda"
+		, mochaConnect     : 'mongodb://localhost/'+main+"_mocha"
 		, gridfs           : {
 			host:'localhost',
-			dbname:'ugmk_files'
-		}
-		, silent 	       : false
+			dbname:main+'_files'
+		  }
+		, silent 	   : false
 		, debugRequests    : true
-		, errorCatch       : false
+		, errorCatch       : true
 		, cpus       	   : cpus
 		, useMultiThread   : true
-		, redis            : {}
-		, db               : 'postgres'
-		//, db               : 'mssql'
+		, redis            : {prefix:main+"_"}
+		, db               : 'pgsql'
+		, dbsqlmap         : false
 		, dbconfig         : {
 			mssql:{
 				userName:'ASSOI_USER',
@@ -56,54 +57,64 @@ var config = {
 				protocol:'xml',
 				debugSql:false,
 				options:{
-					 database:'assoi0909',
-					 port: 1433,
-					 encrypt: true,
-			    	 connectionTimeout: 300000,
-			    	 requestTimeout: 300000
+				    database:main,
+				    port: 1433,
+				    encrypt: true,
+			    	    connectionTimeout: 300000,
+			    	    requestTimeout: 300000
 				}
 			},
-			postgres:{
-				user: 'postgres',
-				password: 'postgres',
-				host: 'localhost',
+			pgsql:{
+				url:'postgres://postgres:postgres@10.66.80.31:5432/'+main,
+				userName:'postgres',
+				password:'postgres',
+				server:'10.66.80.31',
 				adapter:'postgres',
-				protocol: 'json',
-				database:'assoi',
-				debugSql: false,
-				options: {
-					database:'assoi',
-					port: 5432
+				protocol:'json',
+				debugSql:false,
+				options:{
+				    database:'jetcalc',
+				    port: 5432,
+				    encrypt: true,
+			    	    connectionTimeout: 300000,
+			    	    requestTimeout: 300000
 				}
 			}
 		}
+		, bitbucket:{
+			username:"ASSOI_USER",
+			password:"derparole12j",
+			project:"ugmk",
+			projectowner:"zubra12"
+		}
 		, mongoSessionsDB : {
-		  	  db               : 'ugmk_dev_sessions'
+		  	  db               : main+'_sessions'
 			, host             : 'localhost'
 			, autoReconnect    : true
 			, safe             : false
+			, url              : 'mongodb://localhost:27017/'+main+"_sessions"
 		},
 		mailer : {
-			transport: {
-				service: 'Yandex',
-				auth: {
-					user: 'assoi.ugmk',
-					pass: 'derparole12j'
-				}
+			host:'smtp.yandex.ru',
+			port: 465,
+  			secureConnection: true,
+  			requiresAuth: true,
+			auth: {
+				user       : 'jetcalc@yandex.ru',
+				pass       : 'derparole12j',
 			},
-			from  : {
-					name: "Оповещения ASSOI",
-					email:"assoi.ugmk@yandex.ru"
+			from: {
+				name: "Оповещения JetCalc",
+				email:"jetcalc@yandex.ru"
 			}
 		}
 	},
-	staging: {
-	},
-	production: {
-	}
+	staging: {},
+	production: {}
 }
 
 
 
 module.exports = config[environment];
 module.exports.rawConfig = config;
+
