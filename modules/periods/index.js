@@ -23,6 +23,16 @@ var MPeriods = (new function() {
         self.LinkPeriods()[CodePeriod].push(MModels.Create("reportperiods",{CodePeriod:CodePeriod,IndexReportPeriod:(self.LinkPeriods()[CodePeriod]().length+1)}));
     }
 
+    self.EditPeriodMap = ko.observable(null);
+
+    self.SetEditMapPeriod = function(data){
+        self.EditPeriodMap(data);    
+    }
+
+    self.IsCurrentEditMapPeriod = function(data){
+        return self.EditPeriodMap()==data;
+    }
+
     self.LoadPeriodMap = function(){
         self.rGet("periodmap",{},function(data){
             self.MainPeriods(_.map(data.MainPeriods,function(MP){
@@ -74,6 +84,7 @@ var MPeriods = (new function() {
             }
             self.DefaultPeriods(periods);
             var prepared = {};
+            console.log("MAP",data.Map);
             for (var group in data.Map){
                 for (var CodePeriod in data.Map[group]){
                     var arr = [];

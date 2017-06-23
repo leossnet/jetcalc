@@ -151,7 +151,6 @@ var MRowEditor = (new function() {
     	self.RenderTimer = setTimeout(function(){
     		self.RenderTable();
     		self.RenderTimer = null;
-    		//self.table.updateSettings({minSpareRows:100})
     	},200);
     }
 
@@ -520,7 +519,6 @@ var MRowEditor = (new function() {
 	self.Retries = 3;
 
 	self.RenderTable = function(){
-		console.log("RENDER !!!!");
 		var selector = '.handsontable.single:visible';
 		var DomPlace = $(selector)[0];
 		if (_.isEmpty($(DomPlace)) && self.Retries>0){
@@ -557,13 +555,14 @@ var MRowEditor = (new function() {
 	        fixedColumnsLeft: 3,
 	        cellsParams:{},	 
 	        levels:RowsInfo,
-	        minSpareRows:_.isEmpty(self.Rows) ? 100:100,
+	        minSpareRows:(self.Mode()=='Structure') ? 100:0,
 	        tree:{
 	            data:TreeArr,
 	            icon:function(){},
 	            colapsed:CxCtrl.Context().CodeDoc+'RowEditor'
 	        }
 		}
+		console.log(self.Mode(),params.minSpareRows);
 		if (self.Mode()=="Structure"){
 			params.contextMenu =  self.ContextMenu();
 			//params.beforeCreateRow = self.BeforeCreateRow;
@@ -591,7 +590,7 @@ var MRowEditor = (new function() {
 	    		new HandsonTableHelper.TreeView(self.table);
 	    	}
     		self.UpdateTableMeta(Data);
-    		self.table.render();	
+    		self.table.render();
     	} catch(e){
     		console.log("Table not rendered");
     	}

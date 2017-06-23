@@ -82,40 +82,52 @@ var ModelEdit = function(CodeUser,IsNew){
 
 	self.SaveLinks = function(ModelName, Links, done){
 		var ToSave = [], ToRemove = [];
+		Links = Links || [];
 		var M = mongoose.model(ModelName), Q = {}; 
-		var CFG = M.cfg(), Fields = [];
-		for (var CodeField in CFG.fields){
-			var Info = CFG.fields[CodeField];
-			if (Info.refmodel && CodeField.indexOf("Code")==0){
-				Fields.push(CodeField);
-			}
-		}
-		Fields = _.pull(CFG.EditFields,CFG.Code);
+		var CFG = M.cfg(), Fields = [], EditFields = CFG.EditFields;
+		var Code = CFG.Code;
 		Q[self.BaseModelCode] = self.BaseModel[self.BaseModelCode];
 		M.find(Q).isactive().exec(function(err,Existed){
-			Links && Links.forEach(function(Lk){
-				var Ex = _.find(Existed,_.pick(Lk,Fields));
-				if (Ex){
-					Ex = _.merge(Ex,Lk);
+			var IndexedOld = {};
+			Existed.forEach(function(Ex){
+				IndexedOld[Ex[Code]] = Ex;
+			})
+			Links.forEach(function(NL){
+				if (!_.isEmpty(NL[Code])){
+					if (IndexedOld[NL[Code]]){
+						_.keys(NL).forEach(function(NK){
+							IndexedOld[NL[Code]][NK] = NL[NK];
+						})
+					}
+					if (IndexedOld[NL[Code]].isModified()){
+						ToSave.push(IndexedOld[NL[Code]]);
+					}
+					delete IndexedOld[NL[Code]];
 				} else {
-					Ex = new M(_.merge(Lk,Q));
-				}
- 				ToSave.push(Ex);				
+					var ToAdd = new M(NL);
+					ToSave.push(ToAdd);
+				}				
 			})
-			Existed.forEach(function(Lk){
-				if (!_.find(Links,_.pick(Lk,Fields))){
-					ToRemove.push(Lk);
-				}
-			})
-
+			for (var Key in IndexedOld){
+				ToRemove.push(IndexedOld[Key]);
+			}
+			/*if (ModelName=='docheader'){
+				console.log("======== ToRemove =========");
+				console.log(ToRemove);
+				console.log("=================");
+				console.log("=========ToSave========");
+				console.log(ToSave);
+				console.log("=================");
+				die();
+			}*/
 			async.each(ToRemove,function(TR,cb1){
 				TR.remove(self.CodeUser,function(err){
-					cb1();
+					cb1(err);
 				});
 			},function(err){
 				async.each(ToSave,function(TR,cb2){
 					TR.save(self.CodeUser,function(err){
-						cb2();
+						cb2(err);
 					});
 				},done);
 			})

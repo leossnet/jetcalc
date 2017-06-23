@@ -27,3 +27,12 @@ input.small_input{
     line-height: 21px;
     font-size: 13px;
 }
+table.table.table-striped.table-bordered.table-hover.dataTable.no-footer.small-paddings.periodsMapTable{
+	width:initial;
+	margin: 10px;
+	margin-bottom: 100px;
+}
+
+table.table.table-striped.table-bordered.table-hover.dataTable.no-footer.small-paddings.periodsMapTable tr.active td{
+	background-color: #F3F8F1;
+}

@@ -370,7 +370,15 @@ var BaseDocPlugin = function(){
             self.LoadCells,
         ], function (err){
             self.IsLoading(false);
-            if (err) return self.Error(err);
+            if (err) {
+                try{
+                    self.table.destroy();
+                    self.table = null;
+                } catch(e){
+                    //console.log(e);
+                }        
+                return self.Error(err);   
+            }
             self.RenderCells(done);
         });
     }

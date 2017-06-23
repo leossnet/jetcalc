@@ -559,8 +559,8 @@ router.put('/settings', HP.TaskAccess("IsModulesAdmin"), function (req, res, nex
         })
     })    
 })
-/*
-Compiller.BuildBundle(function(err){
+
+Compiller.Build(function(err){
     console.log("Build")    
 });
 

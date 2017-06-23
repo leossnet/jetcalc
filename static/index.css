@@ -1940,7 +1940,7 @@ table.dataTable.small-paddings>tbody>tr>td{
 	z-index: 1005;
 }
 .bottomPannel{
-    z-index: 100;
+    z-index: 102;
 }
 a.btn.btn-sm.btn-primary.btn-white.comboboxbtn{
     opacity: 0.3;
