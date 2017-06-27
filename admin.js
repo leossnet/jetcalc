@@ -24,24 +24,11 @@ var Tasks = {
     	cd(__base);
 	},
 	build:function(){
-	    var path = __base+"modules";
-	    var Functions = require(__base+"modules/modules/functions.js");
-	    LIB.listConfigs (path,function(err,list){  
-	        list.forEach(function(L){
-	            if (L.config.permissions){
-	                Functions.Register(L.config.id,path,L.config.permissions);
-	            }
-	        })    
-	        if (mongoose.models["privelege"]){
-	            Functions.Sync(function(){
-					var Compiller = require(__base+"modules/modules/compiller.js");
-					Compiller.BuildBundle(function(){
-				    	cd(__base);
-						exec('grunt');
-					})
-	            });
-	        }
-	    })		
+		var Compiller = require(__base+"modules/modules/compiller.js");
+		Compiller.BuildBundle(function(){
+	    	cd(__base);
+			exec('grunt');
+		})
 	},
 	compile: function() {
         var items = [
