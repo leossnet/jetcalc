@@ -9,12 +9,20 @@ require('shelljs/global');
 
 jison.print = function() {} // теперь jison не засирает логи
 
+global.__base = __dirname + "/";
+
+
 var generateParser = function(grammar) {
     var parser = new Parser(grammar)
     return parser.generate()
 }
 
 var Tasks = {
+	postgress:function(){
+    	cd(__base + 'sql/mocha/');
+    	exec('mocha pgexec.js');
+    	cd(__base);
+	},
 	compile: function() {
         var items = [
             { file_name: "calculator.jison", output_path: __base + "classes/calculator/jison/calculator.js" },
@@ -34,8 +42,11 @@ var Tasks = {
     	cd(__base + 'classes/calculator/jison/mocha');
     	exec('mocha start.js');
     	cd(__base);
-	},
-	install: function(){
+	}	
+}
+
+/*
+install: function(){
 		global.__is_install = true;
 		var config   = require('./config.js');
 		var mongoose = require('mongoose');
@@ -214,23 +225,26 @@ var Tasks = {
 			process.exit();
 		});
 	}
-}
+
+ */
 
 var StartTask = "";
 process.argv.forEach(function (val, index, array) {
   	if (Tasks[val]) StartTask = val;
 });
 
-if (StartTask){
+if (StartTask && Tasks[StartTask]){
 	Tasks[StartTask]();
 } else {
 	var menu = Menu({ width: 29, x: 4, y: 2 });
 	menu.reset();
 	menu.write('Выбор действия\n');
 	menu.write('-------------------------\n');
-	menu.add('Синхронизация с SQL базой');
-	menu.add('MSSQL -> PostgreSQL');
+	//menu.add('Синхронизация с SQL базой');
+	//menu.add('MSSQL -> PostgreSQL');
 	menu.add('Компиляция парсеров');
+	menu.add('Проверка Postgres');
+
 	menu.add('Выход');
 	menu.on('select', function (label) {
 	    menu.close();
@@ -240,11 +254,14 @@ if (StartTask){
 	    	case 'Компиляция парсеров':
 	    		Tasks.compile();
 	    	break;
-	    	case 'Синхронизация с SQL базой':
-	    		Tasks.install();
-		   	break;
-	    	case 'MSSQL -> PostgreSQL':
-	    		Tasks.convert();
+	    	//case 'Синхронизация с SQL базой':
+	    	//	Tasks.install();
+		   	//break;
+	    	//case 'MSSQL -> PostgreSQL':
+	    	//	Tasks.convert();
+		   	//break;	    	
+		   	case 'Проверка Postgres':
+	    		Tasks.postgress();
 		   	break;
 
 	    }

@@ -3,7 +3,7 @@ var environment = "development";
 var cpus = require('os').cpus().length;
 process.setMaxListeners(0);
 global.__base = __dirname + "/";
-var main = "jetcalcdemo";
+var main = "jetcalc";
 
 var config = {
 	development: {
@@ -19,7 +19,7 @@ var config = {
         	    saveUninitialized : true,
         	    resave            : true
     		}
-		, portalname       : "http://jetcalc.jt.jetstyle.ru"
+		, portalname       : "http://localhost"
 		, adminmail        : "dkoviazin@gmail.com"
 		, adminphone       : "+79226052265"
 		, company          : "JETTECH"
@@ -47,9 +47,9 @@ var config = {
 		, dbsqlmap         : false
 		, dbconfig         : {
 			mssql:{
-				userName:'ASSOI_USER',
-				password:'Cegth,s,hf12j',
-				server:'10.66.80.31',
+				userName:'sa',
+				password:'1',
+				server:'127.0.0.1',
 				adapter:'mssql',
 				protocol:'xml',
 				debugSql:false,
@@ -62,10 +62,10 @@ var config = {
 				}
 			},
 			pgsql:{
-				url:'postgres://postgres:postgres@10.66.80.31:5432/'+main,
+				url:'postgres://postgres:postgres@127.0.0.1:5432/'+main,
 				userName:'postgres',
 				password:'postgres',
-				server:'10.66.80.31',
+				server:'127.0.0.1',
 				adapter:'postgres',
 				protocol:'json',
 				debugSql:false,
@@ -79,10 +79,10 @@ var config = {
 			}
 		}
 		, bitbucket:{
-			username:"ASSOI_USER",
-			password:"derparole12j",
-			project:"ugmk",
-			projectowner:"zubra12"
+			username:"user",
+			password:"password",
+			project:"jetcalc",
+			projectowner:"user"
 		}
 		, mongoSessionsDB : {
 		  	  db               : main+'_sessions'

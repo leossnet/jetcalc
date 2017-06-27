@@ -1,5 +1,5 @@
-var MochaTest = require(__base+"sql/mocha.js");
-var DataBase = require(__base+"sql/pgsql.js");
+var MochaTest = require("../mocha.js");
+var DataBase = require("../pgsql.js");
 
 var Test = new MochaTest("pgsql",DataBase);
 

@@ -1,7 +1,7 @@
 var _ = require("lodash");
 var assert = require('assert');
 var async = require("async");
-var config = require(__base+"config.js");
+var config = require("../config.js");
 
 module.exports = function(driver,DataBase){
 	var self = this;
