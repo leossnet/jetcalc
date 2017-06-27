@@ -23,6 +23,13 @@ var Tasks = {
     	exec('mocha pgexec.js');
     	cd(__base);
 	},
+	build:function(){
+		var Compiller = require(__base+"modules/modules/compiller.js");
+		Compiller.BuildBundle(function(){
+	    	cd(__base);
+			exec('grunt');
+		})
+	},
 	compile: function() {
         var items = [
             { file_name: "calculator.jison", output_path: __base + "classes/calculator/jison/calculator.js" },
@@ -243,6 +250,7 @@ if (StartTask && Tasks[StartTask]){
 	//menu.add('Синхронизация с SQL базой');
 	//menu.add('MSSQL -> PostgreSQL');
 	menu.add('Компиляция парсеров');
+	menu.add('Компиляция библиотек');
 	menu.add('Проверка Postgres');
 
 	menu.add('Выход');
@@ -253,6 +261,9 @@ if (StartTask && Tasks[StartTask]){
 	    switch (label){
 	    	case 'Компиляция парсеров':
 	    		Tasks.compile();
+	    	break;
+	    	case 'Компиляция библиотек':
+	    		Tasks.build();
 	    	break;
 	    	//case 'Синхронизация с SQL базой':
 	    	//	Tasks.install();
