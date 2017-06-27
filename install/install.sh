@@ -38,7 +38,7 @@ wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key a
 
 #apt-get
 sudo apt-get update
-sudo apt-get dist-upgrade
+#sudo apt-get dist-upgrade
 
 #nginx install
 sudo apt-get install -y nginx
