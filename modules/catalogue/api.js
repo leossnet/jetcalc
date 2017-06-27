@@ -288,6 +288,7 @@ router.put('/model', HP.ModelAccessM(), function(req,res,next){
 
 router.delete('/model', HP.ModelAccessM(), function(req,res,next){
 	var ModelName = req.body.model;
+	var IsForce = api.parseBoolean(req.body.force);
 	var M = mongoose.model(ModelName);
 	var CFG = M.cfg();
 	if (!M) return next("Модель не найдена");
@@ -295,12 +296,17 @@ router.delete('/model', HP.ModelAccessM(), function(req,res,next){
 	M.findOne(Q).isactive().exec(function(err,C){
 		if (!C) err = "Объект не найден";
 		if (err) return next(err);
-		var CodeUser = req.user.CodeUser;
-		C.remove(CodeUser,function(err){
-			if (err) return next(err);
-			if (M.IsSandBox) socket.emitTo(CodeUser,"sandboxchange",{});			
-			return res.json({});
-		})
+        C.Dependent(function(err,Result){
+        	if (!_.isEmpty(Result) && !IsForce){
+        		return res.json({Depends:Result});
+        	}
+			var CodeUser = req.user.CodeUser;
+			C.remove(CodeUser,function(err){
+				if (err) return next(err);
+				if (M.IsSandBox) socket.emitTo(CodeUser,"sandboxchange",{});			
+				return res.json({});
+			})
+        });
 	})
 })
 

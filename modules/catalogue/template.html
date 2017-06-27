@@ -217,3 +217,29 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="delete_dependance">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" data-bind="with: ModelTableEdit">
+      <div class="modal-body">
+          <div class="page-header" >
+              <h1 data-bind='lang:"dependaction"'></h1>
+          </div>
+          <div data-bind="with: $data.Dependable">
+              <table class="table  table-bordered table-hover dataTable  smallTable">
+                <tbody data-bind='foreach:_.keys($data)'>
+                  <tr>
+                    <td data-bind='lang:$data'></td>
+                    <td data-bind='html:$parent[$data].join("<br/>")'></td>
+                  </tr>
+                </tbody>        
+              </table>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-white" data-dismiss="modal" data-bind="lang:'forcedelete',click:$data.ForceDelete"></button>
+      </div>
+    </div>
+  </div>
+</div>

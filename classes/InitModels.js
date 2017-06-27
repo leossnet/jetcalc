@@ -2,6 +2,7 @@ var mongoose  = require('mongoose');
 var api = require('../lib/helper.js');
 var fs = require("fs");
 var _ = require("lodash");
+var integrity = require(__base+"lib/helpers/integrity.js");
 
 var IsInstallMode = false;
 try{
@@ -66,6 +67,7 @@ var ShemaCompiller = (new function(){
 				})
 				if (IsSql){
 					schema.plugin(api.mongoosePlugins.Modified);
+					schema.plugin(integrity);
 					if (Searchable.length){
 						schema.plugin(api.mongoosePlugins.Searchable,{fields:Searchable});
 					}

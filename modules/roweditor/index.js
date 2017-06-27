@@ -274,7 +274,6 @@ var MRowEditor = (new function() {
         rowHeaders:true,
         colHeaders:true,
         autoRowSize:true,
-        minSpareRows: 0,
         minSpareCols: 0,
         currentColClassName: 'currentCol',
         currentRowClassName: 'currentRow',
@@ -529,27 +528,6 @@ var MRowEditor = (new function() {
 		var TreeArr = _.sortBy(self.Rows,'lft');		
 		var RowsInfo = {};
 		var Widths = [50,80,400];
-		if (self.Mode()=="Structure"){
-			HandsonRenders.RegisterRender("Lvl",[/[0-9]*?,0$/], self.LvlRenderer);
-			HandsonRenders.RegisterRender("Index",[/[0-9]*?,1$/], Handsontable.renderers.TextRenderer);
-			HandsonRenders.RegisterRender("Num",[/[0-9]*?,2$/], Handsontable.renderers.TextRenderer);
-			HandsonRenders.RegisterRender("Code",[/[0-9]*?,3$/], Handsontable.renderers.TextRenderer);			
-			TreeArr.forEach(function(TA){
-				if (TA) RowsInfo[TA.CodeRow] = TA.level;
-			})			
-			HandsonRenders.RegisterRender("RawTree",[/[0-9]*?,4$/], self.RawTree);	
-			HandsonRenders.RegisterRender("Remove",[/[0-9]*?,5$/], Handsontable.renderers.CheckboxRenderer);	
-			HandsonRenders.RegisterRender("ParentRow",[/[0-9]*?,6$/], HandsonTableRenders.ReadOnlyText);	
-			Widths = [80,40].concat(Widths).concat([100]);
-		} else {
-			HandsonRenders.RegisterRender("Num",[/[0-9]*?,0$/], HandsonTableRenders.ReadOnlyText);
-			HandsonRenders.RegisterRender("Code",[/[0-9]*?,1$/], HandsonTableRenders.ReadOnlyText);
-			HandsonRenders.RegisterRender("Tree",[/[0-9]*?,2$/], HandsonTableRenders.TreeRender);	
-		}
-		
-		HandsonRenders.RegisterRender("Cell",[/[/[0-9]*?,(?![0,1,2]$)[0-9]*/],self.EditorRender);
-		if (self.Mode()=='Filter') HandsonRenders.RegisterRender("Filter",[/[0-9]*?,[0-9]*?/],self.FilterRender); 
-
 		var params = {
 	    	cells:HandsonRenders.UniversalRender,
 	        fixedColumnsLeft: 3,
@@ -561,14 +539,36 @@ var MRowEditor = (new function() {
 	            icon:function(){},
 	            colapsed:CxCtrl.Context().CodeDoc+'RowEditor'
 	        }
+		}		
+		if (self.Mode()=="Structure"){
+			HandsonRenders.RegisterRender("Lvl",[/[0-9]*?,0$/], self.LvlRenderer);
+			HandsonRenders.RegisterRender("Index",[/[0-9]*?,1$/], Handsontable.renderers.TextRenderer);
+			HandsonRenders.RegisterRender("Num",[/[0-9]*?,2$/], Handsontable.renderers.TextRenderer);
+			HandsonRenders.RegisterRender("Code",[/[0-9]*?,3$/], Handsontable.renderers.TextRenderer);			
+			TreeArr.forEach(function(TA){
+				if (TA) RowsInfo[TA.CodeRow] = TA.level;
+			})			
+			HandsonRenders.RegisterRender("RawTree",[/[0-9]*?,4$/], self.RawTree);	
+			HandsonRenders.RegisterRender("Remove",[/[0-9]*?,5$/], Handsontable.renderers.CheckboxRenderer);	
+			HandsonRenders.RegisterRender("ParentRow",[/[0-9]*?,6$/], HandsonTableRenders.ReadOnlyText);	
+			params.manualRowMove = true;
+			Widths = [80,40].concat(Widths).concat([100]);
+		} else {
+			HandsonRenders.RegisterRender("Num",[/[0-9]*?,0$/], HandsonTableRenders.ReadOnlyText);
+			HandsonRenders.RegisterRender("Code",[/[0-9]*?,1$/], HandsonTableRenders.ReadOnlyText);
+			HandsonRenders.RegisterRender("Tree",[/[0-9]*?,2$/], HandsonTableRenders.TreeRender);	
 		}
-		console.log(self.Mode(),params.minSpareRows);
+		HandsonRenders.RegisterRender("Cell",[/[/[0-9]*?,(?![0,1,2]$)[0-9]*/],self.EditorRender);
+		if (self.Mode()=='Filter') HandsonRenders.RegisterRender("Filter",[/[0-9]*?,[0-9]*?/],self.FilterRender); 
 		if (self.Mode()=="Structure"){
 			params.contextMenu =  self.ContextMenu();
 			//params.beforeCreateRow = self.BeforeCreateRow;
 			//params.beforeRemoveRow = self.BeforeRemoveRow;
 		}
 		var HandsonConfig = _.merge(_.clone(self.baseConfig),params);
+
+		console.log(HandsonConfig);
+
 		try{
 			var Data = self.DataForTable();
 			if (!self.table) {

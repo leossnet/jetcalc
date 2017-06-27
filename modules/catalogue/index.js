@@ -442,21 +442,37 @@ var ModelTableEdit = (new function(){
 		})
 	}
 
-	self.DeleteModel = function(){
-		self.Error(null); self.IsLoading(true);
+	self.Dependable = ko.observable(null);
+
+	self.ForceDelete = function(){
+		self.DeleteModel(true);
+	}
+
+	self.DeleteModel = function(force){
+		force = (force===true) ?  true : false;
+		self.Error(null); self.IsLoading(true); self.Dependable(null);
 		$.ajax({
 			url:self.base+'model',
 			data:{
 				model:self.ModelName(),
-				code:self.Choosed()
+				code:self.Choosed(),
+				force:force
 			},
 			method:'delete',
 			success:function(data){
 				self.IsLoading(false);
 				if (data.err) return self.Error(data.err);
-				self.Choosed(null);
-				self.Events.emit("modeldeleted");
-				self.LoadList();
+				if (data.Depends){
+					self.Dependable(data.Depends)
+					$("#delete_dependance").modal('show');
+					$("#delete_dependance").on('hidden.bs.modal', function(){
+						self.Dependable(null);
+					})		
+				} else {
+					self.Choosed(null);
+					self.Events.emit("modeldeleted");
+					self.LoadList();
+				}
 			}
 		})
 	}
