@@ -103,4 +103,4 @@ npm i --unsafe-perms
 node admin.js compile
 node admin.js build
 node admin.js postgress
-grunt
+
