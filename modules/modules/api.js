@@ -559,12 +559,12 @@ router.put('/settings', HP.TaskAccess("IsModulesAdmin"), function (req, res, nex
         })
     })    
 })
-
+/*
 Compiller.Build(function(err){
     console.log("Build")    
 });
 
-/*
+
 
 setTimeout(function(){
   var path = __base+"modules";
