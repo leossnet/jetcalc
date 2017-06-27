@@ -31,7 +31,6 @@
     "events": "*",
     "express": "*",
     "express-session": "*",
-    "face-crop": "*",
     "fs-extra": "*",
     "gitbook": "*",
     "googlediff": "*",
@@ -73,14 +72,12 @@
     "progress": "*",
     "redis": "*",
     "request": "*",
-    "rimraf": "*",
     "shelljs": "*",
     "socket.io": "*",
     "terminal-menu": "*",
     "type-of-is": "*",
     "ua-parser-js": "*",
     "utf8": "*",
-    "webpack": "*",
     "xml2js": "*"
   }
 }
