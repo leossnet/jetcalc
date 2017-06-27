@@ -108,4 +108,6 @@ node admin.js postgress
 cd /htdocs/jetcalc
 cp /htdocs/jetcalc/install/start.json /htdocs/jetcalc/start.json
 pm2 start start.json
+pm2 save
+
 
