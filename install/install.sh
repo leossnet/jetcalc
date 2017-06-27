@@ -22,6 +22,9 @@ apt-get install -y git \
 
 git clone https://$GitUser:$Password@github.com/leossnet/jetcalc.git
 chmod -R 777 /htdocs
+cd /htdocs/jetcalc
+git config core.fileMode false
+
 
 #mongo
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
@@ -83,10 +86,7 @@ nvm use node
 cd /htdocs/jetcalc
 
 #npm modules
-npm i -g pm2 --unsafe-perms
-npm i -g gitbook-cli --unsafe-perms
-npm i -g mocha --unsafe-perms
-npm i -g grunt --unsafe-perms
+npm i -g pm2 gitbook-cli mocha grunt --unsafe-perms
 
 cp /htdocs/jetcalc/install/config.origin jetcalc/config.js
 
