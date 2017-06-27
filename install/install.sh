@@ -1,4 +1,14 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+echo Имя пользователя github:
+read GitUser
+echo Пароль github:
+read Password
+
+echo $GitUser with $Password
+
+mkdir /htdocs
+cd /htdocs/
 
 #mongo
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
@@ -62,6 +72,9 @@ apt-get install -y git \
     libgif-dev \
     build-essential \
     g++
+
+git clone https://$GitUser:$Password@github.com/leossnet/jetcalc.git
+chmod -R 777 /htdocs
 
 #npm modules
 npm i -g pm2
