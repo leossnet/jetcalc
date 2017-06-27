@@ -11,7 +11,6 @@ mkdir /htdocs
 cd /htdocs/
 
 apt-get install -y git \
-    nodejs \
     python \
     libkrb5-dev \
     libcairo2-dev \
@@ -42,8 +41,7 @@ sudo apt-get update
 
 #nginx install
 sudo apt-get install -y nginx
-sudo cp /htdocs/jetcalc/install/jetcalc.conf /etc/nginx/sites-available/jetcalc.conf
-rm -f /etc/nginx/sites-enabled/*
+sudo cp /htdocs/jetcalc/install/nginx.conf /etc/nginx/sites-available/jetcalc.conf
 ln -s /etc/nginx/sites-available/jetcalc.conf /etc/nginx/sites-enabled/jetcalc.conf
 sudo service nginx restart
 
@@ -75,19 +73,24 @@ rabbitmqctl set_user_tags jet administrator
 
 curl -sL https://deb.nodesource.com/setup_8.x | bash -s
 
-#apt-get modules
+#node install
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+nvm install node
+nvm use node
+cd /htdocs/jetcalc
 
 #npm modules
-npm i -g pm2
-npm i -g gitbook-cli
+npm i -g pm2 --unsafe-perms
+npm i -g gitbook-cli --unsafe-perms
+npm i -g mocha --unsafe-perms
+npm i -g grunt --unsafe-perms
 
 cp /htdocs/jetcalc/install/config.origin jetcalc/config.js
 
-sudo npm i --no-bin-links
-npm i -g grunt
-
-cd /htdocs/jetcalc
+sudo npm i --unsafe-perms
 
 node admin.js compile
 grunt
-

@@ -1,8 +1,16 @@
 {
   "name": "jetcalc",
   "version": "1.3.0",
-  "description": "",
-  "homepage": "",
+  "description": "Платформа для моделирования сложных экономических систем",
+  "homepage": "https://github.com/leossnet/jetcalc",
+  "author": {
+    "name": "Dmitry Koviazin",
+    "email": "dkoviazin@gmail.com"
+  },
+  "license": "MIT", 
+  "bugs": {
+    "url": "https://github.com/leossnet/jetcalc/issues"
+  },   
   "dependencies": {
     "agenda": "*",
     "amqplib": "*",
