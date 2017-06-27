@@ -10,6 +10,20 @@ echo $GitUser with $Password
 mkdir /htdocs
 cd /htdocs/
 
+apt-get install -y git \
+    nodejs \
+    python \
+    libkrb5-dev \
+    libcairo2-dev \
+    libjpeg8-dev \
+    libpango1.0-dev \
+    libgif-dev \
+    build-essential \
+    g++
+
+git clone https://$GitUser:$Password@github.com/leossnet/jetcalc.git
+chmod -R 777 /htdocs
+
 #mongo
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
 echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.2.list
@@ -24,7 +38,7 @@ wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key a
 
 #apt-get
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get dist-upgrade
 
 #nginx install
 sudo apt-get install -y nginx
@@ -37,7 +51,7 @@ sudo service nginx restart
 sudo apt-get install -y postgresql-9.5
 sudo su postgres -c "psql -c \"ALTER USER postgres WITH PASSWORD 'postgres';\""
 sudo su postgres -c "createdb -U postgres jetcalc;"
-sudo su postgres -c "psql -U postgres jetcalc < /jetcalc/sql/dump/postgres.sql;"
+sudo su postgres -c "psql -U postgres jetcalc < /htdocs/jetcalc/sql/dump/postgres.sql;"
 sudo echo "host all all ::0/0 md5" >> /etc/postgresql/9.5/main/pg_hba.conf
 sudo echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/9.5/main/pg_hba.conf
 sudo echo "listen_addresses = '*'" >> /etc/postgresql/9.5/main/postgresql.conf
@@ -62,19 +76,6 @@ rabbitmqctl set_user_tags jet administrator
 curl -sL https://deb.nodesource.com/setup_8.x | bash -s
 
 #apt-get modules
-apt-get install -y git \
-    nodejs \
-    python \
-    libkrb5-dev \
-    libcairo2-dev \
-    libjpeg8-dev \
-    libpango1.0-dev \
-    libgif-dev \
-    build-essential \
-    g++
-
-git clone https://$GitUser:$Password@github.com/leossnet/jetcalc.git
-chmod -R 777 /htdocs
 
 #npm modules
 npm i -g pm2
