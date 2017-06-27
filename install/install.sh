@@ -74,7 +74,7 @@ rabbitmqctl add_user jet jetparole12j
 rabbitmqctl set_permissions jet ".*" ".*" ".*"
 rabbitmqctl set_user_tags jet administrator
 
-curl -sL https://deb.nodesource.com/setup_8.x | bash -s
+#curl -sL https://deb.nodesource.com/setup_8.x | bash -s
 
 #node install
 wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
