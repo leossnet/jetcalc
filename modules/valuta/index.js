@@ -66,8 +66,10 @@ var MValuta = (new function() {
                     RVS.push({Code:F.CodeValuta,Name:F.SNameValuta});   
                 }
             })
-            self.ReportValutas(RVS);
-            self.RateValuta(_.first(RVS).Code);
+            if (!_.isEmpty(RVS)){
+                self.ReportValutas(RVS);
+                self.RateValuta(_.first(RVS).Code);
+            }
             return done();
         })
     }
