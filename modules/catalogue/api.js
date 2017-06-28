@@ -273,8 +273,8 @@ router.put('/model', HP.ModelAccessM(), function(req,res,next){
 	var ModelData = _.pick(Data,_.filter(CFG.EditFields.concat("_id"),function(F){
 		return F.indexOf("Link_")==-1;
 	}));
-
 	M.SaveModel(ModelName,ModelData,function(err){
+		console.log("WILL DO NEXT",err);
 		if (err) return next(err);
 		async.each(links,function(link, cb){
 			M.SaveLinks(link,Data["Link_"+link],cb);

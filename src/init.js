@@ -13,7 +13,6 @@ var init = {
 			'task',
 			'usertask'
 		];
-
 		async.map(collectionsToCheck,function(model,callback){
 			mongoose.model(model).count({},callback);
 		},function(err,results){
@@ -29,9 +28,9 @@ var init = {
 		init.checkInitState(function(err,initState){
 			if (initState) {
 				var tasks = [init.initAdmin,init.initTask,init.initUserTask];
-
 				async.series(tasks,function(err){
-					return done(err);
+					var LIB = require(__base+"lib/helpers/lib.js");
+					LIB.SyncPriveleges(done);
 				});
 			} else {
 				return done(err);

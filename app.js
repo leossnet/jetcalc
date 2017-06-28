@@ -16,7 +16,7 @@ var  config      = require('./config.js')
 , cookieParser   = require('cookie-parser')
 , methodOverride = require('method-override')
 , debug          = require('./lib/debug.js')
-, git            = require('./lib/gitControl.js')
+//, git            = require('./lib/gitControl.js')
 , socket         = require('./src/socket.js')
 , UserActivity   = require('./src/audit.js')
 , timeToLive     = 24*60*60*1000
@@ -116,6 +116,12 @@ mongoose.connection.on('connected', function(){
         
         plugins.Router(function(err,ModulesRouter){
             app.use(ModulesRouter);
+            app.use(function (err, req, res, next) {
+                if (_.isObject(err) && err.Module){
+                    return res.redirect("/error?"+QueryString.stringify(err));
+                }
+                return res.json({err:err+''});
+            });            
         })
         
 
@@ -123,17 +129,10 @@ mongoose.connection.on('connected', function(){
         var options = {};
         var server = null;
 
-//        if (environment=="production"){
-//          var https = require("https");
-//          var fs = require('fs.extra');
-//          var privateKey = fs.readFileSync(config.keyFile);
-//          var cert = fs.readFileSync(config.certFile);
-//          options  = {key: privateKey, cert: cert};
-//          server = https.createServer(options,app);
-//        } else if (environment=="development" || environment=="staging"){
-          var http = require("http");
-          server = http.createServer(app);
-//        }
+
+        var http = require("http");
+        server = http.createServer(app);
+
 
         server.on('clientError', function(err) {
             console.log('CLIENT ERROR', err);
@@ -141,7 +140,7 @@ mongoose.connection.on('connected', function(){
 
         debug.debugRecord();
 
-        app.use(git.router);
+        //app.use(git.router);
 
         if (errorCatch) process.on('uncaughtException', function (err,info) {  console.log(err,info); });
         if (debugRequests)  console.log("Starting " + environment + " server on "+E_PORT);
@@ -151,12 +150,7 @@ mongoose.connection.on('connected', function(){
 
         if (server) server.listen(E_PORT);
 
-        app.use(function (err, req, res, next) {
-            if (_.isObject(err) && err.Module){
-                return res.redirect("/error?"+QueryString.stringify(err));
-            }
-            return res.json({err:err+''});
-        });
+       
 
 
         

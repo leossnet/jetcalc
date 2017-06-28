@@ -518,19 +518,9 @@ router.get('/syncgitmodules', HP.TaskAccess("IsModulesAdmin"), function (req, re
 
 
 router.get('/syncpriveleges', HP.TaskAccess("IsModulesAdmin"), function (req, res, next) {
-    var path = __base+"modules";
-    var Functions = require(__base+"modules/modules/functions.js");
-    LIB.listConfigs (path,function(err,list){  
-        list.forEach(function(L){
-            if (L.config.permissions){
-                Functions.Register(L.config.id,path,L.config.permissions);
-            }
-        })    
-        if (mongoose.models["privelege"]){
-            Functions.Sync(function(){
-                return res.json({})
-            });
-        }
+    LIB.SyncPriveleges(function(err){
+        if (err) return next(err);
+        return res.json({});
     })
 })
 
