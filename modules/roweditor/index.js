@@ -429,7 +429,7 @@ var MRowEditor = (new function() {
     }
 
 	self.Columns = function(){
-		var Cols = ["NumRow","CodeRow","NameRow"];
+		var Cols = ["CodeRow","NumRow","NameRow"];
 		switch (self.Mode()){
 			case "Structure":
 				Cols = ['level',"IndexRow"].concat(Cols).concat(["DoRemove","CodeParentRow"]);//
