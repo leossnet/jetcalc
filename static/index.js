@@ -51,9 +51,18 @@ var MSite = (new function(){
 
 	self.AnnounceTimeout = {
 		ctrls:null,
-		scroll:null
+		scroll:null,
+		refresh:null
 	};
 	
+	self.AnnounceF9 = function(noCache){
+		self.FlashButton("fa-refresh");
+		if (self.AnnounceTimeout.refresh) clearTimeout(self.AnnounceTimeout.refresh);
+		self.AnnounceTimeout.refresh = setTimeout(function(){
+			self.Events.emit("refresh",noCache);self.AnnounceTimeout.refresh = null;
+		},500);
+	}
+
 	self.AnnounceCtrS = function(){
 		self.FlashButton("fa-save");
 		if (self.AnnounceTimeout.ctrls) clearTimeout(self.AnnounceTimeout.ctrls);
@@ -90,6 +99,9 @@ var MSite = (new function(){
 			document.addEventListener("keydown", function(e) {
 			  if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
 			    e.preventDefault(); self.AnnounceCtrS();
+			  }
+			  if (e.keyCode == 120 ) {
+			    e.preventDefault(); self.AnnounceF9((navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey));
 			  }
 			}, false);
 			$(window).scroll(function() {

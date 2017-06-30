@@ -4,7 +4,7 @@
    <!-- ko foreach:MColumns.ColsetCols -->
          <!-- ko template:{
                name:'small_form_with_header',
-               data:{Name:'',Fields:['NameColsetCol','IndexColsetCol','CodeCol','Condition','CodePeriod','Year','IsFixed'],Model:$data,Remove:MColumns.RemoveColset}
+               data:{Name:'',Fields:['NameColsetCol','IndexColsetCol','CodeCol','Condition','CodePeriod','Year','IsFixed','IsControlPoint','IsAfFormula','AfFormula','IsAgFormula','AgFormula'],Model:$data,Remove:MColumns.RemoveColset}
          } --><!-- /ko -->
    <!-- /ko -->
    <a class="addLinkModel" data-bind="click:MColumns.AddColsetCol">Добавить колонку</a>

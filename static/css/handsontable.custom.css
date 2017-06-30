@@ -141,15 +141,18 @@
 .handsontable td.topLevel{
     font-weight: 600;
     padding-left: 4px;
+    background-color: #FFF;
 }
 
 .handsontable td.subLevel{
     font-weight: 600;
     padding-left: 16px;
+    background-color: #FFF;
 }
 
 .handsontable td.treeCell{
     text-align: left;
+    background-color: #FAFAFA;
 }
 
 

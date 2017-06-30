@@ -45,17 +45,14 @@ var MRowEditor = (new function() {
     }
 
     self.BeforeShow = function(){
-    	console.log("BeforeShow >> SubscribeDoc");
     	self.SubscribeDoc();
     	self.Show();
     }
 
     self.BeforeHide = function(){
-    	console.log("BeforeHide >> UnSubscribeDoc");
     	self.UnSubscribeDoc();
     	self.Rows = null;
     	if (self.table)  {
-    		console.log("Destroy table");
     		self.table.destroy();
     		self.table = null;
     	}
@@ -66,34 +63,47 @@ var MRowEditor = (new function() {
     }
 
     self.RootBase = "";
-    self.NewCode = function(ind){
-    	var toNum = function(code){
-    		var z = _.last(code.split(self.RootBase)).replace(/[^0-9]*/g,'');
-    		return _.isEmpty(z) ? 0:Number(z);
-    	}
-    	if (ind){
-    		try{
-    			var Start = self.Rows[ind];
-    			var End = self.Rows[ind+1];
-    			var ST = toNum(self.Rows[ind].CodeRow);
-    			if (!Start) throw "Failed";
-    			if (!End){
-    				return self.RootBase+(ST+5);
-    			} else {
-    				var EN = toNum(self.Rows[ind+1].CodeRow);
-    				return self.RootBase+numeral(((ST+EN)/2)).format("#");
-    			}
-    		} catch(e){
-    			console.log(e);
-    			return self.NewCode();
+    self.NewCode = function(ind,key,value,oldvalue){
+    	var RootCode = "";
+    	for (var index = ind; index>=0; index--){
+    		if (self.Rows[index] && self.Rows[index].level==0){
+    			RootCode = self.Rows[index].CodeRow;
+    			break;
     		}
-    	} else {
-	    	var Nums = _.sortBy(_.map(self.Rows,function(R){
-	    		if (!R || !R.CodeRow) return 0;
-	    		return toNum(R.CodeRow);
-	    	}));
     	}
-    	return self.RootBase+((_.last(Nums) || 0)+10)
+    	var _toNum = function(Code){
+    		var r = 0;
+    		try{
+    			r = Number(_.last(self.Rows[ind-1].CodeRow.split(RootCode))) || 0;	
+    		} catch(e){
+    			;
+    		}
+    		return r;
+    	}
+		if (key=='NumRow' && RootCode && value) {
+			return [RootCode,value].join("");
+		} else {
+			var postfix = 0;
+    		if (self.Rows[ind-1] && self.Rows[ind+1] && self.Rows[ind+1].level){
+    			var prev = _toNum(self.Rows[ind-1].CodeRow), post = _toNum(self.Rows[ind+1].CodeRow);
+    			postfix =  Math.round((prev+post)/2);
+    			console.log("1",ind,postfix,RootCode,self.Rows[ind-1].CodeRow);
+    		} else {
+    			if ((self.Rows[ind-1] && self.Rows[ind-1].level==0) || !self.Rows[ind-1] || !self.Rows[ind-1].CodeRow){
+    				if (self.Rows[ind-1] && self.Rows[ind-1].CodeRow){
+						postfix = _toNum(self.Rows[ind-1].CodeRow)+10;
+						console.log("2",ind,postfix,RootCode,self.Rows[ind-1].CodeRow);						
+    				} else {
+    					postfix = 10;	
+    					console.log("3",ind,postfix,RootCode);						
+    				}    				
+    			} else {
+    				postfix = _toNum(self.Rows[ind-1].CodeRow)+10;
+    				console.log("4",ind,postfix,RootCode,self.Rows[ind-1].CodeRow);
+    			} 
+    		}
+	    	return RootCode+postfix;
+		}
     }
 
 	self.LoadRows = function(WithoutCache,done){
@@ -119,7 +129,7 @@ var MRowEditor = (new function() {
 	self._change = function(ind,key,value,oldvalue){
     	if (!self.Rows[ind])  {
 			self.Rows[ind] = {
-				CodeRow:self.NewCode(),
+				CodeRow:self.NewCode(ind,key,value,oldvalue),
 				NameRow:'Новый ряд',
 				NumRow:"",
 				level:1,
@@ -192,7 +202,7 @@ var MRowEditor = (new function() {
 				Rows:_.map(_.filter(self.Rows,function(R){
 			 			return !_.isEmpty(R.CodeRow);
 					}),function(R){
-						return _.pick(R,["level","CodeRow","NumRow","NameRow","DoRemove","IsNew"]);
+						return _.pick(R,["level","CodeRow","NumRow","NameRow","DoRemove","IsNew","CodeParentRow","IndexRow"]);
 					})
 			},function(){
 				self.Show();
@@ -422,7 +432,7 @@ var MRowEditor = (new function() {
 		var Cols = ["NumRow","CodeRow","NameRow"];
 		switch (self.Mode()){
 			case "Structure":
-				Cols = ['level',"IndexRow"].concat(Cols).concat(["DoRemove"]);//
+				Cols = ['level',"IndexRow"].concat(Cols).concat(["DoRemove","CodeParentRow"]);//
 			break;	
 			case "MainFields":
 				Cols = Cols.concat(["CodeRowLink","CodeMeasure","CodeFormat", "CodeStyle",  "CodeValuta", "IsAnalytic", "IsControlPoint"]);
@@ -527,7 +537,7 @@ var MRowEditor = (new function() {
 		var HandsonRenders = new HandsonTableRenders.RenderController();
 		var TreeArr = _.sortBy(self.Rows,'lft');		
 		var RowsInfo = {};
-		var Widths = [50,80,400];
+		var Widths = [100,50,400];
 		var params = {
 	    	cells:HandsonRenders.UniversalRender,
 	        fixedColumnsLeft: 3,
@@ -645,6 +655,7 @@ var MRowEditor = (new function() {
         var Lvl = parseInt(instance.getData()[row][0]);
         td.className = 'simplecell treeCell';
         switch (Lvl) {
+            case 0 : $(td).toggleClass('zeroLevel'); break;
             case 1 : $(td).toggleClass('topLevel'); break;
             case 2 : $(td).toggleClass('subLevel'); break;
             break;

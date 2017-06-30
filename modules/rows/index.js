@@ -12,8 +12,7 @@ var MRows = (new function() {
 
 
     self.SaveChanges = function(){
-        self.IsLoading(true);
-        self.IsLoading(false);
+
     }
 
 
