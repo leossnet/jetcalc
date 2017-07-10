@@ -22,3 +22,7 @@ select.htSelectEditor{
     font-size: 7px;
     color:orange;
 }
+.handsontable td.treeCell.zeroLevel{
+    background-color: #e8e8e8;
+    font-weight: bold;
+}

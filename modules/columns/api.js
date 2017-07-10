@@ -68,7 +68,7 @@ var HeadersLoader = (new function(){
 
 router.get('/colsetcol', LIB.Require(['CodeColset']), HP.TaskAccess("IsColsetEditor"), function(req,res,next){
 	var CodeColset = req.query.CodeColset;
-	mongoose.model("colsetcol").find({CodeColset:CodeColset}).sort({IndexColsetCol:1}).isactive().exec(function(err,CP){
+	mongoose.model("colsetcol").find({CodeColset:CodeColset}).sort({IndexColsetCol:1}).isactive().lean().exec(function(err,CP){
 		return res.json(CP);
 	})
 })
