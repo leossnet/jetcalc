@@ -75,6 +75,7 @@ var LIB = {
     _arrCheck:function(key,args){
         args = LIB._args(args);
         var grps = LIB.get(key);
+        if (!Array.isArray(grps)) grps = [grps];
         var intersect = grps.filter(function(n) {
             return args.indexOf(n) != -1;
         });
@@ -95,7 +96,7 @@ var LIB = {
     },
     // Проверка перечислений
     periodin: function(args) {
-        return LIB._simpleCheck('period',args);
+        return LIB._arrCheck('period',args);
     },
     rowin:function(args){
         return LIB._simpleCheck('row',args);
