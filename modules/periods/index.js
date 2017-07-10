@@ -131,11 +131,11 @@ var MPeriods = (new function() {
         switch (self.Mode()){
             case "Periods":
                 ModelTableEdit.InitModel("period",["IsReportPeriod","IsFormula","CodePeriod","NamePeriod"],{IsFormula:-1,MCount:1,BeginDate:1});
-                ModelTableEdit.ForceEditFields = [
-                    "CodePeriod","NamePeriod","BeginDateText","EndDateText","MCount","IsFormula","Formula","IsReportPeriod","IsNone"
-                ]; 
+                //ModelTableEdit.ForceEditFields = [
+                //"CodePeriod","NamePeriod","BeginDateText","EndDateText","MCount","IsFormula","Formula","IsReportPeriod","IsNone"
+                //]; 
                 ModelTableEdit.IsExtendEditor(true);
-                ModelTableEdit.EditLinks(["periodgrpref"]);     
+                //ModelTableEdit.EditLinks(["periodgrpref"]);     
             break;
             case "PeriodGrps":
                 ModelTableEdit.InitModel("periodgrp",["CodePeriodGrp","NamePeriodGrp","ForPermits"]);

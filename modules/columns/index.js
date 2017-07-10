@@ -108,9 +108,9 @@ var MColumns = (new function() {
                 self.LoadHeadersTree(function(){
                     ModelTableEdit.InitModel("header",["CodeHeader","NameHeader"],{CodeHeader:1},{CodeParentHeader:{$in:[null,""]}});
                     ModelTableEdit.IsOverrideList(true);
-                    ModelTableEdit.ForceEditFields = [
+                    /*ModelTableEdit.ForceEditFields = [
                          "CodeHeader", "NameHeader", "IndexHeader", "Condition", "Year", "IsFixed", "CodeColset", "CodeParentHeader", "CodePeriod"
-                    ];                 
+                    ];*/                 
                 })
             break;            
             case "ColSet":

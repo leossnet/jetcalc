@@ -22,30 +22,30 @@ var MRows = (new function() {
         switch (self.Mode()){
             case "Root":
                 ModelTableEdit.InitModel("row",["CodeRow","NameRow"],{CodeRow:1},{CodeParentRow:{$in:[null,""]}});
-                ModelTableEdit.ForceEditFields = [
+                /*ModelTableEdit.ForceEditFields = [
                     "CodeRow","NameRow","HasFilteredChild","NoFiltered","CodeValuta","CodeMeasure","CodeFormat","CodeParentRow"
-                ];
+                ];*/
             break;            
             case "Measure":
                 ModelTableEdit.InitModel("measure",["IsExchange","CodeMeasure","SNameMeasure","NameMeasure"],{NumMeasure:1});
             break;            
             case "Format":
                 ModelTableEdit.InitModel("format",["CodeFormat", "NameFormat","FormatValue"]);
-                ModelTableEdit.ForceEditFields = [
+                /*ModelTableEdit.ForceEditFields = [
                     "CodeFormat", "NameFormat","FormatValue"
-                ];
+                ];*/
             break;             
             case "Style":
                 ModelTableEdit.InitModel("style",["CodeStyle", "NameStyle","CSS"]);
-                ModelTableEdit.ForceEditFields = [
+                /*ModelTableEdit.ForceEditFields = [
                     "CodeStyle", "NameStyle", "CSS"
-                ];
+                ];*/
             break;             
             case "Tags":
                 ModelTableEdit.InitModel("tag",["CodeTag", "NameTag","SNameTag"]);
-                ModelTableEdit.ForceEditFields = [
+                /*ModelTableEdit.ForceEditFields = [
                     "CodeTag", "NameTag", "SNameTag", "IsList", "IsObj", "IsRow", "IsCol", "IsObjType"
-                ];
+                ];*/
             break;            
         }
         return done && done()
