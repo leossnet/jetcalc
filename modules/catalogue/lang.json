@@ -22,5 +22,6 @@
 	"validatefailed":"Этот код уже используется",
 	"dependaction":"Зависимые модели",
 	"forcedelete":"Удалить и обнулить ссылки",
+	"notexisted":"Нет данных",
 	"DoRemove":"Удалить"
 }
