@@ -65,9 +65,9 @@ var PermChecker = (new function(){
 		}
 	}
 
-	self.ModelAccessM = function(T){
+	self.ModelAccessM = function(){
 		return function(req, res, next){
-			T = T || req.query.model || req.body.model;
+			var T =  req.query.model || req.body.model;
 			console.log("Checking Model ",T);
 			if (self.ModelAccess(T,self.ReqContext(req),req.session.permissions)){
 				return next();	
