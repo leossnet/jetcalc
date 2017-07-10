@@ -79,17 +79,17 @@ var MDocument = (new function() {
         switch (self.Mode()){
             case "Roles":
                 ModelTableEdit.InitModel("role",["IsExtended","CodeRole","NameRole"],{IsExtended:1,CodeRole:1});
-                /*ModelTableEdit.ForceEditFields = [
+                ModelTableEdit.SetForceEditFields ([
                         "CodeRole","NameRole","SNameRole","IsExtended"
-                ];*/
+                ]);
             break;            
             case "Folders":
                 self.LoadFolders(function(){
                     ModelTableEdit.InitModel("docfolder");    
                     ModelTableEdit.IsOverrideList(true);
-                    /*ModelTableEdit.ForceEditFields = [
+                    ModelTableEdit.SetForceEditFields ([
                         "CodeDocFolder", "NameDocFolder", "IndexDocFolder", "CodeParentDocFolder", "Icon"
-                    ]*/
+                    ]);
                 })                
             break;            
             case "Labels":
@@ -100,10 +100,10 @@ var MDocument = (new function() {
             break;   
             case "Docs":
                 ModelTableEdit.InitModel("doc",["CodeDoc","NameDoc","CodeRole","CodeGrp"],{IndexDoc:1});
-                /*ModelTableEdit.ForceEditFields = [
+                ModelTableEdit.SetForceEditFields ([
 					"CodeDoc","NameDoc","IsOlap","IsInput","IsChart","IsPresent","IsShowMeasure","CodeDocType","CodeRole","CodeGrp","CodeMeasure"
-                ];
-                ModelTableEdit.EditLinks(["docfolderdoc","docrow"]);*/                
+                ]);
+                ModelTableEdit.SetEditLinks(["docfolderdoc","docrow"]);
             break;            
         }
         return done && done()

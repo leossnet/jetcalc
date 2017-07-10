@@ -357,6 +357,10 @@ var ModelTableEdit = (new function () {
         self.ForceEditFields(_.intersection(Fields, MModels.Create(self.ModelName()).EditFields));
     }
 
+    self.SetEditLinks = function(Links){
+        self.EditLinks(Links);
+    }
+
     self.EditFields = function () {
         if (self.ForceEditFields.length) return self.ForceEditFields;
         return self.DefaultEditFields;
@@ -419,6 +423,7 @@ var ModelTableEdit = (new function () {
 
     self.Settings = function () {
         self.TableFieldsModel(MModels.Create(self.ModelName(), {}));
+        console.log(self.TableFields(),"<<<<<");
         self._prepareSettings(self.TableFieldsCheckList, self.TableFields, 'EditFields');
         self._prepareSettings(self.ForceEditFieldsCheckList, self.ForceEditFields, 'EditFields');
         self._prepareSettings(self.LinkFieldsCheckList, self.EditLinks, 'Links');
@@ -619,6 +624,8 @@ var ModelTableEdit = (new function () {
         self.Filter(null);
         self.EditLinks([]);
     }
+
+
 
     self.LoadList = function () {
         if (!self.ModelName()) return;
