@@ -379,7 +379,6 @@ var Unmapper = function(Context, InfoCacher){
 	 	}
 	 	if (Math.abs(R.Year)<1000) R.Year = parseInt(Cell.Year)+R.Year;
 		if (R.Period.indexOf('-')>=0){
-			console.log(self.Info.Data.Period["-1"]);
 			R.Period = self.Info.Data.Period[R.Period][Cell.Period];	
 		}	
 		var ObjModifiers = ['toobj','tomainobj','consobj','consgrp','toparentobj','torootobj','<<','<<<']
@@ -452,7 +451,7 @@ var Unmapper = function(Context, InfoCacher){
 			obj:  Cell.Obj,
 			row:Cell.Row, 
 			col: Cell.Col, 			
-			period: Cell.Period, 
+			period:[Cell.Period].concat(P.Grps),
 			months:P.MonthStart,
 			MCOUNT:P.MCount,
 			coltags:Col.Tags,
@@ -1184,7 +1183,6 @@ var Evaluator = function(Unmapper){
 		What2Ask.push(self.Field);
 		self.getCells(What2Ask,Primaries,function(err,ResultCellsArray){
 
-			console.log("GOT",ResultCells);
 			var ResultCells = {};
 			ResultCellsArray.forEach(function(RC){
 				ResultCells[RC.CodeCell] = RC;

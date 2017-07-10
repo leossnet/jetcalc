@@ -131,18 +131,18 @@ var MPeriods = (new function() {
         switch (self.Mode()){
             case "Periods":
                 ModelTableEdit.InitModel("period",["IsReportPeriod","IsFormula","CodePeriod","NamePeriod"],{IsFormula:-1,MCount:1,BeginDate:1});
-                ModelTableEdit.ForceEditFields = [
+                ModelTableEdit.SetForceEditFields([
                     "CodePeriod","NamePeriod","BeginDateText","EndDateText","MCount","IsFormula","Formula","IsReportPeriod","IsNone"
-                ]; 
+                ]); 
                 ModelTableEdit.IsExtendEditor(true);
-                ModelTableEdit.EditLinks(["periodgrpref"]);     
+                ModelTableEdit.SetEditLinks(["periodgrpref"]);     
             break;
             case "PeriodGrps":
                 ModelTableEdit.InitModel("periodgrp",["CodePeriodGrp","NamePeriodGrp","ForPermits"]);
-                ModelTableEdit.ForceEditFields = [
+                ModelTableEdit.SetForceEditFields([
                     "CodePeriodGrp","NamePeriodGrp","ForPermits"
-                ]; 
-                ModelTableEdit.EditLinks(["periodgrpref"]);     
+                ]); 
+                ModelTableEdit.SetEditLinks(["periodgrpref"]);     
             break;
             case "PeriodAutoFill":
                 ModelTableEdit.InitModel("periodautofill",["CodeSourcePeriod","CodeTargetPeriod","Idx"],{CodeSourcePeriod:1,Idx:1});
@@ -152,7 +152,6 @@ var MPeriods = (new function() {
             break;
             case "PeriodMap":
                 self.LoadPeriodMap();
-                console.log("Loading period map");
             break;
         }
         return done && done()

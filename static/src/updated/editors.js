@@ -1,4 +1,3 @@
-
 var ConditionEditor = (new function(){
 	
 	var self = this;
@@ -586,13 +585,44 @@ var FormulaEditor = (new function(){
 		return Result;
 	}
 
+
+	self.CheckExisted = function(done){
+		var Formula = self.Formula()+"";
+		if (Formula.indexOf("$")===-1) return done();
+		$.ajax({
+			url:'/api/cell/validateformula',
+			method:'post',
+			data:{
+				Formula:Formula,
+			},
+			success:function(data){
+				var ToPrint = [];
+				if (data.errMsg) {
+					for (var K in data.errMsg){
+						ToPrint.push(Tr(K)+": "+data.errMsg[K].join(", "));
+					}
+					return done (Tr("notexisted")+" "+ToPrint);
+				} else {
+					return done();	
+				}				
+			}
+		})
+	}
+
 	self.editorTest =  ko.computed(function() {
 		var Formula = (self.Formula()+'').trim();
 		if (Formula.length){
 			try{
 				var R = parser.parse(Formula);
 				self.ParserResult(R);
-				self.isOk(true);
+				self.CheckExisted(function(errMsg){
+					if (errMsg){
+						self.ParserResult(errMsg);
+						self.isOk(false);
+					} else {
+						self.isOk(true);	
+					}					
+				})
 			} catch(e){
 				self.isOk(false);
 				var errMsg = self.ReparseError(e.message);
