@@ -1,0 +1,37 @@
+{
+    "apps": [
+        {
+            "name": "jetcalc",
+            "script": "app.js",
+            "args": [],
+            "cwd": ".",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "instances": 1,
+            "exec_mode": "cluster_mode"
+        },
+        {
+            "name": "calculator_jetcalc",
+            "cwd": ".",
+            "script": "calculator.js",
+            "node_args": "--expose-gc",
+            "instances": 1,
+            "env": {
+                "NODE_ENV": "development"
+            },            
+            "exec_mode": "cluster_mode"
+        },
+        {
+            "name": "rabbit-workers_jetcalc",
+            "cwd": ".",
+            "script": "rabbit-workers.js",
+            "node_args": "--expose-gc",
+            "instances": 1,
+            "env": {
+                "NODE_ENV": "development"
+            },            
+            "exec_mode": "cluster_mode"
+        }
+    ]
+}
