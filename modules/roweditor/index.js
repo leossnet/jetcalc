@@ -22,14 +22,6 @@ var MRowEditor = (new function() {
     				})
     				self.AskForRender();
 				}
-        	},
-	        hsep15: "---------",
- 			remove_row: {
-          		name: 'Удалить ряд',
-          		disabled: function () {
-          			var cx = self.table.getSelected();
-          			return !_.isNumber(cx[0]) || !self.Rows[cx[0]].IsNew;
-          		}
         	}
         }
         return {

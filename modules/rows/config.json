@@ -13,7 +13,7 @@
   		"IsRowEditor"
   ],
    "permissionsModels":{
-      "IsRowEditor":["row","measure","format","tag","style"]
+      "IsRowEditor":["row","measure","format","tag","style","sumgrp"]
   },
   "sort_index":50
 }

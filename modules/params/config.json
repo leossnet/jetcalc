@@ -1,0 +1,19 @@
+{
+  "id": "params",
+  "title": "Параметры",
+  "icon": "fa-sliders",
+  "class_name": "Params",
+  "is_enabled": true,
+  "initial_load" :true,
+  "type":"adminpage",
+  "places":{
+      "adminpage"  : true
+  },
+  "permissions" : [
+      "IsParamSetTunner"
+  ],
+  "permissionsModels":{
+      "IsParamSetTunner":["param","listdefinition","paramset","paramkey","paramsetkey","docparamkey","paramgrp","paramtab"]
+  },
+  "sort_index":20
+}

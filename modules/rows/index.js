@@ -25,6 +25,12 @@ var MRows = (new function() {
                     "CodeRow","NameRow","HasFilteredChild","NoFiltered","CodeValuta","CodeMeasure","CodeFormat","CodeParentRow"
                 ]);
             break;            
+            case "SumGrp":
+                ModelTableEdit.InitModel("sumgrp",["CodeSumGrp","NameSumGrp"]);
+                ModelTableEdit.SetForceEditFields ([
+                    "CodeSumGrp","NameSumGrp","SNameSumGrp"
+                ]);
+            break;            
             case "Measure":
                 ModelTableEdit.InitModel("measure",["IsExchange","CodeMeasure","SNameMeasure","NameMeasure"],{NumMeasure:1});
             break;            
