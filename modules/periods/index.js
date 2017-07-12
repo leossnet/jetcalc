@@ -183,7 +183,7 @@ var MPeriods = (new function() {
     }
     
     self.SaveChangesPMap = function(){
-        var FieldsToPass = MModels.Create("reportperiods").EditFields;
+        var FieldsToPass = MModels.Create("reportperiods").EditFields.concat(["_id"]);
         var Data = ko.toJS(self.LinkPeriods), Reparsed = {};
         for (var Key in Data){
             Reparsed[Key] = _.filter(_.map(Data[Key],function(M){

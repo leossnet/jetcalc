@@ -74,8 +74,7 @@ var MapPeriods = (new function(){
 				self.Result = Answer;
 				return done(err,self.Result);
 			})
-		})		
-
+		})
 	}
 
 	self.Load = function(done){

@@ -179,6 +179,7 @@ var FormulaEditor = (new function(){
 	    var from = textLine.substring(0,cur.ch).length-lastWord.length;
 	    var chars = {"$":'row',"@":'col',".P":'period',"#":'obj'};
 	    var choosed = null, choosedChar = null, choosedPos = -1;
+
 	    for (var mark in chars){
 	    	var test = lastWord.indexOf(mark);
 	    	if (test>choosedPos){
@@ -194,7 +195,9 @@ var FormulaEditor = (new function(){
 	    	}
 	    	Catalogue.SearchModel(choosed,fragment,function(r){
 	    		 callback({
-       				 list: _.map(r,"id"),
+       				 list: _.map(r,function(I){
+       				 	return {text:I.id,displayText:[I.id,I.name].join(". ")};
+       				 }),
        				 from:from,
         			 to: range.head,
         			 completeSingle:false
