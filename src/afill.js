@@ -80,7 +80,7 @@ module.exports =  function(){
 				CodeValuta:Context.CodeValuta
 			};
 		})
-		db.setCells(_.values(ToSaveReparsed),function(err){
+		db.SetCells(_.values(ToSaveReparsed),function(err){
 			return done();
 		})
 	}
