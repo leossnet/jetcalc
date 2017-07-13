@@ -1,4 +1,5 @@
 var  mongoose   = require('mongoose');
+var  _          = require('lodash');
 
 module.exports = {
 	models:{
@@ -17,7 +18,7 @@ module.exports = {
 						if (indexed[CodeHeader]) return _p(indexed[CodeHeader]);
 						return true;
 					}
-					if (!_p[self.CodeHeader]) return done("Рекурсия в дереве заголовков");
+					if (!_p[self.CodeHeader] && !_.isEmpty(self.CodeParentHeader)) return done("Рекурсия в дереве заголовков");
 					return next();
 				})
 

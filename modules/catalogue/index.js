@@ -329,6 +329,7 @@ var ModelTableEdit = (new function () {
     self.Search = ko.observable("").extend({
         throttle: 600
     });
+
     self.CodeField = ko.observable();
     self.NameField = ko.observable();
     self.IsInited = ko.observable(false);
@@ -413,8 +414,10 @@ var ModelTableEdit = (new function () {
     }
 
     self._prepareSettings = function (checkList, fields, fieldsType) {
+        console.log(fieldsType);
         var tmpCheckList = {};
-        self.TableFieldsModel()[fieldsType].forEach(function (field) {
+        var FS = self.TableFieldsModel()[fieldsType] || [];
+        FS.forEach(function (field) {
             var val = fields.indexOf(field) != -1;
             tmpCheckList[field] = ko.observable(val);
         });
@@ -455,20 +458,23 @@ var ModelTableEdit = (new function () {
     }
 
     self.LoadModel = function () {
-        self._loadModel(function () {
+        self._loadModel(self.Choosed(),function () {
             self.Events.emit("modelloaded");
         })
     }
+    self.ReloadModel = function (Code,done) {
+        console.log("ReloadModel");
+        self._loadModel(Code,done);
+    }
 
-    self._loadModel = function (done) {
-        if (!self.Choosed()) return;
+    self._loadModel = function (Code,done) {
         self.Error(null);
         self.IsLoading(true);
         $.ajax({
             url: self.base + 'model',
             data: {
                 model: self.ModelName(),
-                code: self.Choosed(),
+                code: Code,
                 links: self.EditLinks()
             },
             method: 'get',
@@ -524,9 +530,11 @@ var ModelTableEdit = (new function () {
                     self.IsLoading(false);
                     if (data.err) return self.Error(data.err);
                     self.LoadList();
-                    if (!self.Choosed()) self.Choosed(data.code);
-                    self._loadModel(function () {
-                        self.Events.emit("modelsaved");
+                    var Code = self.Choosed() || data.code;
+                    self.ReloadModel(Code,function () {
+                        setTimeout(function(){
+                          self.Events.emit("modelsaved");  
+                        },0);
                     })
                 }
             })
@@ -734,13 +742,17 @@ var ModelTableEdit = (new function () {
                     newref = self.refStack()[self.refStack().length - 2].model;
                     newref[fieldName](data.code);
                 } else {
-                    var ch = self.LoadedModel().toJS();
-                    self.LoadedModel()[fieldName](data.code);
-                }
-
-                self.refStack.pop();
-                if (self.refStack().length == 0) {
-                    self.hideAddModal();
+                    if (self.LoadedModel()){
+                        var ch = self.LoadedModel().toJS();
+                        self.LoadedModel()[fieldName](data.code);    
+                        self.refStack.pop();
+                        if (self.refStack().length == 0) {
+                            self.hideAddModal();
+                        }
+                    } else {
+                        self.hideAddModal();
+                        ModelChooser.SearchStr.valueHasMutated()
+                    }                    
                 }
             }
         })

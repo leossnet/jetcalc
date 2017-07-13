@@ -28,13 +28,15 @@ var MColumns = (new function() {
     }
 
     self.SaveColsetCols = function(){
+        var Code = ModelTableEdit.LoadedModel().CodeColset();
         var ColsetCols = [];
         var Data = {
-            CodeColset:ModelTableEdit.LoadedModel().CodeColset(),
+            CodeColset:Code,
             Cols:_.map(self.ColsetCols(),function(Model){
-                return _.pick(Model.toJS(),Model.EditFields);
+                return _.merge(_.pick(Model.toJS(),Model.EditFields),{CodeColset:Code});
             })   
         };
+        console.log("DATA",Data);
         self.rPut("colsetcol",Data,function(){
             self.LoadColset();
         })
@@ -71,6 +73,7 @@ var MColumns = (new function() {
     }
 
     self.ModelIsLoaded = function(){
+        console.log(">>>>>>","ModelIsLoaded",">>>>>>");
         switch (self.Mode()){
             case "ColSet":
                 self.ColsetCols([]);
