@@ -346,6 +346,15 @@ router.put('/execute', HP.DocAccess("DoBlock"), function(req,res,next){
 	})
 })
 
+
+
+router.get('/statestr',function(req,res,next){ 
+	Helper.Info(function(){
+		return res.json(Helper.StatesTranslate);
+	})
+})
+
+
 router.get('/history', HP.DocAccess("DoBlock"), function(req,res,next){ 
 	var Context = lib.ReqContext(req);
 	console.log(Context);
