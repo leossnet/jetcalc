@@ -47,6 +47,7 @@ var Workflow = (new function(){
         self.IsBlockAllowed(false);
         if (!Document.IsInput) return done && done();
     	$.getJSON(self.base+"status",Context,function(data){
+            console.log(data);
     		if (data.err) {
                 self.Error(data.err);   
                 return done && done();   

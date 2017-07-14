@@ -29,7 +29,6 @@ var Helper = (new function(){
 		self.Info(function(err,Loaded){
 			var DefaultState = _.find(Loaded.State,{IsDefault:true});
 			if (!DefaultState) return done();
-
 			Data.CodeState = DefaultState.CodeState;
 			return done(err,Data);
 		})
@@ -87,14 +86,14 @@ var Helper = (new function(){
 		self.Info(function(err,Loaded){
 			if (!Status) return done();
 			var Routes = _.filter(Loaded.Route,{CodeInitState:Status.CodeState});
-			console.log(Routes.length);
+			console.log("AAAAAAAA",Status.CodeState,"STATUS",Routes.length,Routes,Context.CodePeriod);
 			var Filtered = [];
 			Routes.forEach(function(R){
 				var Enabled = false;
 				var Links = R.Link_routeperiod;
 				Links.forEach(function(Link){
 					if (Link.CodePeriod==Context.CodePeriod){
-						if (Link.CodeDocType && Loaded.Doc[Link.CodeDocType].indexOf(Context.CodeDoc)!=-1){
+						if (Link.CodeDocType && Loaded.Doc[Link.CodeDocType] && Loaded.Doc[Link.CodeDocType].indexOf(Context.CodeDoc)!=-1){
 							Enabled = true;
 						} 
 						if (Link.CodeGrp && (
@@ -115,11 +114,23 @@ var Helper = (new function(){
 
 	self.Loaded = null;
 
+	self.StatesTranslate = {
+
+	}
+
+
+
 	self.Info = function(done){
 		if (self.Loaded) return done(null,self.Loaded);
-		var L = new Loader({UseCache:true});
+		var L = new Loader({UseCache:false});
 		L.get(function(err,Load){
 			self.Loaded = Load;
+			["Default","Opened","Closed","Agreed"].forEach(function(P){
+				var Q = {}; Q["Is"+P] = true;
+				var F = _.find(Load.State,Q);
+				self.StatesTranslate[P] = (F)? F.CodeState:null;
+			})
+			console.log(self.StatesTranslate);
 			return done(err,self.Loaded);
 		});
 	}
@@ -149,7 +160,7 @@ var Helper = (new function(){
 			var Periods2Check = [], Test = [];
 			Links.forEach(function(Link){
 				var K = Link.CodeCheckPeriod+":"+Link.CodeCheckState;
-				if (Link.CodeDocType && Loaded.Doc[Link.CodeDocType].indexOf(Context.CodeDoc)!=-1){
+				if (Link.CodeDocType && Loaded.Doc[Link.CodeDocType] && Loaded.Doc[Link.CodeDocType].indexOf(Context.CodeDoc)!=-1){
 					if (Test.indexOf(K)==-1){
 						Periods2Check.push({CodePeriod:Link.CodeCheckPeriod,CodeState:Link.CodeCheckState});
 						Test.push(K);
@@ -195,12 +206,12 @@ var Helper = (new function(){
 				return done(null,{Status:"skipped",Info:"Нет зависимых документов"});
 			}
 			var Failed = []; ;
-			if (Route.CodeFinalState!="Closed"){
+			if (Route.CodeFinalState!=Helper.StatesTranslate["Closed"]){
 				return done(null,{Status:"skipped",Info:"Не проверяем зависимые документы"});	
 			} 
 			async.each(Docs2Check,function(CodeDoc,cb){
 				self.GetData(_.merge(_.clone(Context),{CodeDoc:CodeDoc}),function(err,Data){
-					if (Data.CodeState=="Opened"){
+					if (Data.CodeState==Helper.StatesTranslate["Opened"]){
 						Failed.push(CodeDoc);
 					}
 					return cb();
@@ -282,6 +293,7 @@ var Helper = (new function(){
 			self.GetData(Context,function(err,Data){
 				var Route = _.find(Loaded.Route,{CodeRoute:CodeAction});
 				self.CheckRoute(Route,Context,function(err,Explain){
+					Explain = Explain || {};
 					for (var Key in Explain){
 						if (Explain[Key].Status=="failed"){
 							err = true;
@@ -320,9 +332,11 @@ router.put('/execute', HP.DocAccess("DoBlock"), function(req,res,next){
 	var Context = lib.ReqContext(req);
 	Context.CodeUser = req.user.CodeUser;
 	Helper.Execute(req.body.Action, Context, function(err,Info){
+		Info = Info || {};
 		for (var Code in Info){
 			if (Info[Code].Status=="failed") err = true;
 		}
+
 		if (err) {
 			Info.Status = "Failed";
 		} else {
