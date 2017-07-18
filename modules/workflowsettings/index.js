@@ -26,19 +26,19 @@ var MWorkFlowSettings = (new function() {
                 ModelTableEdit.InitModel("route");
             break;
             case "CheckPeriods":
-                ModelTableEdit.InitModel("routecheckperiod",["NoGrp","CodeGrp","CodeDocType","CodeRoute","CodePeriod","CodeCheckPeriod"]);
+                ModelTableEdit.InitModel("routecheckperiod");
             break;             
             case "RefPeriods":
-                ModelTableEdit.InitModel("routerefperiod",["CodeRoute","CodePeriod","CodeRefPeriod"]);
+                ModelTableEdit.InitModel("routerefperiod");
             break;              
             case "AvPeriods":
-                ModelTableEdit.InitModel("routeperiod",["NoGrp","CodeGrp","CodeDocType","CodeRoute","CodePeriod"]);
+                ModelTableEdit.InitModel("routeperiod");
             break;            
             case "Attaches":
-                ModelTableEdit.InitModel("routefiletype",["CodeDoc","CodeRoute","CodeFileType","CodePeriod"]);
+                ModelTableEdit.InitModel("routefiletype");
             break;
             case "FileTypes":
-                ModelTableEdit.InitModel("filetype",["CodeFileType","NameFileType"]);
+                ModelTableEdit.InitModel("filetype");
             break;
         }
     	return done && done()

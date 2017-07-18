@@ -1,0 +1,493 @@
+{
+	"header": {
+		"TableFields": [
+			"CodeHeader",
+			"NameHeader"
+		],
+		"EditFields": [
+			"CodeHeader",
+			"NameHeader",
+			"IndexHeader",
+			"Condition",
+			"Year",
+			"IsFixed",
+			"CodeColset",
+			"CodeParentHeader",
+			"CodePeriod"
+		],
+		"Links": []
+	},
+	"col": {
+		"TableFields": [
+			"IsFormula",
+			"CodeCol",
+			"NameCol"
+		],
+		"EditFields": [
+			"IsFormula",
+			"CodeCol",
+			"NameCol"
+		],
+		"Links": []
+	},
+	"period": {
+		"TableFields": [
+			"IsReportPeriod",
+			"IsFormula",
+			"CodePeriod",
+			"NamePeriod"
+		],
+		"EditFields": [
+			"CodePeriod",
+			"NamePeriod",
+			"BeginDateText",
+			"EndDateText",
+			"MCount",
+			"IsFormula",
+			"Formula",
+			"IsReportPeriod",
+			"IsNone"
+		],
+		"Links": [
+			"periodgrpref"
+		]
+	},
+	"periodgrp": {
+		"TableFields": [
+			"CodePeriodGrp",
+			"NamePeriodGrp",
+			"ForPermits"
+		],
+		"EditFields": [
+			"CodePeriodGrp",
+			"NamePeriodGrp",
+			"ForPermits"
+		],
+		"Links": [
+			"periodgrpref"
+		]
+	},
+	"periodautofill": {
+		"TableFields": [
+			"CodeSourcePeriod",
+			"CodeTargetPeriod",
+			"Idx"
+		],
+		"EditFields": [
+			"CodeSourcePeriod",
+			"CodeTargetPeriod",
+			"Idx"
+		],
+		"Links": []
+	},
+	"row": {
+		"TableFields": [
+			"CodeRow",
+			"NameRow"
+		],
+		"EditFields": [
+			"CodeRow",
+			"NameRow",
+			"HasFilteredChild",
+			"NoFiltered",
+			"CodeValuta",
+			"CodeMeasure",
+			"CodeFormat",
+			"CodeParentRow"
+		],
+		"Links": []
+	},
+	"sumgrp": {
+		"TableFields": [
+			"CodeSumGrp",
+			"NameSumGrp"
+		],
+		"EditFields": [
+			"CodeSumGrp",
+			"NameSumGrp",
+			"SNameSumGrp"
+		],
+		"Links": []
+	},
+	"measure": {
+		"TableFields": [
+			"IsExchange",
+			"CodeMeasure",
+			"SNameMeasure",
+			"NameMeasure"
+		],
+		"EditFields": [
+			"IsExchange",
+			"CodeMeasure",
+			"SNameMeasure",
+			"NameMeasure"
+		],
+		"Links": []
+	},
+	"format": {
+		"TableFields": [
+			"CodeFormat",
+			"NameFormat",
+			"FormatValue"
+		],
+		"EditFields": [
+			"CodeFormat",
+			"NameFormat",
+			"FormatValue"
+		],
+		"Links": []
+	},
+	"style": {
+		"TableFields": [
+			"CodeStyle",
+			"NameStyle"
+		],
+		"EditFields": [
+			"CodeStyle",
+			"NameStyle",
+			"CSS"
+		],
+		"Links": []
+	},
+	"tag": {
+		"TableFields": [
+			"CodeTag",
+			"NameTag",
+			"SNameTag"
+		],
+		"EditFields": [
+			"CodeTag",
+			"NameTag",
+			"SNameTag",
+			"IsList",
+			"IsObj",
+			"IsRow",
+			"IsCol",
+			"IsObjType"
+		],
+		"Links": []
+	},
+	"role": {
+		"TableFields": [
+			"IsExtended",
+			"CodeRole",
+			"NameRole"
+		],
+		"EditFields": [
+			"CodeRole",
+			"NameRole",
+			"SNameRole",
+			"IsExtended"
+		],
+		"Links": []
+	},
+	"docfolder": {
+		"TableFields": [
+			"CodeDocFolder",
+			"NameDocFolder"
+		],
+		"EditFields": [
+			"CodeDocFolder",
+			"NameDocFolder",
+			"IndexDocFolder",
+			"CodeParentDocFolder",
+			"Icon"
+		],
+		"Links": []
+	},
+	"doc": {
+		"TableFields": [
+			"CodeDoc",
+			"NameDoc",
+			"CodeRole",
+			"CodeGrp"
+		],
+		"EditFields": [
+			"CodeDoc",
+			"NameDoc",
+			"IsOlap",
+			"IsInput",
+			"IsChart",
+			"IsPresent",
+			"IsShowMeasure",
+			"CodeDocType",
+			"CodeRole",
+			"CodeGrp",
+			"CodeMeasure"
+		],
+		"Links": [
+			"docfolderdoc",
+			"docrow"
+		]
+	},
+	"obj": {
+		"TableFields": [
+			"CodeObj",
+			"NameObj",
+			"CodeObjType",
+			"CodeValuta"
+		],
+		"EditFields": [
+			"CodeObj",
+			"NameObj",
+			"IndexObj",
+			"Comment",
+			"CodeParentObj",
+			"CodeOrg",
+			"CodeObjType",
+			"CodeValuta",
+			"DateBegin",
+			"DateEnd"
+		],
+		"Links": [
+			"objgrp",
+			"objtag"
+		]
+	},
+	"grp": {
+		"TableFields": [
+			"CodeGrp",
+			"NameGrp"
+		],
+		"EditFields": [
+			"CodeGrp",
+			"NameGrp",
+			"IsAgGroup",
+			"Idx"
+		],
+		"Links": [
+			"objgrp"
+		]
+	},
+	"task": {
+		"TableFields": [
+			"CodeTask",
+			"NameTask"
+		],
+		"EditFields": [
+			"CodeTask",
+			"NameTask"
+		],
+		"Links": []
+	},
+	"user": {
+		"TableFields": [
+			"NameUser",
+			"JobTitle",
+			"CodeObj"
+		],
+		"EditFields": [
+			"CodeUser",
+			"NameUser",
+			"TabNum",
+			"LoginUser",
+			"JobTitle",
+			"WorkPhone",
+			"MobilePhone",
+			"Birthday",
+			"Mail",
+			"CodeObj",
+			"InAttentive",
+			"IsConfirmed"
+		],
+		"Links": []
+	},
+	"permit": {
+		"TableFields": [
+			"CodePermit",
+			"NamePermit",
+			"CodeObj"
+		],
+		"EditFields": [
+			"CodePermit",
+			"NamePermit",
+			"CodeObj",
+			"IsPublic"
+		],
+		"Links": []
+	},
+	"request": {
+		"TableFields": [
+			"NameUser",
+			"NameObjs",
+			"DateRequest"
+		],
+		"EditFields": [
+			"NameUser",
+			"JobTitle",
+			"TabNum",
+			"DateRequest",
+			"Birthday",
+			"WorkPhone",
+			"MobilePhone",
+			"Mail",
+			"NameObjs",
+			"Comments"
+		],
+		"Links": []
+	},
+	"org": {
+		"TableFields": [
+			"CodeOrg",
+			"NameOrg",
+			"CodeOtrasl"
+		],
+		"EditFields": [
+			"CodeOrg",
+			"NameOrg",
+			"CodeOtrasl"
+		],
+		"Links": []
+	},
+	"div": {
+		"TableFields": [
+			"CodeDiv",
+			"NameDiv"
+		],
+		"EditFields": [
+			"CodeDiv",
+			"NameDiv"
+		],
+		"Links": []
+	},
+	"city": {
+		"TableFields": [
+			"CodeCity",
+			"NameCity",
+			"CodeRegion"
+		],
+		"EditFields": [
+			"CodeCity",
+			"NameCity",
+			"CodeRegion"
+		],
+		"Links": []
+	},
+	"routecheckperiod": {
+		"TableFields": [
+			"NoGrp",
+			"CodeGrp",
+			"CodeDocType",
+			"CodeRoute",
+			"CodePeriod",
+			"CodeCheckPeriod"
+		],
+		"EditFields": [
+			"NoGrp",
+			"CodeGrp",
+			"CodeDocType",
+			"CodeRoute",
+			"CodePeriod",
+			"CodeCheckPeriod"
+		],
+		"Links": []
+	},
+	"routerefperiod": {
+		"TableFields": [
+			"CodeRoute",
+			"CodePeriod",
+			"CodeRefPeriod"
+		],
+		"EditFields": [
+			"CodeRoute",
+			"CodePeriod",
+			"CodeRefPeriod"
+		],
+		"Links": []
+	},
+	"routeperiod": {
+		"TableFields": [
+			"NoGrp",
+			"CodeGrp",
+			"CodeDocType",
+			"CodeRoute",
+			"CodePeriod"
+		],
+		"EditFields": [
+			"NoGrp",
+			"CodeGrp",
+			"CodeDocType",
+			"CodeRoute",
+			"CodePeriod"
+		],
+		"Links": []
+	},
+	"routefiletype": {
+		"TableFields": [
+			"CodeDoc",
+			"CodeRoute",
+			"CodeFileType",
+			"CodePeriod"
+		],
+		"EditFields": [
+			"CodeDoc",
+			"CodeRoute",
+			"CodeFileType",
+			"CodePeriod"
+		],
+		"Links": []
+	},
+	"filetype": {
+		"TableFields": [
+			"CodeFileType",
+			"NameFileType"
+		],
+		"EditFields": [
+			"CodeFileType",
+			"NameFileType"
+		],
+		"Links": []
+	},
+	"valuta": {
+		"TableFields": [
+			"CodeValuta",
+			"NameValuta"
+		],
+		"EditFields": [
+			"CodeValuta",
+			"SNameValuta",
+			"NameValuta",
+			"SignValuta",
+			"IsReportValuta",
+			"IsReportValuta1",
+			"IsReportValuta2",
+			"KolEdValuta",
+			"NoConversion",
+			"IsNone",
+			"CBRCode"
+		],
+		"Links": []
+	},
+	"state": {
+		"TableFields": [
+			"CodeState",
+			"NameState"
+		],
+		"EditFields": [
+			"CodeState",
+			"NameState",
+			"SNameState",
+			"IsDefault",
+			"IsOpened",
+			"IsClosed",
+			"IsAgreed"
+		],
+		"Links": []
+	},
+	"depart": {
+		"TableFields": [
+			"CodeDepart",
+			"NameDepart",
+			"CodeChiefUser"
+		],
+		"EditFields": [
+			"CodeDepart",
+			"NameDepart",
+			"SNameDepart",
+			"CodeParentDepart",
+			"CodeOrg",
+			"CodeChiefUser"
+		],
+		"Links": []
+	}
+}

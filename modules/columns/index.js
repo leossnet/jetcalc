@@ -36,7 +36,6 @@ var MColumns = (new function() {
                 return _.merge(_.pick(Model.toJS(),Model.EditFields),{CodeColset:Code});
             })   
         };
-        console.log("DATA",Data);
         self.rPut("colsetcol",Data,function(){
             self.LoadColset();
         })
@@ -73,7 +72,6 @@ var MColumns = (new function() {
     }
 
     self.ModelIsLoaded = function(){
-        console.log(">>>>>>","ModelIsLoaded",">>>>>>");
         switch (self.Mode()){
             case "ColSet":
                 self.ColsetCols([]);
@@ -105,15 +103,11 @@ var MColumns = (new function() {
         if (!self.Mode())  return self.InitSetMode ("Cols");
         switch (self.Mode()){
             case "Cols":
-                ModelTableEdit.InitModel("col",["IsFormula","CodeCol","NameCol"]);
+                ModelTableEdit.InitModel("col");
             break;            
             case "Header":
                 self.LoadHeadersTree(function(){
-                    ModelTableEdit.InitModel("header",["CodeHeader","NameHeader"],{CodeHeader:1},{CodeParentHeader:{$in:[null,""]}});
                     ModelTableEdit.IsOverrideList(true);
-                    ModelTableEdit.SetForceEditFields ([
-                         "CodeHeader", "NameHeader", "IndexHeader", "Condition", "Year", "IsFixed", "CodeColset", "CodeParentHeader", "CodePeriod"
-                    ]);
                 })
             break;            
             case "ColSet":

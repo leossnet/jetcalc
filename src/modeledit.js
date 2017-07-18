@@ -90,19 +90,19 @@ var ModelEdit = function(CodeUser,IsNew){
 		M.find(Q).isactive().exec(function(err,Existed){
 			var IndexedOld = {};
 			Existed.forEach(function(Ex){
-				IndexedOld[Ex[Code]] = Ex;
+				IndexedOld[Ex._id+""] = Ex;
 			})
 			Links.forEach(function(NL){
-				if (!_.isEmpty(NL[Code])){
-					if (IndexedOld[NL[Code]]){
+				if (!_.isEmpty(NL._id)){
+					if (IndexedOld[NL._id+'']){
 						_.keys(NL).forEach(function(NK){
-							IndexedOld[NL[Code]][NK] = NL[NK];
+							IndexedOld[NL._id+''][NK] = NL[NK];
 						})
 					}
-					if (IndexedOld[NL[Code]].isModified()){
-						ToSave.push(IndexedOld[NL[Code]]);
+					if (IndexedOld[NL._id+""].isModified()){
+						ToSave.push(IndexedOld[NL._id+""]);
 					}
-					delete IndexedOld[NL[Code]];
+					delete IndexedOld[NL._id+""];
 				} else {
 					var ToAdd = new M(NL);
 					ToSave.push(ToAdd);
@@ -111,15 +111,18 @@ var ModelEdit = function(CodeUser,IsNew){
 			for (var Key in IndexedOld){
 				ToRemove.push(IndexedOld[Key]);
 			}
-			/*if (ModelName=='docheader'){
-				console.log("======== ToRemove =========");
-				console.log(ToRemove);
-				console.log("=================");
-				console.log("=========ToSave========");
-				console.log(ToSave);
-				console.log("=================");
-				die();
-			}*/
+
+			/*
+			console.log("==================");
+			console.log(self.BaseModel[self.BaseModelCode]);
+			console.log("======== ToRemove =========");
+			console.log(ToRemove);
+			console.log("=================");
+			console.log("=========ToSave========");
+			console.log(ToSave);
+			console.log("=================");
+			die();
+			*/
 			async.each(ToRemove,function(TR,cb1){
 				TR.remove(self.CodeUser,function(err){
 					cb1(err);

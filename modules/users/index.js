@@ -140,40 +140,25 @@ var MUsers = (new function(){
             case 'Roles':
                 if (!self.IsPrivelegesLoaded()) self.LoadPriveleges();
                 ModelTableEdit.InitModel("task");
-                ModelTableEdit.SetForceEditFields  ([
-                    "CodeTask","NameTask"
-                ]);
                 ModelTableEdit.IsExtendEditor(true); 
             break;
             case 'Users':
-                ModelTableEdit.InitModel("user",["NameUser","LoginUser"],{CodeUser:1},_.merge({IsConfirmed:true},F));
-                ModelTableEdit.SetForceEditFields([
-                    "CodeUser","NameUser", "LoginUser", "JobTitle", "WorkPhone", "MobilePhone","Birthday", "Mail", "CodeObj", "InAttentive"
-                ]);
+                ModelTableEdit.InitModel("user",{CodeUser:1},_.merge({IsConfirmed:true},F));
                 ModelTableEdit.IsExtendEditor(true); 
             break;
             case 'Permits':
                 if (!self.IsPermitsTemplateLoaded()) self.LoadPermitsTemplate();
-                ModelTableEdit.InitModel("permit",["CodePermit","NamePermit"],{IsPublic:-1,CodePermit:1},{$or:[{CodeObj:Obj},{IsPublic:true}]});
-                ModelTableEdit.SetForceEditFields ([
-                    "CodePermit","NamePermit","CodeObj","IsPublic"
-                ]);
+                ModelTableEdit.InitModel("permit",{IsPublic:-1,CodePermit:1},{$or:[{CodeObj:Obj},{IsPublic:true}]});
                 ModelTableEdit.IsExtendEditor(true); 
             break;
             case 'Requests':
-                ModelTableEdit.InitModel("request",["NameUser","NameObjs","DateRequest"],{DateRequest:1},{IsVerified:true,IsAccept:false});
-                ModelTableEdit.SetForceEditFields ( [
-                    "NameUser","JobTitle","TabNum","DateRequest","Birthday","WorkPhone","MobilePhone","Mail","NameObjs","Comments"
-                ]);
+                ModelTableEdit.InitModel("request",{DateRequest:1},{IsVerified:true,IsAccept:false});
                 ModelTableEdit.IsExtendEditor(true); 
             break;
             case 'NewUsers':
                 var Objs = PermChecker.AvPrivelegeObj("IsUserAcceptor");
                 if (!Objs.length) return self.Error("У вас нет прав на подтверждение пользователей");
-                ModelTableEdit.InitModel("user",["NameUser","JobTitle","CodeObj","CodeUser"],{CodeUser:1},{IsConfirmed:false,CodeObj:{$in:Objs}});
-                ModelTableEdit.SetForceEditFields ([
-                    "LoginUser","NameUser","JobTitle","TabNum","Birthday","WorkPhone","MobilePhone","Mail","CodeObj"
-                ]);
+                ModelTableEdit.InitModel("user",{CodeUser:1},{IsConfirmed:false,CodeObj:{$in:Objs}});
                 ModelTableEdit.IsExtendEditor(true); 
             break;
             default:

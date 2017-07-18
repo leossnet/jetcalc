@@ -224,8 +224,7 @@ router.get('/periodmap', HP.TaskAccess("IsPeriodMapTunner"), function(req,res,ne
 		mongoose.model("reportperiods").find({}).sort({IndexReportPeriod:1}).lean().isactive().exec(function(err,Ps){
 			Answer.LinkPeriods = Ps;
 			return res.json(Answer);	
-		})
-		
+		})		
 	})
 })
 

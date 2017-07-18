@@ -20,37 +20,22 @@ var MRows = (new function() {
         if (!self.Mode()) return self.InitSetMode("Root");
         switch (self.Mode()){
             case "Root":
-                ModelTableEdit.InitModel("row",["CodeRow","NameRow"],{CodeRow:1},{CodeParentRow:{$in:[null,""]}});
-                ModelTableEdit.SetForceEditFields ([
-                    "CodeRow","NameRow","HasFilteredChild","NoFiltered","CodeValuta","CodeMeasure","CodeFormat","CodeParentRow"
-                ]);
+                ModelTableEdit.InitModel("row",{CodeRow:1},{CodeParentRow:{$in:[null,""]}});
             break;            
             case "SumGrp":
-                ModelTableEdit.InitModel("sumgrp",["CodeSumGrp","NameSumGrp"]);
-                ModelTableEdit.SetForceEditFields ([
-                    "CodeSumGrp","NameSumGrp","SNameSumGrp"
-                ]);
+                ModelTableEdit.InitModel("sumgrp");
             break;            
             case "Measure":
-                ModelTableEdit.InitModel("measure",["IsExchange","CodeMeasure","SNameMeasure","NameMeasure"],{NumMeasure:1});
+                ModelTableEdit.InitModel("measure",{NumMeasure:1});
             break;            
             case "Format":
-                ModelTableEdit.InitModel("format",["CodeFormat", "NameFormat","FormatValue"]);
-                ModelTableEdit.SetForceEditFields ([
-                    "CodeFormat", "NameFormat","FormatValue"
-                ]);
+                ModelTableEdit.InitModel("format");
             break;             
             case "Style":
-                ModelTableEdit.InitModel("style",["CodeStyle", "NameStyle","CSS"]);
-                ModelTableEdit.SetForceEditFields ([
-                    "CodeStyle", "NameStyle", "CSS"
-                ]);
+                ModelTableEdit.InitModel("style");
             break;             
             case "Tags":
-                ModelTableEdit.InitModel("tag",["CodeTag", "NameTag","SNameTag"]);
-                ModelTableEdit.SetForceEditFields ([
-                    "CodeTag", "NameTag", "SNameTag", "IsList", "IsObj", "IsRow", "IsCol", "IsObjType"
-                ]);
+                ModelTableEdit.InitModel("tag");
             break;            
         }
         return done && done()

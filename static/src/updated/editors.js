@@ -41,9 +41,9 @@ var ConditionEditor = (new function(){
 				params = params.concat(_.keys(pk));
 			})
 			params = _.sortBy(_.uniq(params)).reverse();
+			if (_.isEmpty(params)) params = ["FACT"];
 			self.Params(params);
 			var regex = new RegExp("[^\\s]*(?:"+params.join("|")+")+(?=^|$|[^\\p{L}])");
-			window.ZZ = regex;
 			CodeMirror.defineSimpleMode("assoi-conditions", {
 			  start: [
 			    {regex: /[^\s]*(?:not|or|and)\b/,token: "logic"},    
@@ -58,7 +58,7 @@ var ConditionEditor = (new function(){
 			});
 
 		}catch(e){
-			console.log(e);
+			console.log(e,"PossibleParams FAILED");
 		}
 		return params;
 	}
@@ -78,6 +78,9 @@ var ConditionEditor = (new function(){
 	    var cur = mirror.getCursor();
 	    var range = mirror.findWordAt(cur);
 	    var fragment = mirror.getRange(range.anchor, range.head);
+
+	    console.log(words,cur,range,fragment);
+
 	    callback({
 	        list: _.filter(words,function(w){
 	        	return w.indexOf(fragment) ===0;

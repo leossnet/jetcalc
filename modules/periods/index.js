@@ -130,22 +130,14 @@ var MPeriods = (new function() {
         if (!self.Mode()) return self.InitSetMode("Periods");
         switch (self.Mode()){
             case "Periods":
-                ModelTableEdit.InitModel("period",["IsReportPeriod","IsFormula","CodePeriod","NamePeriod"],{IsFormula:-1,MCount:1,BeginDate:1});
-                ModelTableEdit.SetForceEditFields([
-                    "CodePeriod","NamePeriod","BeginDateText","EndDateText","MCount","IsFormula","Formula","IsReportPeriod","IsNone"
-                ]); 
+                ModelTableEdit.InitModel("period",{IsFormula:-1,MCount:1,BeginDate:1});
                 ModelTableEdit.IsExtendEditor(true);
-                ModelTableEdit.SetEditLinks(["periodgrpref"]);     
             break;
             case "PeriodGrps":
-                ModelTableEdit.InitModel("periodgrp",["CodePeriodGrp","NamePeriodGrp","ForPermits"]);
-                ModelTableEdit.SetForceEditFields([
-                    "CodePeriodGrp","NamePeriodGrp","ForPermits"
-                ]); 
-                ModelTableEdit.SetEditLinks(["periodgrpref"]);     
+                ModelTableEdit.InitModel("periodgrp");
             break;
             case "PeriodAutoFill":
-                ModelTableEdit.InitModel("periodautofill",["CodeSourcePeriod","CodeTargetPeriod","Idx"],{CodeSourcePeriod:1,Idx:1});
+                ModelTableEdit.InitModel("periodautofill",{CodeSourcePeriod:1,Idx:1});
             break;
             case "PeriodEdit":
                 self.UpdateYear();
