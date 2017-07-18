@@ -405,7 +405,8 @@ var CxCtrl = (new function(){
 
     self.UpdateDocInfo = function(CodeDoc,done){
         var Doc = MFolders.FindDocument(self.CodeDoc());
-        self.PrintNameDoc(Doc.PrintNameDoc);
+        var N = _.isEmpty(Doc.PrintNameDoc)? Doc.NameDoc : Doc.PrintNameDoc;
+        self.PrintNameDoc(N);
         self.PrintNumDoc(Doc.PrintNumDoc);
         $.getJSON("/api/form/doc",_.merge(self.Context(),{CodeDoc:CodeDoc}),function(data){
             if (!data.err){
