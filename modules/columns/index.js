@@ -107,6 +107,7 @@ var MColumns = (new function() {
             break;            
             case "Header":
                 self.LoadHeadersTree(function(){
+                    ModelTableEdit.InitModel("header");
                     ModelTableEdit.IsOverrideList(true);
                 })
             break;            
