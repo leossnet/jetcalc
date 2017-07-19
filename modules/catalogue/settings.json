@@ -572,5 +572,21 @@
 			"SNameColset"
 		],
 		"Links": []
+	},
+	"model": {
+		"TableFields": [
+			"CodeModel",
+			"NameModel"
+		],
+		"EditFields": [
+			"CodeModel",
+			"NameModel",
+			"SNameModel",
+			"VersionModel",
+			"YearModel",
+			"AuthorModel",
+			"DescriptionModel"
+		],
+		"Links": []
 	}
 }

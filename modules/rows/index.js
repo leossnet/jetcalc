@@ -37,6 +37,9 @@ var MRows = (new function() {
             case "Tags":
                 ModelTableEdit.InitModel("tag");
             break;            
+            case "Models":
+                ModelTableEdit.InitModel("model");
+            break;            
         }
         return done && done()
     }  
