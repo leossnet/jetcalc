@@ -27,7 +27,7 @@
 			"IsFormula",
 			"CodeCol",
 			"NameCol",
-			"SNameCol"
+			"Formula"
 		],
 		"Links": []
 	},
@@ -47,7 +47,10 @@
 			"IsFormula",
 			"Formula",
 			"IsReportPeriod",
-			"IsNone"
+			"IsNone",
+			"BeginDate",
+			"EndDate",
+			"SNamePeriod"
 		],
 		"Links": [
 			"periodgrpref"
@@ -178,7 +181,12 @@
 			"CodeRole",
 			"NameRole",
 			"SNameRole",
-			"IsExtended"
+			"IsExtended",
+			"ForOrgAdmin",
+			"ForDivAdmin",
+			"ForAdmin",
+			"ForDepAdmin",
+			"CodeModel"
 		],
 		"Links": []
 	},
@@ -214,7 +222,10 @@
 			"CodeDocType",
 			"CodeRole",
 			"CodeGrp",
-			"CodeMeasure"
+			"CodeMeasure",
+			"IndexDoc",
+			"PrintNameDoc",
+			"IsObjToRow"
 		],
 		"Links": [
 			"docfolderdoc",
@@ -225,8 +236,7 @@
 		"TableFields": [
 			"CodeObj",
 			"NameObj",
-			"CodeObjType",
-			"CodeValuta"
+			"CodeParentObj"
 		],
 		"EditFields": [
 			"CodeObj",
@@ -291,7 +301,9 @@
 			"InAttentive",
 			"IsConfirmed"
 		],
-		"Links": []
+		"Links": [
+			"labeluser"
+		]
 	},
 	"permit": {
 		"TableFields": [
@@ -336,7 +348,12 @@
 		"EditFields": [
 			"CodeOrg",
 			"NameOrg",
-			"CodeOtrasl"
+			"CodeOtrasl",
+			"CodeHoldingOrg",
+			"CodeParentOrg",
+			"CodeCity",
+			"CodeDiv",
+			"SNameOrg"
 		],
 		"Links": []
 	},
@@ -347,7 +364,11 @@
 		],
 		"EditFields": [
 			"CodeDiv",
-			"NameDiv"
+			"NameDiv",
+			"SNameDiv",
+			"Idx",
+			"Comment",
+			"CodeDivOrg"
 		],
 		"Links": []
 	},
@@ -435,7 +456,8 @@
 		],
 		"EditFields": [
 			"CodeFileType",
-			"NameFileType"
+			"NameFileType",
+			"SNameFileType"
 		],
 		"Links": []
 	},
@@ -491,17 +513,64 @@
 		],
 		"Links": []
 	},
+	"otrasl": {
+		"TableFields": [
+			"CodeOtrasl",
+			"NameOtrasl",
+			"SNameOtrasl"
+		],
+		"EditFields": [
+			"CodeOtrasl",
+			"NameOtrasl",
+			"SNameOtrasl",
+			"Comment",
+			"IsShow",
+			"Idx"
+		],
+		"Links": []
+	},
+	"route": {
+		"TableFields": [
+			"CodeRoute",
+			"NameRoute"
+		],
+		"EditFields": [
+			"CodeRoute",
+			"NameRoute",
+			"SNameRoute",
+			"CodeFinalState",
+			"CodeInitState"
+		],
+		"Links": []
+	},
 	"paramset": {
 		"TableFields": [
 			"CodeParamSet",
-			"NameParamSet"
+			"NameParamSet",
+			"CodeListDefinition"
 		],
 		"EditFields": [
 			"CodeParamSet",
-			"NameParamSet"
+			"NameParamSet",
+			"CodeListDefinition",
+			"Idx",
+			"SNameParamSet"
 		],
 		"Links": [
 			"paramsetkey"
 		]
+	},
+	"colset": {
+		"TableFields": [
+			"CodeColset",
+			"NameColset",
+			"SNameColset"
+		],
+		"EditFields": [
+			"CodeColset",
+			"NameColset",
+			"SNameColset"
+		],
+		"Links": []
 	}
 }
