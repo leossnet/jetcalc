@@ -490,5 +490,18 @@
 			"CodeChiefUser"
 		],
 		"Links": []
+	},
+	"paramset": {
+		"TableFields": [
+			"CodeParamSet",
+			"NameParamSet"
+		],
+		"EditFields": [
+			"CodeParamSet",
+			"NameParamSet"
+		],
+		"Links": [
+			"paramsetkey"
+		]
 	}
 }

@@ -228,6 +228,17 @@ router.get('/periodmap', HP.TaskAccess("IsPeriodMapTunner"), function(req,res,ne
 	})
 })
 
+router.get('/periodaf', HP.TaskAccess("IsPeriodAFTunner"), function(req,res,next){
+	var Answer = {MainPeriods:[],LinkPeriods:[]};
+	mongoose.model("period").find({IsReportPeriod:true},"-_id CodePeriod NamePeriod").sort({MCount:1,BeginDate:1}).isactive().exec(function(err,Main){
+		Answer.MainPeriods = Main;
+		mongoose.model("periodautofill").find({}).sort({Idx:1}).lean().isactive().exec(function(err,Ps){
+			Answer.LinkPeriods = Ps;
+			return res.json(Answer);	
+		})		
+	})
+})
+
 router.put('/periodmap', HP.TaskAccess("IsPeriodMapTunner"), function(req,res,next){
 	var ModelSaver = require(__base + 'src/modeledit.js'), CodeUser = req.user.CodeUser;
 	var Data = JSON.parse(req.body.JSON);

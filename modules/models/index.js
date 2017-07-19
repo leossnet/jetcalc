@@ -138,13 +138,14 @@ var LinkEditorHelper = (new function(){
 
     self.FilterEditFields = function(mainmodelname,linkmodel,params){ 
         var AllFields = _.clone(MModels.Create(linkmodel,{}).EditFields);
+        var UselessField = "";
         if (params!='ALL'){
-            var UselessField = "Code"+_.capitalize(mainmodelname);
-            AllFields.splice(AllFields.indexOf(UselessField),1);
+            UselessField = ("code"+mainmodelname).toLowerCase();
         }
         var CodeField = 'code'+linkmodel;
         AllFields = _.filter(AllFields,function(F){
-            return F.toLowerCase()!=CodeField;
+            var T = F.toLowerCase();
+            return T!=CodeField && T!=UselessField;
         })
         return AllFields;
     }

@@ -12,6 +12,8 @@ var MPeriods = (new function() {
     }        
 
 
+
+    // Period map editor
     self.LinkPeriods = ko.observable();
     self.MainPeriods   = ko.observableArray();
 
@@ -26,7 +28,11 @@ var MPeriods = (new function() {
     self.EditPeriodMap = ko.observable(null);
 
     self.SetEditMapPeriod = function(data){
-        self.EditPeriodMap(data);    
+        if (self.IsCurrentEditMapPeriod(data)){
+            self.EditPeriodMap(null);
+        } else {
+            self.EditPeriodMap(data);    
+        }        
     }
 
     self.IsCurrentEditMapPeriod = function(data){
@@ -35,6 +41,7 @@ var MPeriods = (new function() {
 
     self.LoadPeriodMap = function(){
         self.rGet("periodmap",{},function(data){
+            console.log(data);
             self.MainPeriods(_.map(data.MainPeriods,function(MP){
                 return MModels.Create("period",MP);
             }));
@@ -42,20 +49,91 @@ var MPeriods = (new function() {
             data.MainPeriods.forEach(function(MP){
                 Str[MP.CodePeriod] = ko.observableArray();
             })
-            //if (!_.isEmpty(data.LinkPeriods)){
-                data.LinkPeriods.forEach(function(LP){
-                    if (Str[LP.CodePeriod]) {
-                        Str[LP.CodePeriod].push(MModels.Create("reportperiods",LP));
-                    }
-                })
-            //} else {
-            //    Str[MP.CodePeriod].push(MModels.Create("reportperiods",{CodeReportPeriod:MP.CodePeriod, IndexReportPeriod:0, ReportYear:0, IsOptional:false, CodePeriod:MP.CodePeriod}))  
-            //}
+            data.LinkPeriods.forEach(function(LP){
+                if (Str[LP.CodePeriod]) {
+                    Str[LP.CodePeriod].push(MModels.Create("reportperiods",LP));
+                }
+            })
             self.LinkPeriods(Str);
         })
     }
 
+    self.SaveChangesPMap = function(){
+        var FieldsToPass = MModels.Create("reportperiods").EditFields.concat(["_id"]);
+        var Data = ko.toJS(self.LinkPeriods), Reparsed = {};
+        for (var Key in Data){
+            Reparsed[Key] = _.filter(_.map(Data[Key],function(M){
+                return _.pick(M,FieldsToPass);
+            }),function(D){
+                return !_.isEmpty(D.CodeReportPeriod);
+            })
+        }
+        self.rPut("periodmap", {JSON:JSON.stringify(Reparsed)}, function(data){
+            self.Init();
+            self.LoadPeriodMap();            
+        })
+    } 
 
+
+    // Period Autofill
+    self.LinkPeriodsAF = ko.observable();
+    self.MainPeriodsAF   = ko.observableArray();
+
+    self.RemoveLinkPeriodAF = function(CodePeriod){
+        self.LinkPeriodsAF()[CodePeriod].remove(this);
+    }
+
+    self.AddLinkPeriodAF = function(CodePeriod){
+        self.LinkPeriodsAF()[CodePeriod].push(MModels.Create("periodautofill",{CodeSourcePeriod:CodePeriod,Idx:(self.LinkPeriods()[CodePeriod]().length+1)}));
+    }
+
+    self.EditPeriodAF = ko.observable(null);
+
+    self.SetEditPeriodAF = function(data){
+        if (self.IsCurrentEditPeriodAF(data)){
+            self.EditPeriodAF(null);
+        } else {
+            self.EditPeriodAF(data);    
+        }        
+    }
+
+    self.IsCurrentEditPeriodAF = function(data){
+        return self.EditPeriodAF()==data;
+    }
+
+    self.LoadPeriodAF = function(){
+        self.rGet("periodaf",{},function(data){
+            self.MainPeriodsAF(_.map(data.MainPeriods,function(MP){
+                return MModels.Create("period",MP);
+            }));
+            var Str = {};
+            data.MainPeriods.forEach(function(MP){
+                Str[MP.CodePeriod] = ko.observableArray();
+            })
+            data.LinkPeriods.forEach(function(LP){
+                if (Str[LP.CodeSourcePeriod]) {
+                    Str[LP.CodeSourcePeriod].push(MModels.Create("reportperiods",LP));
+                }
+            })
+            self.LinkPeriodsAF(Str);
+        })
+    }
+
+    self.SaveChangesPAF = function(){
+        var FieldsToPass = MModels.Create("reportperiods").EditFields.concat(["_id"]);
+        var Data = ko.toJS(self.LinkPeriods), Reparsed = {};
+        for (var Key in Data){
+            Reparsed[Key] = _.filter(_.map(Data[Key],function(M){
+                return _.pick(M,FieldsToPass);
+            }),function(D){
+                return !_.isEmpty(D.CodeReportPeriod);
+            })
+        }
+        self.rPut("periodmap", {JSON:JSON.stringify(Reparsed)}, function(data){
+            self.Init();
+            self.LoadPeriodMap();            
+        })
+    } 
 
 
 
@@ -84,7 +162,6 @@ var MPeriods = (new function() {
             }
             self.DefaultPeriods(periods);
             var prepared = {};
-            console.log("MAP",data.Map);
             for (var group in data.Map){
                 for (var CodePeriod in data.Map[group]){
                     var arr = [];
@@ -120,10 +197,13 @@ var MPeriods = (new function() {
         if (self.Mode()=="PeriodMap"){
             self.SaveChangesPMap();  
         }
+        if (self.Mode()=="PeriodAutoFill"){
+            self.SaveChangesPAF();
+        }
     }
 
     self.IsModelEdit = ko.computed(function(){
-        return ["Periods","PeriodGrps","PeriodAutoFill"].indexOf(self.Mode())!=-1;
+        return ["Periods","PeriodGrps"].indexOf(self.Mode())!=-1;
     })
 
     self.Show = function(done){
@@ -137,7 +217,7 @@ var MPeriods = (new function() {
                 ModelTableEdit.InitModel("periodgrp");
             break;
             case "PeriodAutoFill":
-                ModelTableEdit.InitModel("periodautofill",{CodeSourcePeriod:1,Idx:1});
+                self.LoadPeriodAF();
             break;
             case "PeriodEdit":
                 self.UpdateYear();
@@ -174,22 +254,6 @@ var MPeriods = (new function() {
         })
     }
     
-    self.SaveChangesPMap = function(){
-        var FieldsToPass = MModels.Create("reportperiods").EditFields.concat(["_id"]);
-        var Data = ko.toJS(self.LinkPeriods), Reparsed = {};
-        for (var Key in Data){
-            Reparsed[Key] = _.filter(_.map(Data[Key],function(M){
-                return _.pick(M,FieldsToPass);
-            }),function(D){
-                return !_.isEmpty(D.CodeReportPeriod);
-            })
-        }
-        self.rPut("periodmap", {JSON:JSON.stringify(Reparsed)}, function(data){
-            self.Init();
-            self.LoadPeriodMap();            
-        })
-    } 
-
     self.Roles = function(){
         var Roles = [];
         try{

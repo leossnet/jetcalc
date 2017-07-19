@@ -227,7 +227,24 @@ var Catalogue = (new function () {
         })
     }
 
+
+ /*   self.throttled = {};
+    self.throttledTimer = null;
+    self.SearchThrottle = function(params,callback){
+        if (!self.throttled[params.model]) self.throttled[params.model] = {};
+        if (!self.throttled[params.model][params.q]) self.throttled[params.model][params.q] = [];
+        self.throttled[params.model][params.q].push(callback);
+        if (self.throttledTimer) clearTimeout(self.throttledTimer);
+        self.throttledTimer = setTimeout(function(){
+            console.log(self.throttled);
+
+        },1000);
+    }
+*/
+
+
     self.DoSearch = function (params, callback) {
+        //return self.SearchThrottle(params, callback);
         self.Error(null);
         $.getJSON(self.base + '/search', params, function (SearchResult) {
             if (SearchResult.err) return self.Error(SearchResult.err);
