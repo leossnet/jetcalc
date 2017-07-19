@@ -79,6 +79,9 @@ var MDocument = (new function() {
         switch (self.Mode()){
             case "Roles":
                 ModelTableEdit.InitModel("role",{IsExtended:1,CodeRole:1});
+            break;       
+            case "Root":
+                ModelTableEdit.InitModel("row",{CodeRow:1},{CodeParentRow:{$in:[null,""]}});
             break;            
             case "Folders":
                 self.LoadFolders(function(){

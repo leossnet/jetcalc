@@ -17,11 +17,8 @@ var MRows = (new function() {
 
 
     self.Show = function(done){
-        if (!self.Mode()) return self.InitSetMode("Root");
+        if (!self.Mode()) return self.InitSetMode("SumGrp");
         switch (self.Mode()){
-            case "Root":
-                ModelTableEdit.InitModel("row",{CodeRow:1},{CodeParentRow:{$in:[null,""]}});
-            break;            
             case "SumGrp":
                 ModelTableEdit.InitModel("sumgrp");
             break;            
