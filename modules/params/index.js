@@ -42,9 +42,6 @@ var MParams = (new function() {
             case "ListDefinitions":
                 ModelTableEdit.InitModel("listdefinition");
             break;            
-            case "ParamTab":
-                ModelTableEdit.InitModel("paramtab");
-            break;           
             case "ParamGrp":
                 ModelTableEdit.InitModel("paramgrp");
             break;
