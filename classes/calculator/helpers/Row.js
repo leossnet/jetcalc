@@ -259,7 +259,6 @@ var RowHelper = function(Context){
 		}
 		async.parallel(tasks,function(err,filtered){
 			self.rows = _.flatten(_.values(filtered));
-			console.log(self.rows,self.IsShowRoots);
 			if (!self.IsShowRoots){
 				var Exclude = _.keys(self.LoadedRootRows);
 				self.rows = _.filter(self.rows,function(o){
@@ -627,7 +626,6 @@ var RowHelper = function(Context){
 					Rows[I].Link2Use = _.pick(RI[R.CodeRowLink],["CodeRow","NameRow"]);
 				}
 			})
-			console.log(Rows);
 			return done(null,Rows);
 		})
 	}

@@ -17,6 +17,7 @@ var Structure = require(__base+"classes/calculator/helpers/Structure.js");
 
 router.get('/api/calculator/structure', function(req,res,next){
 	var Context = lib.ReqContext(req);
+	console.log(Context);
 	var Worker = new Structure(Context);
 	Worker.get(function(err,Ans){
 		if (err) return next(err);
@@ -880,8 +881,6 @@ router.post('/api/cell/explain', function(req,res){
 })
 
 router.post('/api/cell/calculatebyformula', function(req,res){	
-	console.log(req.body);
-	
 	var Context = getContext(req.body.Context,req.session.sandbox,req.user.CodeUser);	
 	var Calculator = require('../calculator/AssoiCalculator.js');
 	var Cells  = {}; Cells[req.body.Cell] = req.body.Formula.replace(/\s+/g,' ');
