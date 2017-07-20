@@ -10,6 +10,7 @@ var MFolders = (new function(){
     }
 
     self.Navigate = function(){
+        return;
         var Ind = self.DocumentLocation(CxCtrl.CodeDoc());
         self.CloseAll()
         self.OpenFolder(Ind[0]);
@@ -18,9 +19,11 @@ var MFolders = (new function(){
 
     self.Lvl0Open = ko.observable(null, {persist: 'lvl0' });
     self.Lvl1Open = ko.observable(null, {persist: 'lvl1' });
+    self.AllOpened  = ko.observableArray([], {persist: 'openfolders' });
+
 
     self.Remember = function(data){
-        var lvl = 0;
+        /*var lvl = 0;
         if (_.keys(self.DocTree()).indexOf(data)==-1){
             lvl = 1;
         }
@@ -29,32 +32,56 @@ var MFolders = (new function(){
         } else {
             self.Lvl1Open(data);
         }
+        */
+        if (!self.IsOpen(data)){
+            self.OpenFolder(data);
+        } else {
+            self.CloseFolder(data);
+        }        
     }
 
     self.DocTree       = ko.observable();
     self.DocTreeCounts = ko.observable();
 
     self.OpenFolder = function(Id){
-        $('li[data-folder="'+Id+'"]').addClass("highlight open");
+        self.AllOpened.push(Id);        
+        $('li[data-folder="'+Id+'"]').addClass("open");
         $('li[data-folder="'+Id+'"]>ul.submenu').show();
     }
+
+    self.CloseFolder = function(Id){
+        self.AllOpened.remove(Id);        
+        $('li[data-folder="'+Id+'"]').removeClass("open");
+        $('li[data-folder="'+Id+'"]>ul.submenu').hide();
+    }
+
     self.CloseAll = function(){
+        return;
         $('.nav-list ul').hide();
         $('.nav-list li').removeClass("highlight open");
     }
 
+    self.IsOpen = function(data){
+        return self.AllOpened().indexOf(data)!=-1;
+    }
+
     self.Reopen = function(){
-        self.CloseAll();
+        return;
         if (self.Lvl0Open()) self.OpenFolder(self.Lvl0Open());
         if (self.Lvl1Open()) self.OpenFolder(self.Lvl1Open());
     }
 
     self.Init = function(done){
         self.LoadTree(function(){
-            CxCtrl.Events.addListener("documentchanged",function(){
-                self.Navigate();
+            /*CxCtrl.Events.addListener("documentchanged",function(){
+              
+                setTimeout(function(){
+                      self.Reopen();
+                      self.Navigate();
+                },1000);
+
             })
-            setTimeout(self.Reopen,1000);
+            */            
             return done && done();
         })
     }
