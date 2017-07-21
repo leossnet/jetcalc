@@ -8663,14 +8663,6 @@ module.exports = {
 				"default": 0,
 				"view": "none"
 			},
-			"IdParamTab": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "paramtab",
-				"view": "none",
-				"dep": "CodeParamTab",
-				"hidden": true
-			},
 			"IdParamGrp": {
 				"type": Number,
 				"default": 0,
@@ -8694,15 +8686,6 @@ module.exports = {
 				"view": "none",
 				"dep": "CodeParamSet",
 				"hidden": true
-			},
-			"CodeParamTab": {
-				"type": String,
-				"default": "",
-				"view": "none",
-				"dep": "IdParamTab",
-				"refmodel": "paramtab",
-				"index": true,
-				"extended": true
 			},
 			"CodeParamGrp": {
 				"type": String,
