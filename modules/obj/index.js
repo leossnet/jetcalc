@@ -58,18 +58,10 @@ var MObj = (new function() {
                 ModelTableEdit.InitModel("objclass");
             break;            
             case "Objs":
-                ModelTableEdit.InitModel("obj",["CodeObj","NameObj","CodeObjType","CodeValuta"],{IndexObj:1});
-                /*ModelTableEdit.ForceEditFields = [
-                    "CodeObj","NameObj","IndexObj","Comment","CodeParentObj","CodeOrg","CodeObjType","CodeValuta","DateBegin","DateEnd"
-                ];
-                ModelTableEdit.EditLinks(["objgrp","objtag"]);*/ 
-            break;
+                ModelTableEdit.InitModel("obj",{IndexObj:1});
+             break;
             case "Grps":
                 ModelTableEdit.InitModel("grp");
-                /*ModelTableEdit.ForceEditFields = [
-                    "CodeGrp", "NameGrp", "IsAgGroup", "Idx"
-                ]
-                ModelTableEdit.EditLinks(["objgrp"]);*/ 
             break;
         }
         return done && done()

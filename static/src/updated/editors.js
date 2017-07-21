@@ -1,4 +1,3 @@
-
 var ConditionEditor = (new function(){
 	
 	var self = this;
@@ -42,9 +41,9 @@ var ConditionEditor = (new function(){
 				params = params.concat(_.keys(pk));
 			})
 			params = _.sortBy(_.uniq(params)).reverse();
+			if (_.isEmpty(params)) params = ["FACT"];
 			self.Params(params);
 			var regex = new RegExp("[^\\s]*(?:"+params.join("|")+")+(?=^|$|[^\\p{L}])");
-			window.ZZ = regex;
 			CodeMirror.defineSimpleMode("assoi-conditions", {
 			  start: [
 			    {regex: /[^\s]*(?:not|or|and)\b/,token: "logic"},    
@@ -59,7 +58,7 @@ var ConditionEditor = (new function(){
 			});
 
 		}catch(e){
-			console.log(e);
+			console.log(e,"PossibleParams FAILED");
 		}
 		return params;
 	}
@@ -79,6 +78,9 @@ var ConditionEditor = (new function(){
 	    var cur = mirror.getCursor();
 	    var range = mirror.findWordAt(cur);
 	    var fragment = mirror.getRange(range.anchor, range.head);
+
+	    console.log(words,cur,range,fragment);
+
 	    callback({
 	        list: _.filter(words,function(w){
 	        	return w.indexOf(fragment) ===0;
@@ -180,6 +182,7 @@ var FormulaEditor = (new function(){
 	    var from = textLine.substring(0,cur.ch).length-lastWord.length;
 	    var chars = {"$":'row',"@":'col',".P":'period',"#":'obj'};
 	    var choosed = null, choosedChar = null, choosedPos = -1;
+
 	    for (var mark in chars){
 	    	var test = lastWord.indexOf(mark);
 	    	if (test>choosedPos){
@@ -195,7 +198,9 @@ var FormulaEditor = (new function(){
 	    	}
 	    	Catalogue.SearchModel(choosed,fragment,function(r){
 	    		 callback({
-       				 list: _.map(r,"id"),
+       				 list: _.map(r,function(I){
+       				 	return {text:I.id,displayText:[I.id,I.name].join(". ")};
+       				 }),
        				 from:from,
         			 to: range.head,
         			 completeSingle:false
@@ -586,13 +591,44 @@ var FormulaEditor = (new function(){
 		return Result;
 	}
 
+
+	self.CheckExisted = function(done){
+		var Formula = self.Formula()+"";
+		if (Formula.indexOf("$")===-1) return done();
+		$.ajax({
+			url:'/api/cell/validateformula',
+			method:'post',
+			data:{
+				Formula:Formula,
+			},
+			success:function(data){
+				var ToPrint = [];
+				if (data.errMsg) {
+					for (var K in data.errMsg){
+						ToPrint.push(Tr(K)+": "+data.errMsg[K].join(", "));
+					}
+					return done (Tr("notexisted")+" "+ToPrint);
+				} else {
+					return done();	
+				}				
+			}
+		})
+	}
+
 	self.editorTest =  ko.computed(function() {
 		var Formula = (self.Formula()+'').trim();
 		if (Formula.length){
 			try{
 				var R = parser.parse(Formula);
 				self.ParserResult(R);
-				self.isOk(true);
+				self.CheckExisted(function(errMsg){
+					if (errMsg){
+						self.ParserResult(errMsg);
+						self.isOk(false);
+					} else {
+						self.isOk(true);	
+					}					
+				})
 			} catch(e){
 				self.isOk(false);
 				var errMsg = self.ReparseError(e.message);

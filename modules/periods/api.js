@@ -74,8 +74,7 @@ var MapPeriods = (new function(){
 				self.Result = Answer;
 				return done(err,self.Result);
 			})
-		})		
-
+		})
 	}
 
 	self.Load = function(done){
@@ -225,8 +224,7 @@ router.get('/periodmap', HP.TaskAccess("IsPeriodMapTunner"), function(req,res,ne
 		mongoose.model("reportperiods").find({}).sort({IndexReportPeriod:1}).lean().isactive().exec(function(err,Ps){
 			Answer.LinkPeriods = Ps;
 			return res.json(Answer);	
-		})
-		
+		})		
 	})
 })
 
@@ -248,6 +246,38 @@ router.put('/periodmap', HP.TaskAccess("IsPeriodMapTunner"), function(req,res,ne
 	async.parallel(Tasks,function(err){
 		if (err) return next(err);
 		MapPeriods.Result = null;
+		return res.json({});
+	})
+})
+
+
+router.get('/periodaf', HP.TaskAccess("IsPeriodAFTunner"), function(req,res,next){
+	var Answer = {MainPeriods:[],LinkPeriods:[]};
+	mongoose.model("period").find({IsReportPeriod:true},"-_id CodePeriod NamePeriod").sort({MCount:1,BeginDate:1}).isactive().exec(function(err,Main){
+		Answer.MainPeriods = Main;
+		mongoose.model("periodautofill").find({}).sort({Idx:1}).lean().isactive().exec(function(err,Ps){
+			Answer.LinkPeriods = Ps;
+			return res.json(Answer);	
+		})		
+	})
+})
+
+router.put('/periodaf', HP.TaskAccess("IsPeriodAFTunner"), function(req,res,next){
+	var ModelSaver = require(__base + 'src/modeledit.js'), CodeUser = req.user.CodeUser;
+	var Data = JSON.parse(req.body.JSON);
+	if (_.isEmpty(Data)) return res.json({});
+	var Tasks = [];
+	console.log(Data);
+	for (var CodePeriod in Data){
+		Tasks.push(function(Code,Links){
+			return function(cb){
+				var MS = new ModelSaver(CodeUser);
+				MS.SyncLinks("periodautofill", {CodeSourcePeriod:Code}, Links, cb);
+			}
+		}(CodePeriod,Data[CodePeriod]));
+	}
+	async.parallel(Tasks,function(err){
+		if (err) return next(err);
 		return res.json({});
 	})
 })

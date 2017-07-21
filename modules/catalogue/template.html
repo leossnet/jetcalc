@@ -190,7 +190,7 @@
                     name:'small_form_with_header',
                     data:{
                         Name:'',
-                        Fields:ModelTableEdit.EditFields(),
+                        Fields:ModelTableEdit.GetEditFields(),
                         Model:ModelTableEdit.LoadedModel
                     }
                 } -->
@@ -202,14 +202,14 @@
                     name:'small_form_with_header',
                     data:{
                         Name:'',
-                        Fields:ModelTableEdit.ForceEditFields(),
+                        Fields:ModelTableEdit.GetEditFields(),
                         Model:ModelTableEdit.LoadedModel
                     }
                 } -->
                 <!-- /ko -->
             <!-- /ko -->
-            <!-- ko if:ModelTableEdit.EditLinks().length -->
-                <!-- ko foreach:ModelTableEdit.EditLinks() -->
+            <!-- ko if:ModelTableEdit.Links().length -->
+                <!-- ko foreach:ModelTableEdit.Links() -->
                     <!-- ko template:{
                         name:'edit_links',
                         data:{
@@ -234,24 +234,19 @@
 
 <script id="model_settings_form" type="text/html">
     <div>
-        <!-- ko if:$data.Name && $data.Name.length -->
-        <h3 class="row header smaller lighter blue" data-bind='text:$data.Name'></h3>
-        <!-- /ko -->
-        <!-- ko with:$data.Model -->
         <div class="profile-user-info profile-user-info-striped" style='margin-bottom: 3px;'>
-            <!-- ko foreach: $parent.Fields  -->
+            <!-- ko foreach: $data.AllValues()  -->
             <div class="profile-info-row">
-                <div class="profile-info-name" data-bind="model:$parent.ModelName,lang:$data"></div>
+                <div class="profile-info-name" data-bind="model:ModelTableEdit.ModelName,lang:$data"></div>
                 <div class="profile-info-value">
                     <div class="checkbox">
-                        <input class="ace ace-checkbox-2" type="checkbox" data-bind="checked: $parents[1].CheckList()[$data]">
+                        <input class="ace ace-checkbox-2" type="checkbox" data-bind="value:$data, checked: $parent.Value">
                         <span class="lbl"></span>
                     </div>
                 </div>
             </div>
             <!-- /ko -->
         </div>
-        <!-- /ko -->
     </div>
 </script>
 
@@ -276,7 +271,7 @@
                         name:'small_form_with_header',
                         data:{
                             Name:'',
-                            Fields:$data.EditFields,
+                            Fields:$data.GetEditFields,
                             Model:$data
                         }
                     } -->
@@ -326,60 +321,55 @@
 </div>
 
 <div id="catalogue_settings_modal" class="modal fade">
-    <div class="modal-dialog" data-bind="with:ModelTableEdit">
+    <div class="modal-dialog" data-bind="with:ModelTableEdit" style="max-width: 800px;max-height: 600px;">
         <div class="modal-content">
+            <h3 class='row header smaller lighter blue' style="padding-left: 5px;">Настройка отображения</h3>
             <div class="modal-body">
-                <table style="width:100%;">
-                    <tr>
-                        <td style="width:30%;vertical-align:top">
-                            <!-- ko if: ModelTableEdit.TableFieldsModel -->
-                                <!-- ko template:{
-                                    name:'model_settings_form',
-				                    data:{
-                                        Name:'Таблица',
-                                        Fields:ModelTableEdit.TableFieldsModel().EditFields,
-                                        Model:ModelTableEdit.TableFieldsModel,
-                                        CheckList:ModelTableEdit.TableFieldsCheckList
-                                    }
-			                     } -->
-                                <!-- /ko -->
-                            <!-- /ko -->
-                        </td>
-                        <td style="width:5%"></td>
-                        <td style="width:30%;vertical-align:top">
-                            <!-- ko if: ModelTableEdit.TableFieldsModel -->
-                                <!-- ko template:{
-                                    name:'model_settings_form',
-				                    data:{
-                                        Name:'Редактирование',
-                                        Fields:ModelTableEdit.TableFieldsModel().EditFields,
-                                        Model:ModelTableEdit.TableFieldsModel,
-                                        CheckList:ModelTableEdit.ForceEditFieldsCheckList
-                                    }
-			                     } -->
-                                <!-- /ko -->
-                            <!-- /ko -->
-                        </td>
-                        <td style="width:5%"></td>
-                        <td style="width:30%;vertical-align:top">
-                            <!-- ko if: ModelTableEdit.TableFieldsModel -->
-                                <!-- ko template:{
-                                    name:'model_settings_form',
-				                    data:{
-                                        Name:'Ссылки',
-                                        Fields:_.keys(ModelTableEdit.LinkFieldsCheckList()),
-                                        Model:ModelTableEdit.TableFieldsModel,
-                                        CheckList:ModelTableEdit.LinkFieldsCheckList
-                                    }
-			                     } -->
-                                <!-- /ko -->
-                            <!-- /ko -->
-                        </td>
-                    </tr>
-                </table>
-                <br>
-                <button class="btn btn-blue btn-sm" data-bind="click:ModelTableEdit.SaveSettings">
-					<i class="ace-icon fa fa-floppy-o"></i>
+                <div class='row'>
+                    <div >
+                        <div >
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#ShowFields" aria-expanded="true"><i class="pink ace-icon fa fa-table bigger-110"></i>Поля таблицы</a></li>
+                                <li class=""><a data-toggle="tab" href="#EditFields" aria-expanded="false"><i class="blue ace-icon fa fa-tasks bigger-110"></i>Форма редактирования</a></li>
+                                <li class=""><a data-toggle="tab" href="#Links" aria-expanded="false"><i class="ace-icon fa fa-link"></i>Ссылки</a></li>
+                            </ul>
+                            <div class="tab-content  padding-12" style='max-height: 500px;overflow-y: scroll;'>
+                                <div id="ShowFields" class="tab-pane active">
+                                        <!-- ko template:{
+                                            name:'model_settings_form',
+                                            data:{
+                                                AllValues:ModelTableEdit.AllEditFields,
+                                                Value:ModelTableEdit.TableFieldsCheck
+                                            }
+                                         } -->
+                                        <!-- /ko -->
+                                </div>
+                                <div id="EditFields" class="tab-pane">
+                                        <!-- ko template:{
+                                            name:'model_settings_form',
+                                            data:{
+                                                AllValues:ModelTableEdit.AllEditFields,
+                                                Value:ModelTableEdit.EditFieldsCheck
+                                            }
+                                         } -->
+                                        <!-- /ko -->
+                                </div>
+                                <div id="Links" class="tab-pane">
+                                        <!-- ko template:{
+                                            name:'model_settings_form',
+                                            data:{
+                                                AllValues:ModelTableEdit.AllLinks,
+                                                Value:ModelTableEdit.LinksCheck
+                                            }
+                                         } -->
+                                        <!-- /ko -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-white btn-sm btn-info" data-bind="click:ModelTableEdit.SaveSettings" style='margin-top:10px;'>
+					<i class="ace-icon fa fa-floppy-o"></i> Сохранить
                 </button>
             </div>
         </div>

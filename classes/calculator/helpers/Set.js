@@ -47,7 +47,7 @@ var SetHelper = function(Context){
 
 	self._getDefault = function(done){
 		self.loadFromCache(function(err,Result){
-			if (Result) {
+			if (Result && false) {
 				return done(null,Result);	
 			} else {
 				self.check (function(err){

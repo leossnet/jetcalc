@@ -79,30 +79,25 @@ var ModelEdit = function(CodeUser,IsNew){
 		})
 	}
 
-
-	self.SaveLinks = function(ModelName, Links, done){
-		var ToSave = [], ToRemove = [];
+	self.SyncLinks = function(ModelName, Query, Links, done){
+		var M = mongoose.model(ModelName), CFG = M.cfg(), EditFields = CFG.EditFields, ToSave = [], ToRemove = [];
 		Links = Links || [];
-		var M = mongoose.model(ModelName), Q = {}; 
-		var CFG = M.cfg(), Fields = [], EditFields = CFG.EditFields;
-		var Code = CFG.Code;
-		Q[self.BaseModelCode] = self.BaseModel[self.BaseModelCode];
-		M.find(Q).isactive().exec(function(err,Existed){
+		M.find(Query).isactive().exec(function(err,Existed){
 			var IndexedOld = {};
 			Existed.forEach(function(Ex){
-				IndexedOld[Ex[Code]] = Ex;
+				IndexedOld[Ex._id+""] = Ex;
 			})
 			Links.forEach(function(NL){
-				if (!_.isEmpty(NL[Code])){
-					if (IndexedOld[NL[Code]]){
+				if (!_.isEmpty(NL._id)){
+					if (IndexedOld[NL._id+'']){
 						_.keys(NL).forEach(function(NK){
-							IndexedOld[NL[Code]][NK] = NL[NK];
+							IndexedOld[NL._id+''][NK] = NL[NK];
 						})
 					}
-					if (IndexedOld[NL[Code]].isModified()){
-						ToSave.push(IndexedOld[NL[Code]]);
+					if (IndexedOld[NL._id+""].isModified()){
+						ToSave.push(IndexedOld[NL._id+""]);
 					}
-					delete IndexedOld[NL[Code]];
+					delete IndexedOld[NL._id+""];
 				} else {
 					var ToAdd = new M(NL);
 					ToSave.push(ToAdd);
@@ -111,15 +106,6 @@ var ModelEdit = function(CodeUser,IsNew){
 			for (var Key in IndexedOld){
 				ToRemove.push(IndexedOld[Key]);
 			}
-			/*if (ModelName=='docheader'){
-				console.log("======== ToRemove =========");
-				console.log(ToRemove);
-				console.log("=================");
-				console.log("=========ToSave========");
-				console.log(ToSave);
-				console.log("=================");
-				die();
-			}*/
 			async.each(ToRemove,function(TR,cb1){
 				TR.remove(self.CodeUser,function(err){
 					cb1(err);
@@ -132,6 +118,12 @@ var ModelEdit = function(CodeUser,IsNew){
 				},done);
 			})
 		})
+	}
+
+	self.SaveLinks = function(ModelName, Links, done){
+		var Q = {};
+		Q[self.BaseModelCode] = self.BaseModel[self.BaseModelCode];
+		self.SyncLinks(ModelName, Q, Links, done);
 	}
 
 

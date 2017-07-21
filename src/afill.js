@@ -72,17 +72,15 @@ module.exports =  function(){
 			var CellName = Cell.Cell, Value = Cell.Value;
 			var In = CellName.match(/\$(.*?)\@(.*?)\.P(.*?)\.Y(.*?)\#(.*?)\?/).splice(1);
 			ToSaveReparsed[CellName]  = {
-				CodePeriod:In[2],
-				CodeObj:In[4],
-				CodeRow:In[0],
-				CodeCol:In[1],
-				Year:parseInt(In[3]),
-				UserEdit:Context.LoginUser,
+				CodeCell:CellName,
+				CodeUser:Context.CodeUser,
+				Comment:'',
+				CalcValue:'',
 				Value:Value,
 				CodeValuta:Context.CodeValuta
 			};
 		})
-		db.setCells(_.values(ToSaveReparsed),function(err){
+		db.SetCells(_.values(ToSaveReparsed),function(err){
 			return done();
 		})
 	}

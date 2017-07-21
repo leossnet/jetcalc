@@ -246,7 +246,7 @@ var MInput = (new function() {
     }
 
     self.CheckFormIsOpened = function(){
-        return !Workflow.CurrentState() || ['Opened',"OPEN"].indexOf(Workflow.CurrentState()!=-1);
+        return !Workflow.CurrentState() || Workflow.StatesTranslate['Opened'] == Workflow.CurrentState();
     }
 
 	self.IndexedCells = {};

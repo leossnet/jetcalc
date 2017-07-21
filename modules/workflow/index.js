@@ -24,11 +24,22 @@ var Workflow = (new function(){
 	self.CurrentState = ko.observable();
     self.Actions = ko.observableArray();
 
+    self.StatesTranslate = {};
+
+    self.LoadStates = function(done){
+        $.getJSON(self.base+"statestr",function(data){
+            self.StatesTranslate = data;
+            return done();
+        })
+    }
+
     self.Init = function(done){
-		CxCtrl.Events.addListener("documentchanged",self.UpdateInfo);
-        CxCtrl.Events.addListener("contextchanged",self.UpdateInfo);		
-        CxCtrl.Events.addListener("pagechanged",self.UpdateInfo);
-        return done();
+        self.LoadStates(function(){
+            CxCtrl.Events.addListener("documentchanged",self.UpdateInfo);
+            CxCtrl.Events.addListener("contextchanged",self.UpdateInfo);        
+            CxCtrl.Events.addListener("pagechanged",self.UpdateInfo);
+            return done();
+        })
     }
 
     self.Context = function(){
@@ -47,6 +58,7 @@ var Workflow = (new function(){
         self.IsBlockAllowed(false);
         if (!Document.IsInput) return done && done();
     	$.getJSON(self.base+"status",Context,function(data){
+            console.log(data);
     		if (data.err) {
                 self.Error(data.err);   
                 return done && done();   

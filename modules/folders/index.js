@@ -7,42 +7,81 @@ var MFolders = (new function(){
     self.FolderIcon = function(data){
         if (self.Icons[data]) return self.Icons[data];
         return "fa-folder";
-
-        //console.log(data);
-/*        var icons = {
-            "Графики":"fa-bar-chart",
-            "Дирекция":"fa-suitcase",
-            "Контроллинг":"fa-calendar",
-            "Отчеты":"fa-pie-chart",
-            "Персонал":"fa-address-card-o",
-            "Производство":"fa-cogs",
-            "Процессы":"fa-recycle",
-            "Финансы":"fa-rub",
-            "Инвестиции":"fa-money",
-            "Экономика":"fa-line-chart",
-        }       
-*/
     }
 
     self.Navigate = function(){
-        // Открытие папок при выборе документа
+        return;
         var Ind = self.DocumentLocation(CxCtrl.CodeDoc());
-        $('.nav-list ul').hide();
-        $('.nav-list li').removeClass("highlight open");
-        $('li[data-folder="'+Ind[0]+'"]').addClass("highlight open");
-        $('li[data-folder="'+Ind[0]+'"]>ul.submenu').show();
-        $('li[data-folder="'+Ind[1]+'"]').addClass("highlight open");
-        $('li[data-folder="'+Ind[1]+'"]>ul.submenu').show();        
+        self.CloseAll()
+        self.OpenFolder(Ind[0]);
+        self.OpenFolder(Ind[1]);
+    }
+
+    self.Lvl0Open = ko.observable(null, {persist: 'lvl0' });
+    self.Lvl1Open = ko.observable(null, {persist: 'lvl1' });
+    self.AllOpened  = ko.observableArray([], {persist: 'openfolders' });
+
+
+    self.Remember = function(data){
+        /*var lvl = 0;
+        if (_.keys(self.DocTree()).indexOf(data)==-1){
+            lvl = 1;
+        }
+        if (lvl==0){
+            self.Lvl0Open(data);
+        } else {
+            self.Lvl1Open(data);
+        }
+        */
+        if (!self.IsOpen(data)){
+            self.OpenFolder(data);
+        } else {
+            self.CloseFolder(data);
+        }        
     }
 
     self.DocTree       = ko.observable();
     self.DocTreeCounts = ko.observable();
 
+    self.OpenFolder = function(Id){
+        self.AllOpened.push(Id);        
+        $('li[data-folder="'+Id+'"]').addClass("open");
+        $('li[data-folder="'+Id+'"]>ul.submenu').show();
+    }
+
+    self.CloseFolder = function(Id){
+        self.AllOpened.remove(Id);        
+        $('li[data-folder="'+Id+'"]').removeClass("open");
+        $('li[data-folder="'+Id+'"]>ul.submenu').hide();
+    }
+
+    self.CloseAll = function(){
+        return;
+        $('.nav-list ul').hide();
+        $('.nav-list li').removeClass("highlight open");
+    }
+
+    self.IsOpen = function(data){
+        return self.AllOpened().indexOf(data)!=-1;
+    }
+
+    self.Reopen = function(){
+        return;
+        if (self.Lvl0Open()) self.OpenFolder(self.Lvl0Open());
+        if (self.Lvl1Open()) self.OpenFolder(self.Lvl1Open());
+    }
+
     self.Init = function(done){
         self.LoadTree(function(){
-            CxCtrl.Events.addListener("documentchanged",function(){
-                self.Navigate();
+            /*CxCtrl.Events.addListener("documentchanged",function(){
+              
+                setTimeout(function(){
+                      self.Reopen();
+                      self.Navigate();
+                },1000);
+
             })
+            */            
             return done && done();
         })
     }

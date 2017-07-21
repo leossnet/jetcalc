@@ -1,0 +1,21 @@
+<div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MPeriods'>
+    <!-- ko template:'tb_simple_loader' --><!-- /ko -->
+   	<!-- ko template:'model_edit_buttons' --><!-- /ko -->
+   	<!-- ko template:'model_edit_search' --><!-- /ko -->
+</div>
+
+<div class="row adminbody" data-bind="with:MParams">
+	<div>
+		<!-- ko template:'model_edit' --><!-- /ko -->
+	</div>
+</div>
+
+<div class="bottomPannel" data-bind="with:MParams">
+	<ul class="toolPanel nav nav-tabs background-blue">
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar',title:'Params',mode:'Params'}} --><!-- /ko -->    	
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-folder-open-o',title:'ParamSets',mode:'ParamSets'}} --><!-- /ko -->    	
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-check-o',title:'ParamKeys',mode:'ParamKeys'}} --><!-- /ko -->    	
+      <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'ListDefinitions',mode:'ListDefinitions'}} --><!-- /ko -->       
+      <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'ParamGrp',mode:'ParamGrp'}} --><!-- /ko -->       
+	</ul>
+</div>

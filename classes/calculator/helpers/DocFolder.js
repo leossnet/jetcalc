@@ -39,7 +39,6 @@ var DocFolderHelper = function(Context){
 		})
 		.isactive()
 		.exec(function(err,Ds){
-			console.log("ALL DOCS",_.filter(Ds,{CodeDoc:'nalog'}));
 			return done (err,Ds);
 		})
 	}
@@ -164,7 +163,6 @@ var DocFolderHelper = function(Context){
 					UnemptyStructure[Key1][Key2] = _.sortBy(UnemptyStructure[Key1][Key2],"IndexDoc");
 				}
 			}
-			console.log({Tree:UnemptyStructure,Icons:Icons});
 			return done(null,{Tree:UnemptyStructure,Icons:Icons});			
 		})
 		

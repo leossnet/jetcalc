@@ -17,6 +17,7 @@ var Structure = require(__base+"classes/calculator/helpers/Structure.js");
 
 router.get('/api/calculator/structure', function(req,res,next){
 	var Context = lib.ReqContext(req);
+	console.log(Context);
 	var Worker = new Structure(Context);
 	Worker.get(function(err,Ans){
 		if (err) return next(err);
@@ -35,6 +36,44 @@ router.get('/api/calculator/cells', function(req,res,next){
 			if (err) return next(err);
 			return res.json(Result);
 		})
+	})
+})
+
+
+
+
+
+router.post('/api/cell/validateformula', function(req,res,next){
+	var R = require(__base+"classes/calculator/RegExp.js");
+	var Frm = req.body.Formula+"", Vars = Frm.match(R.Var), ToTest = {Row:[],Col:[],Period:[],Obj:[]};
+	if (!Vars.length) return res.json({});
+	Vars.forEach(function(Vara){
+		_.keys(ToTest).forEach(function(K){
+			var Match = Vara.match(R[K]);
+			if (!_.isEmpty(Match)){
+				ToTest[K] = ToTest[K].concat(_.map(Match,function(M){
+					return M.substring(R.Symbols[K].length);
+				}));
+			}
+		})
+	})
+	var Error = {};
+	async.each(_.keys(ToTest),function(Key,cb){
+		var Check = ToTest[Key];
+		if (_.isEmpty(Check)) return cb();
+		var Model = mongoose.model(Key.toLowerCase()), CFG = Model.cfg(), Code = CFG.Code, Q = {};
+		Q[Code] = {$in:Check};
+		Model.find(Q,Code).isactive().lean().exec(function(err,Existed){
+			var Arr = _.map(Existed,Code);
+			var Diff = _.difference(Check,Arr);
+			if (!_.isEmpty(Diff)){
+				Error[Key] = Diff;
+			}
+			return cb();
+		})
+	},function(err){
+		if (_.isEmpty(Error)) return res.json({});
+		return res.json({errMsg:Error});
 	})
 })
 
@@ -842,8 +881,6 @@ router.post('/api/cell/explain', function(req,res){
 })
 
 router.post('/api/cell/calculatebyformula', function(req,res){	
-	console.log(req.body);
-	
 	var Context = getContext(req.body.Context,req.session.sandbox,req.user.CodeUser);	
 	var Calculator = require('../calculator/AssoiCalculator.js');
 	var Cells  = {}; Cells[req.body.Cell] = req.body.Formula.replace(/\s+/g,' ');

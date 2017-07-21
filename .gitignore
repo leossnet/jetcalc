@@ -21,3 +21,6 @@ npm-debug.log
 static/build/index.html
 /.gitmodules
 static/build/
+/start.json
+/backup
+/modules/catalogue/settings.json

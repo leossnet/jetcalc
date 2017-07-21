@@ -46,6 +46,7 @@ var CxCtrl = (new function(){
     }
 
     self.ParamsChanged = function(){
+        console.log("AAAAAAAAAAAAAA");
         var NewParams = SettingController.diffParams();
         if (NewParams.length){
             var Override = SettingController.ActualParams();
@@ -254,6 +255,7 @@ var CxCtrl = (new function(){
                 self.CodeValuta(value);
             break;
             default:
+                return;
                 console.log("Changing ... ",type,value);
         }
         if (Updater==-1) return;
@@ -405,7 +407,8 @@ var CxCtrl = (new function(){
 
     self.UpdateDocInfo = function(CodeDoc,done){
         var Doc = MFolders.FindDocument(self.CodeDoc());
-        self.PrintNameDoc(Doc.PrintNameDoc);
+        var N = _.isEmpty(Doc.PrintNameDoc)? Doc.NameDoc : Doc.PrintNameDoc;
+        self.PrintNameDoc(N);
         self.PrintNumDoc(Doc.PrintNumDoc);
         $.getJSON("/api/form/doc",_.merge(self.Context(),{CodeDoc:CodeDoc}),function(data){
             if (!data.err){
@@ -507,12 +510,10 @@ var CxCtrl = (new function(){
     return self;
 })
 
-ModuleManager.Events.addListener("modulesloaded",function(){
+ModuleManager.Events.addListener("modulesinited",function(){
+    console.log("<<<<< modulesloaded");
     SettingController.Events.on("paramschanged",CxCtrl.ParamsChanged)
     SettingController.Events.on("reportchanged",CxCtrl.ReportChanged)    
-})
-
-ModuleManager.Events.addListener("modulesinited",function(){
     CxCtrl.init();
     MSite.Events.on("initialnavigate",CxCtrl.ChangeInitDocPath);
 })

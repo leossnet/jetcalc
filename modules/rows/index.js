@@ -17,34 +17,25 @@ var MRows = (new function() {
 
 
     self.Show = function(done){
-        if (!self.Mode()) return self.InitSetMode("Root");
+        if (!self.Mode()) return self.InitSetMode("SumGrp");
         switch (self.Mode()){
-            case "Root":
-                ModelTableEdit.InitModel("row",["CodeRow","NameRow"],{CodeRow:1},{CodeParentRow:{$in:[null,""]}});
-                ModelTableEdit.ForceEditFields = [
-                    "CodeRow","NameRow","HasFilteredChild","NoFiltered","CodeValuta","CodeMeasure","CodeFormat","CodeParentRow"
-                ];
+            case "SumGrp":
+                ModelTableEdit.InitModel("sumgrp");
             break;            
             case "Measure":
-                ModelTableEdit.InitModel("measure",["IsExchange","CodeMeasure","SNameMeasure","NameMeasure"],{NumMeasure:1});
+                ModelTableEdit.InitModel("measure",{NumMeasure:1});
             break;            
             case "Format":
-                ModelTableEdit.InitModel("format",["CodeFormat", "NameFormat","FormatValue"]);
-                ModelTableEdit.ForceEditFields = [
-                    "CodeFormat", "NameFormat","FormatValue"
-                ];
+                ModelTableEdit.InitModel("format");
             break;             
             case "Style":
-                ModelTableEdit.InitModel("style",["CodeStyle", "NameStyle","CSS"]);
-                ModelTableEdit.ForceEditFields = [
-                    "CodeStyle", "NameStyle", "CSS"
-                ];
+                ModelTableEdit.InitModel("style");
             break;             
             case "Tags":
-                ModelTableEdit.InitModel("tag",["CodeTag", "NameTag","SNameTag"]);
-                ModelTableEdit.ForceEditFields = [
-                    "CodeTag", "NameTag", "SNameTag", "IsList", "IsObj", "IsRow", "IsCol", "IsObjType"
-                ];
+                ModelTableEdit.InitModel("tag");
+            break;            
+            case "Models":
+                ModelTableEdit.InitModel("model");
             break;            
         }
         return done && done()

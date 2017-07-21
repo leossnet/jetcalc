@@ -19,7 +19,7 @@ var StructureHelper = function(Context){
 
 	self.get = function(done){
 		self.loadFromCache(function(err,Result){
-			if (Result) {
+			if (Result && false) {
 				return done(null,Result);	
 			}			
 			self.loadInfo(function(err,Result){

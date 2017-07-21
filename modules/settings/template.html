@@ -1,12 +1,12 @@
 <script id="tb_settings" type="text/html">
 <!-- ko if:SettingController.IsAvailable() -->
     <div class="btn-group">
-      <button class="btn btn-sm btn-primary btn-white" data-bind="
+      <a class="btn btn-sm btn-primary btn-white" data-bind="
         title:'Отображать настройки',
         css:{'active':SettingController.IsShow()},
         click:SettingController.Toggle" >
         <i class="fa fa-wrench" ></i>
-      </button>
+      </a>
     </div>
 <!-- /ko -->
 </script>
@@ -108,14 +108,14 @@
 												</h4>
 											</div>
 
-											<div class="panel-collapse collapse" data-bind="css:{'in':$data==SettingController.choosedGrp()}"">
+											<div class="panel-collapse collapse" data-bind="css:{'in':$data==SettingController.choosedGrp() || true}"">
 												<div class="panel-body" style='padding:0px;'>
 													<!-- ko with: SettingController -->
 														<!-- ko foreach: {data: _.filter(SettingController.servedParams(),{NameParamGrp: grp}), as: 'param'} -->
 															<!-- ko if:$data.type=="checkbox" -->
 																<div class="checkbox" data-bind="css:{'changed': _.includes(SettingController.diffParams(),CodeParam)}">
 																	<label>
-																		<input class="ace ace-checkbox-1" type="checkbox" data-bind="checkBox: $parent.resParams()[CodeParam],e1vent: {'change': CxCtrl.Update.bind(null,'settings')}">
+																		<input class="ace ace-checkbox-1" type="checkbox" data-bind="checkBox: $parent.resParams()[CodeParam],event: {'change': CxCtrl.Update.bind(null,'settings')}">
 																		<span class="lbl small" data-bind="text:'&nbsp;'+NameParam"></span>
 																	</label>
 																</div>
@@ -124,7 +124,7 @@
 																<div class="select" data-bind="css:{'changed': _.includes(SettingController.diffParams(),CodeParam)}">
 																	<label data-bind='text:$data.NameParam'></label>
 																	<div>
-																		<select class="form-control" data-bind="value: $parent.resParams()[CodeParam], options: _.values($data.ParamSets), optionsText: 'SNameParamSet',optionsValue: 'CodeParamSet',e1vent: {'change': CxCtrl.Update.bind(null,'settings')}">
+																		<select class="form-control" data-bind="value: $parent.resParams()[CodeParam], options: _.values($data.ParamSets), optionsText: 'SNameParamSet',optionsValue: 'CodeParamSet',event: {'change': CxCtrl.Update.bind(null,'settings')}">
 																		</select>
 																	</div>
 																</div>

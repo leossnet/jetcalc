@@ -36,6 +36,51 @@ var ModelRestrict = (new function () {
 })
 
 
+var ModelClientConfig = (new function(){
+    var self = this;
+
+    self.Config = {};
+
+    self.CodeAndName = function(ModelName){
+        return [MModels.Config[ModelName].Code,MModels.Config[ModelName].Name];
+    }
+
+    self.TableFields = function(ModelName){
+        return _.isEmpty(self.Config[ModelName]) ? self.CodeAndName(ModelName) : self.Config[ModelName].TableFields;
+    }
+
+    self.Links = function(ModelName){
+        return _.isEmpty(self.Config[ModelName]) ? [] : self.Config[ModelName].Links;
+    }
+
+    self.EditFields = function(ModelName){
+        console.log("AA");
+        return _.isEmpty(self.Config[ModelName]) ? self.CodeAndName(ModelName) : self.Config[ModelName].EditFields;
+    }
+
+    self.base = '/api/modules/catalogue/';
+
+    self.Load = function(done){
+        $.getJSON(self.base+"clientsettings",function(data){
+            self.Config = data;
+            return done && done();
+        })
+    }
+
+    self.Save = function(data,done){
+        $.ajax({
+            url:self.base+"clientsettings",
+            method:'post',
+            data:data,
+            success:function(){
+                self.Load(done);
+            }
+        })
+    }
+
+    return self;
+})
+
 
 
 
@@ -159,7 +204,7 @@ var Catalogue = (new function () {
                 ModelTableEdit.Save();
             }
         })
-        return done();
+        ModelClientConfig.Load(done);
     }
 
     self.LoadModels = function (modelName, Fields, Sort, Search, limit, skip, filter, done) {
@@ -182,7 +227,24 @@ var Catalogue = (new function () {
         })
     }
 
+
+ /*   self.throttled = {};
+    self.throttledTimer = null;
+    self.SearchThrottle = function(params,callback){
+        if (!self.throttled[params.model]) self.throttled[params.model] = {};
+        if (!self.throttled[params.model][params.q]) self.throttled[params.model][params.q] = [];
+        self.throttled[params.model][params.q].push(callback);
+        if (self.throttledTimer) clearTimeout(self.throttledTimer);
+        self.throttledTimer = setTimeout(function(){
+            console.log(self.throttled);
+
+        },1000);
+    }
+*/
+
+
     self.DoSearch = function (params, callback) {
+        //return self.SearchThrottle(params, callback);
         self.Error(null);
         $.getJSON(self.base + '/search', params, function (SearchResult) {
             if (SearchResult.err) return self.Error(SearchResult.err);
@@ -321,14 +383,12 @@ var ModelTableEdit = (new function () {
     self.ModelsCount = ko.observable(0);
 
     self.Events = new EventEmitter();
-
     self.base = "/api/modules/catalogue/";
-
     self.ModelName = ko.observable();
-    self.TableFields = ko.observableArray();
     self.Search = ko.observable("").extend({
         throttle: 600
     });
+
     self.CodeField = ko.observable();
     self.NameField = ko.observable();
     self.IsInited = ko.observable(false);
@@ -342,23 +402,26 @@ var ModelTableEdit = (new function () {
     self.IsExtendEditor = ko.observable(false);
     self.IsOverrideList = ko.observable(false);
 
-    self.ForceEditFields = ko.observableArray();
-    self.DefaultEditFields = [];
 
-    self.EditLinks = ko.observableArray();
+    self.TableFields = ko.observableArray();
+    self.Links = ko.observableArray();
+    self.EditFields = ko.observableArray();
+
+
+    self.TableFieldsCheck = ko.observableArray();
+    self.EditFieldsCheck = ko.observableArray();
+    self.LinksCheck = ko.observableArray();
+
+    self.AllTableFields = ko.observableArray();
+    self.AllEditFields = ko.observableArray();
+    self.AllLinks = ko.observableArray();
+
 
     self.TableFieldsModel = ko.observable(null);
 
-    self.TableFieldsCheckList = ko.observable(null);
-    self.ForceEditFieldsCheckList = ko.observable(null);
-    self.LinkFieldsCheckList = ko.observable(null);
 
-    self.SetForceEditFields = function (Fields) {
-        self.ForceEditFields(_.intersection(Fields, MModels.Create(self.ModelName()).EditFields));
-    }
-
-    self.EditFields = function () {
-        if (self.ForceEditFields.length) return self.ForceEditFields;
+    self.GetEditFields = function () {
+        if (self.EditFields().length) return self.EditFields();
         return self.DefaultEditFields;
     }
 
@@ -408,63 +471,41 @@ var ModelTableEdit = (new function () {
             });
     }
 
-    self._prepareSettings = function (checkList, fields, fieldsType) {
-        var tmpCheckList = {};
-        self.TableFieldsModel()[fieldsType].forEach(function (field) {
-            var val = fields.indexOf(field) != -1;
-            tmpCheckList[field] = ko.observable(val);
-        });
-        checkList(tmpCheckList);
-    }
-
     self.Settings = function () {
-        self.TableFieldsModel(MModels.Create(self.ModelName(), {}));
-        self._prepareSettings(self.TableFieldsCheckList, self.TableFields, 'EditFields');
-        self._prepareSettings(self.ForceEditFieldsCheckList, self.ForceEditFields, 'EditFields');
-        self._prepareSettings(self.LinkFieldsCheckList, self.EditLinks, 'Links');
         $("#catalogue_settings_modal").modal("show");
     }
 
-    self._saveSettings = function (checkList, saveName) {
-        var storage = localStorage;
-        var trueFields = [];
-        Object.keys(checkList()).forEach(function (k) {
-            if (checkList()[k]()) {
-                trueFields.push(k);
-            }
-        });
-        var savedFields = {}
-        if (storage[saveName]) {
-            savedFields = JSON.parse(storage[saveName]);
-        }
-        savedFields[self.ModelName()] = trueFields;
-        storage[saveName] = JSON.stringify(savedFields);
-    }
-
     self.SaveSettings = function () {
-        self._saveSettings(self.TableFieldsCheckList, 'TableFields');
-        self._saveSettings(self.ForceEditFieldsCheckList, 'ForceEditFields');
-        self._saveSettings(self.LinkFieldsCheckList, 'EditLinkFields');
-        self.InitModel(self.ModelName(), self.TableFields(), self.Sort(), self.Filter());
-        $("#catalogue_settings_modal").modal("hide");
-    }
-
-    self.LoadModel = function () {
-        self._loadModel(function () {
-            self.Events.emit("modelloaded");
+        ModelClientConfig.Save({
+            ModelName:self.ModelName(),
+            TableFields:self.TableFieldsCheck(),
+            EditFields:self.EditFieldsCheck(),
+            Links:self.LinksCheck()
+        },function(){
+            $("#catalogue_settings_modal").modal("hide");
+            self.InitModel(self.ModelName(), self.Sort(), self.Filter());
         })
     }
 
-    self._loadModel = function (done) {
-        if (!self.Choosed()) return;
+    self.LoadModel = function () {
+        self._loadModel(self.Choosed(),function () {
+            self.Events.emit("modelloaded");
+        })
+    }
+    self.ReloadModel = function (Code,done) {
+        console.log("ReloadModel");
+        self._loadModel(Code,done);
+    }
+
+    self._loadModel = function (Code,done) {
         self.Error(null);
         self.IsLoading(true);
         $.ajax({
             url: self.base + 'model',
             data: {
                 model: self.ModelName(),
-                code: self.Choosed(),
-                links: self.EditLinks()
+                code: Code,
+                links: self.Links()
             },
             method: 'get',
             success: function (data) {
@@ -512,16 +553,18 @@ var ModelTableEdit = (new function () {
                     code: self.Choosed(),
                     data: self.LoadedModel().toJS(),
                     isnew: self.LoadedModel()._id,
-                    links: self.EditLinks()
+                    links: self.Links()
                 },
                 method: 'put',
                 success: function (data) {
                     self.IsLoading(false);
                     if (data.err) return self.Error(data.err);
                     self.LoadList();
-                    if (!self.Choosed()) self.Choosed(data.code);
-                    self._loadModel(function () {
-                        self.Events.emit("modelsaved");
+                    var Code = self.Choosed() || data.code;
+                    self.ReloadModel(Code,function () {
+                        setTimeout(function(){
+                          self.Events.emit("modelsaved");  
+                        },0);
                     })
                 }
             })
@@ -565,30 +608,30 @@ var ModelTableEdit = (new function () {
         })
     }
 
-    self._loadSettings = function (fields, saveName, ModelName) {
-        var storage = localStorage;
-        if (storage[saveName]) {
-            fields(JSON.parse(storage[saveName])[ModelName] || []);
-        }
-    }
-
-    self.InitModel = function (ModelName, TableFields, Sort, Filter) {
-        var storage = localStorage;
-        TableFields = TableFields || [];
+    self.InitModel = function (ModelName, Sort, Filter) {
         Filter = Filter || {};
         self.Clear();
-        self._loadSettings(self.TableFields, 'TableFields', ModelName);
-        self._loadSettings(self.ForceEditFields, 'ForceEditFields', ModelName);
-        self._loadSettings(self.EditLinks, 'EditLinkFields', ModelName);
-        TableFields = self.TableFields();
-        self.ModelName(ModelName);
-        var N = MModels.Create(ModelName, {});
-        self.DefaultEditFields = N.EditFields;
+        self.ModelName(ModelName);        
+        
+        var TF = ModelClientConfig.TableFields(ModelName);
+        self.TableFields(TF);
+        self.TableFieldsCheck(TF);
+        var TL = ModelClientConfig.Links(ModelName);
+        self.Links(TL);
+        self.LinksCheck(TL);
+        var TE = ModelClientConfig.EditFields(ModelName);
+        self.EditFields(TE);
+        self.EditFieldsCheck(TE);
+
         self.Sort(Sort);
-        self.CodeField(N.Code);
-        self.NameField(N.Name);
-        if (!TableFields.length) TableFields = [self.CodeField(), self.NameField()];
-        self.TableFields(TableFields);
+        self.CodeField(MModels.Config[ModelName].Code);
+        self.NameField(MModels.Config[ModelName].Name);
+
+        self.AllTableFields(MModels.Config[ModelName].EditFields);
+        self.AllEditFields(_.filter(MModels.Config[ModelName].EditFields,function(V){
+            return V.indexOf("Link_")==-1;
+        }));
+        self.AllLinks(_.uniq(MModels.Config[ModelName].Links)); 
         self.Filter(Filter);
         self.IsInited(true);
         self.LoadList();
@@ -602,9 +645,20 @@ var ModelTableEdit = (new function () {
         self.IsInited(false);
         self.Search("");
         self.List([]);
-        self.DefaultEditFields = [];
-        self.ForceEditFields = ko.observableArray();
+
         self.TableFields([]);
+        self.EditFields([]);
+        self.Links([]);
+
+
+        self.TableFieldsCheck([]);
+        self.EditFieldsCheck([]);
+        self.LinksCheck([]);
+
+        self.AllTableFields([]);
+        self.AllEditFields([]);
+        self.AllLinks([]);        
+
         self.CodeField(null);
         self.NameField(null);
         self.ModelName(null);
@@ -616,9 +670,10 @@ var ModelTableEdit = (new function () {
         self.NoAccess(true);
         self.IsExtendEditor(false);
         self.IsOverrideList(false);
-        self.Filter(null);
-        self.EditLinks([]);
+        self.Filter(null);        
     }
+
+
 
     self.LoadList = function () {
         if (!self.ModelName()) return;
@@ -727,13 +782,17 @@ var ModelTableEdit = (new function () {
                     newref = self.refStack()[self.refStack().length - 2].model;
                     newref[fieldName](data.code);
                 } else {
-                    var ch = self.LoadedModel().toJS();
-                    self.LoadedModel()[fieldName](data.code);
-                }
-
-                self.refStack.pop();
-                if (self.refStack().length == 0) {
-                    self.hideAddModal();
+                    if (self.LoadedModel()){
+                        var ch = self.LoadedModel().toJS();
+                        self.LoadedModel()[fieldName](data.code);    
+                        self.refStack.pop();
+                        if (self.refStack().length == 0) {
+                            self.hideAddModal();
+                        }
+                    } else {
+                        self.hideAddModal();
+                        ModelChooser.SearchStr.valueHasMutated()
+                    }                    
                 }
             }
         })

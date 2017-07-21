@@ -137,8 +137,6 @@ var MValuta = (new function() {
             break;
             case "ValutaRates":
                 self.LoadValutaRates();
-
-                //ModelTableEdit.InitModel("valutarate",["CodeValutaRate","Year","CodePeriod"],{Year:-1});
             break;
         }
     	return done && done()

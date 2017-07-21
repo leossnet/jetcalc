@@ -25,6 +25,10 @@
     <!-- ko if:Mode()=='PeriodMap' -->
         <!-- ko template:'save_changes' --><!-- /ko -->
     <!-- /ko -->
+    <!-- ko if:Mode()=='PeriodAutoFill' -->
+        <!-- ko template:'save_changes' --><!-- /ko -->
+
+    <!-- /ko -->
 </div>
 
 <div class="row adminbody" data-bind="with:MPeriods">
@@ -33,6 +37,66 @@
 		<!-- ko if:$data.IsModelEdit() -->
 			<!-- ko template:'model_edit' --><!-- /ko -->
 		<!-- /ko -->
+        <!-- ko if:Mode()=='PeriodAutoFill' -->
+        <div class='row' >
+            <table class="table table-striped table-bordered table-hover dataTable no-footer small-paddings periodsMapTable">
+                <tbody data-bind='foreach:MPeriods.MainPeriodsAF'>
+                    <tr data-bind='css:{active:MPeriods.IsCurrentEditPeriodAF($data)}'>
+                        <td>
+                            <span class="action-buttons gray-icons">
+                                <a  data-bind="title:Lang.Tr('period','edit'), click:MPeriods.SetEditPeriodAF"><i class="ace-icon fa fa-pencil"></i></a>
+                            </span>
+                        </td>
+                        <td data-bind='text:$data.CodePeriod'></td>
+                        <td data-bind='text:$data.NamePeriod'></td>
+                        <td >
+                            <table class="table openperiods table-striped table-bordered table-hover dataTable no-footer" style='min-width: 600px;'>
+                                <thead data-bind='if:MPeriods.LinkPeriodsAF()[$data.CodePeriod()]().length'>
+                                    <tr>
+                                        <td>Индекс</td><td>Код.Периода</td>
+                                        <!-- ko if:MPeriods.IsCurrentEditPeriodAF($data) -->
+                                        <td></td>
+                                        <!-- /ko -->                                        
+                                    </tr>
+                                </thead>
+                                <tbody >
+                                <!-- ko if:MPeriods.IsCurrentEditPeriodAF($data) -->
+                                    <!-- ko foreach:MPeriods.LinkPeriodsAF()[$data.CodePeriod()] -->
+                                    <tr>
+                                        <td><input type="text"  class='small_input' data-bind='value:$data.Idx'></input></td>
+                                        <td  style='min-width: 200px' >
+                                            <combobox-editor params="field:$data.CodeTargetPeriod,fieldname:'Код.Периода',refmodel:'period',mainmodel:'periodautofill'">
+                                            </combobox-editor>
+                                        </td>
+                                        <td class='middle_check'>
+                                            <a data-bind="click:MPeriods.RemoveLinkPeriodAF.bind($data,$parent.CodePeriod())"><i class="fa fa-icon fa-times"></i></a>
+                                        </td>
+                                    </tr>                                    
+                                    <!-- /ko -->
+                                    <tr>
+                                        <td colspan=5>
+                                            <a class="addLinkModel" data-bind="click:MPeriods.AddLinkPeriodAF.bind(null,$data.CodePeriod())">Добавить период</a>
+                                        </td>
+                                    </tr>                                    
+                                <!-- /ko -->
+                                <!-- ko ifnot:MPeriods.IsCurrentEditPeriodAF($data) -->
+                                    <!-- ko foreach:MPeriods.LinkPeriodsAF()[$data.CodePeriod()] -->
+                                    <tr>
+                                        <td data-bind='text:$data.Idx'></td>
+                                        <td  style='min-width: 200px' data-bind='html:Catalogue.GetHtmlWithCode("period",$data.CodeTargetPeriod())'>
+                                        </td>
+                                    </tr>                                    
+                                    <!-- /ko -->
+                                <!-- /ko -->
+                                </tbody>
+                            </table>                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- /ko -->
+
         <!-- ko if:Mode()=='PeriodMap' -->
         <div class='row' >
             <table class="table table-striped table-bordered table-hover dataTable no-footer small-paddings periodsMapTable">

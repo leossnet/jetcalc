@@ -119,7 +119,12 @@ var SettingController = (new function(){
         var All = self.servedParams();
         var Keys = {};
         All.forEach(function(A){
-        	Keys = _.merge(Keys,A.ParamSets[R[A.CodeParam]].ParamKeys);
+            try{
+                Keys = _.merge(Keys,A.ParamSets[R[A.CodeParam]].ParamKeys);    
+            } catch(e){
+                console.log("Error in params config ",A.CodeParam,R[A.CodeParam],A.ParamSets);
+            }
+        	
         })
         return Keys;
     }
@@ -247,6 +252,10 @@ var SettingController = (new function(){
 
     return self;
 })
+
+MSite.Events.on("initialnavigate",function(){
+    SettingController.IsShow(false);
+});
 
 
 MSite.Events.addListener("navigate",function(){

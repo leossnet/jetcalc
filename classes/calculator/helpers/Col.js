@@ -24,6 +24,7 @@ var ColHelper = function(Context){
 
 
 	self.get = function(done){
+		console.log(self.Context);
 		self.loadFromCache(function(err,Result){
 			if (Result && false) {
 				return done(err,self.DebugClean(Result));
