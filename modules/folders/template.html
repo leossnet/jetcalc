@@ -19,7 +19,7 @@
 							</a>
 							<ul class="submenu" data-bind='attr:{style:MFolders.IsOpen($data) ? "display:block":""}'>
 								<!-- ko foreach: $parents[1][$parent][$data] -->
-									<li data-bind="attr:{'data-doc':$data.CodeDoc},click: CxCtrl.AfterPageShow.bind(null,$data.CodeDoc),css:{active:MFolders.IsCurrent($data.CodeDoc),'IsTester':$data.IsTester,'IsDesigner':$data.IsDesigner}">
+									<li data-bind="attr:{'data-doc':$data.CodeDoc},click: CxCtrl.AfterPageShow.bind(null,$data.CodeDoc),css:{active:MFolders.IsCurrent($data.CodeDoc),'IsTester':$data.IsTester,'IsDesigner':$data.IsDesigner},clickBubble: false">
 										<a style='line-height:15px;'>
 											<i class='fa fa-icon fa-circle fa-dot left-block-icon'></i>
 											<span data-bind="html:$data.NameDoc" class='right-block-text'></span>
