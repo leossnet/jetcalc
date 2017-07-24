@@ -46,8 +46,7 @@ module.exports = function(grunt) {
             'static/editor/editor.js',
             "static/src/tree.js",
             "static/lib/require.js",
-            "static/lib/moment-range.js",
-            "static/lib/hitch.js"
+            "static/lib/moment-range.js"
         ],
         dest: 'static/build/lib.js'
       },

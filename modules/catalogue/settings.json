@@ -588,5 +588,18 @@
 			"DescriptionModel"
 		],
 		"Links": []
+	},
+	"region": {
+		"TableFields": [
+			"CodeRegion",
+			"NameRegion"
+		],
+		"EditFields": [
+			"CodeRegion",
+			"NameRegion"
+		],
+		"Links": [
+			"userfavorite"
+		]
 	}
 }

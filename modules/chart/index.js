@@ -275,6 +275,9 @@ var MChart = (new function () {
 
     self.Mode = ko.observable(false);
     self.LegendPosition = ko.observable('inset');
+	self.LegendPosition.subscribe(function () {
+        self.Create()
+    })
     self.ShowGridX = ko.observable(true);
     self.ShowGridX.subscribe(function () {
         self.Create()
@@ -700,8 +703,7 @@ var MChart = (new function () {
                         "stroke-linejoin": "bevel"
                     });
                     switch (type) {
-                        //case 'bar':
-                        //case 'stacked-bar':
+						case 'area':
                         case 'bar-line':
                             d3.selectAll('g.c3-bars path').each(function () {
                                 var box = this.getBBox();
@@ -711,14 +713,7 @@ var MChart = (new function () {
                                     text.attr('y', box.y + box.height / 2 + 6);
                                 }
                             });
-                            break;
-                            //case 'line':
-                            //case 'spline':
-                            //case 'area-spline':
-                            //case 'area-line':
-                        case 'area':
-                        case 'bar-line':
-                            d3.selectAll('circle.c3-circle').each(function () {
+							d3.selectAll('circle.c3-circle').each(function () {
                                 var text = self._getTextOf(this).each(function () {
                                     var that = this;
                                     d3.selectAll('text.c3-text').each(function () {
@@ -728,6 +723,11 @@ var MChart = (new function () {
                                     });
                                 });
                                 text[0][0].innerHTML = self._humanizeText(text[0][0].innerHTML);
+                            });
+                            break;
+                        case 'pie':
+							d3.selectAll('.c3-chart-arc text').each(function () {
+                                this.innerHTML = self._humanizeText(this.innerHTML);
                             });
                             break;
                         default:

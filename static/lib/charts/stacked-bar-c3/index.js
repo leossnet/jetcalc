@@ -4,40 +4,18 @@
 
 var chart = c3.generate( {
 	bindto: '#chart',
-	size: {
-		width: 800,
-		height: 900
-	},
-	interaction: {
-		enabled: true // показывать всплывашки по ховеру
-	},
 	data: {
-		json: data,
-		groups: [ // для stacked
-			[ "Здания", "Сооружения", "Машини и оборудование", "Транспортные средства", "Прочие осн. средства" ]
-		],
-		keys: {
-			x: 'name',
-			value: [ "Здания", "Сооружения", "Машини и оборудование", "Транспортные средства", "Прочие осн. средства" ],
-		},
-		type: 'bar'
-	},
-	axis: {
-		x: {
-			type: 'category'
-		},
-        y:{
-			tick:{
-				values: new Array(100).fill(0).map(function(v,i){ return i*2}) // шаги задаются массивом
-			}
-        }
-	},
-    grid:{
-        y:{
-            show: true // показывать грид
+        json: {
+            data1: [30, 20, 50, 40, 60, 50],
+            data2: [200, 130, 90, 240, 130, 220],
+            data3: [300, 200, 160, 400, 250, 250]
         }
     },
-	legend:{
-		position: 'bottom' // bottom || right || inset
-	}
+	axis: {
+                    x: {
+                        type: 'category'
+                    },
+                    y: {},
+                    
+                },    
 } );

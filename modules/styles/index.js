@@ -8,7 +8,7 @@ var MStyles = (new function(){
 		CxCtrl.Events.addListener("documentchanged",self.UpdateStyles);
 		self.rGet("list",{},function(data){
 			self.Styles(data);
-			Hitch.add([{
+			Hitch && Hitch.add([{
 				name: '-math-checkrange-with-bounds',  
 				filter:   function(match,argsString){
 						var args = argsString.split(",");

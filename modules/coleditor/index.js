@@ -1,10 +1,6 @@
 var MColEditor = (new function() {
 	
-	var self = this;
-
-	self.base = '/api/modules/coleditor';
-
-	self.IsLoading = ko.observable(false);
+	var self = new Module("coleditor");
 
 
 	self.Rows    = [];
@@ -48,6 +44,47 @@ var MColEditor = (new function() {
     }
     
     self.Changes = ko.observableArray([]);
+    self.DiscretChanges = {};
+    self.InitialValues  = {};
+    self.RowsChanged  = ko.observable(0);    
+
+	self._change = function(ind,key,value,oldvalue){
+    	if (!self.Rows[ind])  {
+			self.Rows[ind] = {
+				CodeRow:self.NewCode(ind,key,value,oldvalue),
+				NameRow:'Новый ряд',
+				NumRow:"",
+				level:1,
+				IsNew:true
+    		}
+    		self.AskForRender();
+    	}
+		self.Rows[ind][key] = value;    	
+    	var Cr = self.Rows[ind].CodeRow;
+    	if (!self.Rows[ind].IsNew){
+	    	if (self.InitialValues[Cr] && self.InitialValues[Cr][key]==value && self.DiscretChanges[Cr] && self.DiscretChanges[Cr][key]){
+	    		delete self.DiscretChanges[Cr][key];
+	    		if (!_.values(self.DiscretChanges[Cr]).length) delete self.DiscretChanges[Cr];
+	    	} else {
+	    		if (!self.DiscretChanges[Cr]) self.DiscretChanges[Cr] = {};	
+	    		if (!self.InitialValues[Cr])  self.InitialValues[Cr] = {};
+				if (!self.InitialValues[Cr][key]) self.InitialValues[Cr][key] = oldvalue;
+	    		self.DiscretChanges[Cr][key] = value;
+	    	}
+	    }    	
+    	self.RowsChanged(_.keys(self.DiscretChanges).length+_.filter(self.Rows,{IsNew:true}).length);
+    }
+
+    self.RenderTimer = null
+
+    self.AskForRender = function(){
+    	console.log("ASK");
+    	if (self.RenderTimer) clearTimeout(self.RenderTimer);
+    	self.RenderTimer = setTimeout(function(){
+    		self.RenderTable();
+    		self.RenderTimer = null;
+    	},200);
+    }    
     
     self.AddChange = function(changes, source){
     	console.log(changes, source);
@@ -279,8 +316,15 @@ var MColEditor = (new function() {
 
 	self.FixedCols = ko.observableArray([80,400], {persist: 'coleditor'});
 
+	self.Retries = 3;
 	self.RenderTable = function(){
 		var selector = '.handsontable.single:visible';
+		var DomPlace = $(selector)[0];
+		if (_.isEmpty($(DomPlace)) && self.Retries>0){
+			self.Retries--;
+			return setTimeout(self.RenderTable,100);
+		}		
+		self.Retries = 3;
 		$(selector).empty();
 		if (self.table){
             self.table.destroy();
@@ -323,13 +367,27 @@ var MColEditor = (new function() {
 		self.Init();
 	}
 
-	self.Init = function (){
+	self.Show = function (){
 		self.IsLoading(true);
 		self.LoadRows(function(){
 			self.RenderTable();
 			self.IsLoading(false);
 		})
 	}
+    self.BeforeShow = function(){
+    	self.SubscribeDoc();
+    	self.Show();
+    }
+
+    self.BeforeHide = function(){
+    	self.UnSubscribeDoc();
+    	self.Rows = null;
+    	if (self.table)  {
+    		self.table.destroy();
+    		self.table = null;
+    	}
+    }
+
 	return self;
 })
 

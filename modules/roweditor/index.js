@@ -526,6 +526,7 @@ var MRowEditor = (new function() {
 			self.Retries--;
 			return setTimeout(self.RenderTable,100);
 		}
+		self.Retries = 3;
 		var HandsonRenders = new HandsonTableRenders.RenderController();
 		var TreeArr = _.sortBy(self.Rows,'lft');		
 		var RowsInfo = {};
