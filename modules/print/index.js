@@ -483,12 +483,12 @@ var PrintInterface = function() {
             var label = _.find(CxCtrl.Doc().toJS().Labels, function(label) {
                 return label.IsApproval
             })
-
+			
             if(label) {
                 post = label.NameLabel
 
                 var users = label.Users[org_id]
-
+				
                 if(!users) {
                     return
                 }
@@ -505,9 +505,15 @@ var PrintInterface = function() {
                     var o = user_fio[2]
 
                     fio = ""
-                    fio += i[0] + ". "
-                    fio += o[0] + ". "
-                    fio += f
+					if(i){
+						fio += i[0] + ". "
+					}
+                    if(o){
+						fio += o[0] + ". "
+					}
+					if(f){
+						fio += f
+					}
                 }
             }
 
@@ -550,7 +556,6 @@ var PrintInterface = function() {
                      '<div>Отчет сформирован в Jetcalc при поддержке JetTeam'+
                      '<div>Дата формирования документа: '+moment().format('DD.M.YYYY HH:mm')+'</div>'+
                      '<div>исп. ' + self.userInfo()+'</div></div>';
-
         if (self.showSignatures()){
             var Sigs = "<table class=SignatureBlock>";
             var labels = CxCtrl.Doc().toJS().Labels.filter(function(label) {
@@ -568,7 +573,6 @@ var PrintInterface = function() {
                     Users: []
                 }]
             }
-
             labels.forEach(function(label) {
                 var post = label.NameLabel
                 var fio = "__________________________________"
@@ -588,9 +592,15 @@ var PrintInterface = function() {
                         var o = user_fio[2]
 
                         fio = ""
-                        fio += i[0] + ". "
-                        fio += o[0] + ". "
-                        fio += f
+						if(i){
+							fio += i[0] + ". "
+						}
+                        if(o){
+							fio += o[0] + ". "
+						}
+						if(f){
+							fio += f
+						}
                     }
                 }
 
