@@ -157,7 +157,7 @@ var MInput = (new function() {
                 type:'post',
                 data:{Context:CxCtrl.Context(),Cell:Cell.Cell},
                 success:function(data){
-                    self.HistoryData(_.sortBy(data,function(value) {return new Date(value.DateEdit);}));
+                    self.HistoryData(data);
                     $('#historyModal').modal('show');
                     $('#historyModal').unbind('hide.bs.modal');
                     $('#historyModal').on('hide.bs.modal', function (e) {
