@@ -7,6 +7,27 @@ var ModelRestrict = (new function () {
                 CodeParentDocFolder: ""
             }
         },
+        routeperiod:{
+            CodePeriod:{
+                IsFormula:false
+            }
+        },        
+        routecheckperiod:{
+            CodeCheckPeriod:{
+                IsFormula:false
+            },
+            CodePeriod:{
+                IsFormula:false
+            }
+        },        
+        routerefperiod:{
+            CodeRefPeriod:{
+                IsFormula:false
+            },
+            CodePeriod:{
+                IsFormula:false
+            }
+        },
         docfolderdoc: {
             CodeDocFolder: {
                 CodeParentDocFolder: {
