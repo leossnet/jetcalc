@@ -280,7 +280,6 @@ var CxCtrl = (new function () {
                 self.CodeValuta(value);
                 break;
             default:
-                return;
                 console.log("Changing ... ", type, value);
         }
         if (Updater == -1) return;

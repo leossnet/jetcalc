@@ -29,7 +29,7 @@ var HeaderHelper = function(Context){
 
 	self.get = function(done){
 		self.loadFromCache(function(err,Result){
-			if (Result) {
+			if (Result && false) {
 				return done(null,Result);	
 			}			
 			self.loadInfo(function(err,Result){
@@ -82,6 +82,9 @@ var HeaderHelper = function(Context){
 							break;
 						}
 					})
+					console.log(_.map(FlatTree,"IndexColsetCol"));
+					console.log(_.map(FlatTree,"IndexHeader"));
+					//console.log(FlatTree);
 					return done(null,FlatTree);
 				})
 			})
@@ -108,12 +111,12 @@ var HeaderHelper = function(Context){
 
 	self.LoadHeaders = function(CodeHeader,done){
         var Result = [];
-        self.query('header',{CodeHeader:CodeHeader}, self.Fields['header']).exec(function(err,Header){
+        self.query('header',{CodeHeader:CodeHeader}, self.Fields['header']).sort({IndexHeader:1}).exec(function(err,Header){
         	Header.forEach(function(H){
 				H.Links = H.Link_docheader.length;
         	})
             Result = Result.concat(Header);
-            self.query('header',{CodeParentHeader:CodeHeader},self.Fields['header']).exec(function(err,Children){
+            self.query('header',{CodeParentHeader:CodeHeader},self.Fields['header']).sort({IndexHeader:1}).exec(function(err,Children){
                 if (!Children || !Children.length) return done(null,Result);
                 var Tasks = {};
                 Children.forEach(function(Node){
@@ -123,7 +126,7 @@ var HeaderHelper = function(Context){
                         }
                     }(Node.CodeHeader);
                 })
-                async.parallel(Tasks,function(err,R){
+                async.series(Tasks,function(err,R){
                   for (var Key in R){
                     Result = Result.concat(R[Key]);  
                   }                  
@@ -148,11 +151,17 @@ var HeaderHelper = function(Context){
 					C.Links = LinksColsets[C.CodeColset];
 				})
 	    		Answer.Colsets = Colsets;
-				self.query('colsetcol',{CodeColset:{$in:UsedColsets}},self.Fields["colsetcol"]).sort({IndexColsetCol:1}).populate("Link_colsetcolperiodgrp",'-_id NotInGrp CodePeriodGrp').populate("Link_colsetcolgrp",'-_id NotInGrp CodeGrp').exec(function(err,ColsetCols){
+				self.query('colsetcol',{CodeColset:{$in:UsedColsets}},self.Fields["colsetcol"])
+				.sort({IndexColsetCol:1})
+				.populate("Link_colsetcolperiodgrp",'-_id NotInGrp CodePeriodGrp')
+				.populate("Link_colsetcolgrp",'-_id NotInGrp CodeGrp')
+				.isactive().exec(function(err,ColsetCols){
 					if (err) return done(err);
 					Answer.ColsetCols = ColsetCols;
 					var UsedCols = _.uniq(_.map(ColsetCols,"CodeCol"));
-					self.query('col',{CodeCol:{$in:UsedCols}},self.Fields["col"]).populate('Link_coltag','-_id CodeTag Value').isactive().exec(function(err,Cols){
+					self.query('col',{CodeCol:{$in:UsedCols}},self.Fields["col"])
+					.populate('Link_coltag','-_id CodeTag Value')
+					.isactive().exec(function(err,Cols){
 						Cols.forEach(function(Col){
 							var Tags = [];
 							if(Col.Link_coltag.length){
@@ -329,6 +338,7 @@ var HeaderHelperOld = function(Context){
 						.sort({IndexColsetCol:1})
 						.populate("Link_colsetcolperiodgrp",'-_id NotInGrp CodePeriodGrp') // For periods
 						.populate("Link_colsetcolgrp",'-_id NotInGrp CodeGrp')       // For Groups
+						.isactive()
 						.exec(function(err,ColsetCols){				
 							UsedCols = _.uniq(_.map(ColsetCols,"CodeCol"));
 							var ColsetColCols = {};
@@ -337,7 +347,9 @@ var HeaderHelperOld = function(Context){
 								ColsetColCols[CC.CodeColsetCol].push(CC.CodeCol);
 								self.AddToTree (CC.CodeColsetCol,_.merge(CC,{Type:'colsetcol'}),CC.CodeColset);
 							})
-						self.query('col',{CodeCol:{$in:UsedCols}},'-_id AsAgFormula IsAgFormula AgFormula CodeCol Formula IsFormula Link_coltag DoSum NoCalcSum NoCalcSumHard NameCol Comment CodeValuta').populate('Link_coltag','-_id CodeTag Value')
+						self.query('col',{CodeCol:{$in:UsedCols}},'-_id AsAgFormula IsAgFormula AgFormula CodeCol Formula IsFormula Link_coltag DoSum NoCalcSum NoCalcSumHard NameCol Comment CodeValuta')
+						.populate('Link_coltag','-_id CodeTag Value')
+						.isactive()
 						.exec(function(err,Cols){
 							var IndexedCols = {};
 							Cols.forEach(function(Col){

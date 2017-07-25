@@ -137,7 +137,7 @@ var RabbitManager =  function(){
 	}
 
 	self.update = function(done){
-		self.rabbitCmd('/queues/%2F/'+rabbitPrefix+'calculate',function(err,result){
+		self.rabbitCmd('queues/%2F/'+rabbitPrefix+'calculate',function(err,result){
 			var Consumers = {};
       		result && result.consumer_details.forEach(function(C){
       			Consumers[C.consumer_tag] = {

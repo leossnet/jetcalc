@@ -31,7 +31,7 @@ var RowHelper = function(Context){
 
 	self.get = function(cb1){
 		self.loadFromCache(function(err,Result){
-			if (Result) {
+			if (Result && false) {
 				var Rows = self.DebugClean(Result);
 				cb1(null,Rows);	
 			} else {		

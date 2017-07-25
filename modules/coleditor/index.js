@@ -127,10 +127,17 @@ var MColEditor = (new function() {
 	})
 
 	self.SaveChanges = function(){
-		alert("Saving...");
+		var ToSend = JSON.stringify(self.DiscretChanges);
+		self.rPut("savechanges",{data:ToSend},function(){
+			self.Reload();
+		})
 	}
 
 	self.RollBack = function(){
+		self.Reload();
+	}
+
+	self.Reload = function(){
     	self.DiscretChanges = {};
     	self.InitialValues  = {};
     	self.RowsChanged(0);		
@@ -361,7 +368,7 @@ var MColEditor = (new function() {
 	}
 
 	self.ContextChange = function(){
-		self.Init();
+		self.Reload();
 	}
 
 	self.Show = function (){
