@@ -293,23 +293,23 @@ var ColHelper = function(Context){
 			var H = self.Headers[Code];
 			if (H.Type=='colsetcol'){
 				if (H.Link_colsetcolperiodgrp.length){
-					var r = true;
+					var r = false;
 					H.Link_colsetcolperiodgrp.forEach(function(Check){
 					    if (Check.NotInGrp){
-					        if (self.PeriodGrps.indexOf(Check.CodePeriodGrp)>=0) r = false;
+					        if (self.PeriodGrps.indexOf(Check.CodePeriodGrp)>=0) r = r || true;
 					    } else {
-					        if (self.PeriodGrps.indexOf(Check.CodePeriodGrp)==-1) r = false;
+					        if (self.PeriodGrps.indexOf(Check.CodePeriodGrp)==-1) r = r || true;
 					    }
 					})
 					if (!r) self.Remove(H,"Link_colsetcolperiodgrp");
 				}
 				if (H.Link_colsetcolgrp.length){
-					var r = true;
+					var r = false;
 					H.Link_colsetcolgrp.forEach(function(Check){
 					    if (Check.NotInGrp){
-					        if (self.ObjGrps.indexOf(Check.CodeGrp)>=0) r = false;
+					        if (self.ObjGrps.indexOf(Check.CodeGrp)>=0) r = r || true;
 					    } else {
-					        if (self.ObjGrps.indexOf(Check.CodeGrp)==-1) r = false;
+					        if (self.ObjGrps.indexOf(Check.CodeGrp)==-1) r = r || true;
 					    }
 					})
 					if (!r) self.Remove(H,"Link_colsetcolgrp");
