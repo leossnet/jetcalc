@@ -402,6 +402,7 @@ a.red.redLink{
   text-overflow: ellipsis;
 }
 
+
 .sidebar.menu-min .nav-list>li:hover>a {
     overflow: visible;
 }
@@ -414,6 +415,16 @@ a.red.redLink{
     white-space: nowrap;
 }
 
+.breadcrumbs {
+        border-bottom: none;
+    background-color: #dee2e6;
+}
+.breadcrumb {
+    background-color: transparent;
+    display: inline-block;
+    line-height: 20px;
+    margin: 9px 22px 0 12px;
+}
 .breadcrumb>li:last-child>a {
   font-size: 22px;
   font-weight: lighter;
@@ -1994,4 +2005,11 @@ div.throbberblock.active {
 
 .sweet-alert button{
     border-radius: 0px;
+}
+
+
+.nav>li>a{background-color: inherit!important;}
+.ace-nav>li {
+
+    border-left: none;
 }
