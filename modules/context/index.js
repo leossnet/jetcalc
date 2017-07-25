@@ -541,14 +541,12 @@ var CxCtrl = (new function () {
                 avParams.forEach(function (param) {
                     if (pSearch[param]) {
                         if (param === 'CodePeriod') {
-                            if(pSearch[param]){
+                            if (pSearch[param]) {
                                 self.Override.CodePeriod(pSearch[param]);
                             }
-                        }
-                        else if (param === 'ReportPeriod') {
+                        } else if (param === 'ReportPeriod') {
                             self.CodePeriod(pSearch[param]);
-                        }
-                        else{
+                        } else {
                             self[param](pSearch[param]);
                         }
                     }
@@ -557,15 +555,13 @@ var CxCtrl = (new function () {
             var resSearchString = '?';
             avParams.forEach(function (param, index) {
                 if (param === 'CodePeriod') {
-                    if(!self.Override.CodePeriod()){
+                    if (!self.Override.CodePeriod()) {
                         self.Override.CodePeriod(self.CodePeriod());
                     }
                     resSearchString += (param + '=' + self.Override.CodePeriod());
-                }
-                else if (param === 'ReportPeriod') {
+                } else if (param === 'ReportPeriod') {
                     resSearchString += (param + '=' + self.CodePeriod());
-                }
-                else{
+                } else {
                     resSearchString += (param + '=' + self[param]());
                 }
                 if (index < avParams.length - 1) {
@@ -585,15 +581,13 @@ var CxCtrl = (new function () {
             var resSearchString = '?';
             avParams.forEach(function (param, index) {
                 if (param === 'CodePeriod') {
-                    if(!self.Override.CodePeriod()){
+                    if (!self.Override.CodePeriod()) {
                         self.Override.CodePeriod(self.CodePeriod());
                     }
                     resSearchString += (param + '=' + self.Override.CodePeriod());
-                }
-                else if (param === 'ReportPeriod') {
+                } else if (param === 'ReportPeriod') {
                     resSearchString += (param + '=' + self.CodePeriod());
-                }
-                else{
+                } else {
                     resSearchString += (param + '=' + self[param]());
                 }
                 if (index < avParams.length - 1) {
