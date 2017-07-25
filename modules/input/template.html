@@ -61,7 +61,7 @@
                 <!-- /ko -->
                 <td>
                   <!-- ko if:($data.CalcValue+'').length -->
-                  <b data-bind='text:$data.CalcValue'></b>
+                  <b data-bind='text:Math.round($data.Value)+$data.CalcValue'></b>
                   <!-- /ko -->
                   <!-- ko ifnot:($data.CalcValue+'').length -->
                   <b data-bind='text:Math.round($data.Value)'></b>
