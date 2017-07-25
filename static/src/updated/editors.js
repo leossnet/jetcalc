@@ -25,8 +25,11 @@ var ConditionEditor = (new function(){
 				self.isOk(false);
 			}
 		}
-
 	})
+
+	self.AddParam = function(data){
+		self.editor.replaceRange(" and "+data, CodeMirror.Pos(self.editor.lastLine()));
+	}
 
 	self.Params = ko.observableArray();
 

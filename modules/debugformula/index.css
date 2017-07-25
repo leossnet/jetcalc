@@ -122,3 +122,17 @@ table.layouttable.infotable .use{
     position: relative;
     color:blue;
 }
+.context_fields{
+    padding: 2px;
+    max-height: 300px;
+    overflow-y: scroll; 
+}
+.context_selector_param{
+    padding: 1px;
+    margin:1px;
+    border:1px solid #CFCFCF;
+    cursor: pointer;
+}
+.context_selector_param:hover{
+    background-color: #FBFBFB;
+}

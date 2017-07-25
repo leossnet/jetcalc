@@ -833,7 +833,7 @@ var ModelEdit = (new function () {
         if (!Document) return null;
         var Doc = Document.toJS();
         for (var Field in Doc) {
-            if (Field.indexOf("Link_") == 0 && Doc[Field].length) {
+            if (Field.indexOf("Link_") == 0 && !_.isEmpty(Doc[Field])) {
                 var ModelName = Field.split("Link_").pop();
                 var Test = _.first(Doc[Field]);
                 if (typeof Test == 'object') { // populated

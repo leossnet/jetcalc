@@ -1,8 +1,11 @@
 <div class="intab-container">
     <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MColEditor'>
         <div class="btn-group">
-          <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Сохранить данные',click:SaveChanges">
+          <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Сохранить данные',click:SaveChanges, css:{disabled:!$data.RowsChanged()}">
             <i class="ace-icon fa fa-save"></i>
+            <!-- ko if:$data.RowsChanged() -->
+            <strong class="fa-stack-1x calendar-text" data-bind='text:$data.RowsChanged'></strong>
+            <!-- /ko -->
           </a>
           <a class='btn btn-sm btn-warning btn-white ' data-bind="title:'Отменить все изменения',click:RollBack">
             <i class="ace-icon fa fa-undo"></i>

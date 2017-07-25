@@ -11,6 +11,7 @@ var MInput = (new function() {
     self.MetaChange = function(row,col,type,value){
         if (type=='comment'){
             self.RegisterChange("Comment",row,col,value);
+			self.table.render();
         }
     }
 
@@ -20,12 +21,13 @@ var MInput = (new function() {
             case 'paste'    :
             case 'edit'     :
             case 'KeyDel'   :
-                changes.forEach(function(change){
+				changes.forEach(function(change){
                     var row = change[0], col = change[1];
                     if (change[2]!=change[3]){
                         self.RegisterChange("Value",row,col,change[3]);
                     }
                 })
+				self.table.render();
                 break;
             case "Eradicate":
                 break;
@@ -66,7 +68,6 @@ var MInput = (new function() {
             }
             Cell.IsChanged = self._isChanged (Cell.Cell,Type,Value);
             self.Changes.push(CellParams);
-            self.table.render();
         }
     }
 

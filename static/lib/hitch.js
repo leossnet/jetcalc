@@ -1,4 +1,3 @@
-if (false){
 var Hitch = (function(){
 	
 	var 
@@ -505,7 +504,9 @@ var Hitch = (function(){
 						var targ = t.target;
 						if(!targ._isSetting && targ._oldclasses !== targ.className){
 							targ._isSetting = true;
-							targ.setAttribute('class',targ.className);
+							if(typeof targ.className === "string"){
+								targ.setAttribute('class',targ.className);
+							}
 							targ._oldclasses = targ.className;
 							targ._isSetting = false;
 						}
@@ -1536,4 +1537,3 @@ if(typeof module !== 'undefined' && module.exports){
 		Hitch.events.ready(Hitch.go);
 	}
 })();
-}

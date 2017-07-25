@@ -21,9 +21,11 @@ var MColEditor = (new function() {
 			return Branch.Type != "colsetcol";
 		})		
 		TreeArr.forEach(function(Branch){
-			if (Branch.Type=='col') Branch.level--;
+			if (Branch.Type=='col') {
+				Branch.Type = "colsetcol";
+				Branch.level--;
+			}
 		})	
-
 		self.Rows = TreeArr;
 	}
 
@@ -49,18 +51,8 @@ var MColEditor = (new function() {
     self.RowsChanged  = ko.observable(0);    
 
 	self._change = function(ind,key,value,oldvalue){
-    	if (!self.Rows[ind])  {
-			self.Rows[ind] = {
-				CodeRow:self.NewCode(ind,key,value,oldvalue),
-				NameRow:'Новый ряд',
-				NumRow:"",
-				level:1,
-				IsNew:true
-    		}
-    		self.AskForRender();
-    	}
 		self.Rows[ind][key] = value;    	
-    	var Cr = self.Rows[ind].CodeRow;
+    	var Cr = self.Rows[ind].CodeColsetCol;
     	if (!self.Rows[ind].IsNew){
 	    	if (self.InitialValues[Cr] && self.InitialValues[Cr][key]==value && self.DiscretChanges[Cr] && self.DiscretChanges[Cr][key]){
 	    		delete self.DiscretChanges[Cr][key];
@@ -78,7 +70,6 @@ var MColEditor = (new function() {
     self.RenderTimer = null
 
     self.AskForRender = function(){
-    	console.log("ASK");
     	if (self.RenderTimer) clearTimeout(self.RenderTimer);
     	self.RenderTimer = setTimeout(function(){
     		self.RenderTable();
@@ -87,25 +78,18 @@ var MColEditor = (new function() {
     }    
     
     self.AddChange = function(changes, source){
-    	console.log(changes, source);
+    	console.log(changes);
         switch(source){
             case 'edit':
+            case 'autofill':
+            case 'paste':
+            case 'undo':            
                 changes.forEach(function(change){
-                    self.Rows[change[0]][change[1]] = change[3];
-                    var existFlag = false;
-                    for(var i = 0; i < changes.length; i++){
-                        if(changes[i].CodeRow === self.Rows[change[0]].CodeRow){
-                            changes[i] = self.Rows[change[0]];
-                            existFlag = true;
-                            break;
-                        }
-                    }
-                    if(!existFlag){
-                        self.Changes.push(self.Rows[change[0]]);
-                    }
-                })
+                	self._change(change[0], change[1], change[3], change[2]);
+                })            
                 break;
             default:
+
                 break;
         }
     }
@@ -147,7 +131,10 @@ var MColEditor = (new function() {
 	}
 
 	self.RollBack = function(){
-		alert("RollBack...");	
+    	self.DiscretChanges = {};
+    	self.InitialValues  = {};
+    	self.RowsChanged(0);		
+		self.Show();
 	}
 
 	
@@ -241,6 +228,12 @@ var MColEditor = (new function() {
 		}
 	}
 
+  	self.linkObjectsFields = {
+        Link_colsetcolgrp :["NotInGrp","CodeGrp"],
+        Link_colsetcolperiodgrp :["CodePeriodGrp"],
+        Link_coltag :["CodeTag", "Value"]
+    }
+
 
 	self.table = null;
 
@@ -260,6 +253,9 @@ var MColEditor = (new function() {
 		return Cols;
 	}
 
+	self.Editable = ["Condition","Link_colsetcolperiodgrp","Link_colsetcolgrp","CodeStyle","AfFormula","IsAfFormula","AgFormula","IsAgFormula","IsControlPoint","IsFixed","IndexColsetCol","NameColsetCol"];
+
+
 	self.DataForTable = function(){
 		var Cols2Show = self.Columns(), TableCells = [];
 		self.Rows.forEach(function(R){
@@ -275,6 +271,7 @@ var MColEditor = (new function() {
             if (self.Type(Col)=='links') R.editor = 'link';
             if (self.Type(Col)=='formula') R.editor = 'formula';
             if (self.Type(Col)=='condition') R.editor = 'condition';
+            if (self.Editable.indexOf(Col)==-1) R.readOnly = true;
 			Cols.push(R);
 		})
 		var Translated = Tr(Cols2Show);
@@ -355,7 +352,7 @@ var MColEditor = (new function() {
     	new HandsonTableHelper.TreeView(self.table);
     	self.Rows.forEach(function(Row,IndexRow){
     		var Meta = _.pick(Row,["RemoveComment","IsRemoved","CodeCol"]);
-    		Meta.Model = "col";
+    		Meta.Model = "colsetcol";
     		Data.columns.forEach(function(Col,IndexCol){
 				self.table.setCellMetaObject(IndexRow,IndexCol,Meta);
     		})				

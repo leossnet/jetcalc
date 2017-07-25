@@ -61,7 +61,6 @@ module.exports = (new function(){
 				R.level = Number(C.level);
 				R.IndexRow = Index; R.treeroot = RootNode.CodeRow;
 				Index += 10;
-				console.log(R.IndexRow);
 				R.CodeParentRow = ByParents[R.level];
 				ByParents[(R.level+1)] = R.CodeRow; // Обновляем парентов и порядок
 				if (R.isModified()) ToUpdate.push(R); 

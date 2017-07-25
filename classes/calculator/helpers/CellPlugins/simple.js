@@ -25,6 +25,7 @@ var SimpleStructure = function(Context,Data){
         if (self.Data.Doc.IsShowMeasure){
             Answer.Header.push('Ед/из'); FL = 3;
         }
+        console.log(Cols);
         Cols && Cols.forEach(function(C){
             Answer.Header.push(C.NameColsetCol);
         })

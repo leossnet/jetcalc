@@ -27,9 +27,24 @@
 			"IsFormula",
 			"CodeCol",
 			"NameCol",
-			"Formula"
+			"Formula",
+			"SNameCol",
+			"Comment",
+			"DoSum",
+			"NoCalcSum",
+			"NoCalcSumHard",
+			"DoExRef",
+			"AsAgFormula",
+			"IsAgFormula",
+			"AgFormula",
+			"IsVirtual",
+			"CodeValuta"
 		],
-		"Links": []
+		"Links": [
+			"coltag",
+			"colrelation",
+			"rowcoloption"
+		]
 	},
 	"period": {
 		"TableFields": [
@@ -92,12 +107,7 @@
 		"EditFields": [
 			"CodeRow",
 			"NameRow",
-			"HasFilteredChild",
-			"NoFiltered",
-			"CodeValuta",
-			"CodeMeasure",
-			"CodeFormat",
-			"CodeParentRow"
+			"SNameRow"
 		],
 		"Links": []
 	},
@@ -157,7 +167,11 @@
 		"TableFields": [
 			"CodeTag",
 			"NameTag",
-			"SNameTag"
+			"IsObjType",
+			"IsRow",
+			"IsObj",
+			"IsList",
+			"IsCol"
 		],
 		"EditFields": [
 			"CodeTag",
@@ -225,7 +239,9 @@
 			"CodeMeasure",
 			"IndexDoc",
 			"PrintNameDoc",
-			"IsObjToRow"
+			"IsObjToRow",
+			"FirstYear",
+			"IsShowRoots"
 		],
 		"Links": [
 			"docfolderdoc",
@@ -299,7 +315,11 @@
 			"Mail",
 			"CodeObj",
 			"InAttentive",
-			"IsConfirmed"
+			"IsConfirmed",
+			"IsAdmin",
+			"IsDepAdmin",
+			"IsOrgAdmin",
+			"IsDivAdmin"
 		],
 		"Links": [
 			"labeluser"
@@ -400,7 +420,8 @@
 			"CodeDocType",
 			"CodeRoute",
 			"CodePeriod",
-			"CodeCheckPeriod"
+			"CodeCheckPeriod",
+			"CodeCheckState"
 		],
 		"Links": []
 	},
@@ -430,7 +451,8 @@
 			"CodeGrp",
 			"CodeDocType",
 			"CodeRoute",
-			"CodePeriod"
+			"CodePeriod",
+			"CodeRoutePeriod"
 		],
 		"Links": []
 	},
@@ -573,33 +595,40 @@
 		],
 		"Links": []
 	},
-	"model": {
+	"param": {
 		"TableFields": [
-			"CodeModel",
-			"NameModel"
+			"CodeParam",
+			"NameParam"
 		],
 		"EditFields": [
-			"CodeModel",
-			"NameModel",
-			"SNameModel",
-			"VersionModel",
-			"YearModel",
-			"AuthorModel",
-			"DescriptionModel"
-		],
-		"Links": []
-	},
-	"region": {
-		"TableFields": [
-			"CodeRegion",
-			"NameRegion"
-		],
-		"EditFields": [
-			"CodeRegion",
-			"NameRegion"
+			"CodeParam",
+			"NameParam",
+			"CodeParamSet",
+			"CodeParamGrp",
+			"IndexParam",
+			"SNameParam",
+			"CodeParamTab",
+			"CodeListDefinition"
 		],
 		"Links": [
-			"userfavorite"
+			"docparamkey"
+		]
+	},
+	"label": {
+		"TableFields": [
+			"CodeLabel",
+			"NameLabel",
+			"Idx"
+		],
+		"EditFields": [
+			"CodeLabel",
+			"NameLabel",
+			"Idx",
+			"SNameLabel"
+		],
+		"Links": [
+			"doclabel",
+			"labeluser"
 		]
 	}
 }

@@ -194,7 +194,7 @@ var MRowEditor = (new function() {
 				Rows:_.map(_.filter(self.Rows,function(R){
 			 			return !_.isEmpty(R.CodeRow);
 					}),function(R){
-						return _.pick(R,["level","CodeRow","NumRow","NameRow","DoRemove","IsNew","CodeParentRow","IndexRow"]);
+						return _.pick(R,["level","CodeRow","NumRow","NameRow","DoRemove","IsNew","CodeParentRow","IndexRow","CodeRowLink"]);
 					})
 			},function(){
 				self.Show();
@@ -424,10 +424,10 @@ var MRowEditor = (new function() {
 		var Cols = ["CodeRow","NumRow","NameRow"];
 		switch (self.Mode()){
 			case "Structure":
-				Cols = ['level',"IndexRow"].concat(Cols).concat(["DoRemove","CodeParentRow"]);//
+				Cols = ['level',"IndexRow"].concat(Cols).concat(["DoRemove","CodeParentRow","CodeRowLink"]);//
 			break;	
 			case "MainFields":
-				Cols = Cols.concat(["CodeRowLink","CodeMeasure","CodeFormat", "CodeStyle",  "CodeValuta", "IsAnalytic", "IsControlPoint"]);
+				Cols = Cols.concat(["CodeMeasure","CodeFormat", "CodeStyle",  "CodeValuta", "IsAnalytic", "IsControlPoint"]);
 			break;
 			case "Filter":
 				Cols = Cols.concat([ "HasFilteredChild", "NoFiltered", "Link_rowobj", "NoOutput", "NoInput", "FromObsolete", "FromYear", "IsRowEditFilter", "CodeGrpEditFilter"]);

@@ -24,7 +24,6 @@ var ColHelper = function(Context){
 
 
 	self.get = function(done){
-		console.log(self.Context);
 		self.loadFromCache(function(err,Result){
 			if (Result && false) {
 				return done(err,self.DebugClean(Result));
@@ -202,7 +201,7 @@ var ColHelper = function(Context){
 			if (H.Type=='colsetcol'){      
 				var ColCodes = self.ChildrenCodes(H);
 				ColCodes.forEach(function(CC){
-					var ExFields = ['NameColsetCol','Condition','Year','CodePeriod','IsFixed','IsControlPoint','CodeStyle','IsAfFormula','AfFormula','Link_colsetcolperiodgrp','Link_colsetcolgrp','IndexColsetCol'];
+					var ExFields = ['NameColsetCol','Condition','Year','CodePeriod','IsFixed','IsControlPoint','CodeStyle','IsAfFormula','AfFormula','Link_colsetcolperiodgrp','Link_colsetcolgrp','IndexColsetCol','CodeColsetCol'];
 					if (H.IsAgFormula && H.AgFormula.length){
 						ExFields = ExFields.concat(["IsAgFormula", "AgFormula"]);
 					}

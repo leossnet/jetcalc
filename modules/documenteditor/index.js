@@ -36,7 +36,7 @@ var MDocumentEditor = (new function() {
 	}
 
 
-	self.DocFields = ['CodeDoc','NameDoc','SNameDoc','PrintNameDoc','PrintNumDoc','IsPrimary','IsAnalytic','IsOlap','IsInput','IsChart','IsPresent','IsShowMeasure','CodeMeasure','CodeGrp'];
+	self.DocFields = ['CodeDoc','NameDoc','SNameDoc','PrintNameDoc','PrintNumDoc','IsPrimary','IsAnalytic','IsOlap','IsInput','IsChart','IsPresent','IsShowMeasure','CodeMeasure','CodeGrp','FirstYear'];
 
 
 	self.InfoByMode = function(){
