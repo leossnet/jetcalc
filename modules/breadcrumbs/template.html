@@ -4,6 +4,7 @@
 		<ul class="breadcrumb" data-bind='foreach:$data'>
 			<li><a data-bind="page-href:$data.path,html:$data.title,css:{'multiline':ko.unwrap($data.title).indexOf('<br')>=0}"></a></li>
 		</ul>
+		<span class="breadcrumbs-label label"></span>
 		<!-- ko with:_.last($data) -->
 			<!-- ko with: $data.subtitle -->
 				<ul class="breadcrumb pull-right">

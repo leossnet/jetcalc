@@ -4,7 +4,10 @@
       <!-- ko template:'calculate_button' --><!-- /ko -->
       <div class="btn-group">
          <a class="btn btn-sm btn-white btn-success" data-bind="title:'Сохранить данные <u>Ctrl+S</u>',css: {'disabled':!MInput.Changes().length},click:MInput.SaveChanges">
-            <i class="fa fa-save"></i>
+            <i class="fa fa-save"  data-bind=" css:{'faa-vertical animated  fa-lg':MInput.Changes().length}"></i>
+             <!-- ko if:MInput.Changes().length>0-->
+            <strong class="fa-stack-1x calendar-text" data-bind='text:MInput.Changes().length'></strong>
+            <!-- /ko -->
           </a>
           <a class="btn btn-sm btn-white btn-success btn-warning" data-bind="title:'Отменить все изменения', css:{'disabled':!MInput.Changes().length}, click:MInput.Undo">
             <i class="fa fa-undo"></i>

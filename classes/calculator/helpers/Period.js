@@ -65,7 +65,7 @@ var PeriodHelper = function(Context){
 
 	self.get = function(done){
 		self.loadFromCache(function(err,Result){
-			if (Result) {
+			if (Result && false) {
 				return done(null,Result);	
 			}			
 			self.loadInfo(function(err,Result){
@@ -90,7 +90,8 @@ var PeriodHelper = function(Context){
 						var M = M.replaceAll('\n',''),
 						    parts = M.split("="),
 							periodKey = parts[0],
-							periodValue = Period.CodePeriod;
+							periodValue = Period.CodePeriod,
+							ArrInfo = null;
 						if (parts[1]) {
 							var arr = parts[1].split("!");
 							var raw = arr[0].split(":")[0];
@@ -99,13 +100,22 @@ var PeriodHelper = function(Context){
 								if (!self.DisplayNames[Period.CodePeriod]) self.DisplayNames[Period.CodePeriod] = {};
 								self.DisplayNames[Period.CodePeriod][periodKey] = name;
 							}
+							
 							if (raw) {
 								if (raw.indexOf('+')>=0){
 									periodValue = raw.split("+");
+									ArrInfo = "SUM";
+								} else if (raw.indexOf('*')>=0){
+									periodValue = raw.split("*");
+									ArrInfo = "MULT";
 								} else {
 									periodValue = raw;
 								}
 							}
+						}
+						if (ArrInfo) {
+							if (!PeriodInfo[Period.CodePeriod].Opinfo)	PeriodInfo[Period.CodePeriod].Opinfo = {};
+							PeriodInfo[Period.CodePeriod].Opinfo[periodKey] = ArrInfo;
 						}
 						PeriodInfo[Period.CodePeriod][periodKey] = periodValue;
 					})

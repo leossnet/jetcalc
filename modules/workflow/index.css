@@ -1,17 +1,37 @@
 div.breadcrumbs.breadcrumbs-fixed.Opened *,
 div.breadcrumbs.breadcrumbs-fixed.Closed *,
-div.breadcrumbs.breadcrumbs-fixed.Agreed *{color:#fff}
+div.breadcrumbs.breadcrumbs-fixed.Agreed *{1color:#fff}
 div.breadcrumbs.breadcrumbs-fixed.Opened{
 /*	background:#ffe5e1; */
-        background: #f74e4e;
+/*        background: #f74e4e;*/
 }
 
-div.breadcrumbs.breadcrumbs-fixed.Closed{
-	background:#FFC107;
+div.breadcrumbs .breadcrumbs-label{margin: 4px;}
+div.breadcrumbs .breadcrumbs-label:after{
+    font-size: 1em;display: inline-block
 }
-div.breadcrumbs.breadcrumbs-fixed.Agreed{
-    background: #8BC34A;
+
+
+div.breadcrumbs.Opened .breadcrumbs-label{
+	background:#f74e4e;   display: inline-block;
 }
+div.breadcrumbs.Opened .breadcrumbs-label:after{ content:"Открыт"}
+
+
+
+div.breadcrumbs.Closed .breadcrumbs-label{
+	background:#FFC107;   display: inline-block
+}
+div.breadcrumbs.Closed .breadcrumbs-label:after{ content:"На проверке"}
+
+
+div.breadcrumbs.Agreed .breadcrumbs-label{
+    background: #8BC34A;  display: inline-block
+}
+div.breadcrumbs.Agreed .breadcrumbs-label:after{ content:"Проверен"}
+
+
+
 a.btn.btn-sm.btn-white.Closed>i,a.btn.btn-sm.btn-white.Closed>span{
 	color:#F2BB46;
 }
