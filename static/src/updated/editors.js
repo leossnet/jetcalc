@@ -813,7 +813,7 @@ CodeMirror.defineSimpleMode("jc", {
   }
 });
 CodeMirror.registerHelper("hint", "jc", FormulaEditor.Hint);
-CodeMirror.hint.js.async = true;
+CodeMirror.hint.jc.async = true;
 
 
 CodeMirror.defineSimpleMode("jc-conditions", {

@@ -159,6 +159,7 @@ var ColHelper = function(Context){
 						period: H.ContextPeriod, 
 						months: P.MonthStart,
 						MCOUNT: P.MCount,
+						DCOUNT: P.DCount,
 						coltags: H.Tags,
 						objtags: self.ObjTags
 					},P.Conditions);

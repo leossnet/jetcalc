@@ -454,6 +454,7 @@ var Unmapper = function(Context, InfoCacher){
 			period:[Cell.Period].concat(P.Grps),
 			months:P.MonthStart,
 			MCOUNT:P.MCount,
+			DCOUNT:P.DCount,
 			coltags:Col.Tags,
 			rowtags:Row.Tags,
 			treetags:Row.AllTags,
