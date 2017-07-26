@@ -181,7 +181,7 @@ var Unmapper = function(Context, InfoCacher){
 						T = {Type:'FRM',FRM:'0'};
 					}
 				} else if (T.Type=='FRM'){
-					var Tags = _.uniq((T.FRM+'').match(/([_]{2,3}[A-Z_]+)/g)); // Заменяем тэги
+					var Tags = _.uniq((T.FRM+'').match(/([_]{2,3}[A-Za-z_]+)/g)); // Заменяем тэги
 					if (Tags && Tags.length){
 						Tags.forEach(function(Tag){
 							var TagValue = self.Info.TagValue(Row,Cell.Obj,Tag);
@@ -936,7 +936,9 @@ var GeneralInfo = function(){
 		var TagName = _.trimStart(TagNameRaw,'_');
 		var TagInfo = self.Data.Tag[TagName];
 		var Obj = self.Data.Div[CodeObj];
+		console.log(Row);
 		var RowsToCheck = _.difference((Row.rowpath+'').split('/'),['']).reverse();
+		console.log(RowsToCheck);
 		var TAG = null;
 		for (var i=0; i<RowsToCheck.length; i++){
 			if (TagInfo && TagInfo[RowsToCheck[i]]){

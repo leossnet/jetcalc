@@ -68,7 +68,7 @@ var RowHelper = function(Context){
 			var CleanResult = [];
 			Result.forEach(function(R){
 				if (R && !R.IsRemoved) {
-					R = _.omit(R,["rowpath","NoOutput","NoInput","CodeValuta","IndexRow","CodeRowLink","HasFilteredChild","CodeFormat","ForceShow","NoFiltered","FromObsolete","FromYear","FormulaFromYear","FormulaFromObsolete","Explain","ForceShow"]);
+					R = _.omit(R,["NoOutput","NoInput","CodeValuta","IndexRow","CodeRowLink","HasFilteredChild","CodeFormat","ForceShow","NoFiltered","FromObsolete","FromYear","FormulaFromYear","FormulaFromObsolete","Explain","ForceShow"]);//rowpath
 					R = _.omit(R,['Link_rowsumgrp','Link_rowobj','Link_rowtag']);
 					CleanResult.push(R);	
 				}
