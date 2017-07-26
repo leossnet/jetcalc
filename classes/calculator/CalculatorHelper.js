@@ -99,9 +99,7 @@ var Unmapper = function(Context, InfoCacher){
 
 	self.AfterUnmap = function(done){
 		if (_.keys(self.TranslateProds).length>0){
-			console.time("PRODS!",self.TranslateProds);
 			self.DoTranslateProds(function(){
-				console.timeEnd("PRODS!");						
 				self.TranslateProds = {};
 				self.CompileDependancies();
 				return done();
@@ -244,7 +242,6 @@ var Unmapper = function(Context, InfoCacher){
 					if (M.func!='tovaluta') ModsText+=M.text; // Пока не обрабатываем
 				})
 			}
-			var FormulaParts = [];
 			if (R && R.Obj && R.Obj.indexOf("[")!=-1){
 				R.Obj = R.Obj.replace(/[\[\]]/g,'').split(",");
 			}
@@ -252,7 +249,9 @@ var Unmapper = function(Context, InfoCacher){
 
 			if (!_.isArray(Objs)) Objs = [Objs];
 			if (!_.isArray(Periods)) Periods = [Periods];
+			var FormulaParts = [];
 			Objs.forEach(function(Obj){
+				var PeriodParts = [];
 				Periods.forEach(function(P){
 					var RR = _.clone(R);
 					var CellName = ['$',RR.Row,'@',RR.Col,'.P',P,'.Y',RR.Year,'#',Obj,ModsText,'?'].join('');
@@ -260,11 +259,17 @@ var Unmapper = function(Context, InfoCacher){
 					RR.Period = P;
 					RR.Cell = CellName;
 					UnknownVars[CellName] = RR;
-					FormulaParts.push(CellName);
+					PeriodParts.push(CellName);
 				})
+				if (R.PeriodOp=="MULT"){
+					FormulaParts.push(PeriodParts.join("*"));
+				} else {
+					FormulaParts.push(PeriodParts.join("+"));
+				}
 			})
 
 			if (FormulaParts.length>1){
+				console.log('('+FormulaParts.join('+')+')');
 				Replaces[v] = '('+FormulaParts.join('+')+')';
 			} else {
 				Replaces[v] = _.first(FormulaParts);
@@ -360,6 +365,7 @@ var Unmapper = function(Context, InfoCacher){
 
 
 	self.ParamsFromIncompleteVar = function(v,Cell){
+
 		var _setVar = function(unparsed,name,regexp){
 	 		var t = unparsed.match(regexp);
 	 		var CellSet = Cell[name];
@@ -375,11 +381,15 @@ var Unmapper = function(Context, InfoCacher){
 	 		Period:(_setVar(v, 'Period', self.PeriodRegexp)+'').replace('.P',''),
 	 		Year:parseInt((_setVar(v, 'Year', self.YearRegexp)+'').replace('.Y','')),
 	 		Obj:(_setVar(v, 'Obj', self.ObjRegexp)+'').replace('#',''),
-	 		Mods:[]
+	 		Mods:[],
+	 		PeriodOp:null
 	 	}
 	 	if (Math.abs(R.Year)<1000) R.Year = parseInt(Cell.Year)+R.Year;
 		if (R.Period.indexOf('-')>=0){
-			R.Period = self.Info.Data.Period[R.Period][Cell.Period];	
+			if (self.Info.Data.Period[R.Period] && self.Info.Data.Period[R.Period].Opinfo && self.Info.Data.Period[R.Period].Opinfo[Cell.Period]){
+				R.PeriodOp = self.Info.Data.Period[R.Period].Opinfo[Cell.Period];
+			}
+			R.Period = self.Info.Data.Period[R.Period][Cell.Period];
 		}	
 		var ObjModifiers = ['toobj','tomainobj','consobj','consgrp','toparentobj','torootobj','<<','<<<']
 		var modifiers = v.match(self.Modifiers);
