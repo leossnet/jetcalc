@@ -115,7 +115,7 @@
 															<!-- ko if:$data.type=="checkbox" -->
 																<div class="checkbox" data-bind="css:{'changed': _.includes(SettingController.diffParams(),CodeParam)}">
 																	<label>
-																		<input class="ace ace-checkbox-1" type="checkbox" data-bind="checkBox: $parent.resParams()[CodeParam],event: {'change': CxCtrl.Update.bind(null,'settings')}">
+																		<input class="ace ace-checkbox-1" type="checkbox" data-bind="checkBox: $parent.resParams()[CodeParam],even1t: {'change': CxCtrl.Update.bind(null,'settings')}">
 																		<span class="lbl small" data-bind="text:'&nbsp;'+NameParam"></span>
 																	</label>
 																</div>
@@ -124,7 +124,7 @@
 																<div class="select" data-bind="css:{'changed': _.includes(SettingController.diffParams(),CodeParam)}">
 																	<label data-bind='text:$data.NameParam'></label>
 																	<div>
-																		<select class="form-control" data-bind="value: $parent.resParams()[CodeParam], options: _.values($data.ParamSets), optionsText: 'SNameParamSet',optionsValue: 'CodeParamSet',event: {'change': CxCtrl.Update.bind(null,'settings')}">
+																		<select class="form-control" data-bind="value: $parent.resParams()[CodeParam], options: _.values($data.ParamSets), optionsText: 'SNameParamSet',optionsValue: 'CodeParamSet',ev1ent: {'change': CxCtrl.Update.bind(null,'settings')}">
 																		</select>
 																	</div>
 																</div>
