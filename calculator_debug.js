@@ -1,4 +1,4 @@
-var Calculator = require('./classes/calculator/AssoiCalculator.js');
+var Calculator = require('./classes/calculator/Calculator.js');
 var config = require('./config.js');
 var mongoose = require('mongoose');
 var async = require('async');

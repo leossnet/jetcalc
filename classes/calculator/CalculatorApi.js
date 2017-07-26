@@ -868,7 +868,7 @@ router.post('/api/cell/history', function(req,res){
 })
 
 router.post('/api/cell/explain', function(req,res){	
-	var Calculator = require('../calculator/AssoiCalculator.js');
+	var Calculator = require('../calculator/Calculator.js');
 	var Context = getContext(req.body.Context,req.session.sandbox,req.user.CodeUser);	
 	var Cell = req.body.Cell;
 	Calculator.ExplainCell(Context,[Cell],function(err,Result){
@@ -882,7 +882,7 @@ router.post('/api/cell/explain', function(req,res){
 
 router.post('/api/cell/calculatebyformula', function(req,res){	
 	var Context = getContext(req.body.Context,req.session.sandbox,req.user.CodeUser);	
-	var Calculator = require('../calculator/AssoiCalculator.js');
+	var Calculator = require('../calculator/Calculator.js');
 	var Cells  = {}; Cells[req.body.Cell] = req.body.Formula.replace(/\s+/g,' ');
 	Calculator.CalculateByFormula(Context,Cells,function(err,Result){
 	  if (Result){

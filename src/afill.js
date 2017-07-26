@@ -3,7 +3,7 @@ var _          = require('lodash');
 var async      = require('async');
 var Col = require(__base+"classes/calculator/helpers/Col.js");
 var Structure = require(__base+"classes/calculator/helpers/Structure.js");
-var Calc = require(__base+"classes/calculator/AssoiCalculator.js");
+var Calc = require(__base+"classes/calculator/Calculator.js");
 var RabbitManager = require(__base+'/src/rabbitmq.js');
 var db = require(__base+'/sql/db.js');
 
