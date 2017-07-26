@@ -2,7 +2,7 @@
     <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MRowEditor'>
         <div class="btn-group">
           <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Сохранить данные',click:SaveChanges, css:{disabled:!$data.RowsChanged()}">
-            <i class="ace-icon fa fa-save"></i>
+            <i class="ace-icon fa fa-save" data-bind=" css:{'faa-vertical animated  fa-lg':$data.RowsChanged()}" ></i>
             <!-- ko if:$data.RowsChanged() -->
             <strong class="fa-stack-1x calendar-text" data-bind='text:$data.RowsChanged'></strong>
             <!-- /ko -->

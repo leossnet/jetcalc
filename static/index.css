@@ -897,6 +897,15 @@ span.label{cursor:pointer;}
 }
 .handsontable.single{padding-bottom: 0px;margin-bottom: 0px;}
 .toolPanel.top{border-bottom: 0px;}
+.toolPanel:before{box-shadow: inset 0px 8px 8px -6px #555;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    pointer-events: none;
+    content: "";display: block}
 .toolPanel a.btn {font-size:15px;wi1dth: 25px;padding: 0px;height: 25px;text-align: center;padding-top: 4px;padding-left: 2px;vertical-align: text-bottom;}
 .toolPanel .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn){width:initial; vertical-align: top;border:0px;}
 .toolPanel .btn-group.bootstrap-select{line-height: initial;}
