@@ -10,6 +10,7 @@ monthInKvart
 |'f.monthInKvart'                              return 'FUNC';
 
 MCOUNT
+|DCOUNT
 |year                                          return 'CONSTANTA';
 
 ___KMULT

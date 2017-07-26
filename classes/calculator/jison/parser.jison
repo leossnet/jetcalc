@@ -12,6 +12,7 @@ monthInKvart
 d_u_func                                       return 'FUNC';
 
 MCOUNT
+|DCOUNT
 |___KMULT
 |___[A-Z]*
 |year
