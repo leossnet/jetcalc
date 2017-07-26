@@ -21,7 +21,7 @@ var MsSqlConnector = function(){
 	};
 
 	self.columns = function(done){
-		// select * from assoi.information_schema.columns
+		// select * from information_schema.columns
 		var sql = "SELECT TABLE_NAME,COLUMN_NAME,TABLE_SCHEMA,COLUMN_DEFAULT,DATA_TYPE FROM "+config.options.database+".INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME NOT LIKE '%_h' AND TABLE_NAME NOT IN ('Cells') AND COLUMN_NAME NOT IN ('IsActive','UserEdit','DateEdit') AND TABLE_SCHEMA <> 'dbo' ORDER BY ORDINAL_POSITION ASC";
 		self.query(sql,function(err,res){
 			if (err) return done (err);

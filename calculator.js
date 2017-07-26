@@ -26,7 +26,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(config.mongoUrl,{safe:false});
 mongoose.connection.on('connected', function(){
 	InitMongoose(function(){
-		Calculator = require('./classes/calculator/AssoiCalculator.js');
+		Calculator = require('./classes/calculator/Calculator.js');
 		Calculator.events.on('inited',function(){
 			console.log("Cache Loaded");
 			amqp.connect(config.rabbitmq, function(err, conn) {

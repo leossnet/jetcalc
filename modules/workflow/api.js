@@ -5,7 +5,7 @@ var _        = require('lodash');
 var RabbitManager = require('../../src/rabbitmq.js');
 var lib        = require(__base+'lib/helpers/lib.js');
 var Loader = require(__base+"classes/calculator/helpers/Workflow.js");
-var Calculator = require(__base+'classes/calculator/AssoiCalculator.js');
+var Calculator = require(__base+'classes/calculator/Calculator.js');
 var Structure  = require(__base+'classes/calculator/helpers/Structure.js');
 var HP = require(__base+'lib/helpers/lib.js').Permits; 
 

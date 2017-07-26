@@ -27,6 +27,7 @@
             break;
         }
     }
+    if (!Result && Indexed["default"]) Result = Indexed["DEFAULT"];
     return Result;
   }
 

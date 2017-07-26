@@ -5,7 +5,7 @@ var   config = require('../../config.js')
 	, _ = require('lodash')
 	, async = require('async')
 	, moment = require('moment')
-	, Helper = require('./AssoiCalculatorHelper.js')
+	, Helper = require('./CalculatorHelper.js')
 	, Timer = Helper.Timer
 	, Debuger = Helper.Debuger
 	, InfoCacher = Helper.InfoCacher
@@ -114,7 +114,7 @@ module.exports = {
 		var Structure = new StructureHelper(_.clone(Context));
 		console.log(Context);
 		Structure.getCells(function(err,Cells){
-			var AC = new AssoiCalculator(Context,Cells);	
+			var AC = new Calculator(Context,Cells);	
 			AC.Do(function(err,Answer){
 				if (!Answer) return done("Критическая ошибка в калькуляторе");
 				AC = null;
@@ -127,7 +127,7 @@ module.exports = {
 		Cells.get(function(err,CellsInfo){
 			var Cells = CellsInfo.Cells;
 			if (Context.IsAFOnly){
-				var AC = new AssoiCalculator(Context,Cells);	
+				var AC = new Calculator(Context,Cells);	
 				AC.DoAF(function(err,Answer){
 					for (var CellName in CellsInfo.Work){
 						if (CellsInfo.Work[CellName].Formatter){
@@ -147,7 +147,7 @@ module.exports = {
 					return done(err,Answer);
 				},final)
 			} else {
-				var AC = new AssoiCalculator(Context,Cells);	
+				var AC = new Calculator(Context,Cells);	
 				AC.Do(function(err,Answer){
 					if (!Answer) return done("Критическая ошибка в калькуляторе");
 					for (var CellName in CellsInfo.Work){
@@ -173,7 +173,7 @@ module.exports = {
 
 
 
-var AssoiCalculator = function(Context,cells){	
+var Calculator = function(Context,cells){	
 	
 	var self = this;
 

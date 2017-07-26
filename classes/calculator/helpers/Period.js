@@ -123,6 +123,7 @@ var PeriodHelper = function(Context){
 							Name:Period.NamePeriod,
 							SName:Period.SNamePeriod,
 							MCount:parseInt(Period.MCount),
+							DCount:moment(Period.EndDate).diff(moment(Period.EndDate),"days"),
 							EndDate:Period.EndDate,
 							BeginDate:Period.BeginDate,
 							MonthStart:Number(moment(Period.BeginDate).format('MM')),

@@ -47,7 +47,7 @@ var ConditionEditor = (new function(){
 			if (_.isEmpty(params)) params = ["FACT"];
 			self.Params(params);
 			var regex = new RegExp("[^\\s]*(?:"+params.join("|")+")+(?=^|$|[^\\p{L}])");
-			CodeMirror.defineSimpleMode("assoi-conditions", {
+			CodeMirror.defineSimpleMode("jc-conditions", {
 			  start: [
 			    {regex: /[^\s]*(?:not|or|and)\b/,token: "logic"},    
 			    {regex: regex,token: "validvariable"},   
@@ -110,7 +110,7 @@ ko.bindingHandlers.condition = {
 	          matchBrackets: true,
 	          lineWrapping:true,
 	          extraKeys: {"Ctrl-Space": "autocomplete"},
-	          mode: "assoi-conditions",
+	          mode: "jc-conditions",
 	          autofocus:true,
 	          readOnly: false,
 	          autoRefresh:true
@@ -673,7 +673,7 @@ ko.bindingHandlers.formula = {
 	          matchBrackets: true,
 	          lineWrapping:true,
 	          extraKeys: {"Ctrl-Space": "autocomplete"},
-	          mode: "assoi",
+	          mode: "jc",
 	          autofocus:true,
 	          readOnly: false,
 	          autoRefresh:true
@@ -795,7 +795,7 @@ ko.bindingHandlers.simplemde = {
     }    
 };
 
-CodeMirror.defineSimpleMode("assoi", {
+CodeMirror.defineSimpleMode("jc", {
   start: [
     {regex: /\s+(?:not|or|and)\b/,token: "logic"},    
     {regex: /\b(?:>|<|<>|<=|>=|!=)\b/,token: "logic"},    
@@ -812,11 +812,11 @@ CodeMirror.defineSimpleMode("assoi", {
   meta: {
   }
 });
-CodeMirror.registerHelper("hint", "assoi", FormulaEditor.Hint);
-CodeMirror.hint.assoi.async = true;
+CodeMirror.registerHelper("hint", "jc", FormulaEditor.Hint);
+CodeMirror.hint.jc.async = true;
 
 
-CodeMirror.defineSimpleMode("assoi-conditions", {
+CodeMirror.defineSimpleMode("jc-conditions", {
   start: [
     {regex: /(?:not|or|and)\b/,token: "logic"},    
     {regex: /[\{\[\(]/, indent: true},
@@ -827,8 +827,8 @@ CodeMirror.defineSimpleMode("assoi-conditions", {
   meta: {
   }
 });
-CodeMirror.registerHelper("hint", "assoi-conditions", ConditionEditor.Hint);
-CodeMirror.hint['assoi-conditions'].async = true;
+CodeMirror.registerHelper("hint", "jc-conditions", ConditionEditor.Hint);
+CodeMirror.hint['jc-conditions'].async = true;
 
 
 
