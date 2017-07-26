@@ -20,10 +20,15 @@
 			<i class="fa fa-angle-down icon-on-right fa-light" style="float:right;"></i>
 			</a>
 			<!-- ko with:MUsers.AvPrivelegeObj -->
-			<ul class="dropdown-menu dropdown-caret dropdown-menu-right" style='width: 100%;min-width: 400px;' data-bind='foreach:$data'>
+			<ul class="dropdown-menu dropdown-caret dropdown-menu-right" style='width: 100%;min-width: 400px;' >
+				<li><a data-bind="click: MUsers.SetObj.bind(null,null),lang:'noobjchoose'">
+				      
+				</a></li>				
+				<!-- ko foreach:$data -->
 				<li><a data-bind="click: MUsers.SetObj">
 				      <!-- ko template:{name:'catalogue',data:{model:'obj',id:$data}} --><!-- /ko -->
-				 </a></li>					
+				 </a></li>				
+				 <!-- /ko -->	
 			</ul>
 			<!-- /ko -->			
 	</div>

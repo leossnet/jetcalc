@@ -7076,44 +7076,6 @@ module.exports = {
 			}
 		}
 	},
-	"rule": {
-		"tablename": "[core].[Rules]",
-		"menuplace": "Core",
-		"fields": {
-			"IdRule": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"CodeRule": {
-				"type": String,
-				"default": null,
-				"view": "all",
-				"role": "code",
-				"index": true,
-				"unique": true
-			},
-			"NameRule": {
-				"type": String,
-				"default": null,
-				"view": "all",
-				"role": "name"
-			},
-			"SNameRule": {
-				"type": String,
-				"default": null,
-				"view": "none"
-			},
-			"Formula": {
-				"type": String,
-				"default": null,
-				"view": "none"
-			}
-		}
-	},
 	"route": {
 		"tablename": "[core].[Routes]",
 		"menuplace": "Core",
@@ -7759,79 +7721,6 @@ module.exports = {
 				"type": Number,
 				"default": 0,
 				"view": "none"
-			}
-		}
-	},
-	"routerule": {
-		"tablename": "[link].[RouteRules]",
-		"menuplace": "Link",
-		"fields": {
-			"IdRouteRule": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"CodeRouteRule": {
-				"type": String,
-				"default": null,
-				"view": "all",
-				"role": "code",
-				"index": true,
-				"unique": true
-			},
-			"IdRoute": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "route",
-				"view": "none",
-				"dep": "CodeRoute",
-				"hidden": true
-			},
-			"IdRule": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "rule",
-				"view": "none",
-				"dep": "CodeRule",
-				"hidden": true
-			},
-			"IdNextRule": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "rule",
-				"view": "none",
-				"dep": "CodeNextRule",
-				"hidden": true
-			},
-			"CodeRoute": {
-				"type": String,
-				"default": "",
-				"view": "none",
-				"dep": "IdRoute",
-				"refmodel": "route",
-				"index": true,
-				"extended": true
-			},
-			"CodeRule": {
-				"type": String,
-				"default": "",
-				"view": "none",
-				"dep": "IdRule",
-				"refmodel": "rule",
-				"index": true,
-				"extended": true
-			},
-			"CodeNextRule": {
-				"type": String,
-				"default": "",
-				"view": "none",
-				"dep": "IdNextRule",
-				"refmodel": "rule",
-				"index": true,
-				"extended": true
 			}
 		}
 	},

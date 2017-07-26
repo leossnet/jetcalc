@@ -10,7 +10,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 	<link rel="stylesheet" href="/build/lib.min.css">
-	
+	<!-- ko with:MSystem.Settings -->
+		<!-- ko with:$data.Icon -->
+			<link href='/api/modules/system/favicon.ico' rel="shortcut icon">
+		<!-- /ko -->
+	<!-- /ko -->
 	<!-- <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"  data-apikey="19d876836126e83e5ed48c8971006e16"></script> -->
 
 	<script src='/build/lib.min.js'></script>

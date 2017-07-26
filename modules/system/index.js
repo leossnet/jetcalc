@@ -22,9 +22,12 @@ var MSystem = (new function() {
         self.IsLoading(true);
         MModels.SaveFileToGfs(self.Settings().Logo(),function(err,id){
           if (id) self.Settings().Logo(id);
-          self.rPut("requisites",self.Settings().toJS(),function(data){
-                self.Init();
-                swal("", "Настройки обновлены", "success");                
+          MModels.SaveFileToGfs(self.Settings().Icon(),function(err,id){
+              if (id) self.Settings().Icon(id);
+              self.rPut("requisites",self.Settings().toJS(),function(data){
+                    self.Init();
+                    swal("", "Настройки обновлены", "success");                
+              })
           })
         })
     }

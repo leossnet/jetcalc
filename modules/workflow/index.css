@@ -1,11 +1,16 @@
+div.breadcrumbs.breadcrumbs-fixed.Opened *,
+div.breadcrumbs.breadcrumbs-fixed.Closed *,
+div.breadcrumbs.breadcrumbs-fixed.Agreed *{color:#fff}
 div.breadcrumbs.breadcrumbs-fixed.Opened{
-	background:#ffe5e1; 
+/*	background:#ffe5e1; */
+        background: #f74e4e;
 }
+
 div.breadcrumbs.breadcrumbs-fixed.Closed{
-	background:#fdf6e2;
+	background:#FFC107;
 }
 div.breadcrumbs.breadcrumbs-fixed.Agreed{
-	background:#E3F4E3;
+    background: #8BC34A;
 }
 a.btn.btn-sm.btn-white.Closed>i,a.btn.btn-sm.btn-white.Closed>span{
 	color:#F2BB46;

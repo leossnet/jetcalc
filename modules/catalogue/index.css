@@ -15,10 +15,10 @@
 
 a.btn.btn-sm.btn-white.marked,a.btn-scroll-up.marked{
 	background-color: #CBEDDF!important;
-	transition: border-color 1s;
+/*	transition: border-color 1s;*/
 }  
 a.btn.btn-sm.btn-white,a.btn-scroll-up{
-	transition: background-color 1s;
+/*	transition: background-color 1s;*/
 }  
    
 

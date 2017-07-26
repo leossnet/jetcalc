@@ -1,3 +1,4 @@
+*{text-shadow: none!important}
 a{cursor:pointer!important;}
 tr.clickable {cursor:pointer!important;}
 .page-header a:hover{text-decoration: none!important; color:#2C5B78!important;}
@@ -418,6 +419,7 @@ a.red.redLink{
 .breadcrumbs {
         border-bottom: none;
     background-color: #dee2e6;
+        font-weight: 700;
 }
 .breadcrumb {
     background-color: transparent;
@@ -600,9 +602,9 @@ div.chosen-disabled>a.chosen-single{border-color:transparent;}
 
 
 .ace-settings-container{
-    position: fixed;
+    position: fixed;    margin-top: 5px;
 }
-
+.ace-settings-container .btn.ace-settings-btn{background-image:none!important }
 .btn.btn-app.ace-settings-btn.active{
     opacity:1;
 }
@@ -1097,7 +1099,7 @@ li.IsTester>a>span{
     padding: 0px;
     padding-left: 2px;
     padding-right: 2px;
-    right: 2px;
+    right: 11px;
     width: 16px;
 }
 .fa-dot {
@@ -1426,10 +1428,14 @@ i.fa.fa-simpletext{
     flex-direction : column;
     height: 100%;
 }
+.toolPanel.nav-tabs>li.active {  background: #fff!important;    margin-top: -1px;
+    padding-top: 0px;;}
 .toolPanel.nav-tabs>li>a, .toolPanel.nav-tabs>li.active>a {
-    margin-right: 4px;
+    /* margin-right: 4px; */
     border-top: none;
     padding: 5px 10px;
+    box-shadow: none;
+    color: #333;
 }
 
 #printPreviewContainer i.fa.treeButton{
@@ -1751,7 +1757,8 @@ a.remove>i.ace-icon{
 
 
 .ace-file-input .remove{
-    right: -2px;
+right: 0px;
+    top: 0px;
 }
 
 
@@ -1875,7 +1882,7 @@ table.smallTable>tbody>tr.clickable.permit.active>td{
     width: 100%;
     bottom: 1px;
 }
-.bottomPannel .nav.nav-tabs{
+.nav.nav-tabs{
     padding: 0px;
     padding-left: 12px;
     padding-bottom: 10px;
@@ -1887,8 +1894,22 @@ table.smallTable>tbody>tr.clickable.permit.active>td{
     z-index: 1;
 }
 
-.bottomPannel .toolPanel.nav-tabs>li.active>a{
+.toolPanel.nav-tabs{
+        border: none;
+        border-top: 1px solid #c5d0dc;
+}
+.toolPanel.nav-tabs>li {
+    background: #ccc;
+    margin-right: 4px;
+    color: #333;
+}
+.toolPanel.nav-tabs>li.active>a{
     border-bottom: 2px solid #4c8fbd;
+}
+.nav-tabs>li>a>.badge {
+    padding: 1px 5px;
+    font-size: 9px;
+    line-height: 13px;
 }
 table.dataTable.small-paddings>tbody>tr>td{
     padding: 3px;
@@ -1905,7 +1926,7 @@ table.dataTable.small-paddings>tbody>tr>td{
     opacity: .4;
 }
 .ace-file-multiple .ace-file-container:before{
-    font-size: 17px;
+    font-size: 14px;
     position: absolute;
     top: 0;
     bottom: auto;
@@ -1915,15 +1936,19 @@ table.dataTable.small-paddings>tbody>tr>td{
     opacity: 1;
     font-weight: 400;
     z-index: 10;
-    color: #438EB9;
-    background: transparent;    
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.61);
+    margin: 0;
+    word-break: break-word;   
 }
 .ace-file-multiple .ace-file-container .ace-file-name{
     bottom: 0px;
     left: 35px;
     position: absolute;
 }
-
+.ace-file-multiple .ace-file-container.selected .ace-file-name:after {
+    display:none
+}
 .ace-file-multiple .ace-file-container .ace-file-name.large:last-child{
     position: absolute;
     left: 0px;
@@ -2012,4 +2037,22 @@ div.throbberblock.active {
 .ace-nav>li {
 
     border-left: none;
+}
+
+
+1.btn.btn-white {
+    border-width: 1px;
+
+    border-color: inherit!important;
+    color: inherit!important;
+    text-shadow: none!important;
+    background-color: inherit!important;
+}
+
+.btn-toolbar .btn-group .btn {
+/*    color: #444!important;*/
+    /* background: #fff!important; */
+}
+.tabs-below>.nav-tabs>li>a:hover {
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.25);
 }
