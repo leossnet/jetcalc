@@ -19,13 +19,16 @@ var SettingController = (new function(){
     self.Toggle = function(){
         self.IsShow(!self.IsShow());
        	self.Events.emit("settingstoggle");
-       	if (self.IsShow()){
-       		self.Init();
+        if (self.IsShow()){
+            self.Init();
             RightMenu.IsMenuToggled(false);
-       	} else {
+        } else {
             RightMenu.IsMenuToggled(true);    
         }
-        
+
+        setTimeout(function(){
+            MReport.table.render();
+        },0);
     }
 
     self.LoadDefault = function(NoCache,done){
@@ -255,11 +258,13 @@ var SettingController = (new function(){
 
 MSite.Events.on("initialnavigate",function(){
     SettingController.IsShow(false);
+    RightMenu.IsMenuToggled(true); 
 });
 
 
 MSite.Events.addListener("navigate",function(){
 	if (SettingController.IsShow()) SettingController.IsShow(false);
+    RightMenu.IsMenuToggled(true); 
 })
 
 CxCtrl.Events.addListener("documentchanged",function(){

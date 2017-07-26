@@ -480,6 +480,11 @@ a.red.redLink{
 
 }
 
+
+.main-container.right-margin{
+    margin-right: 285px;
+}
+
 .page-content-area{
     /*padding-top: 60px;*/
     margin-left: 25px;
