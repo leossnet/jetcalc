@@ -9,6 +9,29 @@ var MStyles = (new function(){
 		self.rGet("list",{},function(data){
 			self.Styles(data);
 			Hitch && Hitch.add([{
+				name: '-empty-cell',  
+				filter:   function(match,argsString){
+						var value = match.innerText.replace(/\s*/g,'');
+						if(isNaN(value) || isNaN(Number(value)) || !Number(value)){
+						   return true;
+						}
+						return false;
+		   			}
+		   		},{
+				name: '-not-empty-cell',  
+				filter:   function(match,argsString){
+						var value = match.innerText.replace(/\s*/g,'');
+						if(!isNaN(value) && !isNaN(Number(value)) && Number(value)){
+						   return true;
+						}
+						return false;
+		   			}
+		   		},{
+				name: '-any-cell',  
+				filter:   function(match,argsString){
+						return true;
+		   			}
+		   		},{
 				name: '-math-checkrange-with-bounds',  
 				filter:   function(match,argsString){
 						var args = argsString.split(",");
