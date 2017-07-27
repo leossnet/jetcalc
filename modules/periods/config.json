@@ -14,7 +14,7 @@
   ],
   "permissionsModels":{
       "IsPeriodGrpsTunner":["periodgrp"],
-      "IsPeriodTunner":["period"],
+      "IsPeriodTunner":["period","periodredirect"],
       "IsPeriodAFTunner":["periodautofill"]
   },
   "sort_index":20

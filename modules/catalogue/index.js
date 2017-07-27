@@ -12,6 +12,14 @@ var ModelRestrict = (new function () {
                 IsFormula:false
             }
         },        
+        periodredirect:{
+            CodePeriodToRedirect:{
+                IsFormula:false
+            },
+            CodePeriod:{
+                IsFormula:false
+            }
+        },        
         routecheckperiod:{
             CodeCheckPeriod:{
                 IsFormula:false
@@ -67,16 +75,15 @@ var ModelClientConfig = (new function(){
     }
 
     self.TableFields = function(ModelName){
-        return _.isEmpty(self.Config[ModelName]) ? self.CodeAndName(ModelName) : self.Config[ModelName].TableFields;
+        return _.compact(_.isEmpty(self.Config[ModelName]) ? self.CodeAndName(ModelName) : self.Config[ModelName].TableFields);
     }
 
     self.Links = function(ModelName){
-        return _.isEmpty(self.Config[ModelName]) ? [] : self.Config[ModelName].Links;
+        return _.compact(_.isEmpty(self.Config[ModelName]) ? [] : self.Config[ModelName].Links);
     }
 
     self.EditFields = function(ModelName){
-        console.log("AA");
-        return _.isEmpty(self.Config[ModelName]) ? self.CodeAndName(ModelName) : self.Config[ModelName].EditFields;
+        return _.compact(_.isEmpty(self.Config[ModelName]) ? self.CodeAndName(ModelName) : self.Config[ModelName].EditFields);
     }
 
     self.base = '/api/modules/catalogue/';
