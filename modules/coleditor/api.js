@@ -27,7 +27,6 @@ router.put('/savechanges', HP.TaskAccess("IsColsetTuner"), function(req,res,next
 	} catch(e){
 		return next ("failedtoparse");
 	}
-	console.log(Update);
 	var ColsetCols = _.keys(Update);
 	if (_.isEmpty(ColsetCols)) return res.json({});
 	mongoose.model("colsetcol").find({CodeColsetCol:{$in:ColsetCols}}).isactive().exec(function(err,Current){
@@ -47,11 +46,11 @@ router.put('/savechanges', HP.TaskAccess("IsColsetTuner"), function(req,res,next
 			M.SaveModel("colsetcol",Fields,function(){
 				async.each(_.keys(Links),function(LinkName,done){
 					var ModelName = _.last(LinkName.split("Link_"));
-					console.log("Saving links",ModelName,Links[LinkName]);
 					M.SaveLinks(ModelName,Links[LinkName],done);
 				},cb);
 			})
 		},function(err){
+			if (err) return next(err);
 			return res.json({});
 		})
 	})

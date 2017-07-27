@@ -58,6 +58,7 @@ body{
 }
 .no-skin .sidebar{
 	border-width:0 1px 0 1px;
+	border-width:0;
 }
 
 .login-container .widget-main{
@@ -419,7 +420,7 @@ a.red.redLink{
 .breadcrumbs {
         border-bottom: none;
     background-color: #dee2e6;
-        font-weight: 700;
+/*        font-weight: 700;*/
 }
 .breadcrumb {
     background-color: transparent;
@@ -1168,7 +1169,7 @@ li.IsTester>a>span{
 }
 
 .tab-content.extended{
-    padding:2px;
+/*    padding:2px;*/
 }
 .col-xs-12.col-no-padding{
     padding: 2px;
@@ -1443,8 +1444,8 @@ i.fa.fa-simpletext{
     flex-direction : column;
     height: 100%;
 }
-.toolPanel.nav-tabs>li.active {  background: #fff!important;    margin-top: -1px;
-    padding-top: 0px;;}
+.toolPanel.nav-tabs>li.active {  background: #fff!important;    margin-top: 0px;
+    padding-top: 0px;       box-shadow: 2px 5px 6px -3px #555;}
 .toolPanel.nav-tabs>li>a, .toolPanel.nav-tabs>li.active>a {
     /* margin-right: 4px; */
     border-top: none;
@@ -1897,11 +1898,13 @@ table.smallTable>tbody>tr.clickable.permit.active>td{
     width: 100%;
     bottom: 1px;
 }
-.nav.nav-tabs{
+.bottomPannel .nav.nav-tabs{
     padding: 0px;
     padding-left: 12px;
     padding-bottom: 10px;
 }
+.nav-tabs>li>a:hover {
+    background-color: #eee!important;}
 .scrollable_page.admin_page{
     min-height: 400px;
 }
@@ -1911,7 +1914,7 @@ table.smallTable>tbody>tr.clickable.permit.active>td{
 
 .toolPanel.nav-tabs{
         border: none;
-        border-top: 1px solid #c5d0dc;
+    border-top: 3px solid #fff;
 }
 .toolPanel.nav-tabs>li {
     background: #ccc;
@@ -2071,3 +2074,33 @@ div.throbberblock.active {
 .tabs-below>.nav-tabs>li>a:hover {
   box-shadow: 0 2px 2px 0 rgba(0,0,0,.25);
 }
+
+.sidebar.sidebar-fixed:before {
+    height: 5000px;
+    top: auto;
+    bottom: auto;
+    box-shadow: inset -15px 0px 80px -30px #000;
+    z-index: 11111;
+    background: transparent;
+    pointer-events: none;
+}
+#sidebar-right.sidebar.sidebar-fixed:before {
+    box-shadow: inset 10px 0px 80px -30px rgba(0, 0, 0, 0.25);
+}
+.tab-content {
+    border: 0px solid #c5d0dc;
+}
+
+.handsonContainer {
+margin-left: -1px;
+}
+.no-skin .nav-list>li.active:after {
+    right: auto;
+    left: 0px;
+    border-width: 0 4px 0 0;
+    border-color: #2b7dbc;
+}
+
+
+.nav-tabs>li.active>a{
+    background-color: #fff!important;}

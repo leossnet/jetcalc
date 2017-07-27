@@ -55,7 +55,7 @@ var MSite = (new function(){
 		refresh:null
 	};
 	
-	self.AnnounceF9 = function(noCache){
+	self.AnnounceRefresh = function(noCache){
 		self.FlashButton("fa-refresh");
 		if (self.AnnounceTimeout.refresh) clearTimeout(self.AnnounceTimeout.refresh);
 		self.AnnounceTimeout.refresh = setTimeout(function(){
@@ -101,8 +101,12 @@ var MSite = (new function(){
 			    e.preventDefault(); self.AnnounceCtrS();
 			  }
 			  if (e.keyCode == 120 ) {
-			    e.preventDefault(); self.AnnounceF9((navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey));
+			    e.preventDefault(); self.AnnounceRefresh((navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey));
+			  }			  
+			  if (e.keyCode == 45 ) {
+			    e.preventDefault(); self.AnnounceNew((navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey));
 			  }
+			  console.log(e.keyCode);
 			}, false);
 			$(window).scroll(function() {
 			    if($(window).scrollTop() == $(document).height() - $(window).height()) {
