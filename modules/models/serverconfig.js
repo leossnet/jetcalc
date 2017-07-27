@@ -5238,6 +5238,11 @@ module.exports = {
 				"index": true,
 				"extended": true
 			},
+			"IndexDocHeader": {
+				"type": Number,
+				"default": -1,
+				"index":true
+			},			
 			"CodePeriodGrp": {
 				"type": String,
 				"default": "",

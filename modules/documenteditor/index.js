@@ -9,7 +9,6 @@ var MDocumentEditor = (new function() {
 	}
  
 	self.Init = function (done){
-		console.log("self.Init");
 		MSandBox.Events.on('sandbox_status_change',function(){
 			self.Load();
 		})
@@ -17,7 +16,7 @@ var MDocumentEditor = (new function() {
 	}
 
 	self.ContextChange = function(){
-		console.log(">>> Context Change");
+
 	}
 
 	self.BeforeShow = function(){
@@ -73,7 +72,6 @@ var MDocumentEditor = (new function() {
 
 	self.Load = function(){
 		if (!self.Mode()) return self.InitSetMode("RootRows");
-		console.log("Loading",self.Mode());
 		self.rGet("document/"+CxCtrl.CodeDoc(),self.InfoByMode(),function(data){
 			self.Document(ModelEdit.Model("doc",data.Doc));
 		})

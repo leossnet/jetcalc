@@ -20,7 +20,7 @@ var HeaderHelper = function(Context){
 	self.Context = Context;	
 
 	self.Fields = {
-		"docheader":'-_id CodeDocHeader CodeHeader CodePeriodGrp IsInput IndexHeader',
+		"docheader":'-_id CodeDocHeader CodeHeader CodePeriodGrp IsInput IndexDocHeader',
 		"header":"-_id CodeHeader CodeParentHeader IndexHeader NameHeader SNameHeader Condition Year CodePeriod IsFixed IsControlPoint CodeRole IsNoRoles CodeValid CodeStyle CodeColset Link_docheader",
 		"colset":"CodeColset NameColset SNameColset",
 		"colsetcol":'-_id CodeColsetCol CodeStyle CodeColset CodeCol Condition Year NameColsetCol SNameColsetCol CodePeriod IsFixed IsControlPoint Link_colsetcolperiodgrp Link_colsetcolgrp IndexColsetCol IsAgFormula AgFormula  IsAfFormula AfFormula CodeRole IsNoRole',
@@ -42,10 +42,11 @@ var HeaderHelper = function(Context){
 
 	self.loadInfo = function(done){
 		self.query('docheader',{CodeDoc:self.Context.CodeDoc},self.Fields['docheader'])
-			.sort({IndexHeader:1}).exec(function(err,HeaderLinks){
+			.sort({IndexDocHeader:1}).exec(function(err,HeaderLinks){
 			if (!HeaderLinks.length) return done("У документа "+self.Context.CodeDoc+" не настроены заголовки");
 			self.Tree = new Tree("ROOT",{});
-			async.each(HeaderLinks,self.LoadBranch,function(err){
+
+			async.eachSeries(HeaderLinks,self.LoadBranch,function(err){
 				self.LoadColsetsWithCols(function(err){
 					var ToRemove = [];
 					self.Tree.traverseBF(function(Node){
@@ -296,13 +297,12 @@ var HeaderHelperOld = function(Context){
 
 	self.LoadTree = function(done){
 		self.Tree = new Tree("ROOT",{});
-		self.query('docheader',{CodeDoc:self.Context.CodeDoc},'-_id CodeDocHeader CodeHeader CodePeriodGrp IsInput IndexHeader')
-			.sort({IndexHeader:1}).exec(function(err,HeaderLinks){
+		self.query('docheader',{CodeDoc:self.Context.CodeDoc},'-_id CodeDocHeader CodeHeader CodePeriodGrp IsInput IndexDocHeader')
+			.sort({IndexDocHeader:1}).exec(function(err,HeaderLinks){
 			if (!HeaderLinks.length) return done("У документа "+self.Context.CodeDoc+" не настроены заголовки");
-			/*_.map(HeaderLinks,function(H){
-				console.log(_.pick(H,["IndexHeader","CodeHeader"]));
+			_.map(HeaderLinks,function(H){
+				console.log(_.pick(H,["IndexDocHeader","CodeHeader"]));
 			})
-			*/
 			HeaderLinks.forEach(function(HLink){
 				self.AddToTree (HLink.CodeHeader,_.merge(self.HInfo[HLink.CodeHeader],{Type:'header',CodePeriodGrp:HLink.CodePeriodGrp, IsInput:HLink.IsInput}),"ROOT");//HLink.CodeDocHeader
 			})			

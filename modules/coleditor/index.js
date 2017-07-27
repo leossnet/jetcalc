@@ -50,7 +50,8 @@ var MColEditor = (new function() {
     self.InitialValues  = {};
     self.RowsChanged  = ko.observable(0);    
 
-	self._change = function(ind,key,value,oldvalue){
+	self._change = function(visibleInd,key,value,oldvalue){
+		var ind = self.table.getCellMeta(visibleInd).row;
 		self.Rows[ind][key] = value;    	
     	var Cr = self.Rows[ind].CodeColsetCol;
     	if (!self.Rows[ind].IsNew){

@@ -12,7 +12,12 @@ router.get('/document/:CodeDoc', function(req,res,next){
 	});
 	var Q = mongoose.model("doc").findOne({CodeDoc:req.params.CodeDoc},["-_id"].concat(Fields).concat(LinkFields).join(" "));
 	LinkFields.forEach(function(L){
-		Q.populate(L);
+		if (L=='Link_docheader'){
+			Q.populate({path:L,options: { sort: { 'IndexDocHeader': 1 } }});
+		} else {
+			Q.populate(L);	
+		}
+		
 	});
 	Q.isactive().lean().exec(function(err,D){
 		if (!D) return next("documentnotfound");

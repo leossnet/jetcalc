@@ -66,11 +66,7 @@ router.get('/cols', function(req,res,next){
 		Context[F] = req.query[F];
 	})
 	Context.IsInput = api.parseBoolean(Context.IsInput);
-	if (!req.query.UseCache)	{
-		Context.UseCache = true;	
-	} else {
-		Context.UseCache = api.parseBoolean(req.query.UseCache);	
-	}
+	Context.UseCache = false;	
 	Context.Year = parseInt(Context.Year);
 	ColEditorHelper.get(Context,req.session.sandbox,function(err, Cols){
 		if (err) return next (err);
