@@ -262,9 +262,9 @@ var Unmapper = function(Context, InfoCacher){
 					PeriodParts.push(CellName);
 				})
 				if (R.PeriodOp=="MULT"){
-					FormulaParts.push(PeriodParts.join("*"));
+					FormulaParts.push("("+PeriodParts.join("*")+")");
 				} else {
-					FormulaParts.push(PeriodParts.join("+"));
+					FormulaParts.push("("+PeriodParts.join("+")+")");
 				}
 			})
 
