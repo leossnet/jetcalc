@@ -144,7 +144,7 @@
       <i class="fa fa-angle-down icon-on-right fa-light"></i>
     </a>
     <ul class="dropdown-menu dropdown-light dropdown-caret">
-        <!-- ko foreach:Catalogue.GetAll('year') -->
+        <!-- ko foreach: _.sortBy(Catalogue.GetAll('year'),'name').reverse() -->
         <li>
           <a data-bind="click: CxCtrl.Update.bind(null,'year',$data.id)">
             <span data-bind="text: $data.name"></span>
