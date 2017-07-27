@@ -262,6 +262,10 @@ MSite.Events.on("initialnavigate",function(){
 });
 
 
+CxCtrl.Events.on("contextchanged",function(){
+    SettingController.Init();
+});
+
 MSite.Events.addListener("navigate",function(){
 	if (SettingController.IsShow()) SettingController.IsShow(false);
     RightMenu.IsMenuToggled(true); 

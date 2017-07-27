@@ -169,6 +169,9 @@
         <a class="btn btn-sm btn-white" data-bind="click: CxCtrl.Update.bind(null,'subperiod',$data),css:{'btn-yellow':$data.anotherYear,'btn-grey':!$data.anotherYear,'half-inactive':CxCtrl.Override.CodePeriod()!=$data.code}"  >
           <span data-bind='text:$data.code+". "'></span>
           <!-- ko template:{name:'catalogue',data:{model:'period',id:$data.code}} --><!-- /ko -->
+          <!-- ko if: $data.year != 0 -->
+            <span data-bind='text: " " + (Number(CxCtrl.Year()) + $data.year)'></span>
+          <!-- /ko -->
         </a>
   <!-- /ko -->
 </script>
