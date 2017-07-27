@@ -86,7 +86,6 @@ var Helper = (new function(){
 		self.Info(function(err,Loaded){
 			if (!Status) return done();
 			var Routes = _.filter(Loaded.Route,{CodeInitState:Status.CodeState});
-			console.log("AAAAAAAA",Status.CodeState,"STATUS",Routes.length,Routes,Context.CodePeriod);
 			var Filtered = [];
 			Routes.forEach(function(R){
 				var Enabled = false;
@@ -118,6 +117,10 @@ var Helper = (new function(){
 
 	}
 
+	self.StatesLang = {
+
+	}
+
 
 
 	self.Info = function(done){
@@ -129,8 +132,8 @@ var Helper = (new function(){
 				var Q = {}; Q["Is"+P] = true;
 				var F = _.find(Load.State,Q);
 				self.StatesTranslate[P] = (F)? F.CodeState:null;
+				self.StatesLang[P] = (F)? F.NameState:null;
 			})
-			console.log(self.StatesTranslate);
 			return done(err,self.Loaded);
 		});
 	}
@@ -350,7 +353,10 @@ router.put('/execute', HP.DocAccess("DoBlock"), function(req,res,next){
 
 router.get('/statestr',function(req,res,next){ 
 	Helper.Info(function(){
-		return res.json(Helper.StatesTranslate);
+		return res.json({
+			states:Helper.StatesTranslate,
+			lang:Helper.StatesLang				
+		});
 	})
 })
 

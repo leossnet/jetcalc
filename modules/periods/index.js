@@ -11,8 +11,6 @@ var MPeriods = (new function() {
         self.Show();
     }        
 
-
-
     // Period map editor
     self.LinkPeriods = ko.observable();
     self.MainPeriods   = ko.observableArray();

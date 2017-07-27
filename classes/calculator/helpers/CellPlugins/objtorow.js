@@ -81,9 +81,6 @@ var ObjToRowStructure = function(Context,Data){
         Cols.forEach(function(Col){
         	Answer.Header.push(Col.NameColsetCol);
         })
-
-        console.log(Rows);
-
         Objs.forEach(function(Obj){
         	var EmptRow = [Obj.NameRow];
         	Rows.forEach(function(Row){	        	

@@ -4,6 +4,21 @@ var MBreadCrumbs = (new function(){
 	self.Pages = ko.observableArray();
 
 	self.Css = ko.observable();
+	self.PreLabels = ko.observableArray();
+	self.PostLabels = ko.observableArray();
+
+	self.RemoveLabels = function(ModuleName,Type){
+		var P = (Type=="Pre") ? self.PreLabels:self.PostLabels;
+		var ToRemove = [];
+		_.filter(P(),{ModuleName:ModuleName}).forEach(function(Label){
+			P.remove(Label);
+		})
+	}
+
+	self.AddLabel = function(ModuleName, Type, Label){
+		var P = (Type=="Pre") ? self.PreLabels:self.PostLabels; 
+		P.push(_.merge(Label,{ModuleName:ModuleName}));
+	}
 
 	self.Events = new EventEmitter();
 
@@ -29,7 +44,7 @@ var MBreadCrumbs = (new function(){
 	}
 	
 	self._breadcrumbsFromPages = function(){
-		self.Css(null);
+		self.Css(null); self.PreLabels([]); self.PostLabels([]);
 		var pages = [];
 		var page = pager.activePage$();
 		var maxStack = 20;

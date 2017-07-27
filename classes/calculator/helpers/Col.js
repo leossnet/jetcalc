@@ -166,7 +166,7 @@ var ColHelper = function(Context){
 					jison_prepare.setContext(J_Context);
 					Formula = jison_prepare.parse(Formula);
 				} catch(e){
-					console.log(e.message);
+					//console.log(e.message);
 				}
 				H.Formula = Formula;
 				self.Headers[Code] = H;
@@ -365,7 +365,7 @@ var ColHelper = function(Context){
         try{
           eval("result = "+condition);
         } catch(e){
-          console.log('EvalError:',e,'`'+old+'`',"result = "+condition);
+          //console.log('EvalError:',e,'`'+old+'`',"result = "+condition);
         }
         return {
         	result:result,	

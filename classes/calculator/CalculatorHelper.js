@@ -261,15 +261,19 @@ var Unmapper = function(Context, InfoCacher){
 					UnknownVars[CellName] = RR;
 					PeriodParts.push(CellName);
 				})
+				var Pu = "";
 				if (R.PeriodOp=="MULT"){
-					FormulaParts.push("("+PeriodParts.join("*")+")");
+					Pu = PeriodParts.join("*");
 				} else {
-					FormulaParts.push("("+PeriodParts.join("+")+")");
+					Pu = PeriodParts.join("+");
 				}
+				if (PeriodParts.length>1){
+					Pu = "("+Pu+")";
+				}
+				FormulaParts.push(Pu);
 			})
 
 			if (FormulaParts.length>1){
-				console.log('('+FormulaParts.join('+')+')');
 				Replaces[v] = '('+FormulaParts.join('+')+')';
 			} else {
 				Replaces[v] = _.first(FormulaParts);

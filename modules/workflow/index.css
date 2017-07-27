@@ -15,20 +15,14 @@ div.breadcrumbs .breadcrumbs-label:after{
 div.breadcrumbs.Opened .breadcrumbs-label{
 	background:#f74e4e;   display: inline-block;
 }
-div.breadcrumbs.Opened .breadcrumbs-label:after{ content:"Открыт"}
-
-
 
 div.breadcrumbs.Closed .breadcrumbs-label{
 	background:#FFC107;   display: inline-block
 }
-div.breadcrumbs.Closed .breadcrumbs-label:after{ content:"На проверке"}
-
 
 div.breadcrumbs.Agreed .breadcrumbs-label{
     background: #8BC34A;  display: inline-block
 }
-div.breadcrumbs.Agreed .breadcrumbs-label:after{ content:"Проверен"}
 
 
 

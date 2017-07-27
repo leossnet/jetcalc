@@ -433,6 +433,7 @@ a.red.redLink{
   color: #2679b5;
   vertical-align: text-bottom;
   pointer-events:none;
+    color: #555;
 }
 
 .breadcrumb>li:last-child>a.multiline{

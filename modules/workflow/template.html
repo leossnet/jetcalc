@@ -1,4 +1,5 @@
 <script id="tb_workflow" type="text/html">
+	<!-- ko if:CxCtrl.PageName()=='input' -->
 	<div class="btn-group" data-bind='with:Workflow.Actions,css:{disabled:!Workflow.IsBlockAllowed()}'>
 		<!-- ko foreach:$data -->
 		<a class='btn btn-sm btn-white' data-bind='css:$data.CodeFinalState,click:Workflow.Execute' >
@@ -11,6 +12,7 @@
 		</a>
 		<!-- /ko -->
 	</div>
+	<!-- /ko -->
 </script>
 
 

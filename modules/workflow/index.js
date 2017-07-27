@@ -1,75 +1,69 @@
 var Workflow = (new function(){
-    var self = this;
 
-    self.base = "/api/modules/workflow/";
-    self.Error = ko.observable();
+    var self = new Module("workflow"); 
+
 
     self.History = ko.observableArray();
     self.ShowHistory = function(){
-        self.Error(null); self.History([]);
-        $.getJSON(self.base+'history',{Context:CxCtrl.CxPermDoc()},function(data){
-            if (data.err) return self.Error(data.err);
+        self.History([]);
+        self.rGet('history',{Context:CxCtrl.CxPermDoc()},function(data){
             self.History(data);
             $('#workflowHistory').modal('show');
         })
     }
 
     self.Events = new EventEmitter();
-
-    self.Error.subscribe(function(V){
-		if (V) swal('Ошибка системы блокировок',V,'error');
-		self.Error(null);
-	})
-
 	self.CurrentState = ko.observable();
     self.Actions = ko.observableArray();
 
     self.StatesTranslate = {};
+    self.StatesLang = {};
+    self.StatesByCode = {};
+    self.CSS = {
+        "Opened":"label-lg label-danger",
+        "Closed":"label-lg label-yellow",
+        "Agreed":"label-lg label-success",
+    }
 
     self.LoadStates = function(done){
-        $.getJSON(self.base+"statestr",function(data){
-            self.StatesTranslate = data;
+        self.rGet("statestr",{},function(data){
+            self.StatesTranslate = data.states;
+            self.StatesLang = data.lang;
+            if(!_.isEmpty(self.StatesTranslate)){
+                for (var K in self.StatesTranslate){
+                    if (K!="Default"){
+                        self.StatesByCode[self.StatesTranslate[K]] = K;
+                    }
+                }
+            }
             return done();
         })
     }
 
     self.Init = function(done){
-        self.LoadStates(function(){
-            CxCtrl.Events.addListener("documentchanged",self.UpdateInfo);
-            CxCtrl.Events.addListener("contextchanged",self.UpdateInfo);        
-            CxCtrl.Events.addListener("pagechanged",self.UpdateInfo);
-            return done();
-        })
-    }
-
-    self.Context = function(){
-		var Context = CxCtrl.Context();
-    	return _.merge(_.pick(Context,["Year","CodePeriod","CodeDoc"]),{
-    		CodeObj:Context.ChildObj||Context.CodeObj
-    	});
+        CxCtrl.Events.addListener("documentchanged",self.UpdateInfo);
+        CxCtrl.Events.addListener("contextchanged",self.UpdateInfo);        
+        CxCtrl.Events.addListener("pagechanged",self.UpdateInfo);
+        self.LoadStates(done);
     }
 
     self.UpdateInfo = function(done){
         done = typeof done =='function' ? done : null;
-    	var Context = self.Context();
+    	var Context = CxCtrl.CxPermDoc();
     	self.Error(null); self.CurrentState(null);self.Actions([]);
-        MBreadCrumbs.Css(null);
         var Document = MFolders.FindDocument(Context.CodeDoc);
         self.IsBlockAllowed(false);
         if (!Document.IsInput) return done && done();
-    	$.getJSON(self.base+"status",Context,function(data){
-            console.log(data);
-    		if (data.err) {
-                self.Error(data.err);   
-                return done && done();   
-            }
+    	self.rGet("status",Context,function(data){
+            MBreadCrumbs.RemoveLabels("Workflow","Pre");
             if (_.isEmpty(data.Actions)) {
-                if (done && typeof done=='function')    return done();
+                if (done && typeof done=='function') return done();
                 return;
             }
             self.CurrentState(data.State.CodeState);
-            MBreadCrumbs.Css(data.State.CodeState);
-    		self.Actions(data.Actions);
+            var Code = self.StatesByCode[data.State.CodeState];
+            MBreadCrumbs.AddLabel("Workflow","Pre",{Icon:null,CSS:self.CSS[Code],Text:self.StatesLang[Code],Title:null})
+            self.Actions(data.Actions);
             self.CheckBlockAllowed();
             return done && done();
     	})
@@ -116,28 +110,19 @@ var Workflow = (new function(){
     }
 
     self.Execute = function(Action){
-        var url = self.base+"execute";
-        if (self.ForceFlag()) url = self.base+"forceexecute";
+        var url = self.ForceFlag() ? "forceexecute":"execute";
         self.ForceFlag(false); self.ExecuteResult(null); self.ExecuteInfo(null); self.NeedConfirm(false); self.CurrentAction(Action);
-        $.ajax({
-            url:url,
-            data:{
-                Context:self.Context(),
-                Action:Action.CodeRoute
-            },
-            method:'put',
-            success:function(data){
-                self.ExecuteResult(data.Status);
-                self.ExecuteInfo(_.omit(data,"Status"));
-                if (data.Status=="Success"){
-                    self.UpdateInfo(function(){
-                        self.Events.emit("statuschange");
-                    });
-                    $('#workflowInfo').modal('hide');
-                } else {
-                    self.NeedConfirm(true);
-                    $('#workflowInfo').modal('show');                    
-                }
+        self.rPut(url,{Context:CxCtrl.CxPermDoc(),Action:Action.CodeRoute},function(data){
+            self.ExecuteResult(data.Status);
+            self.ExecuteInfo(_.omit(data,"Status"));
+            if (data.Status=="Success"){
+                self.UpdateInfo(function(){
+                    self.Events.emit("statuschange");
+                });
+                $('#workflowInfo').modal('hide');
+            } else {
+                self.NeedConfirm(true);
+                $('#workflowInfo').modal('show');                    
             }
         })
     }

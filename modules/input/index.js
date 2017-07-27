@@ -7,6 +7,10 @@ var MInput = (new function() {
         return Doc && Doc.IsInput;
     }
 
+    self.BeforeHide = function(){
+       MBreadCrumbs.RemoveLabels("Input","Post");
+    }
+
 
     self.MetaChange = function(row,col,type,value){
         if (type=='comment'){
@@ -220,15 +224,24 @@ var MInput = (new function() {
 
 
     self.AllowInput = function(){
-        var Class2Add = null;
-        if (!self.CheckValuta()) Class2Add = "WrongValuta";
-        if (!self.CheckPeriodIsOpened()) Class2Add = "PeriodClosed";
+        var Class2Add = null, Labels = [];
+        if (!self.CheckValuta()) {
+            Class2Add = "WrongValuta";   
+            Labels.push({Icon:"fa-exclamation-triangle",CSS:"label-warning",Text:"Валюта",Title:"Выбрана альтернативная валюта"});
+        }
+        if (!self.CheckPeriodIsOpened()) {
+            Class2Add = "PeriodClosed";
+            Labels.push({Icon:"fa-exclamation-triangle",CSS:"label-warning",Text:"Период",Title:"Период закрыт"});
+        }
         if (!self.CheckFormIsOpened()) Class2Add = "Block";
-        if (Class2Add) console.log(Class2Add);
         var Primaries = _.filter(self.table.getCellsMeta(),{IsEditablePrimary:true});
         var setter = Class2Add? true:false;
         Primaries.forEach(function(P){
             self.table.setCellMeta(P.row,P.col,"IsLocked",setter);
+        })
+        MBreadCrumbs.RemoveLabels("Input","Post");
+        Labels.forEach(function(Label){
+            MBreadCrumbs.AddLabel("Input","Post",Label);
         })
         self.table.render();
     }
@@ -331,10 +344,14 @@ var MInput = (new function() {
 
 ModuleManager.Events.on("modulesinited",function(){
     Workflow.Events.addListener("statuschange",function(){
-        setTimeout(MInput.AllowInput,0);
+        if (CxCtrl.PageName()=="input"){
+            setTimeout(MInput.AllowInput,0);
+        }
     })
     MInput.Events.addListener("rendercells",function(){
-        setTimeout(MInput.AllowInput,0);
+        if (CxCtrl.PageName()=="input"){
+            setTimeout(MInput.AllowInput,0);
+        }
     })
     BlankDocument.Events.addListener("key",function(e){
         var isControlPressed = (e.ctrlKey || e.metaKey);    

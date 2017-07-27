@@ -221,10 +221,12 @@ ko.bindingHandlers.FileUpload = {
 ko.bindingHandlers.title = {
   update: function(element, valueAccessor) {
     var text = ko.utils.unwrapObservable(valueAccessor());
-    $(element).attr("data-rel","tooltip");
-    $(element).attr("data-placement","bottom");
-    $(element).attr("data-original-title",(text+'').replace(/ /g,'&nbsp;'));
-    $(element).tooltip({html:true,animation:true,delay:{ show: 1000, hide: 100 }});
+    if (text && text!='null') {
+        $(element).attr("data-rel","tooltip");
+        $(element).attr("data-placement","bottom");
+        $(element).attr("data-original-title",(text+'').replace(/ /g,'&nbsp;'));
+        $(element).tooltip({html:true,animation:true,delay:{ show: 1000, hide: 100 }});
+    }
   }
 };
 

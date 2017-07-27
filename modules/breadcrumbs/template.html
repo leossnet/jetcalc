@@ -1,17 +1,37 @@
-<script id="breadcrumbs" type="text/html">
-	<!-- ko with:MBreadCrumbs.Pages -->
-	<div class="breadcrumbs breadcrumbs-fixed" data-bind='css:MBreadCrumbs.Css()'>
-		<ul class="breadcrumb" data-bind='foreach:$data'>
-			<li><a data-bind="page-href:$data.path,html:$data.title,css:{'multiline':ko.unwrap($data.title).indexOf('<br')>=0}"></a></li>
-		</ul>
-		<span class="breadcrumbs-label label"></span>
-		<!-- ko with:_.last($data) -->
-			<!-- ko with: $data.subtitle -->
-				<ul class="breadcrumb pull-right">
-					<li><a data-bind="lang: $data"></a></li>	
-				</ul>
+<script id="breadcrumbs-labels" type="text/html">
+	<!-- ko foreach:$data -->
+        <span class="label arrowed-right" data-bind='css:$data.CSS,title:$data.Title'> 
+        	<!-- ko with:$data.Icon -->
+				<i class="ace-icon fa bigger-120" data-bind='css:$data'></i>
 			<!-- /ko -->
-		<!-- /ko -->
-	</div>				
+             <span data-bind='text:$data.Text'></span>
+        </span>
 	<!-- /ko -->
+</script>
+
+<script id="breadcrumbs" type="text/html">
+    <!-- ko with:MBreadCrumbs.Pages -->
+    <div class="breadcrumbs breadcrumbs-fixed" data-bind='css:MBreadCrumbs.Css()'>
+        <!-- ko with:MBreadCrumbs.PreLabels -->
+        	<!-- ko template:"breadcrumbs-labels"--><!-- /ko -->
+        <!-- /ko -->
+        <ul class="breadcrumb" data-bind='foreach:$data'>
+            <li>
+                <a data-bind="page-href:$data.path,html:$data.title,css:{'multiline':ko.unwrap($data.title).indexOf('<br')>=0}"></a>
+            </li>
+        </ul>
+        <!-- ko with:MBreadCrumbs.PostLabels -->
+        	<!-- ko template:"breadcrumbs-labels"--><!-- /ko -->
+        <!-- /ko -->
+        <!-- ko with:_.last($data) -->
+	        <!-- ko with: $data.subtitle -->
+	        <ul class="breadcrumb pull-right">
+	            <li>
+	                <a data-bind="lang: $data"></a>
+	            </li>
+	        </ul>
+	        <!-- /ko -->
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
 </script>
