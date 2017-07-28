@@ -27,6 +27,14 @@ var ModulesHelper = (new function(){
         })
     }
 
+    self.Build = function(){
+        self.MSSettings(function(err,Set){
+            self.ReCompile(Set.DoBundle,function(){
+                console.log("Build is done",Set.DoBundle)
+            })
+        })
+    }
+
     self.ReCompile = function(doBundle,done){
         if (doBundle){
             Compiller.BuildBundle(done);
@@ -549,11 +557,15 @@ router.put('/settings', HP.TaskAccess("IsModulesAdmin"), function (req, res, nex
         })
     })    
 })
-Compiller.Build(function(err){
-    console.log("Build")    
-});
-/*
 
+
+setTimeout(function(){
+    ModulesHelper.Build(function(err){
+        console.log("Build")    
+    },2000);
+})
+
+/*
 
 
 
