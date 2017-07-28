@@ -1,0 +1,11 @@
+{
+  "id": "translate",
+  "class_name": "Translate",
+  "title": "Перевод",
+  "icon": "fa-globe",
+  "places":{
+      "topmenu"   : true
+  },
+  "is_enabled": true,
+  "sort_index":1
+}
