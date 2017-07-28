@@ -30,10 +30,10 @@
 
 <script id="mode_round_expand" type="text/html">
     <div class="btn-group">
-      <a class="btn btn-sm btn-white btn-primary" data-bind="title:'Полное отображение строк',click: BlankDocument.ChangeModeExpandRow,css:{'active': BlankDocument.ModeExpandRow()}" >
+      <a class="btn btn-sm btn-white" data-bind="title:'Полное отображение строк',click: BlankDocument.ChangeModeExpandRow,css:{'active': BlankDocument.ModeExpandRow()}" >
               <i class="fa fa-expand "></i>
       </a>
-      <a class="btn btn-sm btn-white btn-success" data-bind="title:'Выделять дробные значения',click: BlankDocument.ChangeModeRound,css:{'active': !BlankDocument.ModeRound()}"  >
+      <a class="btn btn-sm btn-white " data-bind="title:'Выделять дробные значения',click: BlankDocument.ChangeModeRound,css:{'active': !BlankDocument.ModeRound()}"  >
         <i class="fa fa-text fa-comm">0.0</i>
       </a>
     </div>
@@ -41,10 +41,10 @@
 
 <script id="tb_colapse_expand" type="text/html">
   <div class="btn-group">
-    <a class="btn btn-sm btn-white btn-primary" data-bind="title:'Свернуть строки',click: $data.CollapseAllRows" >
+    <a class="btn btn-sm btn-white " data-bind="title:'Свернуть строки',click: $data.CollapseAllRows" >
       <i class="fa fa-plus-square-o "></i>
     </a>
-    <a class="btn btn-sm btn-white btn-primary" data-bind="title:'Развернуть строки',click: $data.ExpandAllRows" >
+    <a class="btn btn-sm btn-white " data-bind="title:'Развернуть строки',click: $data.ExpandAllRows" >
       <i class="fa fa-minus-square-o "></i>
     </a>
   </div>
@@ -60,7 +60,7 @@
           <span class="1fa" data-bind="text: $data.TimeLabel" style="font-size: 12px;">1сек</span>
         <!-- /ko -->
       </button>
-      <button class='btn btn-sm btn-warning btn-white btn-primary' data-bind="title:(!CxCtrl.UseCache())?'Пересчитать без кэша <u>Ctrl+F9</u>':'Пересчитать <u>F9</u>',css:{'btn-warning':!CxCtrl.UseCache(),'btn-success':CxCtrl.UseCache()},enable: !$data.IsLoading(),click:$data.Reset">
+      <button class='btn btn-sm btn-warning btn-white' data-bind="title:(!CxCtrl.UseCache())?'Пересчитать без кэша <u>Ctrl+F9</u>':'Пересчитать <u>F9</u>',css:{'btn-warning':!CxCtrl.UseCache(),'btn-success':CxCtrl.UseCache()},enable: !$data.IsLoading(),click:$data.Reset">
         <i class="fa fa-refresh"></i>
       </button>
     </div>
@@ -109,7 +109,7 @@
 
 
 <script id="tb_period" type="text/html">
-    <a class="btn btn-sm btn-white btn-primary dropdown-toggle" data-toggle="dropdown">
+    <a class="btn btn-sm btn-white dropdown-toggle" data-toggle="dropdown">
         <span data-bind="text:CxCtrl.CodePeriod()+'. '"></span>
         <!-- ko template:{name:'catalogue',data:{model:'period',id:CxCtrl.CodePeriod()}} --><!-- /ko -->
         <i class="fa fa-angle-down icon-on-right fa-light"></i>
@@ -139,7 +139,7 @@
 </script>
 
 <script id="tb_year" type="text/html">
-    <a class="btn btn-sm btn-white btn-primary dropdown-toggle" data-toggle="dropdown">
+    <a class="btn btn-sm btn-white dropdown-toggle" data-toggle="dropdown">
       <span data-bind="text: CxCtrl.Year()"></span>
       <i class="fa fa-angle-down icon-on-right fa-light"></i>
     </a>
@@ -161,7 +161,7 @@
           <i class="fa " data-bind="css:{'fa-calendar-plus-o':CxCtrl.IsShowMonthPlan(),'fa-calendar-minus-o':!CxCtrl.IsShowMonthPlan()}"></i>
         </a>
   <!-- /ko -->
-      <a class="btn btn-sm btn-white btn-success" data-bind="click: CxCtrl.Update.bind(null,'subperiod',null),css:{'half-inactive':CxCtrl.Override.CodePeriod() && CxCtrl.Override.CodePeriod()!=CxCtrl.CodePeriod()}">
+      <a class="btn btn-sm btn-white " data-bind="click: CxCtrl.Update.bind(null,'subperiod',null),css:{'half-inactive':CxCtrl.Override.CodePeriod() && CxCtrl.Override.CodePeriod()!=CxCtrl.CodePeriod()}">
         <span data-bind='text:CxCtrl.CodePeriod()+". "'></span>
         <!-- ko template:{name:'catalogue',data:{model:'period',id:CxCtrl.CodePeriod()}} --><!-- /ko -->
       </a>
