@@ -1172,7 +1172,7 @@ li.IsTester>a>span{
 /*    padding:2px;*/
 }
 .col-xs-12.col-no-padding{
-    padding: 2px;
+    padding: 0px;
 }
 
 .accordion-style1.panel-group{
@@ -1474,7 +1474,8 @@ p.sqlString{
 #printPreviewContainer .simplecell.treeCell.topLevel, #printPreviewContainer  .htNumeric.numeric_cell{
     background-color: white;
 }
-html,.main-content{
+html{    background-color: #e4e6e9;}
+.screen{
     background-color:white;
 }
 
@@ -1581,7 +1582,7 @@ html,.main-content{
 }
 
 table.InfoTable{
-    width:100%;
+    width:100%;    box-shadow: 0px 0px 0px 1px #cccccc;
 
 }
 table.InfoTable td.FormulaSymbol{
@@ -2104,3 +2105,18 @@ margin-left: -1px;
 
 .nav-tabs>li.active>a{
     background-color: #fff!important;}
+.sidebar  .nav-tabs>li:first-child {
+    
+    margin-left: 10px;
+
+}
+.accordion-style1.panel-group .panel {
+    border-width: 1px 0px 0px 0;    border-bottom-width: 0px!important;
+}
+.login-box .toolbar {
+    background: #bbb;
+     border-top: 0px; 
+}
+.page-content-area.full-area{
+    background: white;
+}

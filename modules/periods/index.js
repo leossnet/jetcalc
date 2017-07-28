@@ -200,7 +200,7 @@ var MPeriods = (new function() {
     }
 
     self.IsModelEdit = ko.computed(function(){
-        return ["Periods","PeriodGrps","PeriodRedirect"].indexOf(self.Mode())!=-1;
+        return ["Periods","PeriodGrps","PeriodRedirect","Calendar"].indexOf(self.Mode())!=-1;
     })
 
     self.Show = function(done){
@@ -209,6 +209,9 @@ var MPeriods = (new function() {
             case "Periods":
                 ModelTableEdit.InitModel("period",{IsFormula:-1,MCount:1,BeginDate:1});
                 ModelTableEdit.IsExtendEditor(true);
+            break;            
+            case "Calendar":
+                ModelTableEdit.InitModel("statecalendar",{CodePeriod:1});
             break;
             case "PeriodRedirect":
                 ModelTableEdit.InitModel("periodredirect",{CodePeriod:1});

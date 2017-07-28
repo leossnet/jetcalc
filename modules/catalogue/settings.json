@@ -630,5 +630,38 @@
 			"doclabel",
 			"labeluser"
 		]
+	},
+	"periodredirect": {
+		"TableFields": [
+			"CodePeriodRedirect",
+			"CodePeriod",
+			"CodePeriodToRedirect",
+			"CodeGrp",
+			"CodeDocType"
+		],
+		"EditFields": [
+			"NotGrp",
+			"CodeDocType",
+			"CodeGrp",
+			"CodePeriod",
+			"CodePeriodToRedirect"
+		],
+		"Links": []
+	},
+	"statecalendar": {
+		"TableFields": [
+			"NameStateCalendar",
+			"DaysClosed",
+			"CodeRole"
+		],
+		"EditFields": [
+			"NameStateCalendar",
+			"SNameStateCalendar",
+			"DaysClosed",
+			"CodeRole"
+		],
+		"Links": [
+			"statecalendardate"
+		]
 	}
 }

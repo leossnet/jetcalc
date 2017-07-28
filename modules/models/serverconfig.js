@@ -2386,7 +2386,12 @@ module.exports = {
 				"dep": "CodeStateCalendar",
 				"hidden": true
 			},
-			"YearDate": {
+			"YearReport": {
+				"type": Number,
+				"default": 0,
+				"view": "none"
+			},
+			"Year": {
 				"type": Number,
 				"default": 0,
 				"view": "none"

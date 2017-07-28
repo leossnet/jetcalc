@@ -11,6 +11,11 @@ var ModelRestrict = (new function () {
             CodePeriod:{
                 IsFormula:false
             }
+        },    
+        statecalendardate:{
+            CodePeriod:{
+                IsFormula:false
+            }
         },        
         periodredirect:{
             CodePeriodToRedirect:{

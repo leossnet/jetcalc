@@ -401,6 +401,7 @@ var BaseDocPlugin = function(){
         autoRowSize:true,
         minSpareRows: 0,
         minSpareCols: 0,
+        minRowsNumber:100,
         manualColumnResize: true,
         currentColClassName: 'currentCol',
         currentRowClassName: 'currentRow',
