@@ -76,3 +76,8 @@ i.fa.favicon{
     font-size: 15px;
     vertical-align: middle;
 }
+ul.dropdown-menu.pull-right.width200_300{
+    min-width: 200px;
+    max-width: 300px;
+    overflow: hidden;
+}

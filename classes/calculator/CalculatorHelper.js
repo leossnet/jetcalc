@@ -113,7 +113,7 @@ var Unmapper = function(Context, InfoCacher){
 	self.CacheInfo = {}
 
 	self.CompileDependancies  = function(done){
-		var DependanceTree = {}, counter = 50000;
+		var DependanceTree = {}, counter = 60000;
 		var _recursiveFind = function(CellName){
 			var result = [];
 			if (--counter<0) return result			
@@ -1117,6 +1117,7 @@ var Evaluator = function(Unmapper){
  		self.LoadPrimaries(Primaries2Load,function(err){
 			if (err) return done(err);
 			self.HowToCalculate = RemainCells;
+			self.currentRecursion = 1;
 			self._calculate(function(err){
 				return done(err);
 			});
@@ -1244,7 +1245,7 @@ var Evaluator = function(Unmapper){
 		})
 	}
 
-	self.maxRecursions    = 1000;
+	self.maxRecursions    = 2000;
 	self.currentRecursion = 1;
 
 	self._calculate = function(done){

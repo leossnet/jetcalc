@@ -167,7 +167,8 @@ var MColEditor = (new function() {
 		numeric  :["IndexHeader","IndexColsetCol",'Year'],
 		formula  :["InitialFormula","Formula","AfFormula","AgFormula"],
 		links    :["Link_coltag",'Link_colsetcolgrp','Link_colsetcolperiodgrp'],
-		select   :["CodePeriodGrp","CodePeriod","CodeStyle"],
+		select   :["CodePeriodGrp","CodePeriod"],
+		select_table   :["CodeStyle"],
 		checkbox :['IsInput',"IsFixed","IsControlPoint","IsFormula","IsAfFormula","IsAgFormula","AsAgFormula"],			
 	}
 
@@ -210,6 +211,15 @@ var MColEditor = (new function() {
 					$(td).empty();				
 				}					
 			break;
+			case 'select_table':
+				if (!value){
+					$(td).empty();
+				} else {
+					var ModelName = self.ModelsByField[prop];
+					var Html = Catalogue.GetHtml(ModelName,value);
+					$(td).html(Html);
+				}
+			break;			
 			case 'links':
 				var Html = [];
 				if (CellInfo.prop=='Link_colsetcolperiodgrp' && value){
@@ -262,7 +272,10 @@ var MColEditor = (new function() {
 	}
 
 	self.Editable = ["Condition","Link_colsetcolperiodgrp","Link_colsetcolgrp","CodeStyle","AfFormula","IsAfFormula","AgFormula","IsAgFormula","IsControlPoint","IsFixed","IndexColsetCol","NameColsetCol"];
-
+	
+	self.ModelsByField = {
+	    "CodeStyle":'style'
+    }
 
 	self.DataForTable = function(){
 		var Cols2Show = self.Columns(), TableCells = [];
@@ -279,6 +292,10 @@ var MColEditor = (new function() {
             if (self.Type(Col)=='links') R.editor = 'link';
             if (self.Type(Col)=='formula') R.editor = 'formula';
             if (self.Type(Col)=='condition') R.editor = 'condition';
+             if (self.Type(Col)=='select_table') {
+            	R.editor = 'select_table';
+				R.model = self.ModelsByField[Col];
+            }
             if (self.Editable.indexOf(Col)==-1) R.readOnly = true;
 			Cols.push(R);
 		})

@@ -121,7 +121,7 @@
             <span class="pull-left" data-bind="model:'periodgrp',lang: $data"></span>
             <i class="fa fa-caret-right pull-right"></i>
           </a>
-          <ul class="dropdown-menu pull-right">
+          <ul class="dropdown-menu pull-right width200_300">
             <!-- ko with:MPeriods.DefaultPeriods -->
               <!-- ko foreach:$data[$parent] -->
                 <li>
@@ -157,7 +157,7 @@
 
 <script id="tb_subperiods" type="text/html">
   <!-- ko if: !CxCtrl.IsKvart() -->
-        <a class='btn btn-sm btn-white btn-info' data-bind="title:'Отображать месячные планы',click:CxCtrl.ToggleShowMonthPlan" >
+        <a class='btn btn-sm btn-white btn-info' data-bind="title:'Опциональные  периоды',click:CxCtrl.ToggleShowMonthPlan" >
           <i class="fa " data-bind="css:{'fa-calendar-plus-o':CxCtrl.IsShowMonthPlan(),'fa-calendar-minus-o':!CxCtrl.IsShowMonthPlan()}"></i>
         </a>
   <!-- /ko -->
