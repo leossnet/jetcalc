@@ -761,9 +761,6 @@ var ModelTableEdit = (new function () {
     self.refStack = ko.observableArray([]);
 
     self.AddRefModel = function (field, value, Model) {
-        console.log(">>>>>>>>>>>> field", field,
-            "<<<<<<<<<<<<<<<< value", value, "<<<<<<<<<<<<<<<< Model",
-            Model, "<<<<<<<<<<<<<<<<");
         var refmodel = MModels.Create(Model);
         var toStack = {
             depth: self.refStack().length,

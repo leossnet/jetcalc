@@ -7,12 +7,12 @@
     		<!-- ko template:'mode_round_expand' --><!-- /ko -->        
 
     		<div class="btn-group">
-          <button class="btn btn-sm btn-primary btn-white" data-bind="
+          <a class="btn btn-sm btn-white" data-bind="
             title:'Отображать настройки',
             css:{'active':SettingController.IsShow()},
             click:SettingController.Toggle" >
             <i class="fa fa-wrench" ></i>
-          </button>
+          </a>
         </div>
         <!-- ko template:'plugin_buttons' --><!-- /ko -->    
     </div>
@@ -55,6 +55,23 @@
         <li>
           <a data-bind="click: CxCtrl.Update.bind(null,'grouptype',$data)">
             <span data-bind="model:'olapgroup',lang:$data"></span>
+          </a>
+        </li>
+        <!-- /ko -->
+   </ul>
+</script>
+
+<script id="tb_group" type="text/html">
+    <a class="btn btn-sm btn-white btn-primary dropdown-toggle" data-toggle="dropdown">
+      <span data-bind="text: 'Группа'"></span>
+        <!-- ko template:{name:'catalogue',data:{model:'grp',id:CxCtrl.CodeGrp()}} --><!-- /ko -->
+        <i class="fa fa-angle-down icon-on-right fa-light"></i>
+    </a>
+    <ul class="dropdown-menu dropdown-light dropdown-caret">
+        <!-- ko foreach:_.keys(MAggregate.AllGroups()) -->
+        <li>
+          <a data-bind="click: CxCtrl.Update.bind(null,'grp',$data)">
+            <!-- ko template:{name:'catalogue',data:{model:'grp',id:$data}} --><!-- /ko -->
           </a>
         </li>
         <!-- /ko -->

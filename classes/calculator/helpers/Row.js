@@ -235,7 +235,7 @@ var RowHelper = function(Context){
 
 	self.FilterRows = function(done){
 		// Для OLAP отчетов фильрацию не применяем
-		if (self.Context.IsOlap || self.IsOlapDocument || self.IsObjToRow) {
+		if (self.IsObjToRow) {//self.Context.IsOlap || self.IsOlapDocument || 
 			var Rows = _.flatten(_.values(self.LoadedRows));
 			Rows.forEach(function(Row,index){
 				Row.lft = index*2+1;
@@ -450,7 +450,7 @@ var RowHelper = function(Context){
 			Remap[R.CodeRow] = {};
 			Tasks[R.CodeRow] = function(Row){
 				return function(cb){
-					if (Row.IsExpandTree && !(self.Context.IsOlap || self.IsOlapDocument) ){
+					if (Row.IsExpandTree  ){//&& !(self.Context.IsOlap || self.IsOlapDocument)
 						self.LoadRowTree(Row.CodeRow,cb);	
 					} else {
 						self.LoadRow(Row.CodeRow,cb);	
@@ -623,7 +623,7 @@ var RowHelper = function(Context){
 			var RI = {}; LinkRows.forEach(function(LR){ RI[LR.CodeRow] = LR;});
 			Rows.forEach(function(R,I){
 				if (!_.isEmpty(R.CodeRowLink)){
-					Rows[I].Link2Use = _.pick(RI[R.CodeRowLink],["CodeRow","NameRow"]);
+					Rows[I].Link2Use = _.pick(RI[R.CodeRowLink],["CodeRow"]);
 				}
 			})
 			return done(null,Rows);

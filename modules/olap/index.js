@@ -4,10 +4,8 @@ var MOlap = (new function() {
 
 	self.IsAvailable = function(){
 		var Doc = null;
-		if (CxCtrl.CodeDoc())
-      Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
-
-    return Doc && Doc.IsOlap;
+		if (CxCtrl.CodeDoc()) Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
+	    return Doc && Doc.IsOlap;
 	}
 
 	self.IndexedCells = {};
