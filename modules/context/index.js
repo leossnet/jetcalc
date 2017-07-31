@@ -194,7 +194,7 @@ var CxCtrl = (new function () {
             return function(){
                 self.DoUpdate(ToUpdate, Value);
             }
-        }(ToUpdate, Value),500);
+        }(ToUpdate, Value),200);
     }
 
     self.DoUpdate = function (type, value) {
