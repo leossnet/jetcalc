@@ -486,34 +486,12 @@ var PrintInterface = function() {
 			
             if(label) {
                 post = label.NameLabel
-
                 var users = label.Users[org_id]
-				
-                if(!users) {
-                    return
-                }
-
+                if(!users) return;
                 var user = users[_.keys(users)[0]]
-
                 if(user) {
-                    post = user.JobTitle
-
-                    var user_fio = user.NameUser.split(" ")
-
-                    var f = user_fio[0]
-                    var i = user_fio[1]
-                    var o = user_fio[2]
-
-                    fio = ""
-					if(i){
-						fio += i[0] + ". "
-					}
-                    if(o){
-						fio += o[0] + ". "
-					}
-					if(f){
-						fio += f
-					}
+                    post = user.JobTitle;
+                    var fio = user.NameUser;
                 }
             }
 
@@ -537,6 +515,9 @@ var PrintInterface = function() {
                 "</td>"+
             "</tr>"+
         "</table>";
+        if (!_.isEmpty(CxCtrl.KolEd())){
+            Header += "<div class='koled'><span class='kol'>"+CxCtrl.KolEd()+"</span></div>";
+        }
         $(where2add).append(
             $('<div id="PrintDocumentHeader" class="PrintDocumentHeader">'+Header+"</div>")
         );
@@ -827,7 +808,8 @@ var PrintInterface = function() {
             '/css/printTable.css',
             "/css/handsontable.full.min.css",
             "/css/handsontable.custom.css",
-            "/modules/chart/c3.min.css"
+            "/modules/chart/c3.min.css",
+            "/modules/print/index.css"
         ];
 
         Styles.forEach(function(S){

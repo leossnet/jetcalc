@@ -20,9 +20,9 @@ var DocHelper = function(Context){
 			}
 			var Answer = {};
 			self.loadInfo(function(err,Result){
-				self.saveToCache(Result,function(err){
+				//self.saveToCache(Result,function(err){
 					return done(err,Result);
-				});
+				//});
 			})
 		})
 	}

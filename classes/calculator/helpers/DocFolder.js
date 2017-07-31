@@ -29,7 +29,7 @@ var DocFolderHelper = function(Context){
 	}
 
 	self.Docs = function(done){
-		self.query('doc',{}, "-_id CodeDoc CodeDocType PrintNameDoc PrintNumDoc NameDoc SNameDoc IsShowMeasure IsTester IsChart IsPresent IsInput IsOlap IsDesigner IsDivObj IsObjToRow IsShowParentObj CodeGrp HasChildObjs Link_docobjtype Link_docrow IndexDoc CodeRole")
+		self.query('doc',{}, "-_id CodeDoc CodeDocType PrintNameDoc PrintNumDoc NameDoc SNameDoc IsShowMeasure CodeMeasure IsTester IsChart IsPresent IsInput IsOlap IsDesigner IsDivObj IsObjToRow IsShowParentObj CodeGrp HasChildObjs Link_docobjtype Link_docrow IndexDoc CodeRole")
 		.sort({IndexDoc:1})
 		.populate('Link_docobjtype','-_id CodeObjClass CodeObjType')
 		.populate({
@@ -38,8 +38,21 @@ var DocFolderHelper = function(Context){
 			select: '-_id CodeRow',
 		})
 		.isactive()
+		.lean()
 		.exec(function(err,Ds){
-			return done (err,Ds);
+			var MCodes = _.uniq(_.map(Ds,"CodeMeasure"));
+			if (_.isEmpty(MCodes)){
+				return done (err,Ds);	
+			} else {
+				mongoose.model("measure").find({CodeMeasure:{$in:MCodes}},"-_id CodeMeasure SNameMeasure").isactive().lean().exec(function(err,Measures){
+					var Indexed = {}; Measures.forEach(function(M){Indexed[M.CodeMeasure] = M.SNameMeasure});
+					Ds = _.map(Ds,function(D){
+						D.Measure = (!_.isEmpty(D.CodeMeasure)) ? Indexed[D.CodeMeasure]:"";
+						return D;
+					})
+					return done (err,Ds);	
+				})
+			}			
 		})
 	}
 

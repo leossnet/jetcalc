@@ -1,0 +1,9 @@
+div.koled{
+	position: relative;
+}
+div.koled span.kol{
+    position: absolute;
+    right: 40px;
+    top: -20px;
+    color: gray;
+}

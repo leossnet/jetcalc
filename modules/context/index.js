@@ -312,7 +312,6 @@ var CxCtrl = (new function () {
             id: self.PageName()
         });
         if (DocPlugin) {
-            console.log("DocPlugin UPDATE ContextChange",DocPlugin);
             var P = ModuleManager.Modules[DocPlugin.class_name];
             if (P.ContextChange) {
                 P.ContextChange();
@@ -455,6 +454,7 @@ var CxCtrl = (new function () {
     self.Doc = ko.observable();
     self.PrintNameDoc = ko.observable('');
     self.PrintNumDoc = ko.observable('');
+    self.KolEd = ko.observable(null);
 
     self.DocTitle = ko.computed(function () {
         var p = self.CodePeriod();
@@ -463,6 +463,7 @@ var CxCtrl = (new function () {
         var sy = self.Override.Year();
         var n = self.PrintNameDoc();
         var sc = self.ChildObj();
+        var ke = self.KolEd();
         if (n) {
             var s = "";
             if (sc && MFolders.FindDocument(self.CodeDoc()).IsDivObj) {
@@ -470,13 +471,16 @@ var CxCtrl = (new function () {
             }
             if (sp) p = sp;
             if (sy) y = sy;
-            var r = "";
+            var r = "", k = "";            
+            if (!_.isEmpty(ke)) {
+                k = ", "+(ke+'');
+            }
             var R = SettingController.ChoosedReport();
             if (R && R.CodeReport != 'default') {
                 r = '<span class="info"> / ' + SettingController.ChoosedReport().NameReport + "</span>";
             }
             if (self.PrintNameDoc() && self.PrintNameDoc().length) {
-                return self.PrintNameDoc() + ' за ' + Catalogue.GetHtml('period', p) + ' ' + y + s + r;
+                return self.PrintNameDoc() + ' за ' + Catalogue.GetHtml('period', p) + ' ' + y + s + r + k;
             }
             MSite._breadcrumbsFromPages();
         } else {
@@ -500,6 +504,24 @@ var CxCtrl = (new function () {
         var N = _.isEmpty(Doc.PrintNameDoc) ? Doc.NameDoc : Doc.PrintNameDoc;
         self.PrintNameDoc(N);
         self.PrintNumDoc(Doc.PrintNumDoc); 
+        if (!_.isEmpty(self.CodeDoc())){
+            setTimeout(function(){
+                $.getJSON("/api/form/doc",CxCtrl.CxPermDoc(),function(data){
+                    self.Doc(MModels.Create("doc",data));
+                });
+            },0);
+        }
+        if(!Doc.IsShowMeasure && Doc.CodeMeasure && !_.isEmpty(Doc.Measure)){
+            var V = Doc.Measure;
+            if (V.indexOf("[")!=-1){
+                try{
+                    V = V.replace(/\[.*?\]/g," "+_.find(MValuta.Valutas(),{CodeValuta:CxCtrl.CodeValuta()}).SNameValuta);
+                }catch(e){;}            
+            }        
+            self.KolEd(V)
+        } else {
+            self.KolEd(null)
+        };
     }
 
     self.Init = function (done) {

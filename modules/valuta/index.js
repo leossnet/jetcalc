@@ -55,6 +55,7 @@ var MValuta = (new function() {
 
     self.Init = function(done){
         self.rGet("valuta",{},function(data){
+            console.log(data);
             var Vs = [], Choose = ["IsReportValuta","IsReportValuta1","IsReportValuta2"], RVS = [];
             self.Valutas(_.map(data,function(V){
                 return _.pick(V,["CodeValuta","SNameValuta"]);

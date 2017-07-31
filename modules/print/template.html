@@ -11,79 +11,79 @@
   <!-- ko with: MPrint.PrintInterface -->
   <div class="wysiwyg-toolbar btn-toolbar toolH printTool">
     <div class="btn-group">
-      <a class="btn btn-sm btn-info btn-white" data-bind="title:'Вернуться',click: MPrint.Finish">
+      <a class="btn btn-sm  btn-white" data-bind="title:'Вернуться',click: MPrint.Finish">
         <i class="ace-icon fa fa-arrow-left"></i>
       </a>
     </div>
     <div class="btn-group">
-      <a class="btn btn-sm btn-warning btn-white" data-bind="title:'Печатать',click: MPrint.SendToPrinter">
+      <a class="btn btn-sm btn-white" data-bind="title:'Печатать',click: MPrint.SendToPrinter">
         <i class="ace-icon fa fa-print"></i>
       </a>
-      <a class="btn btn-sm btn-warning btn-white" data-bind="title:'Сохранить как PDF',click: MPrint.DownloadPDF">
+      <a class="btn btn-sm  btn-white" data-bind="title:'Сохранить как PDF',click: MPrint.DownloadPDF">
         <i class="ace-icon fa fa-file-pdf-o"></i>
       </a>
-      <a class="btn btn-sm btn-warning btn-white" data-bind="title:'Выбрать колонки для печати',click: openColumnSelectPopup">
+      <a class="btn btn-sm  btn-white" data-bind="title:'Выбрать колонки для печати',click: openColumnSelectPopup">
         <i class="ace-icon fa fa-columns"></i>
       </a>
     </div>
     <div class="btn-group">
-      <a class='btn btn-sm btn-info btn-white' data-bind="title:'Полное отображение строк',click: BlankDocument.ChangeModeExpandRow,css:{'active': BlankDocument.ModeExpandRow()}">
+      <a class='btn btn-sm  btn-white' data-bind="title:'Полное отображение строк',click: BlankDocument.ChangeModeExpandRow,css:{'active': BlankDocument.ModeExpandRow()}">
         <i class="ace-icon fa fa-expand " ></i>
       </a>
     </div>
     <div class="btn-group">
-      <a class="btn btn-sm btn-success btn-white " data-bind="title:'Нумерация страниц',css:{'active': $data.showPageNumbers()},click: $data.setParam.bind(null,'showPageNumbers',!$data.showPageNumbers())">
+      <a class="btn btn-sm  btn-white " data-bind="title:'Нумерация страниц',css:{'active': $data.showPageNumbers()},click: $data.setParam.bind(null,'showPageNumbers',!$data.showPageNumbers())">
         <i class="ace-icon fa fa-sort-numeric-asc"></i>
       </a>
-      <a class="btn btn-sm btn-success btn-white " data-bind="title:'Нумерация страниц с первой',css:{'active':$data.showNumbersOnFirstPage()},click: $data.setParam.bind(null,'showNumbersOnFirstPage',!$data.showNumbersOnFirstPage())">
+      <a class="btn btn-sm  btn-white " data-bind="title:'Нумерация страниц с первой',css:{'active':$data.showNumbersOnFirstPage()},click: $data.setParam.bind(null,'showNumbersOnFirstPage',!$data.showNumbersOnFirstPage())">
         <i class="ace-icon fa ">1 …</i>
       </a>
     </div>
     <div class="btn-group">
-      <a class="btn btn-sm btn-info btn-white " data-bind="title:'Книжная',css:{'active':$data.orientation()=='portrait'},click: $data.setParam.bind(null,'orientation','portrait')">
+      <a class="btn btn-sm  btn-white " data-bind="title:'Книжная',css:{'active':$data.orientation()=='portrait'},click: $data.setParam.bind(null,'orientation','portrait')">
         <i class="ace-icon fa fa-file-image-o"></i>
       </a>
-      <a class="btn btn-sm btn-info btn-white " data-bind="title:'Альбомная',css:{'active':$data.orientation()=='landscape'},click: $data.setParam.bind(null,'orientation','landscape')">
+      <a class="btn btn-sm  btn-white " data-bind="title:'Альбомная',css:{'active':$data.orientation()=='landscape'},click: $data.setParam.bind(null,'orientation','landscape')">
         <i class="ace-icon fa fa-picture-o"></i>
       </a>
     </div>
 
     <div class="btn-group">
-      <a class="btn btn-sm btn-default btn-white " data-bind="title:'Отступ слева',css:{'active':$data.editMode()=='marginL'},click:$data.setEditMode.bind(null,'marginL')">
+      <a class="btn btn-sm  btn-white " data-bind="title:'Отступ слева',css:{'active':$data.editMode()=='marginL'},click:$data.setEditMode.bind(null,'marginL')">
         <i class="ace-icon fa fa-caret-right"></i>
       </a>
-      <a class="btn btn-sm btn-default btn-white " data-bind="title:'Отступ сверху',css:{'active':$data.editMode()=='marginT'},click:$data.setEditMode.bind(null,'marginT')">
+      <a class="btn btn-sm  btn-white " data-bind="title:'Отступ сверху',css:{'active':$data.editMode()=='marginT'},click:$data.setEditMode.bind(null,'marginT')">
         <i class="ace-icon fa fa-caret-down"></i>
       </a>
-      <a class="btn btn-sm btn-default btn-white " data-bind="title:'Отступ справа',css:{'active':$data.editMode()=='marginR'},click:$data.setEditMode.bind(null,'marginR')">
+      <a class="btn btn-sm  btn-white " data-bind="title:'Отступ справа',css:{'active':$data.editMode()=='marginR'},click:$data.setEditMode.bind(null,'marginR')">
         <i class="ace-icon fa fa-caret-left"></i>
       </a>
-      <a class="btn btn-sm btn-default btn-white " data-bind="title:'Отступ снизу',css:{'active':$data.editMode()=='marginB'},click:$data.setEditMode.bind(null,'marginB')">
+      <a class="btn btn-sm  btn-white " data-bind="title:'Отступ снизу',css:{'active':$data.editMode()=='marginB'},click:$data.setEditMode.bind(null,'marginB')">
         <i class="ace-icon fa fa-caret-up"></i>
       </a>
     </div>
     <div class="btn-group">
-      <a class="btn btn-sm btn-default btn-white " data-bind="title:'Масштаб',css:{'active':$data.editMode()=='scale'},click:$data.setEditMode.bind(null,'scale')">
+      <a class="btn btn-sm  btn-white " data-bind="title:'Масштаб',css:{'active':$data.editMode()=='scale'},click:$data.setEditMode.bind(null,'scale')">
         <i class="ace-icon fa fa-search-plus"></i>
       </a>
     </div>
     <div class="btn-group">
-      <a class="btn btn-sm btn-success btn-white " data-bind="title:'Утверждено',css:{'active':$data.showApproval()},click: $data.setParam.bind(null,'showApproval',!$data.showApproval())">
+      <a class="btn btn-sm  btn-white " data-bind="title:'Утверждено',css:{'active':$data.showApproval()},click: $data.setParam.bind(null,'showApproval',!$data.showApproval())">
         <i class="ace-icon fa fa-thumbs-o-up"></i>
       </a>
     </div>
     <div class="btn-group">
-      <a class="btn btn-sm btn-success btn-white " data-bind="title:'Подписи',css:{'active':$data.showSignatures()},click: $data.setParam.bind(null,'showSignatures',!$data.showSignatures())">
+      <a class="btn btn-sm  btn-white " data-bind="title:'Подписи',css:{'active':$data.showSignatures()},click: $data.setParam.bind(null,'showSignatures',!$data.showSignatures())">
         <i class="ace-icon fa fa-pencil"></i>
       </a>
-      <a class="btn btn-sm btn-success btn-white " data-bind="title:'Подписи на каждой странице',css:{'active':$data.showSignaturesOnEveryPage()},click: $data.setParam.bind(null,'showSignaturesOnEveryPage',!$data.showSignaturesOnEveryPage())">
+      <a class="btn btn-sm  btn-white " data-bind="title:'Подписи на каждой странице',css:{'active':$data.showSignaturesOnEveryPage()},click: $data.setParam.bind(null,'showSignaturesOnEveryPage',!$data.showSignaturesOnEveryPage())">
         <i class="ace-icon fa ">1 …</i>
       </a>
     </div>
     <div class="btn-group">
       <!-- ko foreach:['marginL','marginT','marginB','marginR','scale'] -->
           <!-- ko if:$parent.editMode()==$data -->
-              <a class="btn btn-sm btn-success btn-white ">
+              <a class="btn btn-sm  btn-white ">
                 <i class="ace-icon fa" style='width: initial;max-width: initial;padding-left: 5px;font-family: "Open Sans";' data-bind='lang:$data'></i>
               </a>
               <input type='text' style='position:relative;height: 25px;top:5px;padding: 1px;padding-left:5px;line-height: 20px;' data-bind='value:$parent[$data],event:{change:$parent.setParam.bind(null,$data,$parent[$data]())}'>
@@ -139,13 +139,7 @@
 
 
 <script id="table_printHeader" type="text/html">
-<!-- ko if:false -->
-  <div class='TopDocument' >
-    <div class='DocName'    data-bind="text: .name"></div>
-    <div class='DocContext' data-bind="text: .print.printSubTitle"></div>
-    <div class='DocNum'     data-bind="text: .subtitle"></div>
-  </div>  
-<!-- /ko -->
+
 </script>
 
 <script id="table_printFooter" type="text/html">
