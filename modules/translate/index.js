@@ -13,30 +13,41 @@ var MTranslate = (new function () {
     self.Init = function () {}
 
     self.Translations = ko.observable({});
+    self.NotTranslated = ko.observable({});
 
     self.OpenTranslateTab = function () {
         var translations = {};
+        var notTranslated = {};
         _.keys(Lang.OnPage).forEach(function (k) {
-            //if (k.split('.').length >= 1 && k.split('.')[k.split('.').length - 1] === Lang.OnPage[k]) {
             translations[k] = Lang.OnPage[k];
-            //}
+            if (k.split('.').length >= 1 && k.split('.')[k.split('.').length - 1] === Lang.OnPage[k]) {
+                notTranslated[k] = Lang.OnPage[k];
+            }
         })
         self.Translations(translations);
+        self.NotTranslated(notTranslated);
         $("#translate_modal").modal('show');
     }
 
     self.SaveTranslateTab = function () {
         var Update = {};
+        var translations = self.Translations();
+        _.keys(self.NotTranslated()).forEach(function (k) {
+            if (k != self.NotTranslated()[k]) {
+                translations[k] = self.NotTranslated()[k];
+            }
+        })
+        self.Translations(translations);
         _.keys(self.Translations()).forEach(function (k) {
             if (k.split('.').length > 1) {
                 var module = k.split('.')[0] // + 's';
             } else {
                 var module = 'default';
             }
-            if (k.split('.')[k.split('.').length - 1] != self.Translations()[k]) {
-                if (!Update[module]) {
-                    Update[module] = {};
-                }
+            if (!Update[module]) {
+                Update[module] = {};
+            }
+            if (k != self.Translations()[k]) {
                 Update[module][k.split('.')[k.split('.').length - 1]] = self.Translations()[k];
             }
         })
