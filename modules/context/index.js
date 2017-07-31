@@ -465,6 +465,17 @@ var CxCtrl = (new function () {
         }
     })
 
+    self.TabName = function(){
+        var Doc = CxCtrl.CodeDoc();
+        var Info = MFolders.FindDocument(Doc);
+        if (Info){
+            if (!_.isEmpty(Info.SNameDoc)) return Info.SNameDoc;
+            if (Info.PrintNameDoc) return Info.PrintNameDoc;
+            if (Info.NameDoc) return Info.NameDoc;
+        }
+        return "";
+    }
+
     self.UpdateDocInfo = function (CodeDoc, done) {
         var Doc = MFolders.FindDocument(self.CodeDoc());
         var N = _.isEmpty(Doc.PrintNameDoc) ? Doc.NameDoc : Doc.PrintNameDoc;

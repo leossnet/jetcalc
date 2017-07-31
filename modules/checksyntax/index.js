@@ -14,7 +14,6 @@ var MCheckSyntax = (new function() {
 		})
 		el.removeClass(rotator.join(" "));
 		el.addClass(next);
-		console.log(el);
 	}
 
 

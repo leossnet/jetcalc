@@ -29,7 +29,7 @@ var DocFolderHelper = function(Context){
 	}
 
 	self.Docs = function(done){
-		self.query('doc',{}, "-_id CodeDoc CodeDocType PrintNameDoc PrintNumDoc NameDoc IsShowMeasure IsTester IsChart IsPresent IsInput IsOlap IsDesigner IsDivObj IsObjToRow IsShowParentObj CodeGrp HasChildObjs Link_docobjtype Link_docrow IndexDoc CodeRole")
+		self.query('doc',{}, "-_id CodeDoc CodeDocType PrintNameDoc PrintNumDoc NameDoc SNameDoc IsShowMeasure IsTester IsChart IsPresent IsInput IsOlap IsDesigner IsDivObj IsObjToRow IsShowParentObj CodeGrp HasChildObjs Link_docobjtype Link_docrow IndexDoc CodeRole")
 		.sort({IndexDoc:1})
 		.populate('Link_docobjtype','-_id CodeObjClass CodeObjType')
 		.populate({

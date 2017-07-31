@@ -67,7 +67,6 @@ var MCustomReport = (new function() {
 		if(!("text" in options) && !("type" in options)){
 			return callback({ data: self.ReportLoadTree });
 		} else if("type" in options && options.type == "folder") {
-			console.log("options",options);
 			var Answ = options.additionalParameters.children;
 		}
 		callback({ data: Answ });
@@ -171,7 +170,6 @@ var MCustomReport = (new function() {
 			SettingController.Init();
 			self.Render();
 			if (CxCtrl.CodeReport()!='default'){
-				console.log("Need To Load ");
 			}
 		})
 	}

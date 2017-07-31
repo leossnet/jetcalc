@@ -49,7 +49,6 @@ var FunctionsManager = (new function(){
             async.each(_.keys(CurrentIndexed),function(Code,cb){
                 if (NoUpdate.indexOf(Code)!=-1) return cb();
                 var O = CurrentIndexed[Code];
-                console.log(".... P ",Code);
                 O.save("",cb);
             },function(err){
                 if (err) console.log(err);
@@ -72,7 +71,6 @@ var FunctionsManager = (new function(){
                         if (!ToAdd.length) return done();
                         async.each(ToAdd, function(Code,cb){
                             var M = new TPrivelege({CodePrivelege:Code,CodeTask:LinkCode});
-                            console.log(".... TP ",Code);
                             M.save("",cb);
                         },done)
                     })
@@ -107,7 +105,6 @@ var FunctionsManager = (new function(){
                     IsMod = true;
                 }
                 var Tr = Lang[P] || P;
-                // console.log('there:', Existed.NamePrivelege,Tr)
                 if (Existed.ModuleName!=PluginName || Existed.NamePrivelege!=Tr) IsMod = true;
                 Existed.ModuleName = PluginName;
                 Existed.NamePrivelege = Tr;

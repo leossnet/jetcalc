@@ -58,14 +58,12 @@ router.delete('/report', function(req,res,next){
 	var CodeReport = req.body.CodeReport || "";
 	if (!req.body.CodeReport.length) return next("Не указан код отчета");
 	var CodeUser = req.user.CodeUser;
-	console.log("remove report");
 	mongoose.model("report").findOne({CodeReport:CodeReport}).isactive().exec(function(err,Report){
 		if (!Report) return next("Отчет не найден "+CodeReport);
 		var ToDelete = [];
 		mongoose.model("reportparamkey").find({CodeReport:CodeReport}).isactive().exec(function(err,ReportParams){
 			mongoose.model("reportrow").find({CodeReport:CodeReport}).isactive().exec(function(err,ReportRows){
 				ToDelete = ToDelete.concat(ReportParams).concat(ReportRows);
-				console.log(ToDelete);
 				async.each(ToDelete,function(O,cb){
 					O.remove(CodeUser,cb);
 				},function(err){

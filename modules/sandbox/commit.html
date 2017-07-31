@@ -11,7 +11,6 @@
 					<div class="profile-info-row">
 						<div class="profile-info-name" data-bind='text:$data'></div>
 						<!-- ko with:$parents[1][$parent][$data] -->
-						<!-- ko if:console.log($data) --><!-- /ko -->
 						<div class="profile-info-value">
 							<div class='OldValue orange ' data-bind='text:(($data.old+"").length)?$data.old+"":"Не заполнено"'></div>
 							<div class='NewValue green' data-bind='text:(($data.new+"").length)?$data.new+"":"Не заполнено"'></div>

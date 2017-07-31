@@ -41,11 +41,6 @@ var ModuleManager = (new function(){
     self._isLoading = null;
     self.IsLoading = ko.observable(false);
 
- /*   self.IsLoading.subscribe(function(V){
-        if (V) console.log(self.Choosed(),"Start loading");
-        else  console.log(self.Choosed(),"Stop loading");
-    })
-*/
 
     self.SetModule = function(){
         var Route = MBreadCrumbs.CurrentRoute();
@@ -287,7 +282,7 @@ var ModuleManager = (new function(){
             var Cl = ModuleManager.Modules[plugin.class_name];
             var Page = {
                 id          : plugin.id,
-                title       : plugin.title,
+                title       : CxCtrl.TabName()+". "+plugin.title,
                 ifmodule    : plugin.id,
                 class_name  : plugin.class_name,
                 sourceOnShow: "/modules/" + plugin.id + "/index.html",
@@ -328,7 +323,7 @@ var Module = function(id){
     }
 
     self.SaveChanges = function(){
-        console.log("saving...",id);
+        //console.log("saving...",id);
     }
 
     self.SubscribeDoc = function(){
@@ -354,7 +349,7 @@ var Module = function(id){
     self.Mode = ko.observable();
 
     self.Mode.subscribe(function(V){
-        console.log("Mode is changed for module ",id);
+        //console.log("Mode is changed for module ",id);
         self.ChangeModPath();
         self.Show();
     });
@@ -486,7 +481,7 @@ MSite.Events.on("initialnavigate",function(){
         ModuleManager.Modules[module].Mode(mode);
         pager.navigate(redirect);
     } catch(e){
-        console.log(e);
+        //console.log(e);
     }
 });
 MSite.Events.on("navigate",function(){

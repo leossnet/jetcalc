@@ -212,7 +212,6 @@ var MObjs = (new function(){
 
 
     self.OnDocumentChange = function(){
-        console.log("Changing agregates");
     }
 
     self.IsCurrent = function(data){

@@ -76,7 +76,7 @@ var MAFFormula = (new function(){
 					MInput.HandsonRenders.RegisterRender("AFCell",[/[0-9]*?,(?![0,1]$)[0-9]*/],self.AFCellRender);
 					MInput.table.render()
 				} catch(e){
-					console.log("AF Render Failed",e);
+					console.error("AF Render Failed",e);
 				}
 			}
 		})

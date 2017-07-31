@@ -90,7 +90,7 @@ module.exports = (new function(){
 			Row.findOne({CodeRow:Code}).isactive().exec(function(err,Root){
 				if (!Root) {
 					Root = new Row({CodeRow:Code});
-					console.log("ADD ROOT");
+					//console.log("ADD ROOT");
 				}
 				Root.treeroot = Code;
 				Root.rowpath = ["/",Code,"/"].join("");

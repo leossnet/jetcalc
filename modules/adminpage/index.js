@@ -5,7 +5,6 @@ var AdminPage = (new function(){
 	self.Events = new EventEmitter();
 
 	self.PageShow = function(){
-		console.log("APP SHOW");
 		//m_admin.startWatchCalcLog
 		//m_sysLog.loadLog,
 		self.Events.emit("adminpageshow");
@@ -13,7 +12,6 @@ var AdminPage = (new function(){
 
 	self.PageHide = function(){
 		//m_admin.stopWatchCalcLog
-		console.log("APP HIDE");
 		self.Events.emit("adminpagehide");
 	}
 

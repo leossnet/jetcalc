@@ -1,4 +1,4 @@
-<div data-bind="page: {id: '?', deep: true, nameParam: CxCtrl.CodeDoc, breadcrumbs: {path:'/', title:CxCtrl.DocTitle, subtitle: CxCtrl.PrintNumDoc}, afterShow:CxCtrl.AfterPageShow.bind(null,null)},css:{isloading:ModuleManager.IsLoading}">
+<div data-bind="page: {id: '?', deep: true, nameParam: CxCtrl.CodeDoc, title:CxCtrl.TabName(), breadcrumbs: {path:'/', title:CxCtrl.DocTitle, subtitle: CxCtrl.PrintNumDoc}, afterShow:CxCtrl.AfterPageShow.bind(null,null)},css:{isloading:ModuleManager.IsLoading}">
     <style id='LayoutCss'></style>
     <!-- ko if:ModuleManager.IsLoaded() -->
       <!-- ko if: MPrint.IsPrint() -->

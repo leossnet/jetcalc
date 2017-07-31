@@ -5,7 +5,6 @@ var Install = (new function(){
 
 	self.Init = function(done){
 		$.getJSON(self.base+"needinstall",function(data){
-			console.log(data);
 			return done();
 		})
 	}

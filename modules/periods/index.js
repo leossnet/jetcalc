@@ -39,7 +39,6 @@ var MPeriods = (new function() {
 
     self.LoadPeriodMap = function(){
         self.rGet("periodmap",{},function(data){
-            console.log(data);
             self.MainPeriods(_.map(data.MainPeriods,function(MP){
                 return MModels.Create("period",MP);
             }));
@@ -264,7 +263,7 @@ var MPeriods = (new function() {
             var K2 = _.first(_.keys(self.Table()[K1]));
             Roles = _.sortBy(_.keys(self.Table()[K1][K2]));
         } catch(e){
-            console.log(e);
+            //console.log(e);
         }
         return Roles;
     }

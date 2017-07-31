@@ -363,7 +363,6 @@ router.get('/statestr',function(req,res,next){
 
 router.get('/history', HP.DocAccess("DoBlock"), function(req,res,next){ 
 	var Context = lib.ReqContext(req);
-	console.log(Context);
 	mongoose.model("datahistory").find({CodeDoc:Context.CodeDoc,CodeObj:Context.CodeObj,CodePeriod:Context.CodePeriod,YearData:Context.Year},"UserEdit CodeStateFrom CodeStateTo CodePeriod YearData DateEdit").sort({DateEdit:-1}).lean().exec(function(err,Data){
 		return res.json(Data);
 	})
