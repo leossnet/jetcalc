@@ -38,11 +38,11 @@ router.get ('/requisites',   function(req,res){
 router.get ('/favicon.ico',   function(req,res,next){
   var Settings = mongoose.model("settings");
   Settings.findOne().lean().exec(function(err,S){
-      if (S && !_.isEmpty(S.Icon)){
+      if (S && !_.isEmpty(S.Icon) && false){
         var gfs = require(__base+'src/gfs.js');
         return gfs.PipeFileStreamToRes(S.Icon, res, next);
       } else {
-        return res.end();
+        return res.sendFile(__base+"modules/system/favicon.ico");
       }
   })
 })
