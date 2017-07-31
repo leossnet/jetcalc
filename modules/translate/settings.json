@@ -26,6 +26,13 @@
 	},
 	"chat": {
 		"techsupport": "Тех. Поддержка",
-		"orgchannel": "Общение внутри организации"
+		"orgchannel": "Общение внутри организации",
+		"docchannel": "Вопросы по документу"
+	},
+	"olapgroup": {
+		"CodeOtrasl": "Отрасли",
+		"CodeDiv": "Дивизиона",
+		"CodeRegion": "Региона",
+		"CodeCity": "Города"
 	}
 }
