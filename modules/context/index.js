@@ -85,11 +85,9 @@ var CxCtrl = (new function () {
     };
 
     self.AfterPageShow = function (CodeDoc) {
-        console.log("AfterPageShow",arguments,">>>>>>>>>>>>>>>>>>>>>>>>");
         if (CodeDoc != self.CodeDoc()) {
             self.AfterShowUpdate.document = CodeDoc;
         }
-        console.log("AfterPageShow",CodeDoc);
         if (self.ChangeTimer) clearTimeout(self.ChangeTimer);
         self.ChangeTimer = setTimeout(function(){
             self.UpdateViewShow();
@@ -102,7 +100,6 @@ var CxCtrl = (new function () {
         if (Type != self.PageName()) {
             self.AfterShowUpdate.type = Type;
         }
-        console.log("AfterTypeShow",Type);
         if (self.ChangeTimer) clearTimeout(self.ChangeTimer);
         self.ChangeTimer = setTimeout(function(){
             self.UpdateViewShow();
@@ -113,12 +110,7 @@ var CxCtrl = (new function () {
 
     self.Error = ko.observable(null);
 
-    self.Error.subscribe(function (V) {
-        //if (V) swal("",V,'error');
-    })
-
     self.UpdateViewShow = function () {
-        console.log("UpdateViewShow",">>>>>>>>>>>>>>>>>>>>>>>>>>>>",arguments);
         if (!ModuleManager.IsLoaded()) return;
         self.Error(null);
         if (MPrint.IsPrint()) self.AfterShowUpdate = {
@@ -168,10 +160,7 @@ var CxCtrl = (new function () {
         if (Choosed) {
             ToUpdate = "page", Value = PageName;
         }
-        console.log("SUPER UPDATE",self.AfterShowUpdate);
         if (self.AfterShowUpdate.document != -1) {
-            console.log("documentchanged ================== ",self.AfterShowUpdate.document);
-            
             self.ChangeDocPath();
             self.Override.Params(null);
         } else {
@@ -179,7 +168,11 @@ var CxCtrl = (new function () {
             self.ChangeDocPath();
         }
         setTimeout(function () {
-            self.AskForUpdate(CodeDoc,ToUpdate, Value);
+            if (self.AfterShowUpdate.document){
+                self.UpdateDocInfo();
+                self.Events.emit("documentchanged");
+            }            
+            self.AskForUpdate(ToUpdate, Value);
         }, 0);
         self.AfterShowUpdate = {
             document: -1,
@@ -188,25 +181,18 @@ var CxCtrl = (new function () {
     }
 
     self.Update = function (type, value) {
-        self.AskForUpdate (null, type, value);
+        self.AskForUpdate (type, value);
     }
 
     self.AskForUpdateThrottle = null;
-    self.AskForUpdate = function(CodeDoc, ToUpdate, Value){
-        console.log("ASK",ToUpdate, Value);
+    self.AskForUpdate = function(ToUpdate, Value){
         if (self.AskForUpdateThrottle){
             clearTimeout(self.AskForUpdateThrottle);
+            self.AskForUpdateThrottle = null;
         }       
         self.AskForUpdateThrottle = setTimeout (function(ToUpdate, Value){
             return function(){
-                if (CodeDoc){
-                    self.UpdateDocInfo(function(){
-                        self.Events.emit("documentchanged");
-                        self.DoUpdate(ToUpdate, Value);
-                    })    
-                } else {
-                    self.DoUpdate(ToUpdate, Value);
-                }
+                self.DoUpdate(ToUpdate, Value);
             }
         }(ToUpdate, Value),500);
     }
@@ -319,7 +305,7 @@ var CxCtrl = (new function () {
                 self.CodeValuta(value);
                 break;
             default:
-                console.log("Changing ... ", type, value);
+                //console.log("Changing ... ", type, value);
         }
         if (Updater == -1) return;
         var DocPlugin = _.find(ModuleManager.DocTabs(), {
@@ -333,14 +319,7 @@ var CxCtrl = (new function () {
             }
             self.Events.emit("contextchanged", type);
             self.ChangeDocPath();
-        } else {
-            console.log("DocumentForm");
-            /*if (UpdateNeeded){
-                DocumentForm.Work(Updater);
-            } else {
-                DocumentForm.Refresh();
-            }*/
-        }
+        } 
     }
 
     self.Context = function () {
@@ -516,19 +495,11 @@ var CxCtrl = (new function () {
         return "";
     }
 
-    self.UpdateDocInfo = function (CodeDoc, done) {
+    self.UpdateDocInfo = function (CodeDoc) {
         var Doc = MFolders.FindDocument(self.CodeDoc());
         var N = _.isEmpty(Doc.PrintNameDoc) ? Doc.NameDoc : Doc.PrintNameDoc;
         self.PrintNameDoc(N);
-        self.PrintNumDoc(Doc.PrintNumDoc);
-        $.getJSON("/api/form/doc", _.merge(self.Context(), {
-            CodeDoc: CodeDoc
-        }), function (data) {
-            if (!data.err) {
-                self.Doc(MModels.Create("doc", data));
-            }
-            return done();
-        })
+        self.PrintNumDoc(Doc.PrintNumDoc); 
     }
 
     self.Init = function (done) {
@@ -653,7 +624,6 @@ var CxCtrl = (new function () {
 })
 
 ModuleManager.Events.addListener("modulesinited", function () {
-    console.log("<<<<< modulesloaded");
     SettingController.Events.on("paramschanged", CxCtrl.ParamsChanged)
     SettingController.Events.on("reportchanged", CxCtrl.ReportChanged)
     CxCtrl.init();
