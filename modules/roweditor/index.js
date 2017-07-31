@@ -555,7 +555,7 @@ var MRowEditor = (new function() {
 			HandsonRenders.RegisterRender("Remove",[/[0-9]*?,5$/], Handsontable.renderers.CheckboxRenderer);	
 			HandsonRenders.RegisterRender("ParentRow",[/[0-9]*?,6$/], HandsonTableRenders.ReadOnlyText);	
 			params.manualRowMove = true;
-			Widths = [80,40].concat(Widths).concat([100]);
+			Widths = [80,40].concat(Widths).concat([80,200,300]);
 		} else {
 			HandsonRenders.RegisterRender("Num",[/[0-9]*?,0$/], HandsonTableRenders.ReadOnlyText);
 			HandsonRenders.RegisterRender("Code",[/[0-9]*?,1$/], HandsonTableRenders.ReadOnlyText);

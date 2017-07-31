@@ -40,6 +40,7 @@ module.exports = (new function(){
 	self.UpdateRoot = function(OldRowsH,NewRows,CodeUser,done){
 		var Row = mongoose.model("row");
 		Row.find({CodeRow:{$in:_.map(OldRowsH,"CodeRow")}}).isactive().exec(function(err,OldRows){
+
 			var ExistedIndexed = {}; OldRows.forEach(function(Branch){ ExistedIndexed[Branch.CodeRow] = Branch;});
 			var Root = _.first(OldRowsH).CodeRow, RootNode = ExistedIndexed[Root];
 			var ClientIndexed = {}; NewRows.forEach(function(Branch){ ClientIndexed[Branch.CodeRow] = Branch;});
@@ -55,7 +56,7 @@ module.exports = (new function(){
 			var ToUpdate = [], ByParents = {1:RootNode.CodeRow};
 			for (var CodeRow in ClientIndexed){
 				var R = ExistedIndexed[CodeRow], C = ClientIndexed[CodeRow];
-				["NumRow","NameRow"].forEach(function(F){
+				["NumRow","NameRow","CodeRowLink"].forEach(function(F){
 					R[F] = C[F];
 				})
 				R.level = Number(C.level);
@@ -65,7 +66,6 @@ module.exports = (new function(){
 				ByParents[(R.level+1)] = R.CodeRow; // Обновляем парентов и порядок
 				if (R.isModified()) ToUpdate.push(R); 
 			}		
-			console.log("updating ",ToUpdate.length);
 			async.each(ToRemove,function(R,cb){
 				R.remove(CodeUser,cb);
 			},function(err){

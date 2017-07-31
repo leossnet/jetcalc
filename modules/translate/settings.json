@@ -21,6 +21,11 @@
 		"ListDefinitions": "Списки значений"
 	},
 	"param": {
-		"CodeParam": "Код параметрgf"
+		"CodeParam": "Код параметра",
+		"NameParam": "Название параметра"
+	},
+	"chat": {
+		"techsupport": "Тех. Поддержка",
+		"orgchannel": "Общение внутри организации"
 	}
 }
