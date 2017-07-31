@@ -25,7 +25,6 @@ var SettingController = (new function(){
         } else {
             RightMenu.IsMenuToggled(true);    
         }
-
         setTimeout(function(){
             MReport.table.render();
         },0);

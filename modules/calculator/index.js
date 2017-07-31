@@ -268,6 +268,7 @@ var BaseDocPlugin = function(){
     self.Reset = self.Init;
 
     self.ContextChange = function(){
+        console.log("ContextChange","INIT!!!!!!!!!!");
         self.Init();
     }
 

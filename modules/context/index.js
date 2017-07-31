@@ -55,7 +55,6 @@ var CxCtrl = (new function () {
     }
 
     self.ParamsChanged = function () {
-        console.log("AAAAAAAAAAAAAA");
         var NewParams = SettingController.diffParams();
         if (NewParams.length) {
             var Override = SettingController.ActualParams();
@@ -86,19 +85,30 @@ var CxCtrl = (new function () {
     };
 
     self.AfterPageShow = function (CodeDoc) {
+        console.log("AfterPageShow",arguments,">>>>>>>>>>>>>>>>>>>>>>>>");
         if (CodeDoc != self.CodeDoc()) {
             self.AfterShowUpdate.document = CodeDoc;
         }
+        console.log("AfterPageShow",CodeDoc);
         if (self.ChangeTimer) clearTimeout(self.ChangeTimer);
-        self.ChangeTimer = setTimeout(self.UpdateViewShow, 100);
+        self.ChangeTimer = setTimeout(function(){
+            self.UpdateViewShow();
+            clearTimeout(self.ChangeTimer);
+            self.ChangeTimer = null;
+        }, 100);
     }
 
     self.AfterTypeShow = function (Type) {
         if (Type != self.PageName()) {
             self.AfterShowUpdate.type = Type;
         }
+        console.log("AfterTypeShow",Type);
         if (self.ChangeTimer) clearTimeout(self.ChangeTimer);
-        self.ChangeTimer = setTimeout(self.UpdateViewShow, 100);
+        self.ChangeTimer = setTimeout(function(){
+            self.UpdateViewShow();
+            clearTimeout(self.ChangeTimer);
+            self.ChangeTimer = null;
+        }, 100);
     }
 
     self.Error = ko.observable(null);
@@ -108,6 +118,7 @@ var CxCtrl = (new function () {
     })
 
     self.UpdateViewShow = function () {
+        console.log("UpdateViewShow",">>>>>>>>>>>>>>>>>>>>>>>>>>>>",arguments);
         if (!ModuleManager.IsLoaded()) return;
         self.Error(null);
         if (MPrint.IsPrint()) self.AfterShowUpdate = {
@@ -157,8 +168,10 @@ var CxCtrl = (new function () {
         if (Choosed) {
             ToUpdate = "page", Value = PageName;
         }
+        console.log("SUPER UPDATE",self.AfterShowUpdate);
         if (self.AfterShowUpdate.document != -1) {
-            self.Events.emit("documentchanged");
+            console.log("documentchanged ================== ",self.AfterShowUpdate.document);
+            
             self.ChangeDocPath();
             self.Override.Params(null);
         } else {
@@ -166,9 +179,7 @@ var CxCtrl = (new function () {
             self.ChangeDocPath();
         }
         setTimeout(function () {
-            self.UpdateDocInfo(CodeDoc, function () {
-                self.Update(ToUpdate, Value);
-            });
+            self.AskForUpdate(CodeDoc,ToUpdate, Value);
         }, 0);
         self.AfterShowUpdate = {
             document: -1,
@@ -177,6 +188,34 @@ var CxCtrl = (new function () {
     }
 
     self.Update = function (type, value) {
+        self.AskForUpdate (null, type, value);
+    }
+
+    self.AskForUpdateThrottle = null;
+    self.AskForUpdate = function(CodeDoc, ToUpdate, Value){
+        console.log("ASK",ToUpdate, Value);
+        if (self.AskForUpdateThrottle){
+            clearTimeout(self.AskForUpdateThrottle);
+        }       
+        self.AskForUpdateThrottle = setTimeout (function(ToUpdate, Value){
+            return function(){
+                if (CodeDoc){
+                    self.UpdateDocInfo(function(){
+                        self.Events.emit("documentchanged");
+                        self.DoUpdate(ToUpdate, Value);
+                    })    
+                } else {
+                    self.DoUpdate(ToUpdate, Value);
+                }
+            }
+        }(ToUpdate, Value),500);
+    }
+
+    self.DoUpdate = function (type, value) {
+        if (self.AskForUpdateThrottle){
+            clearTimeout(self.AskForUpdateThrottle);
+            self.AskForUpdateThrottle = null;
+        }
         var Updater = [],
             UpdateNeeded = true;
         switch (type) {
@@ -287,6 +326,7 @@ var CxCtrl = (new function () {
             id: self.PageName()
         });
         if (DocPlugin) {
+            console.log("DocPlugin UPDATE ContextChange",DocPlugin);
             var P = ModuleManager.Modules[DocPlugin.class_name];
             if (P.ContextChange) {
                 P.ContextChange();
