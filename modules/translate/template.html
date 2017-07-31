@@ -1,0 +1,35 @@
+<script type="text/html" id="translate_topmenu">
+    <!-- ko with: MTranslate -->
+    <li class="grey" data-bind="title: 'Перевод'" data-rel="tooltip" data-placement="bottom" data-original-title="Перевод">
+        <a data-bind="click: MTranslate.OpenTranslateTab" class="dropdown-toggle">
+            <i class="translate-button ace-icon fa fa-globe"></i>
+        </a>
+    </li>
+    <!-- /ko -->
+</script>
+
+<div id="translate_modal" class="modal fade">
+    <div class="modal-dialog" data-bind='with:MTranslate'>
+        <div class="modal-content">
+            <div class="modal-body">
+                <div>
+                    <h3 class="row header smaller lighter blue">Переводы</h3>
+                    <div class="profile-user-info profile-user-info-striped" style='margin-bottom: 3px;'>
+                        <!-- ko foreach: _.keys(MTranslate.Translations())  -->
+                        <div class="profile-info-row">
+                            <div class="profile-info-name" data-bind="text:$data"></div>
+                            <div class="profile-info-value">
+                                <input class="col-xs-12" type="text" data-bind="value:MTranslate.Translations()[$data]">
+                            </div>
+                        </div>
+                        <!-- /ko -->
+                    </div>
+                </div>
+                <br>
+                <button class="btn btn-blue btn-sm" data-bind="click:MTranslate.SaveTranslateTab">
+					<i class="ace-icon fa fa-floppy-o"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
