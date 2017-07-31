@@ -1,6 +1,6 @@
 <script type="text/html" id="translate_topmenu">
     <!-- ko with: MTranslate -->
-    <li class="grey" data-bind="title: 'Перевод'" data-rel="tooltip" data-placement="bottom" data-original-title="Перевод">
+    <li class="grey" data-bind="title: 'Перевод', Permit:{Id:'IsLangEditor', Type:'Task'}" data-rel="tooltip" data-placement="bottom" data-original-title="Перевод">
         <a data-bind="click: MTranslate.OpenTranslateTab" class="dropdown-toggle">
             <i class="translate-button ace-icon fa fa-globe"></i>
         </a>
@@ -12,21 +12,49 @@
     <div class="modal-dialog" data-bind='with:MTranslate'>
         <div class="modal-content">
             <div class="modal-body">
-                <div>
-                    <h3 class="row header smaller lighter blue">Переводы</h3>
-                    <div class="profile-user-info profile-user-info-striped" style='margin-bottom: 3px;'>
-                        <!-- ko foreach: _.keys(MTranslate.Translations())  -->
-                        <div class="profile-info-row">
-                            <div class="profile-info-name" data-bind="text:$data"></div>
-                            <div class="profile-info-value">
-                                <input class="col-xs-12" type="text" data-bind="value:MTranslate.Translations()[$data]">
+                <div class="row">
+                    <div>
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a data-toggle="tab" href="#NotTranslated" aria-expanded="true">
+                                    Непереведенные
+                                </a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#AllTranslations" aria-expanded="false">
+                                    Все
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content padding-12" style="max-height: 500px;overflow-y: scroll;">
+                            <div id="NotTranslated" class="tab-pane active">
+                                <div class="profile-user-info profile-user-info-striped" style='margin-bottom: 3px;'>
+                                    <!-- ko foreach: _.keys(MTranslate.NotTranslated())  -->
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name" data-bind="text:$data"></div>
+                                        <div class="profile-info-value">
+                                            <input class="col-xs-12" type="text" data-bind="value:MTranslate.NotTranslated()[$data]">
+                                        </div>
+                                    </div>
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                            <div id="AllTranslations" class="tab-pane">
+                                <div class="profile-user-info profile-user-info-striped" style='margin-bottom: 3px;'>
+                                    <!-- ko foreach: _.keys(MTranslate.Translations())  -->
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name" data-bind="text:$data"></div>
+                                        <div class="profile-info-value">
+                                            <input class="col-xs-12" type="text" data-bind="value:MTranslate.Translations()[$data]">
+                                        </div>
+                                    </div>
+                                    <!-- /ko -->
+                                </div>
                             </div>
                         </div>
-                        <!-- /ko -->
                     </div>
                 </div>
-                <br>
-                <button class="btn btn-info btn-sm btn-white" data-bind="click:MTranslate.SaveTranslateTab">
+                <button class="btn btn-white btn-sm btn-info" data-bind="click:MTranslate.SaveTranslateTab" style="margin-top:10px;">
 					<i class="ace-icon fa fa-floppy-o"></i> Сохранить
                 </button>
             </div>

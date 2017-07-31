@@ -78,6 +78,7 @@
     "type-of-is": "*",
     "ua-parser-js": "*",
     "utf8": "*",
-    "xml2js": "*"
+    "xml2js": "*",
+	"xss": "*"
   }
 }
