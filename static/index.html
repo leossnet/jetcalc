@@ -58,7 +58,7 @@
 					<div class="main-content-inner">
 						<!-- ko template:'breadcrumbs' --><!-- /ko -->
 						<div class="page-content-area full-area" >
-							<div data-bind='page:{id:"start"}' style='display:none'>
+							<div data-bind='page:{id:"start",title:MSystem.Settings().SystemName()}' style='display:none'>
 								<div class="ace-settings-container">
 									<!-- ko foreach:ModuleManager.HomePage() -->
 										<!-- ko template:'hpbutton_'+$data.id --><!-- /ko -->
