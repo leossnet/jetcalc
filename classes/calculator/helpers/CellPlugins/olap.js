@@ -30,8 +30,14 @@ var OlapHelper = (new function(){
 				Roots[O[GT]].Code += ":"+Codes;
 			}
 		})
-		Roots = _.values(Roots);
+		Roots = [{
+			Code: 'ALL:['+_.map(Objs2Show,"CodeObj").join(",")+']',
+    		Name: 'ВСЕГО',
+    		Objects:[]
+		}].concat(_.values(Roots));
+
 		var T = new Tree("ROOT",{});
+
 		Roots.forEach(function(R){
 			T.add(R.Code,{CodeRow:R.Code,NameRow:R.Name},"ROOT",T.traverseBF);
 			R.Objects.forEach(function(O){
