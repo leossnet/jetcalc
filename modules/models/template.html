@@ -46,6 +46,10 @@
     <input class="col-xs-12" type="text" data-bind="value: $parent[$data],attr:{'placeholder':Lang.Tr($data)},mask:$parent.Mask[$data],valueUpdate:'afterkeydown'">
 </script>
 
+<script id="pre_textarea" type="text/html">
+    <textarea style='word-wrap: pre;width: 100%;min-height: 200px;' data-bind="value: $parent[$data],valueUpdate:'keyup'"></textarea>
+</script>
+
 <script id="text_icon" type="text/html">
 	<i class='fa fa-icon preview-icon orange' data-bind='css:$parent[$data]'></i>&nbsp;<input class="col-xs-12 icon-editor" type="text" data-bind="value: $parent[$data],attr:{'placeholder':Lang.Tr($data)},valueUpdate:'afterkeydown'">
 </script>
