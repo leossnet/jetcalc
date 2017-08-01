@@ -4,10 +4,23 @@ var MStyles = (new function(){
 
     self.Styles = ko.observable(null);
 
+    self.IsReport = ko.observableArray();
+    self.IsForm = ko.observableArray();
+
+
   	self.Init = function(done){
 		CxCtrl.Events.addListener("documentchanged",self.UpdateStyles);
 		self.rGet("list",{},function(data){
-			self.Styles(data);
+			var ROnly = [], IOnly = []; 
+			data.Styles.forEach(function(S){
+				if (!S.IsForm && !S.IsReport){
+					ROnly.push(S.CodeStyle); IOnly.push(S.CodeStyle);
+				}
+				if (S.IsReport ) ROnly.push(S.CodeStyle);
+				if (S.IsForm ) IOnly.push(S.CodeStyle);
+			})
+			self.IsReport(ROnly); self.IsForm(IOnly);
+			self.Styles(data.CSS);
 			Hitch && Hitch.add([{
 				name: '-empty-cell',  
 				filter:   function(match,argsString){
@@ -82,7 +95,7 @@ var MStyles = (new function(){
     }
 
     self.UpdateStyles = function(){
-    	console.log("updating styles");
+
     }
 
 

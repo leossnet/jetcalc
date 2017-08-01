@@ -35,7 +35,14 @@ window.HandsonTableRenders = {
         CellInfo.allowInvalid = false;
         Handsontable.renderers.NumericRenderer.apply(this, arguments);
         CellInfo.readOnly = true;
-        if (!_.isEmpty(CellInfo.Style)) $(td).addClass(CellInfo.Style.join(" "));
+        var TestArr = (CxCtrl.PageName()=='report') ? MStyles.IsReport():MStyles.IsForm();
+        if (!_.isEmpty(CellInfo.Style)) {
+            var Add = _.intersection(CellInfo.Style,TestArr);
+            if (!_.isEmpty(Add)){
+                //console.log(">>>",CellInfo.Style,TestArr,Add);
+                $(td).addClass(Add.join(" "));    
+            }            
+        }
         if (CellInfo.Cell){
             $(td).addClass("IsCell");
             var PropToMap = ["IsControlPoint","IsEditablePrimary","IsPrimary","IsSum","IsLocked","IsChangedBySave","IsChanged","IsChangedBySave"];
