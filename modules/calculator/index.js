@@ -290,7 +290,7 @@ var BaseDocPlugin = function(){
     }
 
     self.Reset = function(NoCache){
-        CxCtrl.UseCache(!NoCache);
+        if (typeof NoCache=='boolean') CxCtrl.UseCache(!NoCache);
         self.Init(function(){
             if (!_.isEmpty(BlankDocument.LastCoords) && BlankDocument.LastCoords.length==2){
                 BlankDocument.table.selectCell(BlankDocument.LastCoords[0],BlankDocument.LastCoords[1]);
