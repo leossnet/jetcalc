@@ -34,8 +34,8 @@ var Mailer = (new function(){
     }
 
     self.Settings = function(done){
-        mongoose.model("settings").findOne({},"TechPhone TechMail").exec(function(err,S){
-            if (!S) S = {TechPhone:"",TechMail:""};
+        mongoose.model("settings").findOne({},"TechPhone TechMail SystemName").exec(function(err,S){
+            if (!S) S = {TechPhone:"",TechMail:"",SystemName:""};
             return done(err,S);
         });
     }
