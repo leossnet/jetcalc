@@ -218,8 +218,13 @@ var BaseDocPlugin = function(){
         }
     }
 
-    self.Init = function (){
+
+    self.Subscription = null;
+
+    self.Init = function (done){
         if (MPrint.IsPrint()) return;
+        MSite.Events.off("refresh",self.Reset);
+        MSite.Events.on("refresh",self.Reset);
         self.Error(null);
         BlankDocument.ClearLastCell();
         self.Events.emit("start");
@@ -233,6 +238,7 @@ var BaseDocPlugin = function(){
             self.Timer.End("stage5");
             BlankDocument.DebugLabels(BlankDocument.DebugLabels().concat(self.Timer.Results()));
             self.Time(self.Timer.Result["stage5"]);
+            return done && typeof done == 'function' && done();
         })   
     }
 
@@ -283,11 +289,18 @@ var BaseDocPlugin = function(){
         return done();    
     }
 
-    self.Reset = self.Init;
+    self.Reset = function(NoCache){
+        CxCtrl.UseCache(!NoCache);
+        self.Init(function(){
+            if (!_.isEmpty(BlankDocument.LastCoords) && BlankDocument.LastCoords.length==2){
+                BlankDocument.table.selectCell(BlankDocument.LastCoords[0],BlankDocument.LastCoords[1]);
+            };
+            CxCtrl.UseCache(true);
+        })
+    }
 
     self.ContextChange = function(){
-        console.log("ContextChange","INIT!!!!!!!!!!");
-        self.Init();
+        self.Reset();
     }
 
     self.Columns = ko.observableArray();
@@ -409,10 +422,6 @@ var BaseDocPlugin = function(){
         $('#debugModal').modal('show');
     }
 
-    self.Reset  = function(){
-        self.Init(function(){
-        });
-    }
 
     self.baseConfig = {
         rowHeaders:true,
