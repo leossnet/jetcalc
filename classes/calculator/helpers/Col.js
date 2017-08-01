@@ -279,8 +279,9 @@ var ColHelper = function(Context){
 	           		var C = self.СheckCondition(H.Condition,keys);
 					self.Headers[Code].ConditionEval = C.eval;
 					if (!C.result){
-						self.Remove(H,"Condition",{ConditionHTML:C.reparsed});
+						self.Remove(H,"Condition");
 					}
+					self.AddComment(H,{ConditionHTML:C.reparsed});
 	           }
 			}
 		}
@@ -345,11 +346,16 @@ var ColHelper = function(Context){
 		return Result;
 	}
 
-	self.Remove = function(Node,Comment,Params){
+	self.Remove = function(Node,Comment){
 		var removed = [Node.code].concat(self.ChildrenCodes(Node));
 		removed.forEach(function(C){
 			self.Headers[C].IsRemoved = true;
 			self.Headers[C].RemoveComment.push(Comment);
+		})
+	}
+	self.AddComment = function(Node,Params){
+		var nodes = self.ChildrenCodes(Node);
+		nodes.forEach(function(C){
 			if (!_.isEmpty(Params)){
 				self.Headers[C].RemoveComment.push(Params);
 			}
@@ -364,6 +370,7 @@ var ColHelper = function(Context){
         var resultText = (condition+'');        
         for (var I in logic){
         	condition = condition.replaceAll(I,logic[I]);
+        	resultText = resultText.replaceAll(I,"<logic>"+I+"</logic>");
         }
         for (var I in keys){
         	condition = condition.replaceAll('.'+I+'.',keys[I]);

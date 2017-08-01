@@ -52,17 +52,17 @@
 
 <script id="calculate_button" type="text/html">
     <div class="btn-group">
-      <button class='btn btn-sm btn-white' data-bind="title:'Информация о расчете', css:{'btn-success':$data.CacheIsUsed(),'btn-warning' : !$data.CacheIsUsed()},click:$data.DebugTime, enable: !$data.IsLoading()">
+      <a class='btn btn-sm btn-white' data-bind="title:'Информация о расчете', css:{'btn-success':$data.CacheIsUsed(),'btn-warning' : !$data.CacheIsUsed()},click:$data.DebugTime, enable: !$data.IsLoading()">
         <!-- ko if: $data.IsLoading() -->
           <i class="fa fa-spin fa-spinner"></i>
         <!-- /ko -->
         <!-- ko if: !$data.IsLoading() -->
           <span class="1fa" data-bind="text: $data.TimeLabel" style="font-size: 12px;">1сек</span>
         <!-- /ko -->
-      </button>
-      <button class='btn btn-sm btn-warning btn-white' data-bind="title:(!CxCtrl.UseCache())?'Пересчитать без кэша <u>Ctrl+F9</u>':'Пересчитать <u>F9</u>',css:{'btn-warning':!CxCtrl.UseCache(),'btn-success':CxCtrl.UseCache()},enable: !$data.IsLoading(),click:$data.Reset">
+      </a>
+      <a class='btn btn-sm btn-warning btn-white' data-bind="title:(!CxCtrl.UseCache())?'Пересчитать без кэша <u>Ctrl+F9</u>':'Пересчитать <u>F9</u>',css:{'btn-warning':!CxCtrl.UseCache(),'btn-success':CxCtrl.UseCache()},enable: !$data.IsLoading(),click:$data.Reset">
         <i class="fa fa-refresh"></i>
-      </button>
+      </a>
     </div>
 </script>
 

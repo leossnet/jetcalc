@@ -56,6 +56,7 @@ var MSite = (new function(){
 	};
 	
 	self.AnnounceRefresh = function(noCache){
+		console.log("Refresh");
 		self.FlashButton("fa-refresh");
 		if (self.AnnounceTimeout.refresh) clearTimeout(self.AnnounceTimeout.refresh);
 		self.AnnounceTimeout.refresh = setTimeout(function(){

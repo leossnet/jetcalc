@@ -628,17 +628,6 @@ window.HandsonTableHelper = {
                     e.stopImmediatePropagation();
                 }
                 break;
-              case 120: // Ctrl + F9 или F9
-                e.preventDefault();
-                if (isControlPressed){
-                    CxCtrl.UseCache(false);
-                    _.delay(CxCtrl.UseCache.bind(null,true),500);
-                } else {
-                    CxCtrl.UseCache(true);
-                }
-                CxCtrl.Update("cells");
-                e.stopImmediatePropagation();
-              break;
             }
             if (isControlPressed && !e.shiftKey && e.keyCode == 'Z'.charCodeAt(0)) {
                 e.preventDefault();

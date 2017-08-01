@@ -170,7 +170,6 @@ var CxCtrl = (new function () {
         setTimeout(function () {
             if (self.AfterShowUpdate.document){
                 self.UpdateDocInfo();
-                self.Events.emit("documentchanged");
             }            
             self.AskForUpdate(ToUpdate, Value);
         }, 0);
@@ -508,6 +507,7 @@ var CxCtrl = (new function () {
             setTimeout(function(){
                 $.getJSON("/api/form/doc",CxCtrl.CxPermDoc(),function(data){
                     self.Doc(MModels.Create("doc",data));
+                    self.Events.emit("documentchanged");
                 });
             },0);
         }

@@ -236,6 +236,24 @@ var BaseDocPlugin = function(){
         })   
     }
 
+/*
+              case 120: // Ctrl + F9 или F9
+                e.preventDefault();
+                if (isControlPressed){
+                    CxCtrl.UseCache(false);
+                    _.delay(CxCtrl.UseCache.bind(null,true),500);
+                } else {
+                    CxCtrl.UseCache(true);
+                }
+                CxCtrl.Update("cells");
+                e.stopImmediatePropagation();
+              break;
+
+ */
+
+
+
+
     self.TimerRetry = 0;
 
     self.CreateTable = function(place,HandsonConfig,done){

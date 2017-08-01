@@ -16,14 +16,18 @@ td.error_cell_highlight{
 	background-color: #FBF1F0!important;
 }
 
-td.nowrapped.removed_by_filter.guilty_cell good{
+td.nowrapped.removed_by_filter.guilty_cell good, td.nowrapped good{
 	color:#82AF6F;
 	font-weight: bold;
 }
-td.nowrapped.removed_by_filter.guilty_cell bad{
+td.nowrapped.removed_by_filter.guilty_cell bad, td.nowrapped bad{
 	font-weight: bold;
 }
-td.nowrapped.removed_by_filter.guilty_cell unknown{
+td.nowrapped.removed_by_filter.guilty_cell unknown, td.nowrapped unknown{
 	color: black;
 	font-weight: bold;
+}
+td.nowrapped.removed_by_filter.guilty_cell logic,td.nowrapped logic{
+	color: navy;
+	font-weight: normal;
 }
