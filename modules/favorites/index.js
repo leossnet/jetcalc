@@ -1,10 +1,6 @@
 var MFavorites = ( new function(){
 
-    var self = this;
-
-
-    self.base = "/api/modules/favorites"; 
-
+    var self =  new Module("favorites");
 
     self.UserFavs = {
         CodeDoc:ko.observableArray(),
@@ -13,6 +9,7 @@ var MFavorites = ( new function(){
         CodeOtrasl:ko.observableArray(),
         CodeRegion:ko.observableArray(),
         CodeGrp:ko.observableArray(),
+        CodePeriod:ko.observableArray()
     }
 
     self.Init = function(done){
@@ -29,12 +26,9 @@ var MFavorites = ( new function(){
     };
 
     self.RefreshFavs = function(done){  
-        $.ajax({
-            url:self.base,
-            success:function (data) {
-                 self.Apply (data);
-                 return done && done();
-            }               
+        self.rGet("/",{},function (data) {
+             self.Apply (data);
+             return done && typeof done == 'function' && done();
         })
     }
 
@@ -51,31 +45,11 @@ var MFavorites = ( new function(){
     }
 
     self.AddToFavorites = function(type,code,done){
-        $.ajax({
-            url:self.base,
-            type:'put',
-            data:{
-                type:type,
-                code:code
-            },
-            success:function () {
-                return done();  
-            }
-        })  
+        self.rPut("/",{type:type,code:code},done||function(){});
     };
 
     self.RemoveFromFavorites = function(type,code,done){
-        $.ajax({
-            url:self.base,
-            type:'delete',
-            data:{
-                type:type,
-                code:code
-            },
-            success:function () {
-                return done();  
-            }
-        })
+        self.rDelete("/",{type:type,code:code},done||function(){});
     };
 
     return self;

@@ -1,3 +1,26 @@
+<script id="fav_item" type="text/html">
+      <li>
+          <a data-bind="click: $data.click">
+            <input name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" data-bind="checked: MFavorites.IsInFavorites($data.type, $data.code),click:MFavorites.ModifyFavorites.bind(null,$data.type, $data.code),clickBubble: false">
+            <span  class="lbl"></span>
+            <!-- ko if:$data.icon -->
+              <i class='fa fa-icon favicon'  data-bind='css:$data.icon'></i>
+            <!-- /ko -->
+            <!-- ko if:$data.text -->
+            <span data-bind="html: $data.text"></span>
+            <!-- /ko -->
+            <!-- ko ifnot:$data.text -->
+              <!-- ko template:{name:'catalogue',data:{model:$data.model,id:$data.code}} --><!-- /ko -->
+            <!-- /ko -->
+            <!-- ko if:$data.subobjs && $data.subobjs.length -->
+            <span data-bind='text:$data.subobjs.length' style='float: right;color: #CFCFCF;'></span>
+            <!-- /ko -->
+         </a>
+      </li>
+</script>
+
+  
+
 <script id="favorites_left_menu" type="text/html">
 	<!-- ko ifnot:MBreadCrumbs.CheckPath('adminpage') -->
 			<!-- ko with:MFavorites.UserFavs.CodeDoc -->
