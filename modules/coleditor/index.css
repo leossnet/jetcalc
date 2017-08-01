@@ -16,3 +16,14 @@ td.error_cell_highlight{
 	background-color: #FBF1F0!important;
 }
 
+td.nowrapped.removed_by_filter.guilty_cell good{
+	color:#82AF6F;
+	font-weight: bold;
+}
+td.nowrapped.removed_by_filter.guilty_cell bad{
+	font-weight: bold;
+}
+td.nowrapped.removed_by_filter.guilty_cell unknown{
+	color: black;
+	font-weight: bold;
+}

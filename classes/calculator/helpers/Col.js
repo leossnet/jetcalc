@@ -279,7 +279,7 @@ var ColHelper = function(Context){
 	           		var C = self.СheckCondition(H.Condition,keys);
 					self.Headers[Code].ConditionEval = C.eval;
 					if (!C.result){
-						self.Remove(H,"Condition");
+						self.Remove(H,"Condition",{ConditionHTML:C.reparsed});
 					}
 	           }
 			}
@@ -345,11 +345,14 @@ var ColHelper = function(Context){
 		return Result;
 	}
 
-	self.Remove = function(Node,Comment){
+	self.Remove = function(Node,Comment,Params){
 		var removed = [Node.code].concat(self.ChildrenCodes(Node));
 		removed.forEach(function(C){
 			self.Headers[C].IsRemoved = true;
 			self.Headers[C].RemoveComment.push(Comment);
+			if (!_.isEmpty(Params)){
+				self.Headers[C].RemoveComment.push(Params);
+			}
 		})
 	}
 	
@@ -358,9 +361,22 @@ var ColHelper = function(Context){
         condition = (condition+'').replace(/\s+/g,' ');
         logic[' and '] = ' && ';logic[' or '] = ' || ';logic[' not '] = ' !';logic['not '] = '!';
         condition = condition.replace(/([A-ZА-Я0-9_]+)/g,'.$1.');
-        for (var I in logic){condition = condition.replaceAll(I,logic[I]);}
-        for (var I in keys){condition = condition.replaceAll('.'+I+'.',keys[I]);}
+        var resultText = (condition+'');        
+        for (var I in logic){
+        	condition = condition.replaceAll(I,logic[I]);
+        }
+        for (var I in keys){
+        	condition = condition.replaceAll('.'+I+'.',keys[I]);
+        	if (keys[I]) {
+        		resultText = resultText.replace('.'+I+'.','<good>'+I+'</good>')
+        	} else {
+        		resultText = resultText.replace('.'+I+'.','<bad>'+I+'</bad>')
+        	}
+        }
         condition = condition.replace(/\.[A-ZА-Я0-9_]+\./g,' false ');
+        resultText = resultText.replace(/\.[A-ZА-Я0-9_]+\./g,function(match){
+        	return "<unknown>"+_.trim(match,".")+"</unknown>";
+        })
         var result = false;
         try{
           eval("result = "+condition);
@@ -369,7 +385,8 @@ var ColHelper = function(Context){
         }
         return {
         	result:result,	
-        	eval:condition
+        	eval:condition,
+        	reparsed:resultText
         };
     }
 
