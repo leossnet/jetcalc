@@ -52,15 +52,23 @@ var MSite = (new function(){
 	self.AnnounceTimeout = {
 		ctrls:null,
 		scroll:null,
+		addrecord:null,
 		refresh:null
 	};
 	
 	self.AnnounceRefresh = function(noCache){
-		console.log("Refresh");
 		self.FlashButton("fa-refresh");
 		if (self.AnnounceTimeout.refresh) clearTimeout(self.AnnounceTimeout.refresh);
 		self.AnnounceTimeout.refresh = setTimeout(function(){
 			self.Events.emit("refresh",noCache);self.AnnounceTimeout.refresh = null;
+		},500);
+	}
+
+	self.AnnounceNew = function(){
+		self.FlashButton("fa-file-o");
+		if (self.AnnounceTimeout.addrecord) clearTimeout(self.AnnounceTimeout.addrecord);
+		self.AnnounceTimeout.addrecord = setTimeout(function(){
+			self.Events.emit("addrecord");self.AnnounceTimeout.addrecord = null;
 		},500);
 	}
 

@@ -237,6 +237,11 @@ var Catalogue = (new function () {
                 ModelTableEdit.Save();
             }
         })
+        MSite.Events.on("addrecord", function () {
+            if (!ModelTableEdit.NoAccess()) {
+                ModelTableEdit.Add();
+            }
+        })
         ModelClientConfig.Load(done);
     }
 
