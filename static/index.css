@@ -2120,3 +2120,11 @@ margin-left: -1px;
 .page-content-area.full-area{
     background: white;
 }
+
+.admin_page .profile-user-info-striped .profile-info-name {
+    text-align: left;
+    white-space: nowrap;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
