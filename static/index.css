@@ -1979,11 +1979,14 @@ table.dataTable.small-paddings>tbody>tr>td{
     -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.4);
     box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.4);
 }
+.navbar.navbar-default.navbar-fixed-top{
+    z-index: 1049;
+}
 #cascadeAddModal.modal.fade.in{
-    z-index: 1042;
+    z-index: 1060;
 }
 .modal.fade.in{
-    z-index: 1041;
+    z-index: 1050;
 }
 .wysiwyg-toolbar.btn-toolbar.toolH{
     z-index: 1040;

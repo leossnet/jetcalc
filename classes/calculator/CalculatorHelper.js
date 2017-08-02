@@ -352,6 +352,7 @@ var Unmapper = function(Context, InfoCacher){
 			break;
 			case "<<":
 			case "consgrp":
+					console.log(ObjInfo);
 					ObjInfo.AllChildren.forEach(function(C){
 						var SInfo = self.Info.Data.Div[CodeObj];
 						['CodeObjClass','CodeObjType'].forEach(function(Field){
@@ -388,6 +389,13 @@ var Unmapper = function(Context, InfoCacher){
 	 		Mods:[],
 	 		PeriodOp:null
 	 	}
+		if (R.Obj=="^"){
+			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
+			if (ObjInfo.RootObj) {
+				R.Obj = ObjInfo.RootObj;
+			}
+		}
+
 	 	if (Math.abs(R.Year)<1000) R.Year = parseInt(Cell.Year)+R.Year;
 		if (R.Period.indexOf('-')>=0){
 			if (self.Info.Data.Period[R.Period] && self.Info.Data.Period[R.Period].Opinfo && self.Info.Data.Period[R.Period].Opinfo[Cell.Period]){
@@ -486,7 +494,10 @@ var Unmapper = function(Context, InfoCacher){
 			}
 		} catch(e){
 			self.Err.Set(Cell.Cell,'FRM:'+Cell.Type.FRM+' : '+e.message);
-			if (self.Context.IsExplain) self.DebugInfo[Cell.Cell].FormulaParsed = "Ошибка в обработке формулы";
+			if (self.Context.IsExplain) {
+				if (!self.DebugInfo[Cell.Cell]) self.DebugInfo[Cell.Cell] = {};
+				self.DebugInfo[Cell.Cell].FormulaParsed = "Ошибка в обработке формулы";	
+			}
 			Cell.Type ='ERR';
 		}
 
@@ -498,14 +509,16 @@ var Unmapper = function(Context, InfoCacher){
 		var Row = self.RowsLoaded[Info.Row];
 		var Col = self.ColsLoaded[Info.Col];
 		var Obj = Info.Obj;
-		if (Info.Obj=="^"){
-			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
-			if (ObjInfo.RootObj) Info.Obj = ObjInfo.RootObj;
-			Obj = Info.Obj;
-		}
 		if (Obj=='0') return {Type:'FRM',FRM:0};
 		var CellName = Info.Cell;
 		var Result = null;
+		if (Info.Obj=="^"){
+			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
+			if (ObjInfo.RootObj) {
+				Info.Obj = ObjInfo.RootObj;
+				Result = {Type:'FRM',FRM:Info.Cell.split("#^").join("#"+Info.Obj)};			
+			}
+		}
 		var ResultDescription = null;
 		var Choosed = null;
 		if ((Info.Row+'').indexOf("(")!=-1){
@@ -598,6 +611,11 @@ var Unmapper = function(Context, InfoCacher){
 				ResultDescription = "Формула в колонке";		
 			}
 		}
+		if (!Result && !Col.IsFormula && Row.IsSum && Col.NoCalcSum && !Row.IsCalcSum){
+			Result = {Type:"FRM",FRM:0};	
+			Choosed = "Col";
+			ResultDescription = "Формулы в колонке - нет, Ряд - IsSum/Колонка - NoCalcSum, Ряд - нет IsCalcSum";	
+		}
 
 		if (!Result && Row.IsSum) {
 			Result = {Type:"SUM"};
@@ -659,7 +677,6 @@ var Unmapper = function(Context, InfoCacher){
 
 		var LoadTasks = {};
 		if (!Rows2Load.length && !Cols2Load.length) return final();
-		
 		if (Rows2Load.length){
 			LoadTasks.Row = function(cb){
 				self.Info.RowHelper.LoadRows(Rows2Load,function(err,Rows){
@@ -940,9 +957,7 @@ var GeneralInfo = function(){
 		var TagName = _.trimStart(TagNameRaw,'_');
 		var TagInfo = self.Data.Tag[TagName];
 		var Obj = self.Data.Div[CodeObj];
-		console.log(Row);
 		var RowsToCheck = _.difference((Row.rowpath+'').split('/'),['']).reverse();
-		console.log(RowsToCheck);
 		var TAG = null;
 		for (var i=0; i<RowsToCheck.length; i++){
 			if (TagInfo && TagInfo[RowsToCheck[i]]){
@@ -962,12 +977,12 @@ var GeneralInfo = function(){
 	self.DocByRow = function(Row,CodeObj,DefaultDoc){
 		var Result = null;
 		Row.Path.forEach(function(RP){
-			if (self.Data.DocRow.NoChildObjs[RP]){
-				Result = self.Data.DocRow.NoChildObjs[RP];
+			if (self.Data.DocRow[RP]){
+				Result = self.Data.DocRow[RP];
 			}
-			if (self.Data.DocRow.WithChildObjs[RP]){
+			if (self.Data.DocRow[RP]){
 				if (DefaultDoc){
-					var _map = self.Data.DocRow.WithChildObjs[RP];
+					var _map = self.Data.DocRow[RP];
 					var allDocs = [];
 					for (var c in _map){
 						allDocs = allDocs.concat(_.values(_map[c]));
@@ -980,13 +995,13 @@ var GeneralInfo = function(){
 				if (!Result ){
 					var Obj = self.Data.Div[CodeObj];
 					if (Obj){
-						if (self.Data.DocRow.WithChildObjs[RP][Obj.CodeObjClass] &&
-							self.Data.DocRow.WithChildObjs[RP][Obj.CodeObjClass][Obj.CodeObjType]){
-							Result =  self.Data.DocRow.WithChildObjs[RP][Obj.CodeObjClass][Obj.CodeObjType];
+						if (self.Data.DocRow[RP][Obj.CodeObjClass] &&
+							self.Data.DocRow[RP][Obj.CodeObjClass][Obj.CodeObjType]){
+							Result =  self.Data.DocRow[RP][Obj.CodeObjClass][Obj.CodeObjType];
 						} else {
-							if (self.Data.DocRow.WithChildObjs[RP].Empty && 
-								self.Data.DocRow.WithChildObjs[RP].Empty.Empty){
-								Result =  self.Data.DocRow.WithChildObjs[RP].Empty.Empty;
+							if (self.Data.DocRow[RP].Empty && 
+								self.Data.DocRow[RP].Empty.Empty){
+								Result =  self.Data.DocRow[RP].Empty.Empty;
 							}
 						}
 					}
@@ -994,7 +1009,7 @@ var GeneralInfo = function(){
 			}			
 		})
 		if (!Result){
-			if (self.Data.DocRow.FallBack[Row.CodeRow]) Result = self.Data.DocRow.FallBack[Row.CodeRow];
+			if (self.Data.DocRow[Row.CodeRow]) Result = self.Data.DocRow[Row.CodeRow];
 		}
 		if (!Result && DefaultDoc){
 			Result = DefaultDoc;
