@@ -7,7 +7,7 @@ var HP = require(__base+'lib/helpers/lib.js').Permits;
 var FavHelper = (new function(){
 	var self = this;
 
-	self.PossibleTypes = ["CodeDoc","CodeObj","CodeDiv","CodeOtrasl","CodeRegion","CodeGrp"];
+	self.PossibleTypes = ["CodeDoc","CodeObj","CodeDiv","CodeOtrasl","CodeRegion","CodeGrp","CodePeriod"];
 
 	self.PermFilter = function(req,Unfiltered,done){		 
 		var AvDocs = HP.AvDoc(req.session.permissions);

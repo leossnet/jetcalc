@@ -219,6 +219,18 @@ var MColEditor = (new function() {
 					var Html = Catalogue.GetHtml(ModelName,value);
 					$(td).html(Html);
 				}
+			break;
+			case 'condition':
+				if (!value){
+					$(td).empty();
+				} else {
+					var t = _.find(MColEditor.Rows[row].RemoveComment,function(C){
+						return typeof C =='object' && !_.isEmpty(C.ConditionHTML);
+					})
+					var html = MColEditor.Rows[row].Condition;
+					if (t)  html = t.ConditionHTML;
+					$(td).html(html);
+				}
 			break;			
 			case 'links':
 				var Html = [];

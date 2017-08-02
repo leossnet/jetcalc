@@ -3,7 +3,9 @@ var MFileManager = (new function() {
 	var self = new Module("filemanager");
 
 	self.Init = function(done){
+
 		CxCtrl.Events.addListener("documentchanged",function(){
+			console.log("Event","documentchanged");
 			MFileManager.CountAttaches();
 		})
 		return done();

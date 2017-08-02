@@ -1986,13 +1986,13 @@ table.dataTable.small-paddings>tbody>tr>td{
     z-index: 1041;
 }
 .wysiwyg-toolbar.btn-toolbar.toolH{
-    z-index: 1020;
+    z-index: 1040;
 }
 .wysiwyg-toolbar.btn-toolbar.toolH.Context{
-    z-index: 1010;
+    z-index: 1035;
 }
 .wysiwyg-toolbar.btn-toolbar.toolH.Aggregates{
-	z-index: 1005;
+	z-index: 1030;
 }
 .bottomPannel{
     z-index: 102;
@@ -2119,4 +2119,12 @@ margin-left: -1px;
 }
 .page-content-area.full-area{
     background: white;
+}
+
+.admin_page .profile-user-info-striped .profile-info-name {
+    text-align: left;
+    white-space: nowrap;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

@@ -281,6 +281,7 @@ var ColHelper = function(Context){
 					if (!C.result){
 						self.Remove(H,"Condition");
 					}
+					self.AddComment(H,{ConditionHTML:C.reparsed});
 	           }
 			}
 		}
@@ -352,15 +353,37 @@ var ColHelper = function(Context){
 			self.Headers[C].RemoveComment.push(Comment);
 		})
 	}
+	self.AddComment = function(Node,Params){
+		var nodes = self.ChildrenCodes(Node);
+		nodes.forEach(function(C){
+			if (!_.isEmpty(Params)){
+				self.Headers[C].RemoveComment.push(Params);
+			}
+		})
+	}
 	
     self.СheckCondition = function(condition,keys){
         var old = condition, logic = {};
         condition = (condition+'').replace(/\s+/g,' ');
         logic[' and '] = ' && ';logic[' or '] = ' || ';logic[' not '] = ' !';logic['not '] = '!';
         condition = condition.replace(/([A-ZА-Я0-9_]+)/g,'.$1.');
-        for (var I in logic){condition = condition.replaceAll(I,logic[I]);}
-        for (var I in keys){condition = condition.replaceAll('.'+I+'.',keys[I]);}
+        var resultText = (condition+'');        
+        for (var I in logic){
+        	condition = condition.replaceAll(I,logic[I]);
+        	resultText = resultText.replaceAll(I,"<logic>"+I+"</logic>");
+        }
+        for (var I in keys){
+        	condition = condition.replaceAll('.'+I+'.',keys[I]);
+        	if (keys[I]) {
+        		resultText = resultText.replace('.'+I+'.','<good>'+I+'</good>')
+        	} else {
+        		resultText = resultText.replace('.'+I+'.','<bad>'+I+'</bad>')
+        	}
+        }
         condition = condition.replace(/\.[A-ZА-Я0-9_]+\./g,' false ');
+        resultText = resultText.replace(/\.[A-ZА-Я0-9_]+\./g,function(match){
+        	return "<unknown>"+_.trim(match,".")+"</unknown>";
+        })
         var result = false;
         try{
           eval("result = "+condition);
@@ -369,7 +392,8 @@ var ColHelper = function(Context){
         }
         return {
         	result:result,	
-        	eval:condition
+        	eval:condition,
+        	reparsed:resultText
         };
     }
 

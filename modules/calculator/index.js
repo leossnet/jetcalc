@@ -218,8 +218,13 @@ var BaseDocPlugin = function(){
         }
     }
 
-    self.Init = function (){
+
+    self.Subscription = null;
+
+    self.Init = function (done){
         if (MPrint.IsPrint()) return;
+        MSite.Events.off("refresh",self.Reset);
+        MSite.Events.on("refresh",self.Reset);
         self.Error(null);
         BlankDocument.ClearLastCell();
         self.Events.emit("start");
@@ -233,8 +238,27 @@ var BaseDocPlugin = function(){
             self.Timer.End("stage5");
             BlankDocument.DebugLabels(BlankDocument.DebugLabels().concat(self.Timer.Results()));
             self.Time(self.Timer.Result["stage5"]);
+            return done && typeof done == 'function' && done();
         })   
     }
+
+/*
+              case 120: // Ctrl + F9 или F9
+                e.preventDefault();
+                if (isControlPressed){
+                    CxCtrl.UseCache(false);
+                    _.delay(CxCtrl.UseCache.bind(null,true),500);
+                } else {
+                    CxCtrl.UseCache(true);
+                }
+                CxCtrl.Update("cells");
+                e.stopImmediatePropagation();
+              break;
+
+ */
+
+
+
 
     self.TimerRetry = 0;
 
@@ -265,11 +289,44 @@ var BaseDocPlugin = function(){
         return done();    
     }
 
-    self.Reset = self.Init;
+    self.SL = 0;
+    self.ST = 0;
+    self.ScrollSelector = ".handsoncontainer .wtHolder:first";
+    self.RememberScroll = function(){
+        try{
+            var Container = $(self.ScrollSelector);
+            self.SL = Container.scrollLeft();
+            self.ST = Container.scrollTop();
+        }catch(e){
+            console.error(e);
+        }
+    }
+
+    self.RestoreScroll = function(){
+        try{
+            var Container = $(self.ScrollSelector);
+            Container.scrollLeft(self.SL);
+            Container.scrollTop(self.ST);
+            self.SL = 0; self.ST = 0;
+        }catch(e){
+            console.error(e);
+        }
+    }
+
+    self.Reset = function(NoCache){
+        self.RememberScroll();
+        if (typeof NoCache=='boolean') CxCtrl.UseCache(!NoCache);
+        self.Init(function(){
+            if (!_.isEmpty(BlankDocument.LastCoords) && BlankDocument.LastCoords.length==2){
+                BlankDocument.table.selectCell(BlankDocument.LastCoords[0],BlankDocument.LastCoords[1]);
+                setTimeout(self.RestoreScroll,0);                
+            };
+            CxCtrl.UseCache(true);
+        })
+    }
 
     self.ContextChange = function(){
-        console.log("ContextChange","INIT!!!!!!!!!!");
-        self.Init();
+        self.Reset();
     }
 
     self.Columns = ko.observableArray();
@@ -391,10 +448,6 @@ var BaseDocPlugin = function(){
         $('#debugModal').modal('show');
     }
 
-    self.Reset  = function(){
-        self.Init(function(){
-        });
-    }
 
     self.baseConfig = {
         rowHeaders:true,

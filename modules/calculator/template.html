@@ -52,17 +52,17 @@
 
 <script id="calculate_button" type="text/html">
     <div class="btn-group">
-      <button class='btn btn-sm btn-white' data-bind="title:'Информация о расчете', css:{'btn-success':$data.CacheIsUsed(),'btn-warning' : !$data.CacheIsUsed()},click:$data.DebugTime, enable: !$data.IsLoading()">
+      <a class='btn btn-sm btn-white' data-bind="title:'Информация о расчете', css:{'btn-success':$data.CacheIsUsed(),'btn-warning' : !$data.CacheIsUsed()},click:$data.DebugTime, enable: !$data.IsLoading()">
         <!-- ko if: $data.IsLoading() -->
           <i class="fa fa-spin fa-spinner"></i>
         <!-- /ko -->
         <!-- ko if: !$data.IsLoading() -->
           <span class="1fa" data-bind="text: $data.TimeLabel" style="font-size: 12px;">1сек</span>
         <!-- /ko -->
-      </button>
-      <button class='btn btn-sm btn-warning btn-white' data-bind="title:(!CxCtrl.UseCache())?'Пересчитать без кэша <u>Ctrl+F9</u>':'Пересчитать <u>F9</u>',css:{'btn-warning':!CxCtrl.UseCache(),'btn-success':CxCtrl.UseCache()},enable: !$data.IsLoading(),click:$data.Reset">
+      </a>
+      <a class='btn btn-sm btn-warning btn-white' data-bind="title:(!CxCtrl.UseCache())?'Пересчитать без кэша <u>Ctrl+F9</u>':'Пересчитать <u>F9</u>',css:{'btn-warning':!CxCtrl.UseCache(),'btn-success':CxCtrl.UseCache()},enable: !$data.IsLoading(),click:$data.Reset">
         <i class="fa fa-refresh"></i>
-      </button>
+      </a>
     </div>
 </script>
 
@@ -86,27 +86,6 @@
 </div>
 
 
-<script id="fav_item" type="text/html">
-      <li>
-          <a data-bind="click: $data.click">
-            <input name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" data-bind="checked: MFavorites.IsInFavorites($data.type, $data.code),click:MFavorites.ModifyFavorites.bind(null,$data.type, $data.code),clickBubble: false">
-            <span  class="lbl"></span>
-            <!-- ko if:$data.icon -->
-              <i class='fa fa-icon favicon'  data-bind='css:$data.icon'></i>
-            <!-- /ko -->
-            <!-- ko if:$data.text -->
-            <span data-bind="html: $data.text"></span>
-            <!-- /ko -->
-            <!-- ko ifnot:$data.text -->
-              <!-- ko template:{name:'catalogue',data:{model:$data.model,id:$data.code}} --><!-- /ko -->
-            <!-- /ko -->
-            <!-- ko if:$data.subobjs && $data.subobjs.length -->
-            <span data-bind='text:$data.subobjs.length' style='float: right;color: #CFCFCF;'></span>
-            <!-- /ko -->
-         </a>
-      </li>
-</script>
-
 
 <script id="tb_period" type="text/html">
     <a class="btn btn-sm btn-white dropdown-toggle" data-toggle="dropdown">
@@ -115,6 +94,11 @@
         <i class="fa fa-angle-down icon-on-right fa-light"></i>
     </a>
     <ul class="dropdown-menu dropdown-light dropdown-caret">
+      <!-- ko with:MFavorites.UserFavs.CodePeriod -->
+        <!-- ko foreach:$data -->
+          <!-- ko template:{name:'fav_item',data:{type:'CodePeriod',code:$data,model:'period',click:CxCtrl.Update.bind(null,'period',$data)}} --><!-- /ko -->
+        <!-- /ko -->
+      <!-- /ko -->
       <!-- ko foreach:_.keys(MPeriods.DefaultPeriods()) -->
         <li class="dropdown-hover">
           <a tabindex="-1" class="clearfix">            
@@ -123,15 +107,10 @@
             </span>
             <i class="fa fa-caret-right pull-right"></i>
           </a>
-          <ul class="dropdown-menu pull-right width200_300">
+          <ul class="dropdown-menu pull-right width200_300 periods">
             <!-- ko with:MPeriods.DefaultPeriods -->
               <!-- ko foreach:$data[$parent] -->
-                <li>
-                  <a data-bind="click: CxCtrl.Update.bind(null,'period',$data)">
-                    <span data-bind="text: $data+'. '"></span>
-                    <!-- ko template:{name:'catalogue',data:{model:'period',id:$data}} --><!-- /ko -->
-                  </a>
-                </li>
+              <!-- ko template:{name:'fav_item',data:{type:'CodePeriod',code:$data,model:'period',click:CxCtrl.Update.bind(null,'period',$data)}} --><!-- /ko -->
               <!-- /ko -->
             <!-- /ko -->
           </ul>

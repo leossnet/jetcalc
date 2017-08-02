@@ -47,7 +47,20 @@ var Workflow = (new function(){
         self.LoadStates(done);
     }
 
+    self.UpdateInfoThrottled = null;
     self.UpdateInfo = function(done){
+        if (self.UpdateInfoThrottled){
+            clearTimeout(self.UpdateInfoThrottled);
+            self.UpdateInfoThrottled = null;
+        }
+        self.UpdateInfoThrottled = setTimeout(function(){
+            self.DoUpdateInfo(done);
+            clearTimeout(self.UpdateInfoThrottled);
+            self.UpdateInfoThrottled = null;
+        },100);
+    }
+
+    self.DoUpdateInfo = function(done){
         done = typeof done =='function' ? done : null;
     	var Context = CxCtrl.CxPermDoc();
     	self.Error(null); self.CurrentState(null);self.Actions([]);
