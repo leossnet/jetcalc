@@ -289,11 +289,37 @@ var BaseDocPlugin = function(){
         return done();    
     }
 
+    self.SL = 0;
+    self.ST = 0;
+    self.ScrollSelector = ".handsoncontainer .wtHolder:first";
+    self.RememberScroll = function(){
+        try{
+            var Container = $(self.ScrollSelector);
+            self.SL = Container.scrollLeft();
+            self.ST = Container.scrollTop();
+        }catch(e){
+            console.error(e);
+        }
+    }
+
+    self.RestoreScroll = function(){
+        try{
+            var Container = $(self.ScrollSelector);
+            Container.scrollLeft(self.SL);
+            Container.scrollTop(self.ST);
+            self.SL = 0; self.ST = 0;
+        }catch(e){
+            console.error(e);
+        }
+    }
+
     self.Reset = function(NoCache){
+        self.RememberScroll();
         if (typeof NoCache=='boolean') CxCtrl.UseCache(!NoCache);
         self.Init(function(){
             if (!_.isEmpty(BlankDocument.LastCoords) && BlankDocument.LastCoords.length==2){
                 BlankDocument.table.selectCell(BlankDocument.LastCoords[0],BlankDocument.LastCoords[1]);
+                setTimeout(self.RestoreScroll,0);                
             };
             CxCtrl.UseCache(true);
         })
