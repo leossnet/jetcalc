@@ -162,11 +162,9 @@ var CxCtrl = (new function () {
             ToUpdate = "page", Value = PageName;
         }
         if (self.AfterShowUpdate.document != -1) {
-            self.ChangeDocPath();
             self.Override.Params(null);
         } else {
             self.Events.emit("pagechanged");
-            self.ChangeDocPath();
         }
         setTimeout(function () {
             if (self.AfterShowUpdate.document){
@@ -198,6 +196,7 @@ var CxCtrl = (new function () {
     }
 
     self.DoUpdate = function (type, value) {
+        self.ChangeDocPath();                
         if (self.AskForUpdateThrottle){
             clearTimeout(self.AskForUpdateThrottle);
             self.AskForUpdateThrottle = null;
@@ -568,6 +567,7 @@ var CxCtrl = (new function () {
 
 
     self.ChangeInitDocPath = function () {
+        console.log("ChangeInitDocPath");
         if (_.includes(window.location.href, 'docview')) {
             var avParams = ['CodeObj', 'CodePeriod', 'Year', 'CodeReport', 'ReportPeriod'];
             if (window.location.search) {
@@ -620,6 +620,7 @@ var CxCtrl = (new function () {
     }
 
     self.ChangeDocPath = function () {
+        console.log("ChangeDocPath");
         if (_.includes(window.location.href, 'docview')) {
             var avParams = ['CodeObj', 'CodePeriod', 'Year', 'CodeReport', 'ReportPeriod'];
             var resSearchString = '?';
@@ -647,10 +648,10 @@ var CxCtrl = (new function () {
 })
 
 ModuleManager.Events.addListener("modulesinited", function () {
-    SettingController.Events.on("paramschanged", CxCtrl.ParamsChanged)
-    SettingController.Events.on("reportchanged", CxCtrl.ReportChanged)
-    CxCtrl.init();
+    SettingController.Events.on("paramschanged", CxCtrl.ParamsChanged);
+    SettingController.Events.on("reportchanged", CxCtrl.ReportChanged);
     MSite.Events.on("initialnavigate", CxCtrl.ChangeInitDocPath);
+    CxCtrl.init();    
 })
 
 

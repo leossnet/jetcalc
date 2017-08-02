@@ -486,7 +486,10 @@ var Unmapper = function(Context, InfoCacher){
 			}
 		} catch(e){
 			self.Err.Set(Cell.Cell,'FRM:'+Cell.Type.FRM+' : '+e.message);
-			if (self.Context.IsExplain) self.DebugInfo[Cell.Cell].FormulaParsed = "Ошибка в обработке формулы";
+			if (self.Context.IsExplain) {
+				if (!self.DebugInfo[Cell.Cell]) self.DebugInfo[Cell.Cell] = {};
+				self.DebugInfo[Cell.Cell].FormulaParsed = "Ошибка в обработке формулы";	
+			}
 			Cell.Type ='ERR';
 		}
 
@@ -498,14 +501,16 @@ var Unmapper = function(Context, InfoCacher){
 		var Row = self.RowsLoaded[Info.Row];
 		var Col = self.ColsLoaded[Info.Col];
 		var Obj = Info.Obj;
-		if (Info.Obj=="^"){
-			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
-			if (ObjInfo.RootObj) Info.Obj = ObjInfo.RootObj;
-			Obj = Info.Obj;
-		}
 		if (Obj=='0') return {Type:'FRM',FRM:0};
 		var CellName = Info.Cell;
 		var Result = null;
+		if (Info.Obj=="^"){
+			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
+			if (ObjInfo.RootObj) {
+				Info.Obj = ObjInfo.RootObj;
+				Result = {Type:'FRM',FRM:Info.Cell.split("#^").join("#"+Info.Obj)};			
+			}
+		}
 		var ResultDescription = null;
 		var Choosed = null;
 		if ((Info.Row+'').indexOf("(")!=-1){
@@ -659,7 +664,6 @@ var Unmapper = function(Context, InfoCacher){
 
 		var LoadTasks = {};
 		if (!Rows2Load.length && !Cols2Load.length) return final();
-		console.log("LOADING ROWS:",Rows2Load);
 		if (Rows2Load.length){
 			LoadTasks.Row = function(cb){
 				self.Info.RowHelper.LoadRows(Rows2Load,function(err,Rows){
@@ -940,9 +944,7 @@ var GeneralInfo = function(){
 		var TagName = _.trimStart(TagNameRaw,'_');
 		var TagInfo = self.Data.Tag[TagName];
 		var Obj = self.Data.Div[CodeObj];
-		console.log(Row);
 		var RowsToCheck = _.difference((Row.rowpath+'').split('/'),['']).reverse();
-		console.log(RowsToCheck);
 		var TAG = null;
 		for (var i=0; i<RowsToCheck.length; i++){
 			if (TagInfo && TagInfo[RowsToCheck[i]]){
