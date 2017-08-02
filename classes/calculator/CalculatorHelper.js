@@ -352,6 +352,7 @@ var Unmapper = function(Context, InfoCacher){
 			break;
 			case "<<":
 			case "consgrp":
+					console.log(ObjInfo);
 					ObjInfo.AllChildren.forEach(function(C){
 						var SInfo = self.Info.Data.Div[CodeObj];
 						['CodeObjClass','CodeObjType'].forEach(function(Field){
@@ -388,6 +389,13 @@ var Unmapper = function(Context, InfoCacher){
 	 		Mods:[],
 	 		PeriodOp:null
 	 	}
+		if (R.Obj=="^"){
+			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
+			if (ObjInfo.RootObj) {
+				R.Obj = ObjInfo.RootObj;
+			}
+		}
+
 	 	if (Math.abs(R.Year)<1000) R.Year = parseInt(Cell.Year)+R.Year;
 		if (R.Period.indexOf('-')>=0){
 			if (self.Info.Data.Period[R.Period] && self.Info.Data.Period[R.Period].Opinfo && self.Info.Data.Period[R.Period].Opinfo[Cell.Period]){
