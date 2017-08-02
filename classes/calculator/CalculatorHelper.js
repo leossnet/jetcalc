@@ -659,7 +659,7 @@ var Unmapper = function(Context, InfoCacher){
 
 		var LoadTasks = {};
 		if (!Rows2Load.length && !Cols2Load.length) return final();
-		
+		console.log("LOADING ROWS:",Rows2Load);
 		if (Rows2Load.length){
 			LoadTasks.Row = function(cb){
 				self.Info.RowHelper.LoadRows(Rows2Load,function(err,Rows){
@@ -962,12 +962,12 @@ var GeneralInfo = function(){
 	self.DocByRow = function(Row,CodeObj,DefaultDoc){
 		var Result = null;
 		Row.Path.forEach(function(RP){
-			if (self.Data.DocRow.NoChildObjs[RP]){
-				Result = self.Data.DocRow.NoChildObjs[RP];
+			if (self.Data.DocRow[RP]){
+				Result = self.Data.DocRow[RP];
 			}
-			if (self.Data.DocRow.WithChildObjs[RP]){
+			if (self.Data.DocRow[RP]){
 				if (DefaultDoc){
-					var _map = self.Data.DocRow.WithChildObjs[RP];
+					var _map = self.Data.DocRow[RP];
 					var allDocs = [];
 					for (var c in _map){
 						allDocs = allDocs.concat(_.values(_map[c]));
@@ -980,13 +980,13 @@ var GeneralInfo = function(){
 				if (!Result ){
 					var Obj = self.Data.Div[CodeObj];
 					if (Obj){
-						if (self.Data.DocRow.WithChildObjs[RP][Obj.CodeObjClass] &&
-							self.Data.DocRow.WithChildObjs[RP][Obj.CodeObjClass][Obj.CodeObjType]){
-							Result =  self.Data.DocRow.WithChildObjs[RP][Obj.CodeObjClass][Obj.CodeObjType];
+						if (self.Data.DocRow[RP][Obj.CodeObjClass] &&
+							self.Data.DocRow[RP][Obj.CodeObjClass][Obj.CodeObjType]){
+							Result =  self.Data.DocRow[RP][Obj.CodeObjClass][Obj.CodeObjType];
 						} else {
-							if (self.Data.DocRow.WithChildObjs[RP].Empty && 
-								self.Data.DocRow.WithChildObjs[RP].Empty.Empty){
-								Result =  self.Data.DocRow.WithChildObjs[RP].Empty.Empty;
+							if (self.Data.DocRow[RP].Empty && 
+								self.Data.DocRow[RP].Empty.Empty){
+								Result =  self.Data.DocRow[RP].Empty.Empty;
 							}
 						}
 					}
@@ -994,7 +994,7 @@ var GeneralInfo = function(){
 			}			
 		})
 		if (!Result){
-			if (self.Data.DocRow.FallBack[Row.CodeRow]) Result = self.Data.DocRow.FallBack[Row.CodeRow];
+			if (self.Data.DocRow[Row.CodeRow]) Result = self.Data.DocRow[Row.CodeRow];
 		}
 		if (!Result && DefaultDoc){
 			Result = DefaultDoc;

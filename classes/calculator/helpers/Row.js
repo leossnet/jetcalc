@@ -655,13 +655,13 @@ var RowHelper = function(Context){
 		})
 	}
 
-    // Ненужные
+    // Нужное
 	self.LoadRows = function(CodeRows,done){
-		self.query('row',{CodeRow:{$in:CodeRows}},'-_id CodeRow rowpath').exec(function(err,Rows){
+		self._getRows({CodeRow:{$in:CodeRows}}, function(err,Rows){
 			var Result = [];
 			Rows.forEach(function(R,Index){
 				R.Path = _.compact((R.rowpath+'').split('/'));
-				Result.push(_.omit(R,"rowpath"));
+				Result.push(R);
 			})
 			return done(err,Result);
 		})

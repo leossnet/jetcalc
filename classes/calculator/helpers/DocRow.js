@@ -27,6 +27,44 @@ var DocRowHelper = function(Context){
 		})
 	}
 
+	self.loadInfo = function(done){
+		var Result = {}, DocsInput = {}, DocRowsGroupped = {};
+		mongoose.model("docrow").find({},"-_id CodeRow CodeDoc IsExpandTree").isactive().lean().exec(function(err,DocRows){
+			mongoose.model("doc").find({},"-_id CodeDoc IsInput").isactive().lean().exec(function(err,Docs){
+				mongoose.model("row").find({CodeParentRow:null},"-_id CodeRow").isactive().lean().exec(function(err,Roots){
+					Roots.forEach(function(R){ Result[R.CodeRow] = null; });
+					Docs.forEach(function(D){ DocsInput[D.CodeDoc] = D.IsInput;})
+					DocRows.forEach(function(Link){
+						if (!DocRowsGroupped[Link.CodeDoc]) DocRowsGroupped[Link.CodeDoc] = [];
+						DocRowsGroupped[Link.CodeDoc].push(Link);
+					})
+					for (var CodeDoc in DocRowsGroupped){
+						var Rows = DocRowsGroupped[CodeDoc];
+						if (Rows.length>1){
+							var Rs = _.filter(Rows,{IsExpandTree:true});
+							if (Rs.length==1){
+								Result[_.first(Rs).CodeRow] = CodeDoc;	
+							} else {
+								Rs = _.filter(Rs,function(L){
+									return DocsInput[L.CodeDoc];
+								});
+								if (Rs.length==1){
+									Result[_.first(Rs).CodeRow] = CodeDoc;	
+								} else {
+									cosole.log("Unknown",Rs);
+									Result[_.first(Rs).CodeRow] = CodeDoc;	
+								}
+							}
+						} else {
+							Result[_.first(Rows).CodeRow] = CodeDoc;
+						}
+					}
+					return done(err,Result);
+				})
+			})
+		})
+	}
+
 
 	// Условия определения главного узла
 	// 1.   Документ без IsOlap IsChart IsPresent
@@ -39,7 +77,7 @@ var DocRowHelper = function(Context){
 	// 4.2. В таблице link.DocObjs фильтруется перечень документов, из которых нужный определяется по типу или классу.
 	// 4.3. Если все параметры сошлись, но осталось несколько документов, то выбирается документ с более коротким кодом core.Docs.CodeDoc
 
-	self.loadInfo = function(done){
+	self.loadInfoOld = function(done){
 		// 1. Загружаем все ссылки DocRow
 		var Result = {}, Explain  = {}, ResultByObjs = {};
 		var RowDocsRaw = {};

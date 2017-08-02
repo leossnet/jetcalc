@@ -86,6 +86,7 @@ var CxCtrl = (new function () {
 
     self.AfterPageShow = function (CodeDoc) {
         if (CodeDoc != self.CodeDoc()) {
+            self.CodeDoc(CodeDoc);
             self.AfterShowUpdate.document = CodeDoc;
         }
         if (self.ChangeTimer) clearTimeout(self.ChangeTimer);
