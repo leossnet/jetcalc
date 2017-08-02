@@ -603,6 +603,11 @@ var Unmapper = function(Context, InfoCacher){
 				ResultDescription = "Формула в колонке";		
 			}
 		}
+		if (!Result && !Col.IsFormula && Row.IsSum && Col.NoCalcSum && !Row.IsCalcSum){
+			Result = {Type:"FRM",FRM:0};	
+			Choosed = "Col";
+			ResultDescription = "Формулы в колонке - нет, Ряд - IsSum/Колонка - NoCalcSum, Ряд - нет IsCalcSum";	
+		}
 
 		if (!Result && Row.IsSum) {
 			Result = {Type:"SUM"};
