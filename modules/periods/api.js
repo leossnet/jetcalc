@@ -141,7 +141,35 @@ var MapPeriods = (new function(){
 	return self;
 })
 
+var PeriodRedirects = (new function(){
+	var self = this;
 
+	self.Get = function(done){
+		var Res = {
+			CodeDocType:{Include:{},Exclude:{}},
+			CodeGrp:{Include:{},Exclude:{}}
+		};
+		var _set = function(Type,Value){
+			var Set = Value.NotGrp ? Res[Type].Exclude:Res[Type].Include;
+			if (!Set[Value[Type]]) Set[Value[Type]] = {};
+			Set[Value[Type]][Value.CodePeriod] = Value.CodePeriodToRedirect;
+		}
+		mongoose.model("periodredirect").find({},"-_id NotGrp CodeDocType CodeGrp CodePeriod CodePeriodToRedirect").isactive().lean().exec(function(err,Links){
+			Links.forEach(function(Link){
+				if (!_.isEmpty(Link.CodeDocType)){
+					_set("CodeDocType",Link);
+				} else if (!_.isEmpty(Link.CodeGrp)){
+					_set("CodeGrp",Link);
+				}
+			})
+			return done(err,Res);			
+		})
+	}
+
+
+
+	return self;
+})
 
 
 router.put('/update',  HP.TaskAccess("IsPeriodEditTunner"), function(req, res, next){
@@ -205,13 +233,24 @@ router.get('/table', HP.TaskAccess("IsPeriodEditTunner"), function(req, res, nex
 })
 
 
+setTimeout(function(){
+	PeriodRedirects.Get(function(err,Redirect){
+		console.log(Redirect);
+	})
+
+},1000)
+
+
 router.get('/init', function(req, res, next){
 	ReportPeriods.Opened(function(err,Opened){
 		MapPeriods.GetMap(function(err,Map){
-			return res.json({
-				Map:Map,
-				Opened:Opened
-			});
+			PeriodRedirects.Get(function(err,Redirect){
+				return res.json({
+					Map:Map,
+					Opened:Opened,
+					Redirect:Redirect
+				});
+			})
 		})
 	})
 })  

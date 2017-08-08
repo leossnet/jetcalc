@@ -103,7 +103,7 @@ var MSite = (new function(){
 					window.console.error(event);
 				}
 			})
-			self.Events.emit("initialnavigate");
+			self.Events.emit("initialnavigate",window.location.search?window.location.search.queryObj():{});
 			$("body").removeClass("loading");
 			document.addEventListener("keydown", function(e) {
 			  if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
@@ -115,7 +115,6 @@ var MSite = (new function(){
 			  if (e.keyCode == 45 ) {
 			    e.preventDefault(); self.AnnounceNew((navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey));
 			  }
-			  console.log(e.keyCode);
 			}, false);
 			$(window).scroll(function() {
 			    if($(window).scrollTop() == $(document).height() - $(window).height()) {

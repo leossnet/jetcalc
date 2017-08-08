@@ -1,6 +1,6 @@
 var SettingController = (new function(){
 
-    var self = this;
+    var self = new Module("settings");
 
     self.Events = new EventEmitter();
 

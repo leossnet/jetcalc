@@ -29,7 +29,10 @@ var TagHelper = function(Context){
 	}
 
 	self.loadInfo = function(done){
-		self.query('tag',{$or:[{IsObjType:true},{IsRow:true}]},'-_id CodeTag Link_objtypetag Link_rowtag').populate('Link_rowtag','-_id CodeRow Value').populate('Link_objtypetag','-_id CodeObjType Value').exec(function(err,Tags){
+		self.query('tag',{$or:[{IsObjType:true},{IsRow:true},{IsObj:true}]},'-_id CodeTag Link_objtypetag Link_rowtag')
+		.populate('Link_rowtag','-_id CodeRow Value')
+		.populate('Link_objtypetag','-_id CodeObjType Value')
+		.isactive().exec(function(err,Tags){
 			var Info = {};
 			Tags.forEach(function(T){
 				Info[T.CodeTag] = {};

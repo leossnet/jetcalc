@@ -1,27 +1,29 @@
 var MCustomReport = (new function() {
 	
-	var self = this;
+	var self = new Module("customreport");
 
-	self.base = '/api/modules/customreport';
+  	self.BeforeHide = function(){
+        self.UnSubscribe();
+    }
+
+    self.BeforeShow = function(){
+        self.Subscribe();
+        self.Show();
+    }        
+
 
 	self.table        = null;
 	self.previewTable = null;
-
 	self.Rows = [];
-	self.Cols = [];
-
-	self.ContextChange = function(){
-		self.Init();
-	}
+	self.Cols = [];	
 
 	self.IsAvailable = function(CodeDoc){
 		return true;
 	}
-
     self.IsOlap = function(){
     	var Doc = null;
     	if (CxCtrl.CodeDoc()) {
-				Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
+			Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
     	}
     	return Doc && Doc.IsOlap; 
     }
@@ -39,7 +41,33 @@ var MCustomReport = (new function() {
 
 	self.IsShowOlap = [];
 	self.IsShowWithParent = [];
-	self.IsShowWithChildren = [];		
+	self.IsShowWithChildren = [];	    
+
+	self.Show = function(done){
+        if (!self.Mode()) return self.InitSetMode("ModifyView");
+        switch(self.Mode()){
+        	case "SingleView":
+        		self.RenderShow();
+        		console.log("SingleView");
+        	break;
+        	case "ModifyView":
+        		self.RenderShow();
+				console.log("ModifyView");
+        	break;
+        	case "ColumnsView":
+        		self.RenderShow();
+				console.log("ColumnsView");
+        	break;
+        }
+
+	}
+
+	self.RenderShow = function(){
+		self.LoadStructure(function(){				
+			SettingController.Init();
+			self.Render();
+		})
+	}
 
 	self.ModFields = ["IsHidden","IsToggled","IsShowOlap","IsShowWithParent","IsShowWithChildren"];
 
@@ -53,13 +81,12 @@ var MCustomReport = (new function() {
 	self.NewReport = function(){
 		self.CurrentReport('default');
 		self.DoLoadReport();
-
 	}
 
 	self.CurrentReport = ko.observable(null);
 
-	self.LoadError = ko.observable(null);
-	self.IsLoadReportsShow = ko.observable(false);
+
+
 	self.ReportLoadTree = {};
 
 	self.ReportTreeDataSource = function(options, callback){
@@ -102,6 +129,7 @@ var MCustomReport = (new function() {
 		tree_data = _.merge(tree_data,additional);
 		self.ReportLoadTree = tree_data;
 	}
+	self.IsLoadReportsShow = ko.observable(false);
 	
 	self.LoadReport = function(){
 		self.PrepareTree();
@@ -148,49 +176,23 @@ var MCustomReport = (new function() {
 	}
 
 	self.DeleteReport = function(){
-		$.ajax({
-			url:self.base+'/report',
-			data:{CodeReport:MCustomReport.CurrentReport()},
-			method:"delete",
-			success:function(data){
-				if (data.err) {
-					return self.Error(data.err);	
-				}
-				SettingController.LoadDefault(true,function(){
-					SettingController.Init();
-					$("#loadreport_modal").modal("hide");	
-				});				
-			}
+		self.rDelete ("report",{CodeReport:MCustomReport.CurrentReport()},function(){
+			SettingController.LoadDefault(true,function(){
+				SettingController.Init();
+				$("#loadreport_modal").modal("hide");	
+			});				
 		})
 	}
-
-	self.Init = function (){
-		self.LoadStructure(function(){				
-			self.IsLoading(false);
-			SettingController.Init();
-			self.Render();
-			if (CxCtrl.CodeReport()!='default'){
-			}
-		})
-	}
-
 
 	self.LoadStructure  = function(done){
-		$.ajax({
-			url:self.base+'/structure',
-			data:CxCtrl.Context(),
-			success:function(data){
-				if (data.err) {
-					return self.Error(data.err);	
-				}
-				self.Rows = data.Rows;
-				self.Rows.forEach(function(R,index){
-					self.Rows[index] = self.Rows[index];//_.merge(,m);
-				})
-				self.UpdateRowsParams();
-				self.Cols = data.Cols;
-				return done();
-			}
+		self.rGet('structure',CxCtrl.CxPermDoc(),function(data){
+			self.Rows = data.Rows;
+			self.Rows.forEach(function(R,index){
+				self.Rows[index] = self.Rows[index];//_.merge(,m);
+			})
+			self.UpdateRowsParams();
+			self.Cols = data.Cols;
+			return done();
 		})
 	}
 
@@ -235,15 +237,13 @@ var MCustomReport = (new function() {
         self.previewTable && self.previewTable.collapsedRows([]);
     }
 
-	self.Error = ko.observable(null);
 
-	self.Mode = ko.observable("SingleView"); // SingleView, ModifyView, ColumnsView
 
-	self.Mode.subscribe(function(Value){
+	/*self.Mode.subscribe(function(Value){
 		self.Render();
 		if (Value!='ColumnsView') setTimeout(self.Render,500);// Баг не обновляется ширина strechH last
 	}) 		
-
+*/
 
 	self.EditReport = ko.observable(null);
 

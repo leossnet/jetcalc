@@ -2131,3 +2131,9 @@ margin-left: -1px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.navbar {
+    background-color: #00486b;
+}
+div.row{
+    background-color: white;   
+}

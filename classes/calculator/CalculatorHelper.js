@@ -91,6 +91,7 @@ var Unmapper = function(Context, InfoCacher){
 					self.AddToUnmap(Cell);
 				}
 			})
+			self.unmapCounter = 0;
 			self._unmap(function(err){
 				self.AfterUnmap(done)
 			})
@@ -113,7 +114,7 @@ var Unmapper = function(Context, InfoCacher){
 	self.CacheInfo = {}
 
 	self.CompileDependancies  = function(done){
-		var DependanceTree = {}, counter = 60000;
+		var DependanceTree = {}, counter = 2000000;
 		var _recursiveFind = function(CellName){
 			var result = [];
 			if (--counter<0) return result			
@@ -148,10 +149,16 @@ var Unmapper = function(Context, InfoCacher){
 			}
 		}
 		var Setter = _.omit(self.CacheInfo,self.LoadedCells);
+		console.log("Setting to cache",Setter["$i3101100@VAL.P710.Y2017#001_INVKOM_01?"]);
 		self.Redis.Set(Setter,done);
 	}
 
+	self.unmapCounter = 0;
 	self._unmap = function(done){
+		if ( (++self.unmapCounter)>1000) {
+			throw "1000 unmaps";
+		}
+		console.log(self.unmapCounter);
 		self.LoadInfo(self.Unmapped,function(err){
 			if (err) return done(err);
 			for (var CellName in self.Unmapped){
@@ -223,7 +230,13 @@ var Unmapper = function(Context, InfoCacher){
 			}
 			if (_.keys(NewUnmap).length) {
 				self.Unmapped = NewUnmap;
-				return self._unmap(done);
+				if (self.unmapCounter%1000==0){
+					setTimeout(function(){
+						self._unmap(done);
+					},0);
+				} else {
+					self._unmap(done);
+				}
 			} else {
 				return done();
 			}
@@ -279,7 +292,7 @@ var Unmapper = function(Context, InfoCacher){
 				Replaces[v] = _.first(FormulaParts);
 			}
 		})
-		var Initial = (Formula+'').split(/([$@].*?\?)/)
+		var Initial = (Formula+'').split(/([$@].*?\?)/);
 		var ResultFormulaArr = [];
 		Initial.forEach(function(Part){
 			if (Replaces[Part]) ResultFormulaArr.push(Replaces[Part]);
@@ -314,6 +327,26 @@ var Unmapper = function(Context, InfoCacher){
 
 	self.GetConsObjs = function(Mode,CodeObj,Filter){
 		if (!Filter || (Filter+'')=='undefined') Filter = null;
+		if (CodeObj=="^^"){
+			var T = self.Info.Data.Div[self.Context.CodeObj];
+			if (T) {
+				if (!_.isEmpty(T.RootObj)){
+					CodeObj = T.RootObj;	
+				} else {
+					CodeObj = T.CodeObj;
+				}				
+			}
+		}
+		if (CodeObj=="^"){
+			var T = self.Info.Data.Div[self.Context.CodeObj];
+			if (T) {
+				if (!_.isEmpty(T.CodeParentObj)){
+					CodeObj = T.CodeParentObj;	
+				} else {
+					CodeObj = T.CodeObj;
+				}				
+			}
+		}
 		var ObjInfo = self.Info.Data.Div[CodeObj];
 		var Result = [];
 		switch (Mode){
@@ -332,37 +365,20 @@ var Unmapper = function(Context, InfoCacher){
 				break;
 			break;
 			case "consobj":
-				if (!Filter){
-					Result = ObjInfo.AllChildren;
-				} else if (Filter=='_PARENT.CLASS'){
-					var SInfo  = self.Info.Data.Div[ObjInfo.CodeParentObj];
-					Result = SInfo.AllChildren;
-				} else {
-					ObjInfo.AllChildren.forEach(function(C){
-						var SInfo = self.Info.Data.Div[CodeObj];
-						['CodeObjClass','CodeObjType'].forEach(function(Field){
-							if (SInfo[Field]==Filter){
-								console.log("+++++++++++++++++++++++");
-								console.log(Filter,Field,SInfo[Field]);
-								console.log("+++++++++++++++++++++++");
-							}
-						})
-					})
-				}
-			break;
 			case "<<":
 			case "consgrp":
-					console.log(ObjInfo);
-					ObjInfo.AllChildren.forEach(function(C){
-						var SInfo = self.Info.Data.Div[CodeObj];
-						['CodeObjClass','CodeObjType'].forEach(function(Field){
-							if (SInfo[Field]==Filter){
-								console.log("+++++++++++++++++++++++");
-								console.log(Filter,Field,SInfo[Field]);
-								console.log("+++++++++++++++++++++++");
-							}
-						})
-					})
+				var F = self._parseFilter(Filter);
+				var Objs = _.filter(ObjInfo.AllChildren,function(OC){
+					var O = self.Info.Data.Div[OC];
+					if (F.G && O.Groups.indexOf(F.G)!=-1) return true;
+					if (F.C && O.CodeObjClass==F.C) return true;
+					if (F.T && O.CodeObjType==F.T) return true;
+					if (F.D && O.CodeDiv==F.D) return true;
+					if (F.R && O.CodeRegion==F.R) return true;
+					if (F.S && O.CodeOtrasl==F.S) return true;
+					return false;
+				});
+				Result = Objs;				
 			break;			
 		}
 		return Result;
@@ -389,10 +405,16 @@ var Unmapper = function(Context, InfoCacher){
 	 		Mods:[],
 	 		PeriodOp:null
 	 	}
-		if (R.Obj=="^"){
+		if (R.Obj=="^^"){
 			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
 			if (ObjInfo.RootObj) {
 				R.Obj = ObjInfo.RootObj;
+			}
+		}
+		if (R.Obj=="^"){
+			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
+			if (ObjInfo.CodeParentObj) {
+				R.Obj = ObjInfo.CodeParentObj;
 			}
 		}
 
@@ -457,12 +479,16 @@ var Unmapper = function(Context, InfoCacher){
 		var Col = self.ColsLoaded[Cell.Col];
 		var Row = self.RowsLoaded[Cell.Row];
 		if(!Row){
-			Cell.Type='ERR';
+			Cell.Type = {FRM:0};
+
+//			Cell.Type='ERR';
 			return Cell;
 		}
 		if (!P) {
-			self.Err.Set(Cell.Cell,'PERIOD:'+Cell.Period+': UNK');
-			Cell.Type='ERR';
+			Cell.Type = {FRM:0};
+
+			//self.Err.Set(Cell.Cell,'PERIOD:'+Cell.Period+': UNK');
+			//Cell.Type='ERR';
 			return Cell;
 		}		
 		var Obj = self.Info.Data.Div[Cell.Obj] || {}; 
@@ -512,10 +538,17 @@ var Unmapper = function(Context, InfoCacher){
 		if (Obj=='0') return {Type:'FRM',FRM:0};
 		var CellName = Info.Cell;
 		var Result = null;
-		if (Info.Obj=="^"){
+		if (Info.Obj=="^$"){
 			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
 			if (ObjInfo.RootObj) {
 				Info.Obj = ObjInfo.RootObj;
+				Result = {Type:'FRM',FRM:Info.Cell.split("#^^").join("#"+Info.Obj)};			
+			}
+		}
+		if (Info.Obj=="^"){
+			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
+			if (ObjInfo.RootObj) {
+				Info.Obj = ObjInfo.CodeParentObj;
 				Result = {Type:'FRM',FRM:Info.Cell.split("#^").join("#"+Info.Obj)};			
 			}
 		}
@@ -1132,7 +1165,7 @@ var Evaluator = function(Unmapper){
  		self.LoadPrimaries(Primaries2Load,function(err){
 			if (err) return done(err);
 			self.HowToCalculate = RemainCells;
-			self.currentRecursion = 1;
+			self.maxRecursions = 100;
 			self._calculate(function(err){
 				return done(err);
 			});
@@ -1260,8 +1293,7 @@ var Evaluator = function(Unmapper){
 		})
 	}
 
-	self.maxRecursions    = 2000;
-	self.currentRecursion = 1;
+	self.maxRecursions    = 100;
 
 	self._calculate = function(done){
 		if (--self.maxRecursions==0) {
@@ -1277,7 +1309,6 @@ var Evaluator = function(Unmapper){
 			Unmapper.Err.Critical('Рекурсии в вычислениях');
 			return done();
 		}
-		self.currentRecursion++; 
 		var keys2omit = [];
 		for (var CellName in self.HowToCalculate){
 			var Value = self.HowToCalculate[CellName].FRM;
@@ -1295,6 +1326,7 @@ var Evaluator = function(Unmapper){
 			}  
 		}
 		self.HowToCalculate = _.omit(self.HowToCalculate,keys2omit);
+		console.log(self.HowToCalculate);
 		if (!_.keys(self.HowToCalculate).length){
 			return done();
 		}

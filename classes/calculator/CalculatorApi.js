@@ -45,35 +45,49 @@ router.get('/api/calculator/cells', function(req,res,next){
 
 router.post('/api/cell/validateformula', function(req,res,next){
 	var R = require(__base+"classes/calculator/RegExp.js");
-	var Frm = req.body.Formula+"", Vars = Frm.match(R.Var), ToTest = {Row:[],Col:[],Period:[],Obj:[]};
-	if (!Vars.length) return res.json({});
-	Vars.forEach(function(Vara){
-		_.keys(ToTest).forEach(function(K){
-			var Match = Vara.match(R[K]);
-			if (!_.isEmpty(Match)){
-				ToTest[K] = ToTest[K].concat(_.map(Match,function(M){
-					return M.substring(R.Symbols[K].length);
-				}));
-			}
+	var DivHelperApi = require(__base+"classes/calculator/helpers/Div.js");
+	var DivHelper = new DivHelperApi(req.body.Context);
+	DivHelper.get(function(err,DivInfo){
+		var CurrentObj = req.body.SubObj ? req.body.SubObj:Context.CodeObj;
+		var RootObj = null;
+		if (DivInfo[CurrentObj] && DivInfo[CurrentObj].RootObj){
+			RootObj = DivInfo[CurrentObj].RootObj;
+		}
+		var Frm = req.body.Formula+"", Vars = Frm.match(R.Var), ToTest = {Row:[],Col:[],Period:[],Obj:[]};
+		if (!Vars.length) return res.json({});
+		Vars.forEach(function(Vara){
+			_.keys(ToTest).forEach(function(K){
+				var Match = Vara.match(R[K]);
+				if (!_.isEmpty(Match)){
+					ToTest[K] = ToTest[K].concat(_.map(Match,function(M){
+						return M.substring(R.Symbols[K].length);
+					}));
+				}
+			})
 		})
-	})
-	var Error = {};
-	async.each(_.keys(ToTest),function(Key,cb){
-		var Check = ToTest[Key];
-		if (_.isEmpty(Check)) return cb();
-		var Model = mongoose.model(Key.toLowerCase()), CFG = Model.cfg(), Code = CFG.Code, Q = {};
-		Q[Code] = {$in:Check};
-		Model.find(Q,Code).isactive().lean().exec(function(err,Existed){
-			var Arr = _.map(Existed,Code);
-			var Diff = _.difference(Check,Arr);
-			if (!_.isEmpty(Diff)){
-				Error[Key] = Diff;
-			}
-			return cb();
+		var Error = {};
+		async.each(_.keys(ToTest),function(Key,cb){
+			var Check = ToTest[Key];
+			if (_.isEmpty(Check)) return cb();
+			var ModelName = Key.toLowerCase();
+			var Model = mongoose.model(ModelName), CFG = Model.cfg(), Code = CFG.Code, Q = {};
+			Q[Code] = {$in:Check};
+			Model.find(Q,Code).isactive().lean().exec(function(err,Existed){
+				var Arr = _.map(Existed,Code);
+				var Diff = _.difference(Check,Arr);
+				if (Diff.indexOf("^")!=-1 && ModelName=='obj' && RootObj){
+					Diff.splice(Diff.indexOf("^"),1);
+				}
+				if (!_.isEmpty(Diff)){
+					Error[Key] = Diff;
+				}
+				return cb();
+			})
+		},function(err){
+			if (_.isEmpty(Error)) return res.json({});
+			return res.json({errMsg:Error});
 		})
-	},function(err){
-		if (_.isEmpty(Error)) return res.json({});
-		return res.json({errMsg:Error});
+
 	})
 })
 

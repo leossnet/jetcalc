@@ -356,15 +356,18 @@
 </script>
 
 <script id="tb_mode_switch" type="text/html">
-    <a class='btn btn-sm btn-primary btn-white' data-bind="title:$data.title,click:$parent.Mode.bind(null,$data.mode),css:{active:$data.mode==$parent.Mode()}">
+    <a class='btn btn-sm btn-primary btn-white' data-bind="click:$parent.Mode.bind(null,$data.mode),css:{active:$data.mode==$parent.Mode()}">
       <!-- ko if:$data.mode=='Summ' -->
           <i class="ace-icon fa fa-text">Σ</i>
       <!-- /ko -->
       <!-- ko if:$data.mode=='Formula' -->
           <i class="ace-icon fa fa-text">f(x)</i>
       <!-- /ko -->
-      <!-- ko ifnot:$data.mode=='Summ' || $data.mode=='Formula' -->
+        <!-- ko ifnot:$data.mode=='Summ' || $data.mode=='Formula' -->
           <i class="ace-icon fa " data-bind="css:$data.icon"></i>
+        <!-- /ko -->
+        <!-- ko if:$data.text -->
+            <span data-bind='lang:$data.mode'></span>
         <!-- /ko -->
       </a>
 </script>

@@ -143,15 +143,6 @@ var CxCtrl = (new function () {
             }
         }
         var Doc = MFolders.FindDocument(CodeDoc);
-        if (Doc.HasChildObjs) {
-            if (!self.ChildObj() && Doc.SubObjs && Doc.SubObjs[self.CodeObj()]) {
-                self.ChildObj(_.first(Doc.SubObjs[self.CodeObj()]));
-            }
-            self.ChildObjs(Doc.SubObjs[self.CodeObj()]);
-        } else {
-            self.ChildObj(null);
-            self.ChildObjs([]);
-        }
         self.IsDivObj(Doc.IsDivObj);
         pager.navigate(["/docview", CodeDoc, PageName].join('/'));
         var DocPlugins = ModuleManager.DocTabs();
@@ -411,7 +402,8 @@ var CxCtrl = (new function () {
         SetDivObj: ko.observable(false, {
             persist: 'cxDivObj'
         }),
-        Params: ko.observable(null)
+        Params: ko.observable(null),
+        ReportRows:ko.observable(null)
     }
 
     self.RedirectRules = {};
@@ -566,81 +558,121 @@ var CxCtrl = (new function () {
     }
 
 
-    self.ChangeInitDocPath = function () {
-        console.log("ChangeInitDocPath");
-        if (_.includes(window.location.href, 'docview')) {
-            var avParams = ['CodeObj', 'CodePeriod', 'Year', 'CodeReport', 'ReportPeriod'];
-            if (window.location.search) {
-                var search = window.location.search.substring(1);
 
-                function parseSearchString(search) {
-                    var result = {};
-                    search.split('&').forEach(function (pair) {
-                        var p = pair.split('=');
-                        result[p[0]] = p[1];
-                    })
-                    return result;
-                }
-                var pSearch = parseSearchString(search);
-                avParams.forEach(function (param) {
-                    if (pSearch[param]) {
-                        if (param === 'CodePeriod') {
-                            if (pSearch[param]) {
-                                self.Override.CodePeriod(pSearch[param]);
-                            }
-                        } else if (param === 'ReportPeriod') {
-                            self.CodePeriod(pSearch[param]);
-                        } else {
-                            self[param](pSearch[param]);
-                        }
+    self.ParamsToSet = ['CodeObj', 'CodePeriod', 'Year', 'CodeReport', 'ReportPeriod','ChildObj'];
+
+    self.ParamsFromUrl = function(InitialParams){
+        if (!_.isEmpty(InitialParams)) {
+            self.ParamsToSet.forEach(function (param) {
+                var PValue = InitialParams[param];
+                if (!_.isEmpty(PValue)) {
+                    if (param === 'CodePeriod') {
+                        self.Override.CodePeriod(PValue);
+                    } else if (param === 'ReportPeriod') {
+                        self.CodePeriod(PValue);
+                    } else {
+                        self[param](PValue);
                     }
-                });
-            }
-            var resSearchString = '?';
-            avParams.forEach(function (param, index) {
-                if (param === 'CodePeriod') {
-                    if (!self.Override.CodePeriod()) {
-                        self.Override.CodePeriod(self.CodePeriod());
-                    }
-                    resSearchString += (param + '=' + self.Override.CodePeriod());
-                } else if (param === 'ReportPeriod') {
-                    resSearchString += (param + '=' + self.CodePeriod());
-                } else {
-                    resSearchString += (param + '=' + self[param]());
-                }
-                if (index < avParams.length - 1) {
-                    resSearchString += '&';
                 }
             });
+        }
+    }
 
-            pager.navigate(window.location.pathname);
-            var state = window.location.origin + window.location.pathname + resSearchString;
-            history.replaceState({}, '', state);
+
+    self.FixPeriodRedirects = function(){
+        var DocType = null, PeriodRedirects = MPeriods.Redirects(), DocTypeInc = {}, DocTypeExc = {};
+        try {
+            DocType = MFolders.FindDocument(self.CodeDoc()).CodeDocType;
+            if (PeriodRedirects.CodeDocType.Exclude[DocType]){
+                DocTypeExc = PeriodRedirects.CodeDocType.Exclude[DocType];
+            } 
+            if (PeriodRedirects.CodeDocType.Include[DocType]){
+                DocTypeInc =  PeriodRedirects.CodeDocType.Include[DocType];
+            }            
+        } catch(e){
+            console.log(e);
+        }
+        if (!_.isEmpty(DocTypeExc)){
+            console.log("Checking Exclude ...",DocTypeExc);
+        } else if (!_.isEmpty(DocTypeInc)){
+            if (DocTypeInc[self.CodePeriod()]){
+                self.Restore = self.Override.CodePeriod();
+                self.Override.CodePeriod(DocTypeInc[self.CodePeriod()]);
+            }
+        }
+    }
+
+    self.FixChildObjs = function(){
+        var Doc = MFolders.FindDocument(self.CodeDoc());
+        console.log(Doc);
+        if (Doc && Doc.HasChildObjs){
+            if (!Doc.SubObjs[self.CodeObj()]){
+                var NewSub = _.first(_.keys(Doc.SubObjs));
+                self.CodeObj(NewSub);
+                self.ChildObj(_.first(Doc.SubObjs[NewSub]));
+                self.ChildObjs(Doc.SubObjs[NewSub]);
+            } else {
+                self.ChildObjs(Doc.SubObjs[self.CodeObj()]);
+                if (!self.ChildObj() || self.ChildObjs().indexOf(self.ChildObj())==-1){
+                    self.ChildObj(_.first(self.ChildObjs()));
+                }
+            }
+            if (Doc.HasChildObjs) {
+                if (!self.ChildObj() && Doc.SubObjs && Doc.SubObjs[self.CodeObj()]) {
+                    self.ChildObj(_.first(Doc.SubObjs[self.CodeObj()]));
+                }
+                self.ChildObjs(Doc.SubObjs[self.CodeObj()]);
+            }             
+        } else {
+            self.ChildObj(null);
+            self.ChildObjs([]);
+        }
+        console.log("Changing",self.ChildObjs(),self.ChildObj());
+
+    }
+
+    self.CorrectParams = function(){
+        self.FixPeriodRedirects();
+        self.FixChildObjs();
+    }
+
+    self.ParamsToUrl = function(){
+        self.CorrectParams();
+        var ParamsArr = [];
+        self.ParamsToSet.forEach(function (param) {
+            var V = null;
+            switch(param){
+                case 'CodePeriod':
+                    V = self.Override.CodePeriod();
+                break;
+                case 'ReportPeriod':
+                    V = self.CodePeriod();
+                break;                
+                default:
+                    V = self[param]();
+                break;                    
+            }
+            if (!_.isEmpty(V)){
+                ParamsArr.push(param+"="+V);
+            }
+        });
+        var Search = _.isEmpty(ParamsArr)? "":'?'+ParamsArr.join("&");
+        pager.navigate(window.location.pathname);
+        var state = window.location.origin + window.location.pathname + Search;
+        history.replaceState({}, '', state); 
+    }
+
+
+    self.ChangeInitDocPath = function (InitialParams) {
+        if (_.includes(window.location.href, 'docview')) {
+            self.ParamsFromUrl(InitialParams);
+            self.ParamsToUrl();
         }
     }
 
     self.ChangeDocPath = function () {
-        console.log("ChangeDocPath");
         if (_.includes(window.location.href, 'docview')) {
-            var avParams = ['CodeObj', 'CodePeriod', 'Year', 'CodeReport', 'ReportPeriod'];
-            var resSearchString = '?';
-            avParams.forEach(function (param, index) {
-                if (param === 'CodePeriod') {
-                    if (!self.Override.CodePeriod()) {
-                        self.Override.CodePeriod(self.CodePeriod());
-                    }
-                    resSearchString += (param + '=' + self.Override.CodePeriod());
-                } else if (param === 'ReportPeriod') {
-                    resSearchString += (param + '=' + self.CodePeriod());
-                } else {
-                    resSearchString += (param + '=' + self[param]());
-                }
-                if (index < avParams.length - 1) {
-                    resSearchString += '&';
-                }
-            });
-            var state = window.location.origin + window.location.pathname + resSearchString;
-            history.replaceState({}, '', state);
+            self.ParamsToUrl();
         }
     }
 

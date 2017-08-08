@@ -147,6 +147,7 @@ var MPeriods = (new function() {
     self.Map = ko.observable();
     self.DefaultPeriods = ko.observable();
     self.Opened = ko.observable();
+    self.Redirects = ko.observable();
 
     self.Init = function(done){
         self.rGet("init",{},function(data){
@@ -180,6 +181,7 @@ var MPeriods = (new function() {
             }
             self.Map(prepared);
             self.Opened(data.Opened);
+            self.Redirects(data.Redirect);
             MSite.Events.off("save",self.SaveChanges);
             MSite.Events.on("save",self.SaveChanges);
             return done && done();

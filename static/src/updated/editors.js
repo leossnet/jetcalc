@@ -603,6 +603,8 @@ var FormulaEditor = (new function(){
 			method:'post',
 			data:{
 				Formula:Formula,
+				Context:CxCtrl.CxPermDoc(),
+				SubObj:CxCtrl.ChildObj()
 			},
 			success:function(data){
 				var ToPrint = [];

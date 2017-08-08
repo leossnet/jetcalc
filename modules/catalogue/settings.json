@@ -226,7 +226,8 @@
 			"CodeDoc",
 			"NameDoc",
 			"CodeRole",
-			"CodeGrp"
+			"CodeGrp",
+			"CodeDocType"
 		],
 		"EditFields": [
 			"CodeDoc",
@@ -318,11 +319,7 @@
 			"Mail",
 			"CodeObj",
 			"InAttentive",
-			"IsConfirmed",
-			"IsAdmin",
-			"IsDepAdmin",
-			"IsOrgAdmin",
-			"IsDivAdmin"
+			"IsConfirmed"
 		],
 		"Links": [
 			"labeluser"
@@ -665,6 +662,65 @@
 		],
 		"Links": [
 			"statecalendardate"
+		]
+	},
+	"docbill": {
+		"TableFields": [
+			"CodeDocBill",
+			"CodeDoc",
+			"CodeBill"
+		],
+		"EditFields": [
+			"CodeDocBill",
+			"CodeDoc",
+			"CodeBill"
+		],
+		"Links": []
+	},
+	"billrelation": {
+		"TableFields": [
+			"CodeBillRelation",
+			"CodeBillSource",
+			"CodeBillTarget",
+			"CodeGrpSource",
+			"CodeGrpTarget"
+		],
+		"EditFields": [
+			"CodeBillRelation",
+			"IsNotGrpSource",
+			"IsNotGrpTarget",
+			"IsMirror",
+			"CodeBillSource",
+			"CodeBillTarget",
+			"CodeGrpSource",
+			"CodeGrpTarget"
+		],
+		"Links": []
+	},
+	"dogovortype": {
+		"TableFields": [
+			"CodeDogovorType",
+			"NameDogovorType"
+		],
+		"EditFields": [
+			"CodeDogovorType",
+			"NameDogovorType"
+		],
+		"Links": [
+			"dogovortypeart"
+		]
+	},
+	"prod": {
+		"TableFields": [
+			"CodeProd",
+			"NameProd"
+		],
+		"EditFields": [
+			"CodeProd",
+			"NameProd"
+		],
+		"Links": [
+			"prodsumgrp"
 		]
 	}
 }

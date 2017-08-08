@@ -28,9 +28,16 @@ var MBreadCrumbs = (new function(){
 		return done();
 	}
 
+	self.Params = ko.observable();
+
 	self.BreadcrumbsCompute = function () {
 		self.CurrentPath(window.location.pathname.substring(1));
 		self.CurrentRoute(self.CurrentPath().split('/'));
+		if (!_.isEmpty(window.location.search)){
+			self.Params(window.location.search.queryObj());
+		} else {
+			self.Params(null);
+		}		
 		var test = self.CurrentRoute();
 		setTimeout(self._breadcrumbsFromPages,0);
 	}
