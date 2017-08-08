@@ -1,0 +1,19 @@
+{
+  "id": "transaction",
+  "title": "Транзакции",
+  "icon": "fa-recycle",
+  "class_name": "Transaction",
+  "is_enabled": true,
+  "initial_load" :true,
+  "type":"adminpage",
+  "places":{
+      "adminpage"  : true
+  },
+  "permissions" : [
+      "IsTransactionTunner"
+  ],
+  "permissionsModels":{
+      "IsTransactionTunner":["billrelation","docbill","docrelation","colrelation","bill","prod","dogovor","dogovortype"]
+  },
+  "sort_index":90
+}
