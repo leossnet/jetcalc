@@ -1,0 +1,7 @@
+{
+  "id": "modelextractor",
+  "title": "Извлечение моделей",
+  "icon": "fa-arrow-circle-down",
+  "class_name": "ModelExtractor",
+  "is_enabled": true
+}
