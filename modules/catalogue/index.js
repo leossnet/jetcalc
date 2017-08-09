@@ -16,6 +16,16 @@ var ModelRestrict = (new function () {
             CodePeriod:{
                 IsFormula:false
             }
+        },      
+        file:{
+            CodePeriod:{
+                IsFormula:false
+            }
+        },      
+        data:{
+            CodePeriod:{
+                IsFormula:false
+            }
         },        
         periodredirect:{
             CodePeriodToRedirect:{

@@ -10,5 +10,8 @@
   "places":{
       "documentpage"  : true
   },  
+  "permissions" : [
+      "IsFileRemover"
+  ],  
   "sort_index": 70
 }

@@ -10,5 +10,6 @@
 	"SNameFile":"Название(сокр)",
 	"NumDoc":"№",
 	"CodeFileType":"Тип",
+	"IsFileRemover":"Удаление файлов",
 	"Comment":"Комментарий"
 }

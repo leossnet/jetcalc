@@ -290,15 +290,6 @@ module.exports = {
 				"refmodel": "user",
 				"index": true,
 				"extended": true
-			},
-			"CodeData": {
-				"type": String,
-				"default": "",
-				"view": "none",
-				"dep": "IdData",
-				"refmodel": "data",
-				"index": true,
-				"extended": true
 			}
 		}
 	},

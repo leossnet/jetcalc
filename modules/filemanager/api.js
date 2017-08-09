@@ -6,6 +6,9 @@ var socket     = require(__base+'/src/socket.js');
 var moment     = require('moment');
 var RabbitMQClient = require(__base + "src/rabbitmq_wc.js").client;
 var config = require(__base+"config.js");
+var LIB        = require(__base+'lib/helpers/lib.js');
+var HP = LIB.Permits;
+
 
 var rabbitPrefix = config.rabbitPrefix;
 
@@ -22,20 +25,6 @@ var FileManagerHelper = (new function(){
 
 	self.ConvertToPDF = function(HashCode,done){
         PDFClient.sendMessage({ file_id: HashCode },done);
-	}
-
-	self.CodeData = function(DataObject,CodeUser,done){
-		var data = mongoose.model('data');
-		var nD = new data(DataObject);
-		data.findOne(DataObject).isactive().exec(function(err,Data){
-			if (!Data){
-				nD.save(CodeUser,function(err){
-					return done(err,nD.CodeData);
-				})
-			} else {
-				return done(err,nD.CodeData);
-			}
-		})
 	}
 
 	self.LoadInfo = function(done){
@@ -132,18 +121,16 @@ router.get('/filebycode',  function(req,res,next){
 
 
 router.get('/count', function(req,res,next){
-	var Query = _.pick(req.query.Context,["CodeDoc","YearData"]);
-	Query["YearData"] = parseInt(Query["YearData"]);
-	var file = mongoose.model("file");
-	file.count(Query).exec(function(err,Counter){
+	mongoose.model("file").count({CodeDoc:req.query.Context.CodeDoc,YearData:parseInt(req.query.Context.Year)}).isactive().exec(function(err,Counter){
 		return res.json(Counter);
 	})
 })
 
 
 router.get('/:CodeDoc',  function(req,res,next){
-	var file = mongoose.model("file");
-	file.find({CodeDoc:req.params.CodeDoc}).isactive().lean().exec(function(err,Files){
+	var Objs = HP.AvObj(req.session.permissions); 
+	if (_.isEmpty(Objs)) return next("NoPermissionObjs");
+	mongoose.model("file").find({CodeDoc:req.params.CodeDoc,CodeObj:{$in:Objs},YearData:parseInt(req.query.Context.Year)}).isactive().lean().exec(function(err,Files){
 		if (err) return next(err);
 		if (!Files.length) return res.json([]);
 		FileManagerHelper.BuildTree(Files,function(err,TreeArr){
@@ -155,38 +142,59 @@ router.get('/:CodeDoc',  function(req,res,next){
 
 
 
+router.delete('/:id',  HP.TaskAccess("IsFileRemover") ,function(req,res,next){
+	mongoose.model("file").findOne({_id:req.params.id}).isactive().exec(function(err,File){
+		if (err) return next(err);
+		if (!File) return next("FileNotFound");
+		File.remove(req.user.CodeUser,function(err){
+			if (err) return next(err);
+			return res.json({});
+		})
+	})
+})
+
+
+
 router.post('/',  function(req,res,next){
 	var UserCode = req.user.CodeUser;
-	FileManagerHelper.CodeData(req.body.Data, UserCode, function(err,CodeData){
-		if (err) return next(err);
-		var model = mongoose.model('file');		
-		var Data = _.merge(req.body.Data,{CodeData:CodeData,CodeUser:UserCode});
-		var File = _.merge(req.body.File,Data);
-		if (File._id){
-			return next("Обновление файлов пока не реализовано");
+	var GetFile = function(Info,done){
+		var FileModel = mongoose.model('file');
+		if (!Info._id){
+			var F = new FileModel(Info);
+			return done(null,F);
 		} else {
-			var F = new model(File);
-			var NeedToConvert = true;
-			if (F.NameFile.indexOf(".pdf")>=0){
-				F.PDF = F.HashCode;
-				NeedToConvert = false;
-			}
-			F.save(UserCode,function(err){
+			FileModel.findOne({_id:Info._id}).isactive().exec(function(err,F){
+				if (!F) {
+					F = new FileModel(Info);
+				} else {
+					for (var K in Info) F[K] = Info[K];
+				}
+				return done(err,F);
+			})			
+		}
+	}
+	GetFile(_.merge(req.body.File,{DateDoc:Date.now(),CodeUser:UserCode}),function(err,F){
+		if (err) return next(err);
+		var NeedToConvert = true;
+		if (F.NameFile.indexOf(".pdf")>=0){
+			F.PDF = F.HashCode;
+			NeedToConvert = false;
+		}
+		F.save(UserCode,function(err){
+			if (err) return next(err);
+			if (!NeedToConvert) return res.json({});
+			FileManagerHelper.ConvertToPDF(F.HashCode,function(err,PDF){
+				if (err){
+					console.log("PDF GOT",err,PDF);
+				}
 				if (err) return next(err);
-				if (!NeedToConvert) return res.json({});
-				FileManagerHelper.ConvertToPDF(F.HashCode,function(err,PDF){
-					if (err){
-						console.log("PDF GOT",err,PDF);
-					}
+				FileModel.findByIdAndUpdate(F._id,{PDF:PDF}).exec(function(err){	
 					if (err) return next(err);
-					model.findByIdAndUpdate(F._id,{PDF:PDF}).exec(function(err){	
-						if (err) return next(err);
-						return res.json({});
-					})
+					return res.json({});
 				})
 			})
-		}
-	});
+		})
+	})
 })
 
 

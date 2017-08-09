@@ -8,6 +8,10 @@
   <div class="btn-group">
       <!-- ko template:'tb_colapse_expand' --><!-- /ko -->      
   </div>
+  <div class="btn-group">
+      <!-- ko template:'tb_year' --><!-- /ko -->      
+  </div>
+
   <!-- ko with:ChoosenAttach -->
   <div class="btn-group" >
     <a class='btn btn-sm btn-warning btn-white inacvtive half-inacvtive' data-bind="title:'Скачать файл',attr:{href:'/api/gfs/download/'+$data.HashCode()}">
@@ -19,13 +23,11 @@
     </a>
     <!-- /ko -->
   </div>
-  <!-- 
-  <div class="btn-group">
-  <a class='btn btn-sm btn-danger btn-white inacvtive half-inacvtive' data-bind="title:'Удалить файл',click: $parent.RemoveAttach">
-      <i class="ace-icon fa fa-trash-o"></i>
-    </a>
-  </div>
-  -->
+  <div class="btn-group" data-bind="Permit:{Id:'IsFileRemover', Type:'Task'}">
+      <a class='btn btn-sm btn-danger btn-white ' data-bind="title:'Удалить файл',click:MFileManager.RemoveFile">
+        <i class="ace-icon fa fa-trash-o"></i>
+      </a>
+  </div>  
   <!-- /ko -->
 
 </div>
@@ -66,7 +68,7 @@
                   data:{Name:'Описание',Fields:['File','NameFile','SNameFile','NumDoc','CodeFileType','Comment'],Model:$data}
               } --><!-- /ko -->
             </div>
-            <div class='col-xs-6' data-bind='with:$data.NewAttachData'>
+            <div class='col-xs-6' data-bind='with:$data.NewAttach'>
               <!-- ko template:{
                   name:'small_form_with_header',
                   data:{Name:'Контекст',Fields:['CodeDoc','YearData','CodePeriod','CodeObj'],Model:$data}

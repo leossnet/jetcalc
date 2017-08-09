@@ -3,18 +3,19 @@ var MFileManager = (new function() {
 	var self = new Module("filemanager");
 
 	self.Init = function(done){
-
 		CxCtrl.Events.addListener("documentchanged",function(){
-			console.log("Event","documentchanged");
 			MFileManager.CountAttaches();
 		})
 		return done();
 	}
 
-	self.IsInited = ko.observable(false);
+	self.ContextChange = function(){
+		self.Reload();
+	}
 
 	self.IsAvailable = function(CodeDoc){
-		return true;
+ 		var Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
+        return !_.isEmpty(Doc);
 	}
 
 	self.CollapseAllRows = function(){
@@ -47,7 +48,7 @@ var MFileManager = (new function() {
 
 	self.ShowPDFByCode = function(CodeFile){
 		self.rGet("filebycode",{CodeFile:CodeFile},function(data){
-			self.ChoosenAttach(MModels.Create("file",_.pick(data,["HashCode","NameFile","PDF"])));
+			self.ChoosenAttach(MModels.Create("file",data));
 			self.Preview();
 		})
 	}
@@ -73,13 +74,16 @@ var MFileManager = (new function() {
 	self.ChoosenAttach = ko.observable(null);
 
 	self.BeforeShow = function (){
+		self.Reload();
+	}
+
+	self.Reload = function(){
 		self.LoadFiles(function(){
 			setTimeout(function(){
-				self.IsInited = ko.observable(true);
 				if (self.Files.length)	{
 					self.RenderTable();
 				}
-			})
+			},0)
 		})
 	}
 
@@ -90,7 +94,6 @@ var MFileManager = (new function() {
 	self.CountAttaches = function(){
 		self.Counter(0);
 		self.rGet("count",{Context:CxCtrl.CxPermDoc()},function(data){
-			if (data.err) return self.Error (data.err);
 			self.Counter(data);
 		})
 
@@ -162,8 +165,9 @@ var MFileManager = (new function() {
   
   	self.OnFileChoose = function(event,xy){
   		var Info = self.table.getCellMeta(xy.row,xy.col);
+
   		if (Info.Type=='File'){
-  			self.ChoosenAttach(MModels.Create("file",_.pick(Info,["HashCode","NameFile","PDF"])));
+  			self.ChoosenAttach(MModels.Create("file",self.Files[xy.row]));
   		} else {
   			self.ChoosenAttach(null);
   		}
@@ -213,16 +217,13 @@ var MFileManager = (new function() {
 	}	
 
 	self.NewAttach = ko.observable(null);
-	self.NewAttachData = ko.observable(null);
 
 	self.EditAttach =  function (row, col, instance) {
 		var Meta = instance.getCellMeta(row, col);
 		if (Meta.Type=='File'){
-			var NA = MModels.Create("file",_.pick(Meta,['_id',"NameFile","File","SNameFile","NumDoc","CodeFileType","Comment"]));
-			var ND = MModels.Create("data",_.pick(Meta,['CodeObj','CodeDoc','CodePeriod','YearData']));
+			var NA = MModels.Create("file",_.pick(Meta,['_id',"NameFile","File","SNameFile","NumDoc","CodeFileType","Comment",'CodeObj','CodeDoc','CodePeriod','YearData']));
 			NA.File(NA.NameFile());
 			self.NewAttach(NA);
-			self.NewAttachData(ND);
 			$('#attachDialog').modal('show');
 			self.IsAttachShow(true);
 			$('#attachDialog').on('hide.bs.modal', self.CleanNewAttach); 
@@ -230,17 +231,14 @@ var MFileManager = (new function() {
 	}
 
 	self.CreateNewAttach = function (){
-		var NA = MModels.Create("file",{});
 		var Cx = CxCtrl.Context();
-		Cx.YearData = Cx.Year;
-		var ND = MModels.Create("data",_.pick(Cx,['CodeObj','CodeDoc','CodePeriod','YearData']));
+		var NA = MModels.Create("file",_.pick(Cx,['CodeObj','CodeDoc','CodePeriod','YearData']));		
+		NA.YearData = Cx.Year;
 		self.NewAttach(NA);
-		self.NewAttachData(ND);
 	}
 
 	self.CleanNewAttach = function(){
 		self.NewAttach(null);
-		self.NewAttachData(null);
 		self.IsAttachShow(false);
 		self.Error(null);
 	}
@@ -257,6 +255,30 @@ var MFileManager = (new function() {
 
 	self.IsAttachShow = ko.observable(false);
 
+	self.RemoveFile = function(data){
+		var D = self.ChoosenAttach().toJS();
+		swal({
+            title: "",
+            text: "Вы собираетесь удалить файл "+D.NameFile,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Да, удалить!",
+            cancelButtonText: "Отменить",
+            closeOnConfirm: true
+        },
+        function () {
+            self._remove(D);
+        });
+	}
+
+	self._remove = function(data){
+		self.rDelete(data._id,{Context:{CodeDoc:data.CodeDoc,CodeObj:data.CodeObj}},function(){
+			self.Reload();
+			self.CountAttaches();
+		})
+	}
+
 	self.AddAttach = function(){
 		if (!self.NewAttach().File()){
 			return self.Error("Добавьте файл");
@@ -272,23 +294,14 @@ var MFileManager = (new function() {
 			var File2Send = _.omit(self.NewAttach().toJS(),"File");
 			if (id) File2Send = _.merge(File2Send,{HashCode:id});
             var Data2Send = {
-            	File:File2Send,
-            	Data:self.NewAttachData().toJS()
+            	File:File2Send
             }
-            $.ajax({
-            	url:self.base,
-            	method:'post',
-            	data:Data2Send,
-            	success:function(data){
-            		if (data.err) return self.Error(data.err);
-					self.LoadFiles(function(){
-						$('#attachDialog').modal('hide');
-						self.CleanNewAttach();	
-						self.CountAttaches();
-						self.Init();
-					});
-            	}
-            })              
+            self.rPost("",Data2Send,function(data){
+				$('#attachDialog').modal('hide');
+				self.CleanNewAttach();	
+				self.CountAttaches();
+				self.Reload();
+	    	})
 		})
 	}
 
