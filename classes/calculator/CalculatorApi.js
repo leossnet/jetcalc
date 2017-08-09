@@ -48,7 +48,7 @@ router.post('/api/cell/validateformula', function(req,res,next){
 	var DivHelperApi = require(__base+"classes/calculator/helpers/Div.js");
 	var DivHelper = new DivHelperApi(req.body.Context);
 	DivHelper.get(function(err,DivInfo){
-		var CurrentObj = req.body.SubObj ? req.body.SubObj:Context.CodeObj;
+		var CurrentObj = req.body.SubObj ? req.body.SubObj:req.body.Context.CodeObj;
 		var RootObj = null;
 		if (DivInfo[CurrentObj] && DivInfo[CurrentObj].RootObj){
 			RootObj = DivInfo[CurrentObj].RootObj;
@@ -66,6 +66,7 @@ router.post('/api/cell/validateformula', function(req,res,next){
 			})
 		})
 		var Error = {};
+		console.log(ToTest);
 		async.each(_.keys(ToTest),function(Key,cb){
 			var Check = ToTest[Key];
 			if (_.isEmpty(Check)) return cb();

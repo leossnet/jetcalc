@@ -1,12 +1,13 @@
 monthInKvart
 |round
 |choose
-|checklimit
-|'f.monthInKvart'
-|'f.round'
-|'f.choose'
-|'System.Math.Round'
-|'f.checklimit'
+|limit
+|lt
+|gt
+|le
+|ge
+|min
+|max
 |EDITOR_FUNCTION                               return 'U_FUNC';
 
 d_u_func                                       return 'FUNC';
@@ -18,7 +19,6 @@ MCOUNT
 |year
 |EDITOR_CONSTANTA                              return 'U_CONSTANTA';
 
-'q.Column.Period'                              return 'OLD';
 
 d_u_constanta                                  return 'CONSTANTA';
 

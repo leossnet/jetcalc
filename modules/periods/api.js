@@ -232,15 +232,6 @@ router.get('/table', HP.TaskAccess("IsPeriodEditTunner"), function(req, res, nex
 	})
 })
 
-
-setTimeout(function(){
-	PeriodRedirects.Get(function(err,Redirect){
-		console.log(Redirect);
-	})
-
-},1000)
-
-
 router.get('/init', function(req, res, next){
 	ReportPeriods.Opened(function(err,Opened){
 		MapPeriods.GetMap(function(err,Map){

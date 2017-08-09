@@ -3,14 +3,6 @@ module.exports = {
 		"tablename": "[link].[OrgGrps]",
 		"menuplace": "Link",
 		"fields": {
-			"IdOrgGrp": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeOrgGrp": {
 				"type": String,
 				"default": null,
@@ -18,22 +10,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdOrg": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "org",
-				"view": "none",
-				"dep": "CodeOrg",
-				"hidden": true
-			},
-			"IdGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrp",
-				"hidden": true
 			},
 			"CodeOrg": {
 				"type": String,
@@ -59,14 +35,6 @@ module.exports = {
 		"tablename": "[spr].[Formats]",
 		"menuplace": "Service",
 		"fields": {
-			"IdFormat": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeFormat": {
 				"type": String,
 				"default": "NONE",
@@ -93,72 +61,10 @@ module.exports = {
 			}
 		}
 	},
-	"userphoto": {
-		"tablename": "[link].[UserPhotos]",
-		"menuplace": "Link",
-		"fields": {
-			"IdUserPhoto": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdUser": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "user",
-				"view": "none",
-				"dep": "CodeUser",
-				"hidden": true
-			},
-			"SPhoto": {
-				"type": "Buffer",
-				"default": null,
-				"view": "none"
-			},
-			"Photo": {
-				"type": "Buffer",
-				"default": null,
-				"view": "none"
-			},
-			"LPhoto": {
-				"type": "Buffer",
-				"default": null,
-				"view": "none"
-			},
-			"CodeUserPhoto": {
-				"type": String,
-				"default": null,
-				"view": "all",
-				"role": "code",
-				"index": true,
-				"unique": true
-			},
-			"CodeUser": {
-				"type": String,
-				"default": "",
-				"view": "none",
-				"dep": "IdUser",
-				"refmodel": "user",
-				"index": true,
-				"extended": true
-			}
-		}
-	},
 	"objclass": {
 		"tablename": "[spr].[ObjClasses]",
 		"menuplace": "Service",
 		"fields": {
-			"IdObjClass": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeObjClass": {
 				"type": String,
 				"default": null,
@@ -182,16 +88,6 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none"
-			},
-			"OldIdObjClass": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"OldTagObjClass": {
-				"type": String,
-				"default": "",
-				"view": "none"
 			}
 		}
 	},
@@ -199,14 +95,6 @@ module.exports = {
 		"tablename": "[core].[ColsetCols]",
 		"menuplace": "Core",
 		"fields": {
-			"IdColsetCol": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeColsetCol": {
 				"type": String,
 				"default": null,
@@ -214,22 +102,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdColset": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "colset",
-				"view": "none",
-				"dep": "CodeColset",
-				"hidden": true
-			},
-			"IdCol": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "col",
-				"view": "none",
-				"dep": "CodeCol",
-				"hidden": true
 			},
 			"NameColsetCol": {
 				"type": String,
@@ -257,14 +129,6 @@ module.exports = {
 				"default": 0,
 				"view": "none"
 			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
-			},
 			"IsFixed": {
 				"type": Boolean,
 				"default": false,
@@ -275,39 +139,15 @@ module.exports = {
 				"default": false,
 				"view": "none"
 			},
-			"IdRole": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "role",
-				"view": "none",
-				"dep": "CodeRole",
-				"hidden": true
-			},
 			"IsNoRoles": {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
 			},
-			"IdValid": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "valid",
-				"view": "none",
-				"dep": "CodeValid",
-				"hidden": true
-			},
 			"IsHistory": {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
-			},
-			"IdStyle": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "style",
-				"view": "none",
-				"dep": "CodeStyle",
-				"hidden": true
 			},
 			"IsAgFormula": {
 				"type": Boolean,
@@ -382,6 +222,11 @@ module.exports = {
 				"refmodel": "style",
 				"index": true,
 				"extended": true
+			},
+			"AfPriority": {
+				"type": Number,
+				"default": 0,
+				"view": "none"
 			}
 		}
 	},
@@ -389,14 +234,6 @@ module.exports = {
 		"tablename": "[core].[Files]",
 		"menuplace": "Core",
 		"fields": {
-			"IdFile": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeFile": {
 				"type": String,
 				"default": null,
@@ -430,30 +267,6 @@ module.exports = {
 				"type": String,
 				"default": null,
 				"view": "none"
-			},
-			"IdFileType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "filetype",
-				"view": "none",
-				"dep": "CodeFileType",
-				"hidden": true
-			},
-			"IdUser": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "user",
-				"view": "none",
-				"dep": "CodeUser",
-				"hidden": true
-			},
-			"IdData": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "data",
-				"view": "none",
-				"dep": "CodeData",
-				"hidden": true
 			},
 			"Comment": {
 				"type": String,
@@ -493,14 +306,6 @@ module.exports = {
 		"tablename": "[link].[PeriodAutofills]",
 		"menuplace": "Link",
 		"fields": {
-			"IdPeriodAutofill": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePeriodAutofill": {
 				"type": String,
 				"default": null,
@@ -508,27 +313,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"Idx": {
-				"type": Number,
-				"default": 0,
-				"view": "none"
-			},
-			"IdSourcePeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodeSourcePeriod",
-				"hidden": true
-			},
-			"IdTargetPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodeTargetPeriod",
-				"hidden": true
 			},
 			"CodeSourcePeriod": {
 				"type": String,
@@ -554,14 +338,6 @@ module.exports = {
 		"tablename": "[link].[ParamSetKeys]",
 		"menuplace": "Link",
 		"fields": {
-			"IdParamSetKey": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeParamSetKey": {
 				"type": String,
 				"default": "",
@@ -569,22 +345,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdParamSet": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "paramset",
-				"view": "none",
-				"dep": "CodeParamSet",
-				"hidden": true
-			},
-			"IdParamKey": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "paramkey",
-				"view": "none",
-				"dep": "CodeParamKey",
-				"hidden": true
 			},
 			"KeyValue": {
 				"type": Boolean,
@@ -615,14 +375,6 @@ module.exports = {
 		"tablename": "[spr].[ChartTypes]",
 		"menuplace": "Service",
 		"fields": {
-			"IdChartType": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeChartType": {
 				"type": String,
 				"default": null,
@@ -698,14 +450,6 @@ module.exports = {
 		"tablename": "[core].[Presents]",
 		"menuplace": "Core",
 		"fields": {
-			"IdPresent": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePresent": {
 				"type": String,
 				"default": null,
@@ -734,30 +478,6 @@ module.exports = {
 				"type": String,
 				"default": null,
 				"view": "none"
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdPresentThema": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "presentthema",
-				"view": "none",
-				"dep": "CodePresentThema",
-				"hidden": true
-			},
-			"IdPresentTransitType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "presenttransittype",
-				"view": "none",
-				"dep": "CodePresentTransitType",
-				"hidden": true
 			},
 			"IsAutoPlay": {
 				"type": Boolean,
@@ -812,14 +532,6 @@ module.exports = {
 		"tablename": "[link].[RowColOptions]",
 		"menuplace": "Link",
 		"fields": {
-			"IdRowColOption": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeRowColOption": {
 				"type": String,
 				"default": null,
@@ -827,22 +539,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdRow": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "row",
-				"view": "none",
-				"dep": "CodeRow",
-				"hidden": true
-			},
-			"IdCol": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "col",
-				"view": "none",
-				"dep": "CodeCol",
-				"hidden": true
 			},
 			"IsEditable": {
 				"type": Boolean,
@@ -878,14 +574,6 @@ module.exports = {
 		"tablename": "[spr].[Styles]",
 		"menuplace": "Service",
 		"fields": {
-			"IdStyle": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeStyle": {
 				"type": String,
 				"default": null,
@@ -916,14 +604,6 @@ module.exports = {
 		"tablename": "[core].[DocFolders]",
 		"menuplace": "Core",
 		"fields": {
-			"IdDocFolder": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDocFolder": {
 				"type": String,
 				"default": null,
@@ -948,14 +628,6 @@ module.exports = {
 				"default": "",
 				"view": "none"
 			},
-			"IdParentDocFolder": {
-				"type": Number,
-				"default": -1,
-				"refmodel": "docfolder",
-				"view": "none",
-				"dep": "CodeParentDocFolder",
-				"hidden": true
-			},
 			"IndexDocFolder": {
 				"type": Number,
 				"default": 0,
@@ -976,14 +648,6 @@ module.exports = {
 		"tablename": "[spr].[FileTypes]",
 		"menuplace": "Service",
 		"fields": {
-			"IdFileType": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeFileType": {
 				"type": String,
 				"default": null,
@@ -1009,30 +673,6 @@ module.exports = {
 		"tablename": "[link].[ColTags]",
 		"menuplace": "Link",
 		"fields": {
-			"IdColTag": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdCol": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "col",
-				"view": "none",
-				"dep": "CodeCol",
-				"hidden": true
-			},
-			"IdTag": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "tag",
-				"view": "none",
-				"dep": "CodeTag",
-				"hidden": true
-			},
 			"Value": {
 				"type": String,
 				"default": null,
@@ -1070,14 +710,6 @@ module.exports = {
 		"tablename": "[spr].[Valids]",
 		"menuplace": "Service",
 		"fields": {
-			"IdValid": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeValid": {
 				"type": String,
 				"default": "NONE",
@@ -1108,55 +740,10 @@ module.exports = {
 		"tablename": "[core].[Data]",
 		"menuplace": "Core",
 		"fields": {
-			"IdData": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"YearData": {
 				"type": Number,
 				"default": 0,
 				"view": "none"
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
-			},
-			"IdObj": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "obj",
-				"view": "none",
-				"dep": "CodeObj",
-				"hidden": true
-			},
-			"IdStatus": {
-				"type": Number,
-				"default": 0,
-				"view": "none"
-			},
-			"IdState": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "state",
-				"view": "none",
-				"dep": "CodeState",
-				"hidden": true
 			},
 			"CodeData": {
 				"type": String,
@@ -1208,14 +795,6 @@ module.exports = {
 		"tablename": "[core].[Cols]",
 		"menuplace": "Core",
 		"fields": {
-			"IdCol": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeCol": {
 				"type": String,
 				"default": "NONE",
@@ -1246,24 +825,6 @@ module.exports = {
 				"view": "none"
 			},
 			"Formula": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"IdValuta": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "valuta",
-				"view": "none",
-				"dep": "CodeValuta",
-				"hidden": true
-			},
-			"OldIdCol": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"OldTagCol": {
 				"type": String,
 				"default": "",
 				"view": "none"
@@ -1303,11 +864,6 @@ module.exports = {
 				"default": "",
 				"view": "none"
 			},
-			"OldFormula": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
 			"IsVirtual": {
 				"type": Boolean,
 				"default": false,
@@ -1328,14 +884,6 @@ module.exports = {
 		"tablename": "[spr].[Priveleges]",
 		"menuplace": "Service",
 		"fields": {
-			"IdPrivelege": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePrivelege": {
 				"type": String,
 				"default": null,
@@ -1371,14 +919,6 @@ module.exports = {
 		"tablename": "[spr].[StateCalendar]",
 		"menuplace": "Service",
 		"fields": {
-			"IdStateCalendar": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeStateCaledar": {
 				"type": String,
 				"default": null,
@@ -1394,14 +934,6 @@ module.exports = {
 				"type": String,
 				"default": null,
 				"view": "none"
-			},
-			"IdRole": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "role",
-				"view": "none",
-				"dep": "CodeRole",
-				"hidden": true
 			},
 			"DaysClosed": {
 				"type": Number,
@@ -1423,14 +955,6 @@ module.exports = {
 		"tablename": "[link].[ValutaRates]",
 		"menuplace": "Link",
 		"fields": {
-			"IdValutaRate": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeValutaRate": {
 				"type": String,
 				"default": null,
@@ -1439,50 +963,10 @@ module.exports = {
 				"index": true,
 				"unique": true
 			},
-			"IdValuta": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "valuta",
-				"view": "none",
-				"dep": "CodeValuta",
-				"hidden": true
-			},
-			"IdReportValuta": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "valuta",
-				"view": "none",
-				"dep": "CodeReportValuta",
-				"hidden": true
-			},
-			"IdReportValuta1": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "valuta",
-				"view": "none",
-				"dep": "CodeReportValuta1",
-				"hidden": true
-			},
-			"IdReportValuta2": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "valuta",
-				"view": "none",
-				"dep": "CodeReportValuta2",
-				"hidden": true
-			},
 			"Year": {
 				"type": Number,
 				"default": 0,
 				"view": "none"
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
 			},
 			"Value": {
 				"type": Number,
@@ -1550,14 +1034,6 @@ module.exports = {
 		"tablename": "[spr].[SumGrps]",
 		"menuplace": "Service",
 		"fields": {
-			"IdSumGrp": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeSumGrp": {
 				"type": String,
 				"default": null,
@@ -1583,14 +1059,6 @@ module.exports = {
 		"tablename": "[link].[VirtualDocBases]",
 		"menuplace": "Link",
 		"fields": {
-			"IdVirtualDocBase": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeVirtualDocBase": {
 				"type": String,
 				"default": null,
@@ -1598,22 +1066,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdDocBase": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDocBase",
-				"hidden": true
 			},
 			"CodeDoc": {
 				"type": String,
@@ -1639,14 +1091,6 @@ module.exports = {
 		"tablename": "[spr].[Measures]",
 		"menuplace": "Service",
 		"fields": {
-			"IdMeasure": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeMeasure": {
 				"type": String,
 				"default": null,
@@ -1676,16 +1120,6 @@ module.exports = {
 				"default": "",
 				"view": "none"
 			},
-			"OldIdMeasure": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"OldEditUserMeasure": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
 			"IsExchange": {
 				"type": Boolean,
 				"default": false,
@@ -1697,14 +1131,6 @@ module.exports = {
 		"tablename": "[spr].[Roles]",
 		"menuplace": "Service",
 		"fields": {
-			"IdRole": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeRole": {
 				"type": String,
 				"default": "NONE",
@@ -1744,14 +1170,6 @@ module.exports = {
 				"default": false,
 				"view": "none"
 			},
-			"IdModel": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "model",
-				"view": "none",
-				"dep": "CodeModel",
-				"hidden": true
-			},
 			"IsExtended": {
 				"type": Boolean,
 				"default": false,
@@ -1772,14 +1190,6 @@ module.exports = {
 		"tablename": "[core].[PresentSlides]",
 		"menuplace": "Core",
 		"fields": {
-			"IdPresentSlide": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePresentSlide": {
 				"type": String,
 				"default": null,
@@ -1808,35 +1218,6 @@ module.exports = {
 				"type": String,
 				"default": null,
 				"view": "none"
-			},
-			"IdxPresent": {
-				"type": Number,
-				"default": 0,
-				"view": "none"
-			},
-			"IdPresent": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "present",
-				"view": "none",
-				"dep": "CodePresent",
-				"hidden": true
-			},
-			"IdPresentTransitType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "presenttransittype",
-				"view": "none",
-				"dep": "CodePresentTransitType",
-				"hidden": true
-			},
-			"IdPresentSlideLayout": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "presentslidelayout",
-				"view": "none",
-				"dep": "CodePresentSlideLayout",
-				"hidden": true
 			},
 			"CodePresent": {
 				"type": String,
@@ -1871,14 +1252,6 @@ module.exports = {
 		"tablename": "[core].[Headers]",
 		"menuplace": "Core",
 		"fields": {
-			"IdHeader": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeHeader": {
 				"type": String,
 				"default": null,
@@ -1903,22 +1276,6 @@ module.exports = {
 				"default": -1,
 				"view": "none"
 			},
-			"IdColset": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "colset",
-				"view": "none",
-				"dep": "CodeColset",
-				"hidden": true
-			},
-			"IdParentHeader": {
-				"type": Number,
-				"default": -1,
-				"refmodel": "header",
-				"view": "none",
-				"dep": "CodeParentHeader",
-				"hidden": true
-			},
 			"Condition": {
 				"type": String,
 				"default": "",
@@ -1928,14 +1285,6 @@ module.exports = {
 				"type": Number,
 				"default": 0,
 				"view": "none"
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
 			},
 			"IsFixed": {
 				"type": Boolean,
@@ -1947,39 +1296,15 @@ module.exports = {
 				"default": false,
 				"view": "none"
 			},
-			"IdRole": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "role",
-				"view": "none",
-				"dep": "CodeRole",
-				"hidden": true
-			},
 			"IsNoRoles": {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
 			},
-			"IdValid": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "valid",
-				"view": "none",
-				"dep": "CodeValid",
-				"hidden": true
-			},
 			"IsHistory": {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
-			},
-			"IdStyle": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "style",
-				"view": "none",
-				"dep": "CodeStyle",
-				"hidden": true
 			},
 			"IsPublic": {
 				"type": Boolean,
@@ -2046,14 +1371,6 @@ module.exports = {
 		"tablename": "[core].[Charts]",
 		"menuplace": "Core",
 		"fields": {
-			"IdChart": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeChart": {
 				"type": String,
 				"default": null,
@@ -2072,22 +1389,6 @@ module.exports = {
 				"type": String,
 				"default": null,
 				"view": "none"
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdChartType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "charttype",
-				"view": "none",
-				"dep": "CodeChartType",
-				"hidden": true
 			},
 			"UseGrid": {
 				"type": Boolean,
@@ -2168,14 +1469,6 @@ module.exports = {
 		"tablename": "[link].[DocRelations]",
 		"menuplace": "Link",
 		"fields": {
-			"IdDocRelation": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDocRelation": {
 				"type": String,
 				"default": null,
@@ -2183,22 +1476,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdDocSourse": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDocSourse",
-				"hidden": true
-			},
-			"IdDocTarget": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDocTarget",
-				"hidden": true
 			},
 			"DoSetTree": {
 				"type": Boolean,
@@ -2219,22 +1496,6 @@ module.exports = {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
-			},
-			"IdGrpSource": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrpSource",
-				"hidden": true
-			},
-			"IdGrpTarget": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrpTarget",
-				"hidden": true
 			},
 			"CodeDocSourse": {
 				"type": String,
@@ -2278,14 +1539,6 @@ module.exports = {
 		"tablename": "[core].[Departs]",
 		"menuplace": "Core",
 		"fields": {
-			"IdDepart": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDepart": {
 				"type": String,
 				"default": null,
@@ -2304,30 +1557,6 @@ module.exports = {
 				"type": String,
 				"default": null,
 				"view": "none"
-			},
-			"IdParentDepart": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "depart",
-				"view": "none",
-				"dep": "CodeParentDepart",
-				"hidden": true
-			},
-			"IdOrg": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "org",
-				"view": "none",
-				"dep": "CodeOrg",
-				"hidden": true
-			},
-			"IdChiefUser": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "user",
-				"view": "none",
-				"dep": "CodeChiefUser",
-				"hidden": true
 			},
 			"CodeParentDepart": {
 				"type": String,
@@ -2362,14 +1591,6 @@ module.exports = {
 		"tablename": "[link].[StateCalendarDates]",
 		"menuplace": "Link",
 		"fields": {
-			"IdStateCalendarDate": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeStateCalendarDate": {
 				"type": String,
 				"default": null,
@@ -2377,14 +1598,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdStateCalendar": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "statecalendar",
-				"view": "none",
-				"dep": "CodeStateCalendar",
-				"hidden": true
 			},
 			"YearReport": {
 				"type": Number,
@@ -2395,14 +1608,6 @@ module.exports = {
 				"type": Number,
 				"default": 0,
 				"view": "none"
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
 			},
 			"DateClosed": {
 				"type": Date,
@@ -2438,14 +1643,6 @@ module.exports = {
 		"tablename": "[link].[TaskPriveleges]",
 		"menuplace": "Link",
 		"fields": {
-			"IdTaskPrivelege": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeTaskPrivelege": {
 				"type": String,
 				"default": null,
@@ -2453,22 +1650,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdTask": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "task",
-				"view": "none",
-				"dep": "CodeTask",
-				"hidden": true
-			},
-			"IdPrivelege": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "privelege",
-				"view": "none",
-				"dep": "CodePrivelege",
-				"hidden": true
 			},
 			"CodeTask": {
 				"type": String,
@@ -2494,30 +1675,6 @@ module.exports = {
 		"tablename": "[link].[RowSumGrps]",
 		"menuplace": "Link",
 		"fields": {
-			"IdRowSumGrp": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdSumGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "sumgrp",
-				"view": "none",
-				"dep": "CodeSumGrp",
-				"hidden": true
-			},
-			"IdRow": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "row",
-				"view": "none",
-				"dep": "CodeRow",
-				"hidden": true
-			},
 			"CodeRowSumGrp": {
 				"type": String,
 				"default": null,
@@ -2550,14 +1707,6 @@ module.exports = {
 		"tablename": "[spr].[Tasks]",
 		"menuplace": "Service",
 		"fields": {
-			"IdTask": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeTask": {
 				"type": String,
 				"default": null,
@@ -2576,22 +1725,6 @@ module.exports = {
 				"type": String,
 				"default": null,
 				"view": "none"
-			},
-			"IdDepart": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "depart",
-				"view": "none",
-				"dep": "CodeDepart",
-				"hidden": true
-			},
-			"IdModel": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "model",
-				"view": "none",
-				"dep": "CodeModel",
-				"hidden": true
 			},
 			"CodeDepart": {
 				"type": String,
@@ -2617,14 +1750,6 @@ module.exports = {
 		"tablename": "[link].[ColsetColPeriodGrps]",
 		"menuplace": "Link",
 		"fields": {
-			"IdColsetColPeriodGrp": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeColsetColPeriodGrp": {
 				"type": String,
 				"default": null,
@@ -2632,22 +1757,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdColsetCol": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "colsetcol",
-				"view": "none",
-				"dep": "CodeColsetCol",
-				"hidden": true
-			},
-			"IdPeriodGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "periodgrp",
-				"view": "none",
-				"dep": "CodePeriodGrp",
-				"hidden": true
 			},
 			"CodeColsetCol": {
 				"type": String,
@@ -2673,14 +1782,6 @@ module.exports = {
 		"tablename": "[core].[Docs]",
 		"menuplace": "Core",
 		"fields": {
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDoc": {
 				"type": String,
 				"default": "",
@@ -2700,14 +1801,6 @@ module.exports = {
 				"default": "",
 				"view": "none"
 			},
-			"IdDocType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doctype",
-				"view": "none",
-				"dep": "CodeDocType",
-				"hidden": true
-			},
 			"PrintNameDoc": {
 				"type": String,
 				"default": "",
@@ -2718,23 +1811,10 @@ module.exports = {
 				"default": "",
 				"view": "none"
 			},
-			"OldIdDoc": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
 			"FirstYear": {
 				"type": Number,
 				"default": 0,
 				"view": "none"
-			},
-			"IdRole": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "role",
-				"view": "none",
-				"dep": "CodeRole",
-				"hidden": true
 			},
 			"IsDesigner": {
 				"type": Boolean,
@@ -2760,14 +1840,6 @@ module.exports = {
 				"type": Number,
 				"default": 0,
 				"view": "none"
-			},
-			"IdGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrp",
-				"hidden": true
 			},
 			"IsShowRoots": {
 				"type": Boolean,
@@ -2823,14 +1895,6 @@ module.exports = {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
-			},
-			"IdModel": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "model",
-				"view": "none",
-				"dep": "CodeModel",
-				"hidden": true
 			},
 			"IsBiztranDoc": {
 				"type": Boolean,
@@ -2892,14 +1956,6 @@ module.exports = {
 				"default": false,
 				"view": "none"
 			},
-			"IdMeasure": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "measure",
-				"view": "none",
-				"dep": "CodeMeasure",
-				"hidden": true
-			},
 			"CodeDocType": {
 				"type": String,
 				"default": "",
@@ -2951,14 +2007,6 @@ module.exports = {
 		"tablename": "[link].[DocBills]",
 		"menuplace": "Link",
 		"fields": {
-			"IdDocBill": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDocBill": {
 				"type": String,
 				"default": null,
@@ -2966,22 +2014,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdBill": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "bill",
-				"view": "none",
-				"dep": "CodeBill",
-				"hidden": true
 			},
 			"CodeDoc": {
 				"type": String,
@@ -3007,14 +2039,6 @@ module.exports = {
 		"tablename": "[core].[Colsets]",
 		"menuplace": "Core",
 		"fields": {
-			"IdColset": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeColset": {
 				"type": String,
 				"default": null,
@@ -3040,14 +2064,6 @@ module.exports = {
 		"tablename": "[spr].[Countries]",
 		"menuplace": "Service",
 		"fields": {
-			"IdCountry": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeCountry": {
 				"type": String,
 				"default": "NONE",
@@ -3066,11 +2082,6 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none"
-			},
-			"OldIdCountry": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
 			}
 		}
 	},
@@ -3078,14 +2089,6 @@ module.exports = {
 		"tablename": "[link].[ReportParamKeys]",
 		"menuplace": "Link",
 		"fields": {
-			"IdReportParamKey": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeReportParamKey": {
 				"type": String,
 				"default": null,
@@ -3093,30 +2096,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdReport": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "report",
-				"view": "none",
-				"dep": "CodeReport",
-				"hidden": true
-			},
-			"IdParam": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "param",
-				"view": "none",
-				"dep": "CodeParam",
-				"hidden": true
-			},
-			"IdParamSet": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "paramset",
-				"view": "none",
-				"dep": "CodeParamSet",
-				"hidden": true
 			},
 			"CodeReport": {
 				"type": String,
@@ -3151,14 +2130,6 @@ module.exports = {
 		"tablename": "[spr].[Bills]",
 		"menuplace": "Service",
 		"fields": {
-			"IdBill": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeBill": {
 				"type": String,
 				"default": null,
@@ -3188,16 +2159,6 @@ module.exports = {
 				"default": "",
 				"view": "none"
 			},
-			"OldIdCode": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"OldEditUserBill": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
 			"UseAltOrg": {
 				"type": Boolean,
 				"default": false,
@@ -3209,14 +2170,6 @@ module.exports = {
 		"tablename": "[link].[BillRelations]",
 		"menuplace": "Link",
 		"fields": {
-			"IdBillRelation": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeBillRelation": {
 				"type": String,
 				"default": null,
@@ -3225,47 +2178,15 @@ module.exports = {
 				"index": true,
 				"unique": true
 			},
-			"IdBillSource": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "bill",
-				"view": "none",
-				"dep": "CodeBillSource",
-				"hidden": true
-			},
-			"IdBillTarget": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "bill",
-				"view": "none",
-				"dep": "CodeBillTarget",
-				"hidden": true
-			},
 			"IsNotGrpSource": {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
 			},
-			"IdGrpSource": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrpSource",
-				"hidden": true
-			},
 			"IsNotGrpTarget": {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
-			},
-			"IdGrpTarget": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrpTarget",
-				"hidden": true
 			},
 			"IsMirror": {
 				"type": Boolean,
@@ -3314,14 +2235,6 @@ module.exports = {
 		"tablename": "[spr].[Status]",
 		"menuplace": "Service",
 		"fields": {
-			"IdStatus": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeStatus": {
 				"type": String,
 				"default": "",
@@ -3347,30 +2260,6 @@ module.exports = {
 		"tablename": "[link].[DocFolderDocs]",
 		"menuplace": "Link",
 		"fields": {
-			"IdDocFolderDoc": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdDocFolder": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "docfolder",
-				"view": "none",
-				"dep": "CodeDocFolder",
-				"hidden": true
-			},
 			"CodeDocFolderDoc": {
 				"type": String,
 				"default": null,
@@ -3403,46 +2292,6 @@ module.exports = {
 		"tablename": "[link].[RowObjs]",
 		"menuplace": "Link",
 		"fields": {
-			"IdRowObj": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdRow": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "row",
-				"view": "none",
-				"dep": "CodeRow",
-				"hidden": true
-			},
-			"IdObj": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "obj",
-				"view": "none",
-				"dep": "CodeObj",
-				"hidden": true
-			},
-			"IdGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrp",
-				"hidden": true
-			},
-			"IdObjType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "objtype",
-				"view": "none",
-				"dep": "CodeObjType",
-				"hidden": true
-			},
 			"CodeRowObj": {
 				"type": String,
 				"default": null,
@@ -3503,14 +2352,6 @@ module.exports = {
 		"tablename": "[link].[UserFavorites]",
 		"menuplace": "Link",
 		"fields": {
-			"IdUserFavorite": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeUserFavorite": {
 				"type": String,
 				"default": null,
@@ -3519,74 +2360,10 @@ module.exports = {
 				"index": true,
 				"unique": true
 			},
-			"IdUser": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "user",
-				"view": "none",
-				"dep": "CodeUser",
-				"hidden": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdObj": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "obj",
-				"view": "none",
-				"dep": "CodeObj",
-				"hidden": true
-			},
-			"IdDiv": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "div",
-				"view": "none",
-				"dep": "CodeDiv",
-				"hidden": true
-			},
-			"IdOtrasl": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "otrasl",
-				"view": "none",
-				"dep": "CodeOtrasl",
-				"hidden": true
-			},
-			"IdRegion": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "region",
-				"view": "none",
-				"dep": "CodeRegion",
-				"hidden": true
-			},
-			"IdGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrp",
-				"hidden": true
-			},
 			"Year": {
 				"type": Number,
 				"default": 0,
 				"view": "none"
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
 			},
 			"CodeUser": {
 				"type": String,
@@ -3666,14 +2443,6 @@ module.exports = {
 		"tablename": "[core].[PresentSlots]",
 		"menuplace": "Core",
 		"fields": {
-			"IdPresetSlot": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePresentSlot": {
 				"type": String,
 				"default": null,
@@ -3689,50 +2458,10 @@ module.exports = {
 				"default": null,
 				"view": "none"
 			},
-			"IdPresentSlide": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "presentslide",
-				"view": "none",
-				"dep": "CodePresentSlide",
-				"hidden": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdReport": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "report",
-				"view": "none",
-				"dep": "CodeReport",
-				"hidden": true
-			},
 			"YearData": {
 				"type": Number,
 				"default": 0,
 				"view": "none"
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
-			},
-			"IdValuta": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "valuta",
-				"view": "none",
-				"dep": "CodeValuta",
-				"hidden": true
 			},
 			"CodePresentSlide": {
 				"type": String,
@@ -3785,14 +2514,6 @@ module.exports = {
 		"tablename": "[link].[ColRelations]",
 		"menuplace": "Link",
 		"fields": {
-			"IdColRelation": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeColRelation": {
 				"type": String,
 				"default": null,
@@ -3800,30 +2521,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdDocRelation": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "docrelation",
-				"view": "none",
-				"dep": "CodeDocRelation",
-				"hidden": true
-			},
-			"IdColSource": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "col",
-				"view": "none",
-				"dep": "CodeColSource",
-				"hidden": true
-			},
-			"IdColTarget": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "col",
-				"view": "none",
-				"dep": "CodeColTarget",
-				"hidden": true
 			},
 			"IsAfFormula": {
 				"type": Boolean,
@@ -3868,14 +2565,6 @@ module.exports = {
 		"tablename": "[spr].[DocTypes]",
 		"menuplace": "Service",
 		"fields": {
-			"IdDocType": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDocType": {
 				"type": String,
 				"default": "NONE",
@@ -3901,30 +2590,6 @@ module.exports = {
 		"tablename": "[link].[ColsetColGrps]",
 		"menuplace": "Link",
 		"fields": {
-			"IdColsetColGrp": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdColsetCol": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "colsetcol",
-				"view": "none",
-				"dep": "CodeColsetCol",
-				"hidden": true
-			},
-			"IdGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrp",
-				"hidden": true
-			},
 			"NotInGrp": {
 				"type": Boolean,
 				"default": false,
@@ -3962,14 +2627,6 @@ module.exports = {
 		"tablename": "[spr].[Regions]",
 		"menuplace": "Service",
 		"fields": {
-			"IdRegion": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeRegion": {
 				"type": String,
 				"default": null,
@@ -3989,24 +2646,6 @@ module.exports = {
 				"default": "",
 				"view": "none"
 			},
-			"IdCountry": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "country",
-				"view": "none",
-				"dep": "CodeCountry",
-				"hidden": true
-			},
-			"OldIdRegion": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"Idx": {
-				"type": Number,
-				"default": 0,
-				"view": "none"
-			},
 			"CodeCountry": {
 				"type": String,
 				"default": "",
@@ -4022,14 +2661,6 @@ module.exports = {
 		"tablename": "[link].[DocPackets]",
 		"menuplace": "Link",
 		"fields": {
-			"IdDocPacket": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDocPacket": {
 				"type": String,
 				"default": null,
@@ -4037,22 +2668,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdPacket": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodePacket",
-				"hidden": true
 			},
 			"CodeDoc": {
 				"type": String,
@@ -4078,14 +2693,6 @@ module.exports = {
 		"tablename": "[spr].[DogovorTypes]",
 		"menuplace": "Service",
 		"fields": {
-			"IdDogovorType": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDogovorType": {
 				"type": String,
 				"default": null,
@@ -4111,14 +2718,6 @@ module.exports = {
 		"tablename": "[spr].[Prods]",
 		"menuplace": "Service",
 		"fields": {
-			"IdProd": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeProd": {
 				"type": String,
 				"default": "",
@@ -4143,36 +2742,10 @@ module.exports = {
 				"default": "",
 				"view": "none"
 			},
-			"IdMeasure": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "measure",
-				"view": "none",
-				"dep": "CodeMeasure",
-				"hidden": true
-			},
 			"Comment": {
 				"type": String,
 				"default": "",
 				"view": "none"
-			},
-			"OldIdProd": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"OldTagProd": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"IdParentProd": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "prod",
-				"view": "none",
-				"dep": "CodeParentProd",
-				"hidden": true
 			},
 			"IsCalcSum": {
 				"type": Boolean,
@@ -4203,30 +2776,6 @@ module.exports = {
 		"tablename": "[link].[DocRows]",
 		"menuplace": "Link",
 		"fields": {
-			"IdDocRow": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdRow": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "row",
-				"view": "none",
-				"dep": "CodeRow",
-				"hidden": true
-			},
 			"CodeDocRow": {
 				"type": String,
 				"default": null,
@@ -4274,14 +2823,6 @@ module.exports = {
 		"tablename": "[core].[ListDefs]",
 		"menuplace": "Core",
 		"fields": {
-			"IdListDef": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeListDef": {
 				"type": String,
 				"default": "",
@@ -4307,14 +2848,6 @@ module.exports = {
 		"tablename": "[link].[PeriodEdits]",
 		"menuplace": "Link",
 		"fields": {
-			"IdPeriodEdit": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePeriodEdit": {
 				"type": String,
 				"default": null,
@@ -4323,26 +2856,10 @@ module.exports = {
 				"index": true,
 				"unique": true
 			},
-			"IdRole": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "role",
-				"view": "none",
-				"dep": "CodeRole",
-				"hidden": true
-			},
 			"Year": {
 				"type": Number,
 				"default": 0,
 				"view": "none"
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
 			},
 			"IsEdit": {
 				"type": Boolean,
@@ -4373,14 +2890,6 @@ module.exports = {
 		"tablename": "[spr].[ListDefinitions]",
 		"menuplace": "Service",
 		"fields": {
-			"IdListDefinition": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeListDefinition": {
 				"type": String,
 				"default": "",
@@ -4406,22 +2915,6 @@ module.exports = {
 		"tablename": "[core].[Objs]",
 		"menuplace": "Core",
 		"fields": {
-			"IdObj": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdParentObj": {
-				"type": Number,
-				"default": -1,
-				"refmodel": "obj",
-				"view": "none",
-				"dep": "CodeParentObj",
-				"hidden": true
-			},
 			"CodeObj": {
 				"type": String,
 				"default": "",
@@ -4466,53 +2959,9 @@ module.exports = {
 				"default": 0,
 				"view": "none"
 			},
-			"IdOrg": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "org",
-				"view": "none",
-				"dep": "CodeOrg",
-				"hidden": true
-			},
-			"IdObjType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "objtype",
-				"view": "none",
-				"dep": "CodeObjType",
-				"hidden": true
-			},
-			"IdValuta": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "valuta",
-				"view": "none",
-				"dep": "CodeValuta",
-				"hidden": true
-			},
 			"Comment": {
 				"type": String,
 				"default": "",
-				"view": "none"
-			},
-			"OldIdObj": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"OldTagObj": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"OldGroupCasheObj": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"OldEditUserObj": {
-				"type": String,
-				"default": "sys",
 				"view": "none"
 			},
 			"IsAfFormula": {
@@ -4529,35 +2978,6 @@ module.exports = {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
-			},
-			"IdGrpEditFilter": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrpEditFilter",
-				"hidden": true
-			},
-			"OldFormula": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"IdStatus": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "status",
-				"view": "none",
-				"dep": "CodeStatus",
-				"hidden": true
-			},
-			"IdPriority": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "priority",
-				"view": "none",
-				"dep": "CodePriority",
-				"hidden": true
 			},
 			"DateBegin": {
 				"type": Date,
@@ -4638,14 +3058,6 @@ module.exports = {
 		"tablename": "[link].[PeriodRedirects]",
 		"menuplace": "Link",
 		"fields": {
-			"IdPeriodRedirect": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePeriodRedirect": {
 				"type": String,
 				"default": null,
@@ -4654,42 +3066,10 @@ module.exports = {
 				"index": true,
 				"unique": true
 			},
-			"IdDocType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doctype",
-				"view": "none",
-				"dep": "CodeDocType",
-				"hidden": true
-			},
-			"IdGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrp",
-				"hidden": true
-			},
 			"NotGrp": {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
-			},
-			"IdPeriodToRedirect": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriodToRedirect",
-				"hidden": true
 			},
 			"CodeDocType": {
 				"type": String,
@@ -4733,14 +3113,6 @@ module.exports = {
 		"tablename": "[link].[OrgGroups]",
 		"menuplace": "Link",
 		"fields": {
-			"IdOrgGroup": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeOrgGroup": {
 				"type": String,
 				"default": null,
@@ -4748,22 +3120,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrp",
-				"hidden": true
 			},
 			"CodeDoc": {
 				"type": String,
@@ -4789,14 +3145,6 @@ module.exports = {
 		"tablename": "[spr].[Prioritys]",
 		"menuplace": "Service",
 		"fields": {
-			"IdPriority": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePriority": {
 				"type": String,
 				"default": "",
@@ -4822,14 +3170,6 @@ module.exports = {
 		"tablename": "[spr].[Cities]",
 		"menuplace": "Service",
 		"fields": {
-			"IdCity": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeCity": {
 				"type": String,
 				"default": null,
@@ -4849,19 +3189,6 @@ module.exports = {
 				"default": "",
 				"view": "none"
 			},
-			"IdRegion": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "region",
-				"view": "none",
-				"dep": "CodeRegion",
-				"hidden": true
-			},
-			"OldIdCity": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
 			"CodeRegion": {
 				"type": String,
 				"default": "",
@@ -4877,14 +3204,6 @@ module.exports = {
 		"tablename": "[core].[Dogovors]",
 		"menuplace": "Core",
 		"fields": {
-			"IdDogovor": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDogovor": {
 				"type": String,
 				"default": null,
@@ -4914,46 +3233,6 @@ module.exports = {
 				"default": "1970-01-01T00:00:00.000Z",
 				"view": "none"
 			},
-			"IdOrg": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "org",
-				"view": "none",
-				"dep": "CodeOrg",
-				"hidden": true
-			},
-			"IdAltOrg": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "org",
-				"view": "none",
-				"dep": "CodeAltOrg",
-				"hidden": true
-			},
-			"IdThirdOrg": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "org",
-				"view": "none",
-				"dep": "CodeThirdOrg",
-				"hidden": true
-			},
-			"IdDogovorType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "dogovortype",
-				"view": "none",
-				"dep": "CodeDogovorType",
-				"hidden": true
-			},
-			"IdParentDogovor": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "dogovor",
-				"view": "none",
-				"dep": "CodeParentDogovor",
-				"hidden": true
-			},
 			"BeginDate": {
 				"type": Date,
 				"default": "1970-01-01T00:00:00.000Z",
@@ -4968,14 +3247,6 @@ module.exports = {
 				"type": Date,
 				"default": "1970-01-01T00:00:00.000Z",
 				"view": "none"
-			},
-			"IdValuta": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "valuta",
-				"view": "none",
-				"dep": "CodeValuta",
-				"hidden": true
 			},
 			"SummaDogovor": {
 				"type": Number,
@@ -4995,11 +3266,6 @@ module.exports = {
 			"Comment": {
 				"type": String,
 				"default": null,
-				"view": "none"
-			},
-			"OldTagDogovor": {
-				"type": String,
-				"default": "",
 				"view": "none"
 			},
 			"CodeOrg": {
@@ -5062,14 +3328,6 @@ module.exports = {
 		"tablename": "[spr].[Functions]",
 		"menuplace": "Service",
 		"fields": {
-			"IdFunction": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeFunction": {
 				"type": String,
 				"default": null,
@@ -5180,38 +3438,6 @@ module.exports = {
 		"tablename": "[link].[DocHeaders]",
 		"menuplace": "Link",
 		"fields": {
-			"IdDocHeader": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdHeader": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "header",
-				"view": "none",
-				"dep": "CodeHeader",
-				"hidden": true
-			},
-			"IdPeriodGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "periodgrp",
-				"view": "none",
-				"dep": "CodePeriodGrp",
-				"hidden": true
-			},
 			"IsInput": {
 				"type": Boolean,
 				"default": false,
@@ -5246,8 +3472,8 @@ module.exports = {
 			"IndexDocHeader": {
 				"type": Number,
 				"default": -1,
-				"index":true
-			},			
+				"index": true
+			},
 			"CodePeriodGrp": {
 				"type": String,
 				"default": "",
@@ -5263,14 +3489,6 @@ module.exports = {
 		"tablename": "[spr].[ParamSets]",
 		"menuplace": "Service",
 		"fields": {
-			"IdParamSet": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeParamSet": {
 				"type": String,
 				"default": "",
@@ -5290,19 +3508,6 @@ module.exports = {
 				"default": "",
 				"view": "none"
 			},
-			"IdListDefinition": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "listdefinition",
-				"view": "none",
-				"dep": "CodeListDefinition",
-				"hidden": true
-			},
-			"Idx": {
-				"type": Number,
-				"default": 0,
-				"view": "none"
-			},
 			"CodeListDefinition": {
 				"type": String,
 				"default": "",
@@ -5318,14 +3523,6 @@ module.exports = {
 		"tablename": "[link].[RowChartLines]",
 		"menuplace": "Link",
 		"fields": {
-			"IdRowChartLine": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeRowChartLine": {
 				"type": String,
 				"default": null,
@@ -5333,30 +3530,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdRow": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "row",
-				"view": "none",
-				"dep": "CodeRow",
-				"hidden": true
-			},
-			"IdChartColor": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "chartcolor",
-				"view": "none",
-				"dep": "CodeChartColor",
-				"hidden": true
 			},
 			"ColorCorrection": {
 				"type": Number,
@@ -5396,14 +3569,6 @@ module.exports = {
 		"tablename": "[spr].[ParamTabs]",
 		"menuplace": "Service",
 		"fields": {
-			"IdParamTab": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeParamTab": {
 				"type": String,
 				"default": null,
@@ -5429,14 +3594,6 @@ module.exports = {
 		"tablename": "[core].[Requests]",
 		"menuplace": "Core",
 		"fields": {
-			"IdRequest": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeRequest": {
 				"type": String,
 				"default": null,
@@ -5505,14 +3662,6 @@ module.exports = {
 				"default": null,
 				"view": "none"
 			},
-			"IdObj": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "obj",
-				"view": "none",
-				"dep": "CodeObj",
-				"hidden": true
-			},
 			"LoginUser": {
 				"type": String,
 				"default": null,
@@ -5548,14 +3697,6 @@ module.exports = {
 		"tablename": "[link].[UserTasks]",
 		"menuplace": "Link",
 		"fields": {
-			"IdUserTask": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeUserTask": {
 				"type": String,
 				"default": null,
@@ -5563,70 +3704,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdUser": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "user",
-				"view": "none",
-				"dep": "CodeUser",
-				"hidden": true
-			},
-			"IdTask": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "task",
-				"view": "none",
-				"dep": "CodeTask",
-				"hidden": true
-			},
-			"IdObj": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "obj",
-				"view": "none",
-				"dep": "CodeObj",
-				"hidden": true
-			},
-			"IdObjGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeObjGrp",
-				"hidden": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdRole": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "role",
-				"view": "none",
-				"dep": "CodeRole",
-				"hidden": true
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
-			},
-			"IdPeriodGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "periodgrp",
-				"view": "none",
-				"dep": "CodePeriodGrp",
-				"hidden": true
 			},
 			"CodeUser": {
 				"type": String,
@@ -5706,14 +3783,6 @@ module.exports = {
 		"tablename": "[spr].[Divs]",
 		"menuplace": "Service",
 		"fields": {
-			"IdDiv": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDiv": {
 				"type": String,
 				"default": null,
@@ -5738,34 +3807,6 @@ module.exports = {
 				"default": "",
 				"view": "none"
 			},
-			"OldIdDiv": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"OldIdxDiv": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"OldTagDiv": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"Idx": {
-				"type": Number,
-				"default": 0,
-				"view": "none"
-			},
-			"IdDivOrg": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "org",
-				"view": "none",
-				"dep": "CodeDivOrg",
-				"hidden": true
-			},
 			"CodeDivOrg": {
 				"type": String,
 				"default": "",
@@ -5781,14 +3822,6 @@ module.exports = {
 		"tablename": "[spr].[Actions]",
 		"menuplace": "Service",
 		"fields": {
-			"IdAction": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeAction": {
 				"type": String,
 				"default": "NONE",
@@ -5814,14 +3847,6 @@ module.exports = {
 		"tablename": "[core].[Permits]",
 		"menuplace": "Core",
 		"fields": {
-			"IdPermit": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePermit": {
 				"type": String,
 				"default": "",
@@ -5851,14 +3876,6 @@ module.exports = {
 				"default": false,
 				"view": "none"
 			},
-			"IdObj": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "obj",
-				"view": "none",
-				"dep": "CodeObj",
-				"hidden": true
-			},
 			"CodeObj": {
 				"type": String,
 				"default": "",
@@ -5874,14 +3891,6 @@ module.exports = {
 		"tablename": "[spr].[ParamKeys]",
 		"menuplace": "Service",
 		"fields": {
-			"IdParamKey": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeParamKey": {
 				"type": String,
 				"default": "",
@@ -5907,14 +3916,6 @@ module.exports = {
 		"tablename": "[spr].[ParamGrps]",
 		"menuplace": "Service",
 		"fields": {
-			"IdParamGrp": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeParamGrp": {
 				"type": String,
 				"default": null,
@@ -5940,14 +3941,6 @@ module.exports = {
 		"tablename": "[link].[ReportRows]",
 		"menuplace": "Link",
 		"fields": {
-			"IdReportRow": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeReportRow": {
 				"type": String,
 				"default": null,
@@ -5955,22 +3948,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdReport": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "report",
-				"view": "none",
-				"dep": "CodeReport",
-				"hidden": true
-			},
-			"IdRow": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "row",
-				"view": "none",
-				"dep": "CodeRow",
-				"hidden": true
 			},
 			"IsHidden": {
 				"type": Boolean,
@@ -6026,14 +4003,6 @@ module.exports = {
 		"tablename": "[spr].[DogovorArts]",
 		"menuplace": "Service",
 		"fields": {
-			"IdDogovorArt": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDogovorArt": {
 				"type": String,
 				"default": null,
@@ -6053,14 +4022,6 @@ module.exports = {
 				"default": null,
 				"view": "none"
 			},
-			"IdValuta": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "valuta",
-				"view": "none",
-				"dep": "CodeValuta",
-				"hidden": true
-			},
 			"CodeValuta": {
 				"type": String,
 				"default": "",
@@ -6076,22 +4037,6 @@ module.exports = {
 		"tablename": "[spr].[TagDefs]",
 		"menuplace": "Service",
 		"fields": {
-			"IdTagDef": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdTag": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "tag",
-				"view": "none",
-				"dep": "CodeTag",
-				"hidden": true
-			},
 			"CodeTagDef": {
 				"type": String,
 				"default": "NONE",
@@ -6126,14 +4071,6 @@ module.exports = {
 		"tablename": "[core].[Rows]",
 		"menuplace": "Core",
 		"fields": {
-			"IdRow": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeRow": {
 				"type": String,
 				"default": null,
@@ -6141,14 +4078,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdParentRow": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "row",
-				"view": "none",
-				"dep": "CodeParentRow",
-				"hidden": true
 			},
 			"NameRow": {
 				"type": String,
@@ -6184,92 +4113,6 @@ module.exports = {
 			"Link": {
 				"type": Number,
 				"default": 0,
-				"view": "none"
-			},
-			"IdValuta": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "valuta",
-				"view": "none",
-				"dep": "CodeValuta",
-				"hidden": true
-			},
-			"IdMeasure": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "measure",
-				"view": "none",
-				"dep": "CodeMeasure",
-				"hidden": true
-			},
-			"IdFormat": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "format",
-				"view": "none",
-				"dep": "CodeFormat",
-				"hidden": true
-			},
-			"IdStyle": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "style",
-				"view": "none",
-				"dep": "CodeStyle",
-				"hidden": true
-			},
-			"IdBill": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "bill",
-				"view": "none",
-				"dep": "CodeBill",
-				"hidden": true
-			},
-			"IdProd": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "prod",
-				"view": "none",
-				"dep": "CodeProd",
-				"hidden": true
-			},
-			"IdAltOrg": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "org",
-				"view": "none",
-				"dep": "CodeAltOrg",
-				"hidden": true
-			},
-			"OldIdRow": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"OldTagRow": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"OldMarkCacheRow": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"OldGrpRow": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"OldEditUserRow": {
-				"type": String,
-				"default": "sys",
-				"view": "none"
-			},
-			"OldPathRow": {
-				"type": String,
-				"default": "",
 				"view": "none"
 			},
 			"IsSum": {
@@ -6347,22 +4190,6 @@ module.exports = {
 				"default": false,
 				"view": "none"
 			},
-			"IdFilteredAltGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeFilteredAltGrp",
-				"hidden": true
-			},
-			"IdDogovor": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "dogovor",
-				"view": "none",
-				"dep": "CodeDogovor",
-				"hidden": true
-			},
 			"FromObsolete": {
 				"type": Number,
 				"default": 0,
@@ -6373,38 +4200,9 @@ module.exports = {
 				"default": 0,
 				"view": "none"
 			},
-			"IdDogovorArt": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "dogovorart",
-				"view": "none",
-				"dep": "CodeDogovorArt",
-				"hidden": true
-			},
-			"IdGrpEditFilter": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrpEditFilter",
-				"hidden": true
-			},
 			"NoDoSum": {
 				"type": Boolean,
 				"default": false,
-				"view": "none"
-			},
-			"IdRowLink": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "row",
-				"view": "none",
-				"dep": "CodeRowLink",
-				"hidden": true
-			},
-			"OldFormula": {
-				"type": String,
-				"default": "",
 				"view": "none"
 			},
 			"UseProdSumGrps": {
@@ -6543,6 +4341,11 @@ module.exports = {
 				"refmodel": "row",
 				"index": true,
 				"extended": true
+			},
+			"AfPriority": {
+				"type": Number,
+				"default": 0,
+				"view": "none"
 			}
 		}
 	},
@@ -6550,14 +4353,6 @@ module.exports = {
 		"tablename": "[link].[RouteFileTypes]",
 		"menuplace": "Link",
 		"fields": {
-			"IdRouteFileType": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeRouteFileType": {
 				"type": String,
 				"default": null,
@@ -6565,46 +4360,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdRoute": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "route",
-				"view": "none",
-				"dep": "CodeRoute",
-				"hidden": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdFileType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "filetype",
-				"view": "none",
-				"dep": "CodeFileType",
-				"hidden": true
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
-			},
-			"IdPeriodGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "periodgrp",
-				"view": "none",
-				"dep": "CodePeriodGrp",
-				"hidden": true
 			},
 			"CodeRoute": {
 				"type": String,
@@ -6657,14 +4412,6 @@ module.exports = {
 		"tablename": "[link].[DogovorTypeArts]",
 		"menuplace": "Link",
 		"fields": {
-			"IdDogovorTypeArt": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDogovorTypeArt": {
 				"type": String,
 				"default": null,
@@ -6672,22 +4419,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdDogovorType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "dogovortype",
-				"view": "none",
-				"dep": "CodeDogovorType",
-				"hidden": true
-			},
-			"IdDogovorArt": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "dogovorart",
-				"view": "none",
-				"dep": "CodeDogovorArt",
-				"hidden": true
 			},
 			"IsDefault": {
 				"type": Boolean,
@@ -6697,11 +4428,6 @@ module.exports = {
 			"NoSum": {
 				"type": Boolean,
 				"default": false,
-				"view": "none"
-			},
-			"Idx": {
-				"type": Number,
-				"default": 0,
 				"view": "none"
 			},
 			"CodeDogovorType": {
@@ -6728,14 +4454,6 @@ module.exports = {
 		"tablename": "[spr].[PresentThemas]",
 		"menuplace": "Service",
 		"fields": {
-			"IdPresentThema": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePresentThema": {
 				"type": String,
 				"default": null,
@@ -6766,30 +4484,6 @@ module.exports = {
 		"tablename": "[link].[ObjGrps]",
 		"menuplace": "Link",
 		"fields": {
-			"IdObjGrp": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdObj": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "obj",
-				"view": "none",
-				"dep": "CodeObj",
-				"hidden": true
-			},
-			"IdGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrp",
-				"hidden": true
-			},
 			"CodeObjGrp": {
 				"type": String,
 				"default": null,
@@ -6822,14 +4516,6 @@ module.exports = {
 		"tablename": "[core].[Models]",
 		"menuplace": "Core",
 		"fields": {
-			"IdModel": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeModel": {
 				"type": String,
 				"default": null,
@@ -6875,14 +4561,6 @@ module.exports = {
 		"tablename": "[spr].[States]",
 		"menuplace": "Service",
 		"fields": {
-			"IdState": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeState": {
 				"type": String,
 				"default": null,
@@ -6928,14 +4606,6 @@ module.exports = {
 		"tablename": "[spr].[Otrasls]",
 		"menuplace": "Service",
 		"fields": {
-			"IdOtrasl": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeOtrasl": {
 				"type": String,
 				"default": null,
@@ -6964,26 +4634,6 @@ module.exports = {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
-			},
-			"OldIdOtrasl": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"OldTagOtrasl": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"OldEditUserOtrasl": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"Idx": {
-				"type": Number,
-				"default": 0,
-				"view": "none"
 			}
 		}
 	},
@@ -6991,14 +4641,6 @@ module.exports = {
 		"tablename": "[spr].[PeriodGrps]",
 		"menuplace": "Service",
 		"fields": {
-			"IdPeriodGrp": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePeriodGrp": {
 				"type": String,
 				"default": null,
@@ -7029,30 +4671,6 @@ module.exports = {
 		"tablename": "[link].[DocTags]",
 		"menuplace": "Link",
 		"fields": {
-			"IdDocTag": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdTag": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "tag",
-				"view": "none",
-				"dep": "CodeTag",
-				"hidden": true
-			},
 			"Value": {
 				"type": String,
 				"default": "",
@@ -7090,14 +4708,6 @@ module.exports = {
 		"tablename": "[core].[Routes]",
 		"menuplace": "Core",
 		"fields": {
-			"IdRoute": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeRoute": {
 				"type": String,
 				"default": null,
@@ -7116,22 +4726,6 @@ module.exports = {
 				"type": String,
 				"default": null,
 				"view": "none"
-			},
-			"IdFinalState": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "state",
-				"view": "none",
-				"dep": "CodeFinalState",
-				"hidden": true
-			},
-			"IdInitState": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "state",
-				"view": "none",
-				"dep": "CodeInitState",
-				"hidden": true
 			},
 			"CodeFinalState": {
 				"type": String,
@@ -7157,30 +4751,6 @@ module.exports = {
 		"tablename": "[link].[ObjTags]",
 		"menuplace": "Link",
 		"fields": {
-			"IdObjTag": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdObj": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "obj",
-				"view": "none",
-				"dep": "CodeObj",
-				"hidden": true
-			},
-			"IdTag": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "tag",
-				"view": "none",
-				"dep": "CodeTag",
-				"hidden": true
-			},
 			"Value": {
 				"type": String,
 				"default": "",
@@ -7218,14 +4788,6 @@ module.exports = {
 		"tablename": "[spr].[Courses]",
 		"menuplace": "Service",
 		"fields": {
-			"IdCourse": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeCourse": {
 				"type": String,
 				"default": null,
@@ -7234,26 +4796,10 @@ module.exports = {
 				"index": true,
 				"unique": true
 			},
-			"IdValuta": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "valuta",
-				"view": "none",
-				"dep": "CodeValuta",
-				"hidden": true
-			},
 			"Year": {
 				"type": Number,
 				"default": 0,
 				"view": "none"
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
 			},
 			"CourseValue": {
 				"type": Number,
@@ -7284,14 +4830,6 @@ module.exports = {
 		"tablename": "[spr].[Grps]",
 		"menuplace": "Service",
 		"fields": {
-			"IdGrp": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeGrp": {
 				"type": String,
 				"default": "NONE",
@@ -7326,11 +4864,6 @@ module.exports = {
 				"default": false,
 				"view": "none"
 			},
-			"Idx": {
-				"type": Number,
-				"default": 0,
-				"view": "none"
-			},
 			"IsFormula": {
 				"type": Boolean,
 				"default": false,
@@ -7352,34 +4885,10 @@ module.exports = {
 		"tablename": "[link].[UserRequests]",
 		"menuplace": "Link",
 		"fields": {
-			"IdUserRequest": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CoreUserRequest": {
 				"type": String,
 				"default": null,
 				"view": "none"
-			},
-			"IdUser": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "user",
-				"view": "none",
-				"dep": "CodeUser",
-				"hidden": true
-			},
-			"IdRequest": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "request",
-				"view": "none",
-				"dep": "CodeRequest",
-				"hidden": true
 			},
 			"CodeUser": {
 				"type": String,
@@ -7405,14 +4914,6 @@ module.exports = {
 		"tablename": "[spr].[PresentTransitTypes]",
 		"menuplace": "Service",
 		"fields": {
-			"IdPresentTransitType": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePresentTransitType": {
 				"type": String,
 				"default": null,
@@ -7443,14 +4944,6 @@ module.exports = {
 		"tablename": "[spr].[Orgs]",
 		"menuplace": "Service",
 		"fields": {
-			"IdOrg": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeOrg": {
 				"type": String,
 				"default": null,
@@ -7468,56 +4961,6 @@ module.exports = {
 			"SNameOrg": {
 				"type": String,
 				"default": "",
-				"view": "none"
-			},
-			"IdOtrasl": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "otrasl",
-				"view": "none",
-				"dep": "CodeOtrasl",
-				"hidden": true
-			},
-			"IdDiv": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "div",
-				"view": "none",
-				"dep": "CodeDiv",
-				"hidden": true
-			},
-			"IdCity": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "city",
-				"view": "none",
-				"dep": "CodeCity",
-				"hidden": true
-			},
-			"OldIdOrg": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"IdParentOrg": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "org",
-				"view": "none",
-				"dep": "CodeParentOrg",
-				"hidden": true
-			},
-			"IdHoldingOrg": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "org",
-				"view": "none",
-				"dep": "CodeHoldingOrg",
-				"hidden": true
-			},
-			"OldCodeOrg": {
-				"type": String,
-				"default": null,
 				"view": "none"
 			},
 			"CodeOtrasl": {
@@ -7571,14 +5014,6 @@ module.exports = {
 		"tablename": "[core].[Periods]",
 		"menuplace": "Core",
 		"fields": {
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePeriod": {
 				"type": String,
 				"default": "NONE",
@@ -7623,17 +5058,12 @@ module.exports = {
 				"default": "0",
 				"view": "none"
 			},
-			"OldIdPeriod": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"OldFormula": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
 			"IsReportPeriod": {
+				"type": Boolean,
+				"default": false,
+				"view": "none"
+			},
+			"IsCalendar": {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
@@ -7644,14 +5074,6 @@ module.exports = {
 		"tablename": "[link].[TaskFunctions]",
 		"menuplace": "Link",
 		"fields": {
-			"IdTaskFuntion": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeTaskFuntion": {
 				"type": String,
 				"default": null,
@@ -7659,22 +5081,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdTask": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "task",
-				"view": "none",
-				"dep": "CodeTask",
-				"hidden": true
-			},
-			"IdFunction": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "function",
-				"view": "none",
-				"dep": "CodeFunction",
-				"hidden": true
 			},
 			"CodeTask": {
 				"type": String,
@@ -7700,14 +5106,6 @@ module.exports = {
 		"tablename": "[spr].[Labels]",
 		"menuplace": "Service",
 		"fields": {
-			"IdLabel": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeLabel": {
 				"type": String,
 				"default": null,
@@ -7726,11 +5124,6 @@ module.exports = {
 				"type": String,
 				"default": null,
 				"view": "none"
-			},
-			"Idx": {
-				"type": Number,
-				"default": 0,
-				"view": "none"
 			}
 		}
 	},
@@ -7738,14 +5131,6 @@ module.exports = {
 		"tablename": "[spr].[PresentSlotTypes]",
 		"menuplace": "Service",
 		"fields": {
-			"IdPresentSlotType": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePresentSlotType": {
 				"type": String,
 				"default": null,
@@ -7786,14 +5171,6 @@ module.exports = {
 		"tablename": "[core].[Reports]",
 		"menuplace": "Core",
 		"fields": {
-			"IdReport": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeReport": {
 				"type": String,
 				"default": "",
@@ -7828,22 +5205,6 @@ module.exports = {
 				"default": null,
 				"view": "none"
 			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdUser": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "user",
-				"view": "none",
-				"dep": "CodeUser",
-				"hidden": true
-			},
 			"IsPublic": {
 				"type": Boolean,
 				"default": false,
@@ -7853,22 +5214,6 @@ module.exports = {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
-			},
-			"IdGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrp",
-				"hidden": true
-			},
-			"IdPeriodGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "periodgrp",
-				"view": "none",
-				"dep": "CodePeriodGrp",
-				"hidden": true
 			},
 			"IsInput": {
 				"type": Boolean,
@@ -7922,14 +5267,6 @@ module.exports = {
 		"tablename": "[spr].[Tags]",
 		"menuplace": "Service",
 		"fields": {
-			"IdTag": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeTag": {
 				"type": String,
 				"default": "NONE",
@@ -7980,14 +5317,6 @@ module.exports = {
 		"tablename": "[core].[Users]",
 		"menuplace": "Core",
 		"fields": {
-			"IdUser": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"NameUser": {
 				"type": String,
 				"default": "Noname User",
@@ -8017,14 +5346,6 @@ module.exports = {
 				"default": false,
 				"view": "none"
 			},
-			"IdOrg": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "org",
-				"view": "none",
-				"dep": "CodeOrg",
-				"hidden": true
-			},
 			"JobTitle": {
 				"type": String,
 				"default": "",
@@ -8046,26 +5367,6 @@ module.exports = {
 				"view": "none"
 			},
 			"AuthDoc": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"OldIdUser": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"OldUserRoles": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"OldUserSlotList": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
-			"OldLoginUser": {
 				"type": String,
 				"default": "",
 				"view": "none"
@@ -8155,22 +5456,6 @@ module.exports = {
 				"default": null,
 				"view": "none"
 			},
-			"IdDepart": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "depart",
-				"view": "none",
-				"dep": "CodeDepart",
-				"hidden": true
-			},
-			"IdObj": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "obj",
-				"view": "none",
-				"dep": "CodeObj",
-				"hidden": true
-			},
 			"IsConfirmed": {
 				"type": Boolean,
 				"default": false,
@@ -8209,14 +5494,6 @@ module.exports = {
 		"tablename": "[link].[LabelUsers]",
 		"menuplace": "Link",
 		"fields": {
-			"IdLabelUser": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeLabelUser": {
 				"type": String,
 				"default": null,
@@ -8224,30 +5501,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdObj": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "obj",
-				"view": "none",
-				"dep": "CodeObj",
-				"hidden": true
-			},
-			"IdLabel": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "label",
-				"view": "none",
-				"dep": "CodeLabel",
-				"hidden": true
-			},
-			"IdUser": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "user",
-				"view": "none",
-				"dep": "CodeUser",
-				"hidden": true
 			},
 			"CodeObj": {
 				"type": String,
@@ -8282,30 +5535,6 @@ module.exports = {
 		"tablename": "[link].[RowTags]",
 		"menuplace": "Link",
 		"fields": {
-			"IdRowTag": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdRow": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "row",
-				"view": "none",
-				"dep": "CodeRow",
-				"hidden": true
-			},
-			"IdTag": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "tag",
-				"view": "none",
-				"dep": "CodeTag",
-				"hidden": true
-			},
 			"Value": {
 				"type": String,
 				"default": "",
@@ -8343,14 +5572,6 @@ module.exports = {
 		"tablename": "[link].[CoursePeriods]",
 		"menuplace": "Link",
 		"fields": {
-			"IdCoursePeriod": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeCoursePeriod": {
 				"type": String,
 				"default": null,
@@ -8358,22 +5579,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
-			},
-			"IdLinkPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodeLinkPeriod",
-				"hidden": true
 			},
 			"CodePeriod": {
 				"type": String,
@@ -8399,30 +5604,6 @@ module.exports = {
 		"tablename": "[link].[ObjTypeTags]",
 		"menuplace": "Link",
 		"fields": {
-			"IdObjTypeTag": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdObjType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "objtype",
-				"view": "none",
-				"dep": "CodeObjType",
-				"hidden": true
-			},
-			"IdTag": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "tag",
-				"view": "none",
-				"dep": "CodeTag",
-				"hidden": true
-			},
 			"Value": {
 				"type": String,
 				"default": "",
@@ -8460,14 +5641,6 @@ module.exports = {
 		"tablename": "[spr].[ObjTypes]",
 		"menuplace": "Service",
 		"fields": {
-			"IdObjType": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeObjType": {
 				"type": String,
 				"default": null,
@@ -8497,24 +5670,6 @@ module.exports = {
 				"default": "",
 				"view": "none"
 			},
-			"IdObjClass": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "objclass",
-				"view": "none",
-				"dep": "CodeObjClass",
-				"hidden": true
-			},
-			"OldIdObjType": {
-				"type": Number,
-				"default": -1,
-				"view": "none"
-			},
-			"OldTagObjType": {
-				"type": String,
-				"default": "",
-				"view": "none"
-			},
 			"CodeObjClass": {
 				"type": String,
 				"default": "",
@@ -8530,14 +5685,6 @@ module.exports = {
 		"tablename": "[core].[Params]",
 		"menuplace": "Core",
 		"fields": {
-			"IdParam": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeParam": {
 				"type": String,
 				"default": "",
@@ -8561,30 +5708,6 @@ module.exports = {
 				"type": Number,
 				"default": 0,
 				"view": "none"
-			},
-			"IdParamGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "paramgrp",
-				"view": "none",
-				"dep": "CodeParamGrp",
-				"hidden": true
-			},
-			"IdListDefinition": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "listdefinition",
-				"view": "none",
-				"dep": "CodeListDefinition",
-				"hidden": true
-			},
-			"IdParamSet": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "paramset",
-				"view": "none",
-				"dep": "CodeParamSet",
-				"hidden": true
 			},
 			"CodeParamGrp": {
 				"type": String,
@@ -8619,14 +5742,6 @@ module.exports = {
 		"tablename": "[link].[RoutePeriods]",
 		"menuplace": "Link",
 		"fields": {
-			"IdRoutePeriod": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeRoutePeriod": {
 				"type": String,
 				"default": null,
@@ -8634,38 +5749,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdRoute": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "route",
-				"view": "none",
-				"dep": "CodeRoute",
-				"hidden": true
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
-			},
-			"IdDocType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doctype",
-				"view": "none",
-				"dep": "CodeDocType",
-				"hidden": true
-			},
-			"IdGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrp",
-				"hidden": true
 			},
 			"NoGrp": {
 				"type": Boolean,
@@ -8714,14 +5797,6 @@ module.exports = {
 		"tablename": "[link].[DocLabels]",
 		"menuplace": "Link",
 		"fields": {
-			"IdDocLabel": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDocLabel": {
 				"type": String,
 				"default": null,
@@ -8729,22 +5804,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdLabel": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "label",
-				"view": "none",
-				"dep": "CodeLabel",
-				"hidden": true
 			},
 			"IsSignature": {
 				"type": Boolean,
@@ -8755,14 +5814,6 @@ module.exports = {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
-			},
-			"IdPeriodGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "periodgrp",
-				"view": "none",
-				"dep": "CodePeriodGrp",
-				"hidden": true
 			},
 			"CodeDoc": {
 				"type": String,
@@ -8797,14 +5848,6 @@ module.exports = {
 		"tablename": "[link].[ProdSumGrps]",
 		"menuplace": "Link",
 		"fields": {
-			"IdProdSumGrp": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeProdSumGrp": {
 				"type": String,
 				"default": null,
@@ -8812,22 +5855,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdProd": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "prod",
-				"view": "none",
-				"dep": "CodeProd",
-				"hidden": true
-			},
-			"IdSumGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "sumgrp",
-				"view": "none",
-				"dep": "CodeSumGrp",
-				"hidden": true
 			},
 			"CodeProd": {
 				"type": String,
@@ -8853,14 +5880,6 @@ module.exports = {
 		"tablename": "[spr].[ChartColors]",
 		"menuplace": "Service",
 		"fields": {
-			"IdChartColor": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeChartColor": {
 				"type": String,
 				"default": null,
@@ -8896,14 +5915,6 @@ module.exports = {
 		"tablename": "[spr].[PresentSlideLayouts]",
 		"menuplace": "Service",
 		"fields": {
-			"IdPresentSlideLayout": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodePresentSlideLayout": {
 				"type": String,
 				"default": null,
@@ -8959,14 +5970,6 @@ module.exports = {
 		"tablename": "[core].[Commits]",
 		"menuplace": "Core",
 		"fields": {
-			"IdCommit": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeCommit": {
 				"type": String,
 				"default": null,
@@ -8992,14 +5995,6 @@ module.exports = {
 		"tablename": "[link].[ReportPeriods]",
 		"menuplace": "Link",
 		"fields": {
-			"IdReportPeriods": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeReportPeriod": {
 				"type": String,
 				"default": "",
@@ -9008,22 +6003,6 @@ module.exports = {
 				"refmodel": "period",
 				"index": true,
 				"extended": true
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
-			},
-			"IdReportPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodeReportPeriod",
-				"hidden": true
 			},
 			"IndexReportPeriod": {
 				"type": Number,
@@ -9055,14 +6034,6 @@ module.exports = {
 		"tablename": "[link].[DocParamKeys]",
 		"menuplace": "Link",
 		"fields": {
-			"IdDocParamKey": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDocParamKey": {
 				"type": String,
 				"default": "",
@@ -9071,42 +6042,10 @@ module.exports = {
 				"index": true,
 				"unique": true
 			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdPeriodGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "periodgrp",
-				"view": "none",
-				"dep": "CodePeriodGrp",
-				"hidden": true
-			},
 			"IsInput": {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
-			},
-			"IdParam": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "param",
-				"view": "none",
-				"dep": "CodeParam",
-				"hidden": true
-			},
-			"IdParamSet": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "paramset",
-				"view": "none",
-				"dep": "CodeParamSet",
-				"hidden": true
 			},
 			"IsShow": {
 				"type": Boolean,
@@ -9155,14 +6094,6 @@ module.exports = {
 		"tablename": "[link].[RouteRefPeriods]",
 		"menuplace": "Link",
 		"fields": {
-			"IdRouteRefPeriod": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeRouteRefPeriod": {
 				"type": String,
 				"default": null,
@@ -9170,30 +6101,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdRoute": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "route",
-				"view": "none",
-				"dep": "CodeRoute",
-				"hidden": true
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
-			},
-			"IdRefPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodeRefPeriod",
-				"hidden": true
 			},
 			"CodeRoute": {
 				"type": String,
@@ -9228,46 +6135,6 @@ module.exports = {
 		"tablename": "[link].[UserPermits]",
 		"menuplace": "Link",
 		"fields": {
-			"IdUserPermit": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdUser": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "user",
-				"view": "none",
-				"dep": "CodeUser",
-				"hidden": true
-			},
-			"IdPermit": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "permit",
-				"view": "none",
-				"dep": "CodePermit",
-				"hidden": true
-			},
-			"IdGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrp",
-				"hidden": true
-			},
-			"IdObj": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "obj",
-				"view": "none",
-				"dep": "CodeObj",
-				"hidden": true
-			},
 			"CodeUserPermit": {
 				"type": String,
 				"default": null,
@@ -9318,14 +6185,6 @@ module.exports = {
 		"tablename": "[spr].[Valutes]",
 		"menuplace": "Service",
 		"fields": {
-			"IdValuta": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeValuta": {
 				"type": String,
 				"default": "NONE",
@@ -9386,38 +6245,6 @@ module.exports = {
 		"tablename": "[link].[PermitRoles]",
 		"menuplace": "Link",
 		"fields": {
-			"IdPermitRole": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdPermit": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "permit",
-				"view": "none",
-				"dep": "CodePermit",
-				"hidden": true
-			},
-			"IdPeriodGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "periodgrp",
-				"view": "none",
-				"dep": "CodePeriodGrp",
-				"hidden": true
-			},
-			"IdRole": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "role",
-				"view": "none",
-				"dep": "CodeRole",
-				"hidden": true
-			},
 			"DoRead": {
 				"type": Boolean,
 				"default": false,
@@ -9474,14 +6301,6 @@ module.exports = {
 		"tablename": "[link].[RouteCheckPeriods]",
 		"menuplace": "Link",
 		"fields": {
-			"IdRouteCheckPeriod": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeRouteCheckPeriod": {
 				"type": String,
 				"default": null,
@@ -9490,63 +6309,15 @@ module.exports = {
 				"index": true,
 				"unique": true
 			},
-			"IdRoute": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "route",
-				"view": "none",
-				"dep": "CodeRoute",
-				"hidden": true
-			},
-			"IdDocType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doctype",
-				"view": "none",
-				"dep": "CodeDocType",
-				"hidden": true
-			},
-			"IdGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "grp",
-				"view": "none",
-				"dep": "CodeGrp",
-				"hidden": true
-			},
 			"NoGrp": {
 				"type": Boolean,
 				"default": false,
 				"view": "none"
 			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
-			},
-			"IdCheckPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodeCheckPeriod",
-				"hidden": true
-			},
 			"RelYear": {
 				"type": Number,
 				"default": 0,
 				"view": "none"
-			},
-			"IdCheckState": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "state",
-				"view": "none",
-				"dep": "CodeCheckState",
-				"hidden": true
 			},
 			"CodeRoute": {
 				"type": String,
@@ -9608,30 +6379,6 @@ module.exports = {
 		"tablename": "[link].[PeriodGrpRefs]",
 		"menuplace": "Link",
 		"fields": {
-			"IdPeriodGrpRef": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
-			"IdPeriod": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "period",
-				"view": "none",
-				"dep": "CodePeriod",
-				"hidden": true
-			},
-			"IdPeriodGrp": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "periodgrp",
-				"view": "none",
-				"dep": "CodePeriodGrp",
-				"hidden": true
-			},
 			"CodePeriodGrpRef": {
 				"type": String,
 				"default": null,
@@ -9664,14 +6411,6 @@ module.exports = {
 		"tablename": "[link].[DocObjTypes]",
 		"menuplace": "Link",
 		"fields": {
-			"IdDocObjType": {
-				"type": Number,
-				"default": 0,
-				"view": "none",
-				"role": "id",
-				"readonly": true,
-				"index": true
-			},
 			"CodeDocObjType": {
 				"type": String,
 				"default": "",
@@ -9679,46 +6418,6 @@ module.exports = {
 				"role": "code",
 				"index": true,
 				"unique": true
-			},
-			"IdDoc": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "doc",
-				"view": "none",
-				"dep": "CodeDoc",
-				"hidden": true
-			},
-			"IdObjClass": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "objclass",
-				"view": "none",
-				"dep": "CodeObjClass",
-				"hidden": true
-			},
-			"IdObjType": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "objtype",
-				"view": "none",
-				"dep": "CodeObjType",
-				"hidden": true
-			},
-			"IdParentObjClass": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "objclass",
-				"view": "none",
-				"dep": "CodeParentObjClass",
-				"hidden": true
-			},
-			"IdParentObjTypes": {
-				"type": Number,
-				"default": 0,
-				"refmodel": "objtype",
-				"view": "none",
-				"dep": "CodeParentObjTypes",
-				"hidden": true
 			},
 			"CodeDoc": {
 				"type": String,

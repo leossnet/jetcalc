@@ -1,14 +1,14 @@
 module.exports = exports =  [
 			{
-				Formula: "f.If ( not rowin (\"m200240\"), { @Б1? - @Б1.P-303? } )",
+				Formula: "if ( not rowin (\"m200240\"), { @Б1? - @Б1.P-303? } )",
 				Contexts:[{Context:{row:"z25000"},Result : '@Б1? - @Б1.P-303?'},{Context:{row:"m200240"},Result : '0'}]
 			},		
 			{
-				Formula: "f.If ( coltagin (\"/OSV:1/\"), { @Б1? - @Б1.P-303? } )",
+				Formula: "if ( coltagin (\"/OSV:1/\"), { @Б1? - @Б1.P-303? } )",
 				Contexts:[{Context:{coltags:["OSV:1"]},Result : '@Б1? - @Б1.P-303?'},{Context:{coltags:["OSV:2"]},Result : '0'}]
 			},			
 			{
-				Formula: "f.If ( coltagin (\"/OSV:*/\"), { @Б1? - @Б1.P-303? } )",
+				Formula: "if ( coltagin (\"/OSV:*/\"), { @Б1? - @Б1.P-303? } )",
 				Contexts:[{Context:{coltags:["OSV:1"]},Result : '@Б1? - @Б1.P-303?'}]
 			},				
 			{
@@ -16,19 +16,19 @@ module.exports = exports =  [
 				Contexts:[{Context:{ismonth:true,period:19},Result : '1'},{Context:{ismonth:false,period:442},Result : '1'},{Context:{ismonth:true,period:11},Result : '2'}]
 			},				
 			{
-				Formula: "f.If(periodin('1',\"2\",3),{1},{2})",
+				Formula: "if(periodin('1',\"2\",3),{1},{2})",
 				Contexts:[{Context:{period:1},Result : '1'}]
 			},				
 			{
-				Formula: "f.If(groupin('PR_KVART',\"G1_CONS\"),{1},{2})",
+				Formula: "if(groupin('PR_KVART',\"G1_CONS\"),{1},{2})",
 				Contexts:[{Context:{grp:['G11','G1_CONS','G1_2011','G1','PR_KVART']},Result : '1'}]
 			},				
 			{
-				Formula: "f.If(objin('1054'),{1},{2})",
+				Formula: "if(objin('1054'),{1},{2})",
 				Contexts:[{Context:{obj:1054},Result : '1'}]
 			},		
 			{
-				Formula: 'f.If(rowin("m200240","m200241"),{1},{0})',
+				Formula: 'if(rowin("m200240","m200241"),{1},{0})',
 				Contexts:[{Context:{row:"m200241"},Result : '1'}]
 			},		
 			{
@@ -60,11 +60,15 @@ module.exports = exports =  [
 				Contexts:[{Context:{ },Result : '4'}]
 			},
 			{
-				Formula: 'f.checklimit(1,0.1)',
+				Formula: 'limit(1,0.1)',
+				Contexts:[{Context:{},Result : '0'}]
+			},
+			{
+				Formula: 'limit(1:0.1)',
 				Contexts:[{Context:{},Result : '0'}]
 			},			
 			{
-				Formula: 'f.checklimit(1,8)',
+				Formula: 'limit(1,8)',
 				Contexts:[{Context:{},Result : '8'}]
 			},			
 			{
@@ -100,15 +104,15 @@ module.exports = exports =  [
 				Contexts:[{Context:{},Result : '2'}]
 			},
 			{
-				Formula: 'checklimit(-0.5,-0.2)',
+				Formula: 'limit(-0.5,-0.2)',
 				Contexts:[{Context:{},Result : '-0.2'}]
 			},
 			{
-				Formula: 'checklimit(0.2,-0.2)',
+				Formula: 'limit(0.2,-0.2)',
 				Contexts:[{Context:{},Result : '-0.2'}]
 			},
 			{
-				Formula: 'checklimit(0.3,-0.2)',
+				Formula: 'limit(0.3,-0.2)',
 				Contexts:[{Context:{},Result : '0'}]
 			},
 
@@ -164,5 +168,45 @@ module.exports = exports =  [
 			{
 				Formula: '$m203117?*0.90+$m203118?*0+$m2031191?*0.10',
 				Contexts:[{Context:{},Result : '$m203117?*0.9+$m2031191?*0.1'}]
-			},			
+			},
+			{
+				Formula: 'lt(2,1.5)',
+				Contexts:[{Context:{},Result : '1.5'}]
+			},
+			{
+				Formula: 'lt(2,2)',
+				Contexts:[{Context:{},Result : '0'}]
+			},
+			{
+				Formula: 'lt(2,3)',
+				Contexts:[{Context:{},Result : '0'}]
+			},
+			{
+				Formula: 'lt(2,-3)',
+				Contexts:[{Context:{},Result : '-3'}]
+			},
+			{
+				Formula: 'min(2,-3,1,22,11,-5,0)',
+				Contexts:[{Context:{},Result : '-5'}]
+			},
+			{
+				Formula: 'max(2,-3,1,22,11,-5,0)',
+				Contexts:[{Context:{},Result : '22'}]
+			},
+			{
+				Formula: "check ( 1>2:1 )",
+				Contexts:[{Context:{},Result : '0'}]
+			},
+			{
+				Formula: "check ( 1<2:1 )",
+				Contexts:[{Context:{},Result : '1'}]
+			},
+			{
+				Formula: "check ( 1>2:1;2 )",
+				Contexts:[{Context:{},Result : '2'}]
+			},
+			{
+				Formula: "check ( 1<2:1;2 )",
+				Contexts:[{Context:{},Result : '1'}]
+			}
 ]

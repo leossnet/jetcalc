@@ -1,13 +1,14 @@
 round
 |choose
-|checklimit
-|'f.round'
-|'f.choose'
-|'System.Math.Round'
-|'f.checklimit'                                return 'U_FUNC';
+|lt
+|gt
+|le
+|ge
+|min
+|max
+|limit			                              return 'U_FUNC';
 
-monthInKvart
-|'f.monthInKvart'                              return 'FUNC';
+monthInKvart								  return 'FUNC';
 
 MCOUNT
 |DCOUNT
@@ -16,7 +17,6 @@ MCOUNT
 ___KMULT
 |___[A-Z]*                                     return 'U_CONSTANTA';
 
-'q.Column.Period'                              return 'OLD';
 
 periodin
 |colin

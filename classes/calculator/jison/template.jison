@@ -27,7 +27,8 @@
             break;
         }
     }
-    if (!Result && Indexed["default"]) Result = Indexed["DEFAULT"];
+    if (!Result && Indexed["default"]) Result = Indexed["default"];
+    if (!Result && Indexed["DEFAULT"]) Result = Indexed["DEFAULT"];
     return Result;
   }
 
@@ -162,25 +163,36 @@ var LIB = {
       var result = Math.round(args[0]);
       return result;
     },
-    'checklimit':function(args) {
+    'limit':function(args) {
       args = LIB._argsNumeric(args);
       if (args[0] > Math.abs(args[1])) return 0;
       return args[1];
     },
-    'f.checklimit':function(args) {
-        return LIB['checklimit'](args);
+    'lt':function(args) {
+      args = LIB._argsNumeric(args);
+      if (args[0] > args[1]) return args[1];
+      return 0;
     },
-    'f.round':function(args) {
-      return LIB['round'](args);
+    'le':function(args) {
+      args = LIB._argsNumeric(args);
+      if (args[0] >= args[1]) return args[1];
+      return 0;
     },
-    'System.Math.Round':function(args) {
-      return LIB['round'](args);
+    'gt':function(args) {
+      args = LIB._argsNumeric(args);
+      if (args[0] < args[1]) return args[1];
+      return 0;
     },
-    'f.choose':function(args) {
-        return LIB['choose'](args);
+    'ge':function(args) {
+      args = LIB._argsNumeric(args);
+      if (args[0] <= args[1]) return args[1];
+      return 0;
     },
-    'f.monthInKvart':function(args) {
-        return LIB['monthInKvart'](args);
+    'min':function(args) {
+      return Math.min.apply(this,LIB._argsNumeric(args));
+    },
+    'max':function(args) {
+      return Math.max.apply(this,LIB._argsNumeric(args));
     }
   };
   try{
@@ -235,8 +247,8 @@ var LIB = {
 \".*?\"
 |\'.*?\'                                       return 'LITERAL';
 
-'f.If'
-|'if'                                          return 'IF';
+'if'                                           return 'IF';
+'check'                                        return 'CHECK_IF';
 
 [$@.].*?\?                                     return 'VARIABLE';
 
@@ -255,7 +267,7 @@ var LIB = {
 /* end: can have U_ prefix */
 
 
-[A-ZА-Я0-9]+(?=^|$|[^\p{L}])                   return 'MIXED';
+[A-ZА-Яa-zа-я0-9]+(?=^|$|[^\p{L}])             return 'MIXED';
 
 <<EOF>>                                        return 'EOF';
 
@@ -317,6 +329,8 @@ MATH:
   NUMERIC                         -> $1;
   | IF_THEN                       -> $1;
   | IF_THEN_ELSE                  -> $1;
+  | CHECK_IF_THEN                 -> $1;
+  | CHECK_IF_THEN_ELSE            -> $1;
   | SWITCH                        -> $1;
   | MATH '+' MATH                 -> Number($1)+Number($3);
   | MATH '-' MATH                 -> Number($1)-Number($3);
@@ -349,6 +363,12 @@ U_MATH:
   | IF_THEN_ELSE_U1                -> $1;
   | IF_THEN_ELSE_U2                -> $1;
   | IF_THEN_ELSE_U3                -> $1;
+  | CHECK_U_IF_THEN                -> $1;
+  | CHECK_U_IF_THEN_ELSE           -> $1;
+  | CHECK_IF_THEN_U                -> $1;
+  | CHECK_IF_THEN_ELSE_U1          -> $1;
+  | CHECK_IF_THEN_ELSE_U2          -> $1;
+  | CHECK_IF_THEN_ELSE_U3          -> $1;
   | '-' U_MATH %prec UMINUS        -> '-'+String($2);
   | U_MATH '+' U_MATH              -> String($1)+'+'+String($3);
   | U_MATH '+' MATH                -> String($1)+'+'+String($3);
@@ -436,13 +456,14 @@ U_BOOLOPERATION:
 ARG:
   RESULT                               -> [$1];
   | MIXED                              -> [$1];
-  | OLD                                -> [0];
   | LITERAL                            -> [$1];
 ;
 
 ARGS:
   ARG                                 -> $1;
   | ARGS ',' ARG                      { $$ = $1; $1.push($3[0]);}
+  | ARGS CASEDELIM ARG                { $$ = $1; $1.push($3[0]);}
+  | ARGS EOC ARG                      { $$ = $1; $1.push($3[0]);}
   | NOT '(' ARGS ')'                  { $$ = $3; $3.unshift($1);}
 ;
 
@@ -507,3 +528,38 @@ IF_THEN_ELSE_U3:
 U_IF_THEN_ELSE:
    IF '(' U_BOOL ',' '{' RESULT '}' ',' '{' RESULT '}' ')'    -> $IF+' ('+ $3+ ',{' +$6 +'},{'+ $10+ '})';
 ;
+
+CHECK_IF_THEN:
+    CHECK_IF '(' BOOL CASEDELIM  MATH  ')'                          -> IfThenElse ($3,$5,0);
+;
+CHECK_IF_THEN_U:
+    CHECK_IF '(' BOOL CASEDELIM  U_MATH ')'                         -> IfThenElse ($3,$5,0);
+;
+CHECK_U_IF_THEN:
+    CHECK_IF '(' U_BOOL CASEDELIM  RESULT  ')'                      ->  $CHECK_IF+' ('+ $3+ ':' +$5 +') ';
+;
+CHECK_IF_THEN_ELSE:
+   CHECK_IF '(' BOOL CASEDELIM  MATH  EOC  MATH  ')'                -> IfThenElse ($3,$5,$7);
+;
+CHECK_IF_THEN_ELSE_U1:
+   CHECK_IF '(' BOOL CASEDELIM   MATH EOC  U_MATH  ')'              -> IfThenElse ($3,$5,$7);
+;
+CHECK_IF_THEN_ELSE_U2:
+   CHECK_IF '(' BOOL CASEDELIM  U_MATH  EOC  MATH  ')'              -> IfThenElse ($3,$5,$7);
+;
+CHECK_IF_THEN_ELSE_U3:
+   CHECK_IF '(' BOOL CASEDELIM  U_MATH  EOC  U_MATH  ')'            -> IfThenElse ($3,$5,$7);
+;
+CHECK_U_IF_THEN_ELSE:
+   CHECK_IF '(' U_BOOL CASEDELIM  RESULT  EOC  RESULT  ')'          -> $CHECK_IF+' ('+ $3+ ':' +$5 +';'+ $7+ ') ';
+;
+
+
+
+
+
+
+
+
+
+
