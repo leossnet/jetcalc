@@ -24,10 +24,15 @@
 		"CodeParam": "Код.Парам",
 		"CodeParamSet": "Знч.Парам",
 		"Idx": "Индекс",
-		"ParamSets": "Значения"
+		"ParamSets": "Значения",
+		"addmessage": "Добавить сообщение",
+		"IsInput": "Фрм.Ввод",
+		"IsShow": "Показывать",
+		"CodeDoc": "Код.Док",
+		"CodePeriodGrp": "Гр.Прд"
 	},
 	"param": {
-		"CodeParam": "Код параметраxfvsdf",
+		"CodeParam": "Код параметра",
 		"NameParam": "Название параметра"
 	},
 	"chat": {
