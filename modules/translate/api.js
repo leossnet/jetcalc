@@ -26,18 +26,18 @@ var XSSHelper = (new function(){
     return self;
 })
 
+var FileName = __base + "/static/custom/translate.json";
 
 router.get('/clientsettings', function (req, res, next) {
-    res.sendFile(__dirname + "/settings.json");
+    res.sendFile(FileName);
 })
 
 router.post('/clientsettings', HP.TaskAccess("IsLangEditor"), function (req, res, next) {
-    console.log('here')
-    var Config = require(__dirname + "/settings.json");
+    var Config = require(FileName);
     var Update = req.body;
     Update = XSSHelper.filterJSON(Update);
     var fs = require("fs");
-    fs.writeFile(__dirname + "/settings.json", JSON.stringify(_.merge(Config, Update), null, "\t"), function (err) {
+    fs.writeFile(FileName, JSON.stringify(_.merge(Config, Update), null, "\t"), function (err) {
         if (err) return next(err);
         return res.json({});
     });

@@ -23,4 +23,5 @@ static/build/index.html
 static/build/
 /start.json
 /backup
-/modules/catalogue/settings.json
+static/custom/catalogue.json
+static/custom/translate.json

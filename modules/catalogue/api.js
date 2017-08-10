@@ -183,20 +183,21 @@ var SearchQuery = function(ModelName){
 }
 
 
+var FileName = __base+"static/custom/catalogue.json";
 
 router.get('/clientsettings', function(req,res,next){
-	res.sendFile(__dirname+"/settings.json");
+	res.sendFile(FileName);
 })
 
 router.post('/clientsettings', function(req,res,next){
-	var Config = require(__dirname+"/settings.json");
+	var Config = require(FileName);
 	var Update = req.body, M = mongoose.model(Update.ModelName), CFG = M.cfg(), NameAndCode = [CFG.Code,CFG.Name];
 	if (_.isEmpty(Config[Update.ModelName])) Config[Update.ModelName] = {};
 	Config[Update.ModelName].TableFields = (_.isEmpty(Update.TableFields)) ? NameAndCode:Update.TableFields;
 	Config[Update.ModelName].EditFields = (_.isEmpty(Update.EditFields)) ? NameAndCode:Update.EditFields;
 	Config[Update.ModelName].Links = (_.isEmpty(Update.Links)) ? []:Update.Links;
 	var fs = require("fs");
-	fs.writeFile(__dirname+"/settings.json", JSON.stringify(Config,null,"\t"), function (err) {
+	fs.writeFile(FileName, JSON.stringify(Config,null,"\t"), function (err) {
 		if (err) return next(err);
 		return res.json({});
     });
