@@ -14,16 +14,14 @@ var ExtractorHelper = (new function () {
 
     self.used_ids = {};
 
-    self.models_black_list = ["user", "userfavorite", "usertask", "userrequest", "labeluser", "userpermit"];
+    self.models_black_list = ["user", "userfavorite", "usertask", "userrequest", "labeluser", "userpermit", "periodedit", "permit", "permitrole", "obj", "org", "objtype", "objgrp", "objtag", "objtypetag", "data", "file"];
 
     self.works = 0;
 
+    self.serverconfig = require(__base + 'modules/models/serverconfig.js');
+
     self.getObjByQuery = function (model, query, done) {
-        try {
-            var Query = mongoose.model(model).findOne(query);
-        } catch (e) {
-            return done('error')
-        }
+        var Query = mongoose.model(model).findOne(query);
         Query.exec(function (err, obj) {
             if (!obj) {
                 return done('объект не найден')
@@ -33,27 +31,51 @@ var ExtractorHelper = (new function () {
         })
     };
 
-    self.extractModel = function (model, query) {
-        self.used_ids = [];
-        self.extractedModel = {};
-        self.works = 1;
-        self._extractModel({
-            model: model,
-            query: query,
-            depth: 1,
-            done: function () {
-
+    self.getObjectsByQuery = function (model, query, done) {
+        var Query = mongoose.model(model).find(query);
+        Query.exec(function (err, obj) {
+            if (!obj) {
+                return done('объект не найден')
+            } else {
+                return done(null, obj);
             }
         })
-        var checkDone = function () {
-            if (self.works === 0) {
-                var fs = require("fs");
-                fs.writeFile(__dirname + "/export.json", JSON.stringify(self.extractedModel, null, "\t"), function (err) {});
-            } else {
-                setTimeout(checkDone, 500);
+    };
+
+    self.prepare = 0;
+
+    self.extractModel = function (model, query) {
+        self.used_ids = [];
+        self.docs = [];
+        self.rootrows = [];
+        self.extractedModel = {};
+        self.prepare = 1;
+        self._getDocList(query[_.keys(query)[0]])
+        var waitPrepare = function () {
+            if (self.prepare != 0) {
+                setTimeout(waitPrepare, 500);
+                return;
             }
+            self.works = 1;
+            self._extractModel({
+                model: model,
+                query: query,
+                depth: 1,
+                done: function () {
+
+                }
+            })
+            var checkDone = function () {
+                if (self.works === 0) {
+                    var fs = require("fs");
+                    fs.writeFile(__dirname + "/export.json", JSON.stringify(self.extractedModel, null, "\t"), function (err) {});
+                } else {
+                    setTimeout(checkDone, 500);
+                }
+            }
+            checkDone();
         }
-        checkDone();
+        waitPrepare();
     }
 
     self._extractModel = function (el) {
@@ -69,7 +91,7 @@ var ExtractorHelper = (new function () {
             self.used_ids[el.model.toLowerCase()] = [];
         }
         self.getObjByQuery(el.model, el.query, function (err, obj) {
-            if (!obj || obj.err) {
+            if (!obj || obj.err || obj.IsActive == false) {
                 self.works -= 1;
                 return;
             }
@@ -77,19 +99,32 @@ var ExtractorHelper = (new function () {
                 self.works -= 1;
                 return;
             }
+            if (el.model === "doc" && self.docs.indexOf(obj.CodeDoc) === -1) {
+                self.works -= 1;
+                return;
+            }
+            if (el.model === "row" && self.rootrows.indexOf(obj.treeroot) === -1) {
+                self.works -= 1;
+                return;
+            }
             self.used_ids[el.model.toLowerCase()].push(obj._id.toString());
+            self._extractDependent(el, obj);
             var objects_for_extract = [];
             _.keys(obj._doc).forEach(function (k) {
                 if (k.startsWith("Code")) {
-                    var model = k.substr(4).toLowerCase();
-                    var query = {};
-                    query[k] = obj[k];
-                    objects_for_extract.push({
-                        model: model,
-                        query: query,
-                        done: function () {},
-                        depth: el.depth + 1,
-                    })
+                    try {
+                        var model = self.serverconfig[el.model].fields[k].refmodel;
+                        if (model) {
+                            var query = {};
+                            query[k] = obj[k];
+                            objects_for_extract.push({
+                                model: model,
+                                query: query,
+                                done: function () {},
+                                depth: el.depth + 1,
+                            })
+                        }
+                    } catch (e) {}
                 }
                 if (k.startsWith("Link_")) {
                     if (obj[k]) {
@@ -112,10 +147,79 @@ var ExtractorHelper = (new function () {
                 self.extractedModel[el.model] = [];
             }
             self.extractedModel[el.model].push(self._prepareObj(obj));
-            console.log('Extract...');
+            console.log('Extract ' + el.model);
             self.works += objects_for_extract.length;
             async.each(objects_for_extract, self._extractModel, el.done)
             self.works -= 1;
+        })
+    }
+
+    self._extractDependent = function (el, obj) {
+        self.works += 1;
+        obj.Dependent(function (err, dependents) {
+            if (err) {
+                return
+            }
+            var objects_for_extract = [];
+            _.keys(dependents).forEach(function (k) {
+                dependents[k].forEach(function (c) {
+                    var codename;
+                    _.keys(self.serverconfig[k].fields).forEach(function (fk) {
+                        if (self.serverconfig[k].fields[fk].role === "code") {
+                            codename = fk;
+                        }
+                    })
+                    var query = {};
+                    query[codename] = c;
+                    objects_for_extract.push({
+                        model: k,
+                        query: query,
+                        done: function () {},
+                        depth: el.depth + 1,
+                    })
+                })
+            })
+            self.works += objects_for_extract.length;
+            async.each(objects_for_extract, self._extractModel, function () {})
+            self.works -= 1;
+        })
+    }
+
+    self.docs = [];
+    self.rootrows = [];
+
+    self._getDocList = function (CodeDocFolder) {
+        self.getObjectsByQuery('docfolderdoc', {
+            CodeDocFolder: CodeDocFolder
+        }, function (err, dfds) {
+            dfds.forEach(function (dfd) {
+                self.docs.push(dfd.CodeDoc);
+            })
+            self.prepare -= 1;
+        })
+        self.getObjectsByQuery('docfolder', {
+            CodeParentDocFolder: CodeDocFolder
+        }, function (err, dfs) {
+            self.prepare += dfs.length;
+            dfs.forEach(function (df) {
+                self.getObjectsByQuery('docfolderdoc', {
+                    CodeDocFolder: df.CodeDocFolder
+                }, function (err, dfds) {
+                    dfds.forEach(function (dfd) {
+                        self.docs.push(dfd.CodeDoc);
+                        self.prepare += 1;
+                        self.getObjectsByQuery('docrow', {
+                            CodeDoc: dfd.CodeDoc
+                        }, function (err, drs) {
+                            drs.forEach(function (dr) {
+                                self.rootrows.push(dr.CodeRow);
+                            })
+                            self.prepare -= 1;
+                        })
+                    })
+                    self.prepare -= 1;
+                })
+            })
         })
     }
 
