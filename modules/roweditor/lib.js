@@ -2,9 +2,48 @@ var mongoose   = require('mongoose');
 var router     = require('express').Router();
 var _          = require('lodash');
 var async      = require('async');
+var Regexp = require(__base+"classes/calculator/RegExp.js");
 
-module.exports = (new function(){
+var Struct =  (new function(){
 	var self = this;
+
+	self.FindInFormula = function(Code,Formula,Codes){
+		var Vars = Formula.match(Regexp.Var), Undeleted = {};
+		Vars.forEach(function(V){
+			var Rows = V.match(Regexp.Row);
+			if (!_.isEmpty(Rows)){
+				var CodeRow = _.first(Rows).replace("$","");
+				if (!_.isEmpty(CodeRow) && Codes.indexOf(Code)==-1 && Codes.indexOf(CodeRow)!=-1){
+					Undeleted[Code] = Formula.split(CodeRow).join("<b>"+CodeRow+"</b>");
+				}
+			}
+		})
+		return Undeleted;
+
+	}
+
+	self.CheckInFormula = function(Codes,done){
+		var Undeleted = {};
+		if (_.isEmpty(Codes)) return done(null,Undeleted);		
+		mongoose.model("row").find({IsFormula:true},"CodeRow Formula").isactive().lean().exec(function(err,Rows){
+			mongoose.model("col").find({IsFormula:true},"CodeCol Formula").isactive().lean().exec(function(err,Cols){
+				Rows.forEach(function(R){
+					var Bad = self.FindInFormula(R.CodeRow,R.Formula,Codes);
+					if (!_.isEmpty(Bad)) Undeleted = _.merge(Undeleted,Bad);
+				})
+				Cols.forEach(function(C){
+					var Bad = self.FindInFormula(C.CodeCol,C.Formula,Codes);
+					if (!_.isEmpty(Bad)) Undeleted = _.merge(Undeleted,Bad);
+				})
+				return done(err,Undeleted);
+			})
+		})
+	}
+
+
+
+
+
 
 	self.ReparseRequest = function(AllRows){
 		AllRows = AllRows || [];
@@ -65,15 +104,24 @@ module.exports = (new function(){
 				R.CodeParentRow = ByParents[R.level];
 				ByParents[(R.level+1)] = R.CodeRow; // Обновляем парентов и порядок
 				if (R.isModified()) ToUpdate.push(R); 
-			}		
-			async.each(ToRemove,function(R,cb){
-				R.remove(CodeUser,cb);
-			},function(err){
-				async.each(ToUpdate,function(U,cb){ // Обновляем существующие
-					U.save(CodeUser,cb)
+			}	
+			self.CheckInFormula(_.map(ToRemove,"CodeRow"),function(err,Undeleted){
+				if (err) return done(err);
+				if (!_.isEmpty(Undeleted)){
+					var error = ["<div>На удаляемые ряды есть формульные ссылки:</div>"];
+					for (var Code in Undeleted){
+						error.push(Code+": "+Undeleted[Code]);
+					}
+					return done(error.join("<br/>"));
+				}
+				async.each(ToRemove,function(R,cb){
+					R.remove(CodeUser,cb);
 				},function(err){
-					console.log("err",err);
-					RootNode.IndexNewTree(CodeUser,done);
+					async.each(ToUpdate,function(U,cb){ // Обновляем существующие
+						U.save(CodeUser,cb)
+					},function(err){
+						RootNode.IndexNewTree(CodeUser,done);
+					})
 				})
 			})
 		})
@@ -90,7 +138,6 @@ module.exports = (new function(){
 			Row.findOne({CodeRow:Code}).isactive().exec(function(err,Root){
 				if (!Root) {
 					Root = new Row({CodeRow:Code});
-					//console.log("ADD ROOT");
 				}
 				Root.treeroot = Code;
 				Root.rowpath = ["/",Code,"/"].join("");
@@ -114,3 +161,6 @@ module.exports = (new function(){
 
 	return self;
 })
+
+
+module.exports = Struct;

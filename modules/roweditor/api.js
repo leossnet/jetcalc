@@ -9,6 +9,7 @@ var StructureHelper = require('./lib.js');
 
 
 
+
 router.get('/rows',  HP.TaskAccess("IsRowTuner"), function(req,res,next){
 	var Context = LIB.ReqContext(req);
 	Helper.LoadRoots(Context.CodeDoc,function(err,Rows){

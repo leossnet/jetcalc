@@ -112,7 +112,7 @@
                 <div class="col-sm-6 " data-bind='with:MModules.Settings'>
                     <!-- ko template:{
                         name:'small_form_with_header',
-                        data:{Name:'Настройки GitHub',Fields:["usecron","RepoOwner","GitLogin","Password"],Model:$data}
+                        data:{Name:'Настройки GitHub',Fields:["usecron","MainRepoOwner","RepoOwner","GitLogin","Password"],Model:$data}
                     } --><!-- /ko -->                
                     <!-- ko template:{
                         name:'small_form_with_header',
@@ -130,7 +130,7 @@
 	<ul class="toolPanel nav nav-tabs background-blue">
         <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-database',title:'Выбор моделей',mode:'ChooseModels'}} --><!-- /ko -->        
     	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-th-large',title:'Выбор модулей',mode:'ChooseModules'}} --><!-- /ko -->    	
-    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-bug',title:'Трэкер ошибок',mode:'Issues'}} --><!-- /ko -->    	
+<!--ko if:false --><!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-bug',title:'Трэкер ошибок',mode:'Issues'}} --><!-- /ko --><!-- /ko -->
     	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-wrench',title:'Настройки',mode:'Settings'}} --><!-- /ko -->    	
 	</ul>
 </div>

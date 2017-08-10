@@ -5,6 +5,7 @@ module.exports = {
 			RepoOwner:{type:String, default:'dkoviazin'},
 			GitLogin :{type:String, default:''},
 			Password :{type:String, default:'', template:'form_password'},
+			MainRepoOwner:{type:String, default:'leossnet'},
 			LastSync:{type:Date, default:null},
 			DoBundle : {type : Boolean, default:false}
 		},

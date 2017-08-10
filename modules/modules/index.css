@@ -136,3 +136,6 @@ h3 .label-module{
     color:gray;
     margin-bottom: 5px;
 }
+.adminpage .profile-user-info-striped, .adminpage .profile-info-name{
+    white-space: nowrap;
+}
