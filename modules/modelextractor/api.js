@@ -10,9 +10,13 @@ var HP = LIB.Permits;
 var ExtractorHelper = (new function () {
     var self = this;
 
-    self.extractedModel = [];
+    self.extractedModel = {};
 
     self.used_ids = {};
+
+    self.models_black_list = ["user", "userfavorite", "usertask", "userrequest", "labeluser", "userpermit"];
+
+    self.works = 0;
 
     self.getObjByQuery = function (model, query, done) {
         try {
@@ -30,20 +34,35 @@ var ExtractorHelper = (new function () {
     };
 
     self.extractModel = function (model, query) {
-        var fs = require("fs");
-        fs.writeFile(__dirname + "/settings.json", JSON.stringify(self.extractedModel, null, "\t"), function (err) {});
         self.used_ids = [];
-        self.extractedModel = [];
+        self.extractedModel = {};
+        self.works = 1;
         self._extractModel({
             model: model,
             query: query,
             depth: 1,
-            done: function () {}
+            done: function () {
+
+            }
         })
+        var checkDone = function () {
+            if (self.works === 0) {
+                var fs = require("fs");
+                fs.writeFile(__dirname + "/export.json", JSON.stringify(self.extractedModel, null, "\t"), function (err) {});
+            } else {
+                setTimeout(checkDone, 500);
+            }
+        }
+        checkDone();
     }
 
     self._extractModel = function (el) {
+        if (self.models_black_list.indexOf(el.model) != -1) {
+            self.works -= 1;
+            return;
+        }
         if (el.depth > 20) {
+            self.works -= 1;
             return;
         }
         if (!self.used_ids[el.model.toLowerCase()]) {
@@ -51,9 +70,11 @@ var ExtractorHelper = (new function () {
         }
         self.getObjByQuery(el.model, el.query, function (err, obj) {
             if (!obj || obj.err) {
+                self.works -= 1;
                 return;
             }
             if (self.used_ids[el.model.toLowerCase()].indexOf(obj._id.toString()) != -1) {
+                self.works -= 1;
                 return;
             }
             self.used_ids[el.model.toLowerCase()].push(obj._id.toString());
@@ -87,12 +108,25 @@ var ExtractorHelper = (new function () {
                     }
                 }
             })
-            var extracted = {};
-            extracted[el.model] = obj;
-            self.extractedModel.push(extracted);
-            console.log('Extracted objects: ', self.extractedModel.length)
+            if (!self.extractedModel[el.model]) {
+                self.extractedModel[el.model] = [];
+            }
+            self.extractedModel[el.model].push(self._prepareObj(obj));
+            console.log('Extract...');
+            self.works += objects_for_extract.length;
             async.each(objects_for_extract, self._extractModel, el.done)
+            self.works -= 1;
         })
+    }
+
+    self._prepareObj = function (obj) {
+        var prepared = {};
+        obj.cfg().EditFields.forEach(function (field) {
+            if (!field.startsWith("Link_")) {
+                prepared[field] = obj[field];
+            }
+        })
+        return prepared;
     }
 
     return self;
