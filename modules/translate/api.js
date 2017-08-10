@@ -32,7 +32,6 @@ router.get('/clientsettings', function (req, res, next) {
 })
 
 router.post('/clientsettings', HP.TaskAccess("IsLangEditor"), function (req, res, next) {
-    console.log('here')
     var Config = require(__dirname + "/settings.json");
     var Update = req.body;
     Update = XSSHelper.filterJSON(Update);
