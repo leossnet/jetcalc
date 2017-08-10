@@ -277,13 +277,13 @@ var MColEditor = (new function() {
 				Cols = Cols.concat(["Condition","CodePeriodGrp",'IsInput','Link_colsetcolgrp','Link_colsetcolperiodgrp']);
 			break;
 			case "Formula":
-				Cols = Cols.concat(["IsFormula","InitialFormula","Link_coltag","IsAfFormula","AfFormula","IsAgFormula","AsAgFormula","AgFormula"]);
+				Cols = Cols.concat(["IsFormula","InitialFormula","Link_coltag","IsAfFormula","AfFormula","AsAgFormula","IsAgFormula","AgFormula"]);
 			break;
 		}
 		return Cols;
 	}
 
-	self.Editable = ["Condition","Link_colsetcolperiodgrp","Link_colsetcolgrp","CodeStyle","AfFormula","IsAfFormula","AgFormula","IsAgFormula","IsControlPoint","IsFixed","IndexColsetCol","NameColsetCol"];
+	self.Editable = ["Condition","Link_colsetcolperiodgrp","Link_colsetcolgrp","CodeStyle","AfFormula","IsAfFormula","AgFormula","IsAgFormula","AsAgFormula","IsControlPoint","IsFixed","IndexColsetCol","NameColsetCol"];
 	
 	self.ModelsByField = {
 	    "CodeStyle":'style'
