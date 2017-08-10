@@ -4,7 +4,7 @@ var MRowEditor = (new function() {
 
 	self.IsAvailable = function(CodeDoc){
 		var Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
-		return (!_.isEmpty(Doc.Link_docrow) || Doc.IsObjToRow) && PermChecker.CheckPrivelege("IsRowTuner",CxCtrl.CxPermDoc());
+		return PermChecker.CheckPrivelege("IsRowTuner",CxCtrl.CxPermDoc());
 	}
 
 	self.ContextMenu = function(){
@@ -79,19 +79,15 @@ var MRowEditor = (new function() {
     		if (self.Rows[ind-1] && self.Rows[ind+1] && self.Rows[ind+1].level){
     			var prev = _toNum(self.Rows[ind-1].CodeRow), post = _toNum(self.Rows[ind+1].CodeRow);
     			postfix =  Math.round((prev+post)/2);
-    			console.log("1",ind,postfix,RootCode,self.Rows[ind-1].CodeRow);
     		} else {
     			if ((self.Rows[ind-1] && self.Rows[ind-1].level==0) || !self.Rows[ind-1] || !self.Rows[ind-1].CodeRow){
     				if (self.Rows[ind-1] && self.Rows[ind-1].CodeRow){
 						postfix = _toNum(self.Rows[ind-1].CodeRow)+10;
-						console.log("2",ind,postfix,RootCode,self.Rows[ind-1].CodeRow);						
     				} else {
     					postfix = 10;	
-    					console.log("3",ind,postfix,RootCode);						
     				}    				
     			} else {
     				postfix = _toNum(self.Rows[ind-1].CodeRow)+10;
-    				console.log("4",ind,postfix,RootCode,self.Rows[ind-1].CodeRow);
     			} 
     		}
 	    	return RootCode+postfix;
@@ -148,7 +144,6 @@ var MRowEditor = (new function() {
     self.RenderTimer = null
 
     self.AskForRender = function(){
-    	console.log("ASK");
     	if (self.RenderTimer) clearTimeout(self.RenderTimer);
     	self.RenderTimer = setTimeout(function(){
     		self.RenderTable();
@@ -159,10 +154,6 @@ var MRowEditor = (new function() {
   	self.AddChange = function(changes, source){
         switch(source) {
         	case 'edit':
-                changes.forEach(function(change){
-                	self._change(change[0], change[1], change[3], change[2]);
-                })
-                break;
             case 'autofill':
             case 'paste':
             case 'undo':
@@ -419,12 +410,19 @@ var MRowEditor = (new function() {
         Link_rowtag :["CodeTag", "Value"],
         Link_rowobj :["CodeObj", "CodeGrp", "CodeObjType"]
     }
+    self.IsOlap = function(){
+		return MFolders.FindDocument(CxCtrl.CodeDoc()).IsOlap
+    }
 
 	self.Columns = function(){
 		var Cols = ["CodeRow","NumRow","NameRow"];
 		switch (self.Mode()){
 			case "Structure":
-				Cols = ['level',"IndexRow"].concat(Cols).concat(["DoRemove","CodeParentRow","CodeRowLink"]);//
+				var Add = ['level',"IndexRow"];
+				if (self.IsOlap()){
+					Add = ["IndexRow"];
+				}
+				Cols = Add.concat(Cols).concat(["DoRemove","CodeParentRow","CodeRowLink"]);//
 			break;	
 			case "MainFields":
 				Cols = Cols.concat(["CodeMeasure","CodeFormat", "CodeStyle",  "CodeValuta", "IsAnalytic", "IsControlPoint"]);
@@ -509,7 +507,6 @@ var MRowEditor = (new function() {
 			Cols.push(R);
 		})
 		var Translated = Tr(Cols2Show);
-		console.log("TableCells",TableCells.length);
 		return {
 			data:TableCells,
 			headers:[Translated],
@@ -544,18 +541,29 @@ var MRowEditor = (new function() {
 	        }
 		}		
 		if (self.Mode()=="Structure"){
-			HandsonRenders.RegisterRender("Lvl",[/[0-9]*?,0$/], self.LvlRenderer);
-			HandsonRenders.RegisterRender("Index",[/[0-9]*?,1$/], Handsontable.renderers.TextRenderer);
-			HandsonRenders.RegisterRender("Num",[/[0-9]*?,2$/], Handsontable.renderers.TextRenderer);
-			HandsonRenders.RegisterRender("Code",[/[0-9]*?,3$/], Handsontable.renderers.TextRenderer);			
 			TreeArr.forEach(function(TA){
 				if (TA) RowsInfo[TA.CodeRow] = TA.level;
-			})			
-			HandsonRenders.RegisterRender("RawTree",[/[0-9]*?,4$/], self.RawTree);	
-			HandsonRenders.RegisterRender("Remove",[/[0-9]*?,5$/], Handsontable.renderers.CheckboxRenderer);	
-			HandsonRenders.RegisterRender("ParentRow",[/[0-9]*?,6$/], HandsonTableRenders.ReadOnlyText);	
-			params.manualRowMove = true;
-			Widths = [80,40].concat(Widths).concat([80,200,300]);
+			})	
+			var AddWidths = [];			
+			if (self.IsOlap()){
+				HandsonRenders.RegisterRender("Index",[/[0-9]*?,0$/], Handsontable.renderers.TextRenderer);
+				HandsonRenders.RegisterRender("Num",[/[0-9]*?,1$/], Handsontable.renderers.TextRenderer);
+				HandsonRenders.RegisterRender("Code",[/[0-9]*?,2$/], Handsontable.renderers.TextRenderer);			
+				HandsonRenders.RegisterRender("RawTree",[/[0-9]*?,3$/], self.RawTree);	
+				HandsonRenders.RegisterRender("Remove",[/[0-9]*?,4$/], Handsontable.renderers.CheckboxRenderer);	
+				HandsonRenders.RegisterRender("ParentRow",[/[0-9]*?,5$/], HandsonTableRenders.ReadOnlyText);	
+				AddWidths = [40];
+			} else {
+				HandsonRenders.RegisterRender("Lvl",[/[0-9]*?,0$/], self.LvlRenderer);
+				HandsonRenders.RegisterRender("Index",[/[0-9]*?,1$/], Handsontable.renderers.TextRenderer);
+				HandsonRenders.RegisterRender("Num",[/[0-9]*?,2$/], Handsontable.renderers.TextRenderer);
+				HandsonRenders.RegisterRender("Code",[/[0-9]*?,3$/], Handsontable.renderers.TextRenderer);			
+				HandsonRenders.RegisterRender("RawTree",[/[0-9]*?,4$/], self.RawTree);	
+				HandsonRenders.RegisterRender("Remove",[/[0-9]*?,5$/], Handsontable.renderers.CheckboxRenderer);	
+				HandsonRenders.RegisterRender("ParentRow",[/[0-9]*?,6$/], HandsonTableRenders.ReadOnlyText);	
+				AddWidths = [80,40];
+			}
+			Widths = AddWidths.concat(Widths).concat([80,200,300]);
 		} else {
 			HandsonRenders.RegisterRender("Num",[/[0-9]*?,0$/], HandsonTableRenders.ReadOnlyText);
 			HandsonRenders.RegisterRender("Code",[/[0-9]*?,1$/], HandsonTableRenders.ReadOnlyText);
@@ -569,19 +577,14 @@ var MRowEditor = (new function() {
 			//params.beforeRemoveRow = self.BeforeRemoveRow;
 		}
 		var HandsonConfig = _.merge(_.clone(self.baseConfig),params);
-
-		console.log(HandsonConfig);
-
 		try{
 			var Data = self.DataForTable();
 			if (!self.table) {
-				console.log("Creating new table");
 				self.table = new Handsontable(DomPlace, HandsonConfig);
 
 				self.table.updateSettings(Data);
 			} else {
 				var Update = _.merge(HandsonConfig,Data);
-				console.log(Update);
 				self.table.updateSettings(Update);	
 			}
 			
@@ -595,7 +598,7 @@ var MRowEditor = (new function() {
     		self.UpdateTableMeta(Data);
     		self.table.render();
     	} catch(e){
-    		console.log("Table not rendered");
+    		console.warn("Table not rendered");
     	}
         
 	}
@@ -646,6 +649,9 @@ var MRowEditor = (new function() {
 	self.RawTree = function(instance, td, row, col, prop, value, cellProperties){
         Handsontable.renderers.HtmlRenderer.apply(this, arguments);
         var Lvl = parseInt(instance.getData()[row][0]);
+        if (self.IsOlap()){
+        	Lvl = 1;
+        }
         td.className = 'simplecell treeCell';
         switch (Lvl) {
             case 0 : $(td).toggleClass('zeroLevel'); break;

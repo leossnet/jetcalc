@@ -3,6 +3,7 @@ var MDocumentEditor = (new function() {
 	var self = new Module("documenteditor");
 
 	self.Document = ko.observable();
+	self.DocumentSubscription = null;
 
 	self.IsAvailable = function(CodeDoc){
 		return PermChecker.CheckPrivelege("IsDocumentDesigner",CxCtrl.CxPermDoc());
@@ -23,6 +24,13 @@ var MDocumentEditor = (new function() {
 		self.Load();
 		MSite.Events.off("save",self.SaveChanges);
         MSite.Events.on("save",self.SaveChanges);		
+        if (!self.DocumentSubscription){
+	       	self.DocumentSubscription =  ko.computed(function() {
+	            return ko.toJS(self.Document);
+	        });
+	        self.DocumentSubscription.subscribe(self.DocumentChange);
+        }
+        
 	}
 
 	self.Mode.subscribe(function(){
@@ -30,16 +38,38 @@ var MDocumentEditor = (new function() {
 	})
 
 	self.BeforeHide = function(){
+		self.DocumentSubscription.dispose();
+		MDocumentEditor.DocumentSubscription = null;
 		self.Document(null);
 		MSite.Events.off("save",self.SaveChanges);
 	}
 
 
-	self.DocFields = ['CodeDoc','NameDoc','SNameDoc','PrintNameDoc','PrintNumDoc','IsPrimary','IsAnalytic','IsOlap','IsInput','IsChart','IsPresent','IsShowMeasure','CodeMeasure','CodeGrp','FirstYear'];
+	self.DocFieldsShablon = ['CodeDoc','NameDoc','SNameDoc','PrintNameDoc','PrintNumDoc','IsPrimary','IsAnalytic','IsOlap','IsInput','IsChart','IsPresent','IsShowMeasure','CodeMeasure','CodeGrp','FirstYear'];
+	self.DocFields = ko.observableArray();
 
+	self.DocumentChange = function(D){
+		if (D){
+			var ToRemove = [];
+			if (D.IsOlap){
+				ToRemove = ToRemove.concat('IsInput','IsChart','IsPresent');
+			}
+			if (D.IsChart){
+				ToRemove = ToRemove.concat('IsOlap','IsInput','IsPresent');
+			}			
+			if (D.IsPresent){
+				ToRemove = ToRemove.concat('IsOlap','IsInput','IsChart');
+			}
+			var Current = self.DocFieldsShablon;
+			Current = _.difference(Current,ToRemove);
+			self.DocFields(Current);
+		} else {
+			self.DocFields(self.DocFieldsShablon);
+		}
+	}
 
 	self.InfoByMode = function(){
-		var Result = {Fields:self.DocFields, Links :[]};
+		var Result = {Fields:self.DocFields(), Links :[]};
 		switch(self.Mode()){
 			case "RootRows":
 				Result.Links = Result.Links.concat(['docrow','docheader']);
