@@ -55,11 +55,11 @@
 </script>
 
 <script id="form_password" type="text/html">
-	<input class="col-xs-12" type="password" data-bind="value: $parent[$data],valueUpdate:'afterkeydown'">
+	<input class="col-xs-12" type="password" data-bind="value: $parent[$data]">
 </script>
 
 <script id="form_number" type="text/html">
-	<input class="col-xs-12" type="number" data-bind="value: $parent[$data],valueUpdate:'afterkeydown'">
+	<input class="col-xs-12" type="number" data-bind="value: $parent[$data]">
 </script>
 
 <script id="form_date" type="text/html">
@@ -95,7 +95,7 @@
 	<!-- ko with:$parent[$data] -->
 		<!-- ko foreach: $data -->
 		    <div style='margin-top:5px;'>
-		    	<input type='text' data-bind='value:$parent[$index()],valueUpdate:"afterkeydown"'></input>
+		    	<input type='text' data-bind='value:$parent[$index()]'></input>
 			    <a data-bind="title:'Удалить',click:function(){$parents[2][$parents[1]].splice($index(),1);}">
 			        <span ><i class="fa fa-icon fa-times bigger-130" ></i></span>
 			    </a>

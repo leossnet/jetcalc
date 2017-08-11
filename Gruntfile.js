@@ -1,8 +1,8 @@
 module.exports = function(grunt) {
   grunt.initConfig({
-    pkg: {name:'jetcalc_lib'},
+    pkg: {name:'ugmk_lib'},
     concat: {
-      jetcalc_lib_js: {
+      ugmk_lib_js: {
         src: [
             "static/lib/jquery.js",
             "static/lib/EventEmitter.min.js",
@@ -46,12 +46,11 @@ module.exports = function(grunt) {
             'static/editor/editor.js',
             "static/src/tree.js",
             "static/lib/require.js",
-            "static/lib/moment-range.js",
-            "static/lib/hitch.js"            
+            "static/lib/moment-range.js"
         ],
         dest: 'static/build/lib.js'
       },
-      jetcalc_lib_css: {
+      ugmk_lib_css: {
         src: [
           "static/css/opensans.css",
           "static/css/bootstrap.min.css",
@@ -72,7 +71,7 @@ module.exports = function(grunt) {
       }
     },
     cssmin: {
-      jetcalc_lib_css: {
+      ugmk_lib_css: {
         src:  'static/build/lib.css',
         dest: 'static/build/lib.min.css'
       }
@@ -91,7 +90,7 @@ module.exports = function(grunt) {
         }
     },      
     uglify: {
-      jetcalc_lib_js: {
+      ugmk_lib_js: {
         files: {
           'static/build/lib.min.js': ['static/build/lib.js'],
         }

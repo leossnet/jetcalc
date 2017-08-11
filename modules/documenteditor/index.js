@@ -126,4 +126,3 @@ var MDocumentEditor = (new function() {
 })
 
 ModuleManager.Modules.DocumentEditor = MDocumentEditor;
-

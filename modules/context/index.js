@@ -604,6 +604,7 @@ var CxCtrl = (new function () {
 
     self.FixChildObjs = function(){
         var Doc = MFolders.FindDocument(self.CodeDoc());
+        console.log(Doc);
         if (Doc && Doc.HasChildObjs){
             if (!Doc.SubObjs[self.CodeObj()]){
                 var NewSub = _.first(_.keys(Doc.SubObjs));
@@ -626,6 +627,8 @@ var CxCtrl = (new function () {
             self.ChildObj(null);
             self.ChildObjs([]);
         }
+        console.log("Changing",self.ChildObjs(),self.ChildObj());
+
     }
 
     self.CorrectParams = function(){
