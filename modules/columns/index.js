@@ -24,7 +24,7 @@ var MColumns = (new function() {
 
     self.AddColsetCol = function(){
         var CodeColset = ModelTableEdit.LoadedModel().CodeColset();
-        self.ColsetCols.push(MModels.Create("colsetcol",{CodeColset:CodeColset}));
+        self.ColsetCols.push(MModels.Create("colsetcol",{CodeColset:CodeColset,IsEdit:true}));
     }
 
     self.SaveColsetCols = function(){

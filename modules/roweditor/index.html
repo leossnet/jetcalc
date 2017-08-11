@@ -12,23 +12,19 @@
           </a>
           <!-- ko template:'tb_simple_loader' --><!-- /ko -->
         </div>
-        <!-- ko if:Mode()!='Structure' -->
         <div class="btn-group" >
             <!-- ko template:'tb_colapse_expand' --><!-- /ko -->      
         </div>
-        <!-- /ko -->
-        <!-- ko if:Mode()=='Filter' -->
         <div class="btn-group">    
             <!-- ko template:'tb_input_report_switch' --><!-- /ko -->   
         </div>
-        <!-- /ko -->
         <div class="btn-group">
-            <!-- ko template:{name:'tb_mode_switch',data:{icon:'fa-sitemap',title:'Структура',mode:'Structure'}} --><!-- /ko -->      
-            <!-- ko template:{name:'tb_mode_switch',data:{icon:'fa-indent',title:'Основные настройки',mode:'MainFields'}} --><!-- /ko -->      
-            <!-- ko template:{name:'tb_mode_switch',data:{icon:'fa-filter',title:'Фильтрация',mode:'Filter'}} --><!-- /ko -->      
-            <!-- ko template:{name:'tb_mode_switch',data:{icon:'fa-hashtag',title:'Формулы',mode:'Formula'}} --><!-- /ko -->   
-            <!-- ko template:{name:'tb_mode_switch',data:{icon:'',title:'Суммы',mode:'Summ'}} --><!-- /ko -->   
-            <!-- ko template:{name:'tb_mode_switch',data:{icon:'fa-map-signs',title:'БизТран',mode:'Bistran'}} --><!-- /ko -->     
+            <!-- ko template:{name:'tb_mode_switch',data:{mode:'Structure'}} --><!-- /ko -->      
+            <!-- ko template:{name:'tb_mode_switch',data:{mode:'MainFields'}} --><!-- /ko -->      
+            <!-- ko template:{name:'tb_mode_switch',data:{mode:'Filter'}} --><!-- /ko -->      
+            <!-- ko template:{name:'tb_mode_switch',data:{mode:'Formula'}} --><!-- /ko -->   
+            <!-- ko template:{name:'tb_mode_switch',data:{mode:'Summ'}} --><!-- /ko -->   
+            <!-- ko template:{name:'tb_mode_switch',data:{mode:'Bistran'}} --><!-- /ko -->     
         </div>
     </div>
 

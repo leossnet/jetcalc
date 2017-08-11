@@ -22,6 +22,18 @@ var MRowEditor = (new function() {
     				})
     				self.AskForRender();
 				}
+        	},
+        	cut_row: {
+				name: 'Вырезать',
+				action:function(act,place){
+					console.log(act,place);
+				}
+        	},
+        	paste_row: {
+				name: 'Вставить после',
+				action:function(act,place){
+					console.log(act,place);
+				}
         	}
         }
         return {

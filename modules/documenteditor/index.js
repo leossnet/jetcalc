@@ -11,7 +11,7 @@ var MDocumentEditor = (new function() {
  
 	self.Init = function (done){
 		MSandBox.Events.on('sandbox_status_change',function(){
-			self.Load();
+			self.Show();
 		})
 		return done && done();
 	}
@@ -21,7 +21,6 @@ var MDocumentEditor = (new function() {
 	}
 
 	self.BeforeShow = function(){
-		self.Load();
 		MSite.Events.off("save",self.SaveChanges);
         MSite.Events.on("save",self.SaveChanges);		
         if (!self.DocumentSubscription){
@@ -30,12 +29,8 @@ var MDocumentEditor = (new function() {
 	        });
 	        self.DocumentSubscription.subscribe(self.DocumentChange);
         }
-        
+		self.Show();        
 	}
-
-	self.Mode.subscribe(function(){
-		self.Load();
-	})
 
 	self.BeforeHide = function(){
 		self.DocumentSubscription.dispose();
@@ -62,9 +57,13 @@ var MDocumentEditor = (new function() {
 			}
 			var Current = self.DocFieldsShablon;
 			Current = _.difference(Current,ToRemove);
-			self.DocFields(Current);
+			if (!_.isEqual(self.DocFields(),Current)){
+				self.DocFields(Current);	
+			}			
 		} else {
-			self.DocFields(self.DocFieldsShablon);
+			if (!_.isEqual(self.DocFields(),self.DocFieldsShablon)){
+				self.DocFields(self.DocFieldsShablon);
+			}
 		}
 	}
 
@@ -100,7 +99,7 @@ var MDocumentEditor = (new function() {
 	}
 
 
-	self.Load = function(){
+	self.Show = function(){
 		if (!self.Mode()) return self.InitSetMode("RootRows");
 		self.rGet("document/"+CxCtrl.CodeDoc(),self.InfoByMode(),function(data){
 			self.Document(ModelEdit.Model("doc",data.Doc));
@@ -113,13 +112,13 @@ var MDocumentEditor = (new function() {
 			Changes:JSON.stringify(self.Document().toJS())
 		},function(){
 			swal("","Изменения сохранены","success")				
-			self.Load();
+			self.Show();
 		})
 	}
 
 
 	self.RollBack = function(){
-		self.Load();		
+		self.Show();		
 	}
 
 

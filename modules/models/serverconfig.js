@@ -223,6 +223,24 @@ module.exports = {
 				"index": true,
 				"extended": true
 			},
+			"CodeDocSource": {
+				"type": String,
+				"default": "",
+				"view": "none",
+				"dep": "IdDoc",
+				"refmodel": "doc",
+				"index": true,
+				"extended": true
+			},
+			"CodeFormat": {
+				"type": String,
+				"default": "",
+				"view": "none",
+				"dep": "IdFormat",
+				"refmodel": "format",
+				"index": true,
+				"extended": true
+			},
 			"AfPriority": {
 				"type": Number,
 				"default": 0,

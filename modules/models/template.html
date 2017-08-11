@@ -241,10 +241,39 @@
     <!-- /ko -->
 </script>
 
+<script id="small_form_with_header_edit" type="text/html">
+    <!-- ko foreach: $parent.Fields  -->
+    <div class="profile-info-row">
+        <div class="profile-info-name" data-bind="model:$parent.modelname,lang:$data"></div>
+        <div class="profile-info-value">
+            <!-- ko template: $parent.Template($data) --><!-- /ko -->
+        </div>
+    </div>  
+    <!-- /ko -->
+</script>
+
+<script id="small_form_with_header_view" type="text/html">
+    <!-- ko foreach: $parent.Fields  -->
+    <div class="profile-info-row">
+        <div class="profile-info-name" data-bind="model:$parent.modelname,lang:$data"></div>
+        <div class="profile-info-value">
+            <!-- ko if:$parent.Types[$data].Type=='Boolean' -->
+                <div class="checkbox"><input class="ace ace-checkbox" type="checkbox" disabled  data-bind="checked: $parent[$data]"><span class="lbl"></span></div>
+            <!-- /ko -->
+            <!-- ko ifnot:$parent.Types[$data].Type=='Boolean' || $parent.Types[$data].Type=="Select" -->
+                <span data-bind='text:$parent[$data]'></span>
+            <!-- /ko -->                                    
+            <!-- ko if:$parent.Types[$data].Type=="Select"  -->
+                <!-- ko template:{name:'catalogue_withcode',data:{model:$parent.Types[$data].Model,id:$parent[$data]()}} --><!-- /ko -->
+            <!-- /ko -->                                    
+        </div>
+    </div>  
+    <!-- /ko -->
+</script>
+
 
 
 <script id="small_form_with_header" type="text/html">
-    <div>
     <!-- ko if:$data.Name && $data.Name.length -->
     <h3 class="row header smaller lighter blue" data-bind='lang:$data.Name'></h3>
     <!-- /ko -->
@@ -252,22 +281,29 @@
     <div class="profile-user-info profile-user-info-striped"  style='margin-bottom: 3px;position: relative;'>
         <!-- ko if:$parent.Remove -->
         <div class="profile-info-toolbuttons pull-right action-buttons noselect">
+            <!-- ko if:$parent.TurnEdit -->
+            <a class="white" data-bind="title:'Изменить',click:$data.IsEdit.bind(null,!$data.IsEdit())">
+                <span><i class="fa fa-icon fa-pencil bigger-130"></i></span>
+            </a>
+            <!-- /ko -->
             <a class="white" data-bind="title:'Удалить',click:$parent.Remove">
                 <span><i class="fa fa-icon fa-times bigger-130"></i></span>
             </a>
         </div>    
         <!-- /ko -->
-        <!-- ko foreach: $parent.Fields  -->
-        <div class="profile-info-row">
-            <div class="profile-info-name" data-bind="model:$parent.modelname,lang:$data"></div>
-            <div class="profile-info-value">
-                <!-- ko template: $parent.Template($data) --><!-- /ko -->
-            </div>
-        </div>  
+        <!-- ko ifnot:$parent.TurnEdit -->
+            <!-- ko template:'small_form_with_header_edit' --><!-- /ko -->
+        <!-- /ko -->
+        <!-- ko if:$parent.TurnEdit -->
+            <!-- ko ifnot:$data.IsEdit() -->
+                <!-- ko template:'small_form_with_header_view' --><!-- /ko -->
+            <!-- /ko -->
+            <!-- ko if:$data.IsEdit() -->
+                <!-- ko template:'small_form_with_header_edit' --><!-- /ko -->
+            <!-- /ko -->
         <!-- /ko -->
     </div>
     <!-- /ko -->
-    </div>
 </script>
 
 
@@ -356,20 +392,25 @@
 </script>
 
 <script id="tb_mode_switch" type="text/html">
-    <a class='btn btn-sm btn-primary btn-white' data-bind="click:$parent.Mode.bind(null,$data.mode),css:{active:$data.mode==$parent.Mode()}">
-      <!-- ko if:$data.mode=='Summ' -->
-          <i class="ace-icon fa fa-text">Σ</i>
-      <!-- /ko -->
-      <!-- ko if:$data.mode=='Formula' -->
-          <i class="ace-icon fa fa-text">f(x)</i>
-      <!-- /ko -->
-        <!-- ko ifnot:$data.mode=='Summ' || $data.mode=='Formula' -->
-          <i class="ace-icon fa " data-bind="css:$data.icon"></i>
-        <!-- /ko -->
-        <!-- ko if:$data.text -->
-            <span data-bind='lang:$data.mode'></span>
-        <!-- /ko -->
-      </a>
+    <a class='btn btn-sm btn-white' data-bind="click:$parent.Mode.bind(null,$data.mode),css:{active:$data.mode==$parent.Mode()}">
+    <!-- ko if:$data.icon -->
+          <!-- ko if:$data.mode=='Summ' -->
+              <i class="ace-icon fa fa-text">Σ</i>
+          <!-- /ko -->
+          <!-- ko if:$data.mode=='Formula' -->
+              <i class="ace-icon fa fa-text">f(x)</i>
+          <!-- /ko -->
+            <!-- ko ifnot:$data.mode=='Summ' || $data.mode=='Formula' -->
+              <i class="ace-icon fa " data-bind="css:$data.icon"></i>
+            <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko ifnot:$data.title || $data.text  -->
+        <span data-bind='lang:$data.mode'></span>
+    <!-- /ko -->
+    <!-- ko if:$data.text -->
+        <span data-bind='lang:$data.mode'></span>    
+    <!-- /ko -->
+    </a>
 </script>
 
 <div id="link_editor_modal" class="modal fade" data-bind="with: EditorRegistrator">
