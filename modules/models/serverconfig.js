@@ -14,8 +14,7 @@ module.exports = {
 			"CodeOrg": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				"dep": "IdOrg",
+				"view": "none",				
 				"refmodel": "org",
 				"index": true,
 				"extended": true
@@ -23,8 +22,7 @@ module.exports = {
 			"CodeGrp": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				"dep": "IdGrp",
+				"view": "none",				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -173,7 +171,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdColset",
+				
 				"refmodel": "colset",
 				"index": true,
 				"extended": true
@@ -181,8 +179,7 @@ module.exports = {
 			"CodeCol": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				"dep": "IdCol",
+				"view": "none",				
 				"refmodel": "col",
 				"index": true,
 				"extended": true
@@ -190,8 +187,7 @@ module.exports = {
 			"CodePeriod": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				"dep": "IdPeriod",
+				"view": "none",				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -199,8 +195,7 @@ module.exports = {
 			"CodeRole": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				"dep": "IdRole",
+				"view": "none",				
 				"refmodel": "role",
 				"index": true,
 				"extended": true
@@ -208,8 +203,7 @@ module.exports = {
 			"CodeValid": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				"dep": "IdValid",
+				"view": "none",				
 				"refmodel": "valid",
 				"index": true,
 				"extended": true
@@ -218,7 +212,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdStyle",
+				
 				"refmodel": "style",
 				"index": true,
 				"extended": true
@@ -227,7 +221,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -236,7 +230,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdFormat",
+				
 				"refmodel": "format",
 				"index": true,
 				"extended": true
@@ -295,7 +289,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdFileType",
+				
 				"refmodel": "filetype",
 				"index": true,
 				"extended": true
@@ -304,7 +298,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdUser",
+				
 				"refmodel": "user",
 				"index": true,
 				"extended": true
@@ -327,7 +321,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdSourcePeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -336,7 +330,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdTargetPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -364,7 +358,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParamSet",
+				
 				"refmodel": "paramset",
 				"index": true,
 				"extended": true
@@ -373,7 +367,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParamKey",
+				
 				"refmodel": "paramkey",
 				"index": true,
 				"extended": true
@@ -512,7 +506,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -521,7 +515,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPresentThema",
+				
 				"refmodel": "presentthema",
 				"index": true,
 				"extended": true
@@ -530,7 +524,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPresentTransitType",
+				
 				"refmodel": "presenttransittype",
 				"index": true,
 				"extended": true
@@ -563,7 +557,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRow",
+				
 				"refmodel": "row",
 				"index": true,
 				"extended": true
@@ -572,7 +566,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdCol",
+				
 				"refmodel": "col",
 				"index": true,
 				"extended": true
@@ -646,7 +640,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParentDocFolder",
+				
 				"refmodel": "docfolder",
 				"index": true,
 				"extended": true
@@ -699,7 +693,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdCol",
+				
 				"refmodel": "col",
 				"index": true,
 				"extended": true
@@ -708,7 +702,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdTag",
+				
 				"refmodel": "tag",
 				"index": true,
 				"extended": true
@@ -766,7 +760,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -775,7 +769,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -784,7 +778,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObj",
+				
 				"refmodel": "obj",
 				"index": true,
 				"extended": true
@@ -793,7 +787,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdState",
+				
 				"refmodel": "state",
 				"index": true,
 				"extended": true
@@ -882,7 +876,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdValuta",
+				
 				"refmodel": "valuta",
 				"index": true,
 				"extended": true
@@ -953,7 +947,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRole",
+				
 				"refmodel": "role",
 				"index": true,
 				"extended": true
@@ -996,7 +990,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdValuta",
+				
 				"refmodel": "valuta",
 				"index": true,
 				"extended": true
@@ -1005,7 +999,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdReportValuta",
+				
 				"refmodel": "valuta",
 				"index": true,
 				"extended": true
@@ -1014,7 +1008,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdReportValuta1",
+				
 				"refmodel": "valuta",
 				"index": true,
 				"extended": true
@@ -1023,7 +1017,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdReportValuta2",
+				
 				"refmodel": "valuta",
 				"index": true,
 				"extended": true
@@ -1032,7 +1026,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -1080,7 +1074,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -1089,7 +1083,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDocBase",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -1188,7 +1182,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdModel",
+				
 				"refmodel": "model",
 				"index": true,
 				"extended": true
@@ -1232,7 +1226,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPresent",
+				
 				"refmodel": "present",
 				"index": true,
 				"extended": true
@@ -1241,7 +1235,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPresentTransitType",
+				
 				"refmodel": "presenttransittype",
 				"index": true,
 				"extended": true
@@ -1250,7 +1244,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPresentSlideLayout",
+				
 				"refmodel": "presentslidelayout",
 				"index": true,
 				"extended": true
@@ -1324,7 +1318,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdColset",
+				
 				"refmodel": "colset",
 				"index": true,
 				"extended": true
@@ -1333,7 +1327,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParentHeader",
+				
 				"refmodel": "header",
 				"index": true,
 				"extended": true
@@ -1342,7 +1336,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -1351,7 +1345,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRole",
+				
 				"refmodel": "role",
 				"index": true,
 				"extended": true
@@ -1360,7 +1354,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdValid",
+				
 				"refmodel": "valid",
 				"index": true,
 				"extended": true
@@ -1369,7 +1363,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdStyle",
+				
 				"refmodel": "style",
 				"index": true,
 				"extended": true
@@ -1458,7 +1452,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -1467,7 +1461,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdChartType",
+				
 				"refmodel": "charttype",
 				"index": true,
 				"extended": true
@@ -1510,7 +1504,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDocSourse",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -1519,7 +1513,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDocTarget",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -1528,7 +1522,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrpSource",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -1537,7 +1531,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrpTarget",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -1571,7 +1565,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParentDepart",
+				
 				"refmodel": "depart",
 				"index": true,
 				"extended": true
@@ -1580,7 +1574,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdOrg",
+				
 				"refmodel": "org",
 				"index": true,
 				"extended": true
@@ -1589,7 +1583,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdChiefUser",
+				
 				"refmodel": "user",
 				"index": true,
 				"extended": true
@@ -1632,7 +1626,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdStateCalendar",
+				
 				"refmodel": "statecalendar",
 				"index": true,
 				"extended": true
@@ -1641,7 +1635,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -1664,7 +1658,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdTask",
+				
 				"refmodel": "task",
 				"index": true,
 				"extended": true
@@ -1673,7 +1667,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPrivelege",
+				
 				"refmodel": "privelege",
 				"index": true,
 				"extended": true
@@ -1696,7 +1690,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdSumGrp",
+				
 				"refmodel": "sumgrp",
 				"index": true,
 				"extended": true
@@ -1705,7 +1699,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRow",
+				
 				"refmodel": "row",
 				"index": true,
 				"extended": true
@@ -1739,7 +1733,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDepart",
+				
 				"refmodel": "depart",
 				"index": true,
 				"extended": true
@@ -1748,7 +1742,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdModel",
+				
 				"refmodel": "model",
 				"index": true,
 				"extended": true
@@ -1771,7 +1765,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdColsetCol",
+				
 				"refmodel": "colsetcol",
 				"index": true,
 				"extended": true
@@ -1780,7 +1774,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriodGrp",
+				
 				"refmodel": "periodgrp",
 				"index": true,
 				"extended": true
@@ -1969,7 +1963,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDocType",
+				
 				"refmodel": "doctype",
 				"index": true,
 				"extended": true
@@ -1978,7 +1972,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRole",
+				
 				"refmodel": "role",
 				"index": true,
 				"extended": true
@@ -1987,7 +1981,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrp",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -1996,7 +1990,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdModel",
+				
 				"refmodel": "model",
 				"index": true,
 				"extended": true
@@ -2005,7 +1999,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdMeasure",
+				
 				"refmodel": "measure",
 				"index": true,
 				"extended": true
@@ -2028,7 +2022,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -2037,7 +2031,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdBill",
+				
 				"refmodel": "bill",
 				"index": true,
 				"extended": true
@@ -2110,7 +2104,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdReport",
+				
 				"refmodel": "report",
 				"index": true,
 				"extended": true
@@ -2119,7 +2113,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParam",
+				
 				"refmodel": "param",
 				"index": true,
 				"extended": true
@@ -2128,7 +2122,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParamSet",
+				
 				"refmodel": "paramset",
 				"index": true,
 				"extended": true
@@ -2206,7 +2200,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdBillSource",
+				
 				"refmodel": "bill",
 				"index": true,
 				"extended": true
@@ -2215,7 +2209,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdBillTarget",
+				
 				"refmodel": "bill",
 				"index": true,
 				"extended": true
@@ -2224,7 +2218,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrpSource",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -2233,7 +2227,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrpTarget",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -2281,7 +2275,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -2290,7 +2284,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDocFolder",
+				
 				"refmodel": "docfolder",
 				"index": true,
 				"extended": true
@@ -2323,7 +2317,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRow",
+				
 				"refmodel": "row",
 				"index": true,
 				"extended": true
@@ -2332,7 +2326,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObj",
+				
 				"refmodel": "obj",
 				"index": true,
 				"extended": true
@@ -2341,7 +2335,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrp",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -2350,7 +2344,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObjType",
+				
 				"refmodel": "objtype",
 				"index": true,
 				"extended": true
@@ -2378,7 +2372,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdUser",
+				
 				"refmodel": "user",
 				"index": true,
 				"extended": true
@@ -2387,7 +2381,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -2396,7 +2390,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObj",
+				
 				"refmodel": "obj",
 				"index": true,
 				"extended": true
@@ -2405,7 +2399,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDiv",
+				
 				"refmodel": "div",
 				"index": true,
 				"extended": true
@@ -2414,7 +2408,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdOtrasl",
+				
 				"refmodel": "otrasl",
 				"index": true,
 				"extended": true
@@ -2423,7 +2417,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRegion",
+				
 				"refmodel": "region",
 				"index": true,
 				"extended": true
@@ -2432,7 +2426,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrp",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -2441,7 +2435,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -2476,7 +2470,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPresentSlide",
+				
 				"refmodel": "presentslide",
 				"index": true,
 				"extended": true
@@ -2485,7 +2479,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -2494,7 +2488,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdReport",
+				
 				"refmodel": "report",
 				"index": true,
 				"extended": true
@@ -2503,7 +2497,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -2512,7 +2506,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdValuta",
+				
 				"refmodel": "valuta",
 				"index": true,
 				"extended": true
@@ -2545,7 +2539,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDocRelation",
+				
 				"refmodel": "docrelation",
 				"index": true,
 				"extended": true
@@ -2554,7 +2548,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdColSource",
+				
 				"refmodel": "col",
 				"index": true,
 				"extended": true
@@ -2563,7 +2557,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdColTarget",
+				
 				"refmodel": "col",
 				"index": true,
 				"extended": true
@@ -2616,7 +2610,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdColsetCol",
+				
 				"refmodel": "colsetcol",
 				"index": true,
 				"extended": true
@@ -2625,7 +2619,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrp",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -2659,7 +2653,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdCountry",
+				
 				"refmodel": "country",
 				"index": true,
 				"extended": true
@@ -2682,7 +2676,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -2691,7 +2685,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPacket",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -2765,7 +2759,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdMeasure",
+				
 				"refmodel": "measure",
 				"index": true,
 				"extended": true
@@ -2774,7 +2768,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParentProd",
+				
 				"refmodel": "prod",
 				"index": true,
 				"extended": true
@@ -2812,7 +2806,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -2821,7 +2815,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRow",
+				
 				"refmodel": "row",
 				"index": true,
 				"extended": true
@@ -2879,7 +2873,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRole",
+				
 				"refmodel": "role",
 				"index": true,
 				"extended": true
@@ -2888,7 +2882,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -3002,7 +2996,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParentObj",
+				
 				"refmodel": "obj",
 				"index": true,
 				"extended": true
@@ -3011,7 +3005,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdOrg",
+				
 				"refmodel": "org",
 				"index": true,
 				"extended": true
@@ -3020,7 +3014,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObjType",
+				
 				"refmodel": "objtype",
 				"index": true,
 				"extended": true
@@ -3029,7 +3023,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdValuta",
+				
 				"refmodel": "valuta",
 				"index": true,
 				"extended": true
@@ -3038,7 +3032,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrpEditFilter",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -3047,7 +3041,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdStatus",
+				
 				"refmodel": "status",
 				"index": true,
 				"extended": true
@@ -3056,7 +3050,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPriority",
+				
 				"refmodel": "priority",
 				"index": true,
 				"extended": true
@@ -3084,7 +3078,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDocType",
+				
 				"refmodel": "doctype",
 				"index": true,
 				"extended": true
@@ -3093,7 +3087,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrp",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -3102,7 +3096,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -3111,7 +3105,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriodToRedirect",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -3134,7 +3128,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -3143,7 +3137,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrp",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -3202,7 +3196,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRegion",
+				
 				"refmodel": "region",
 				"index": true,
 				"extended": true
@@ -3281,7 +3275,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdOrg",
+				
 				"refmodel": "org",
 				"index": true,
 				"extended": true
@@ -3290,7 +3284,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdAltOrg",
+				
 				"refmodel": "org",
 				"index": true,
 				"extended": true
@@ -3299,7 +3293,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdThirdOrg",
+				
 				"refmodel": "org",
 				"index": true,
 				"extended": true
@@ -3308,7 +3302,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDogovorType",
+				
 				"refmodel": "dogovortype",
 				"index": true,
 				"extended": true
@@ -3317,7 +3311,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParentDogovor",
+				
 				"refmodel": "dogovor",
 				"index": true,
 				"extended": true
@@ -3326,7 +3320,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdValuta",
+				
 				"refmodel": "valuta",
 				"index": true,
 				"extended": true
@@ -3464,7 +3458,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -3473,7 +3467,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdHeader",
+				
 				"refmodel": "header",
 				"index": true,
 				"extended": true
@@ -3487,7 +3481,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriodGrp",
+				
 				"refmodel": "periodgrp",
 				"index": true,
 				"extended": true
@@ -3521,7 +3515,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdListDefinition",
+				
 				"refmodel": "listdefinition",
 				"index": true,
 				"extended": true
@@ -3549,7 +3543,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -3558,7 +3552,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRow",
+				
 				"refmodel": "row",
 				"index": true,
 				"extended": true
@@ -3567,7 +3561,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdChartColor",
+				
 				"refmodel": "chartcolor",
 				"index": true,
 				"extended": true
@@ -3695,7 +3689,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObj",
+				
 				"refmodel": "obj",
 				"index": true,
 				"extended": true
@@ -3718,7 +3712,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdUser",
+				
 				"refmodel": "user",
 				"index": true,
 				"extended": true
@@ -3727,7 +3721,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdTask",
+				
 				"refmodel": "task",
 				"index": true,
 				"extended": true
@@ -3736,7 +3730,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObj",
+				
 				"refmodel": "obj",
 				"index": true,
 				"extended": true
@@ -3745,7 +3739,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObjGrp",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -3754,7 +3748,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -3763,7 +3757,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRole",
+				
 				"refmodel": "role",
 				"index": true,
 				"extended": true
@@ -3772,7 +3766,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -3781,7 +3775,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriodGrp",
+				
 				"refmodel": "periodgrp",
 				"index": true,
 				"extended": true
@@ -3820,7 +3814,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDivOrg",
+				
 				"refmodel": "org",
 				"index": true,
 				"extended": true
@@ -3889,7 +3883,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObj",
+				
 				"refmodel": "obj",
 				"index": true,
 				"extended": true
@@ -3992,7 +3986,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdReport",
+				
 				"refmodel": "report",
 				"index": true,
 				"extended": true
@@ -4001,7 +3995,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRow",
+				
 				"refmodel": "row",
 				"index": true,
 				"extended": true
@@ -4035,7 +4029,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdValuta",
+				
 				"refmodel": "valuta",
 				"index": true,
 				"extended": true
@@ -4069,7 +4063,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdTag",
+				
 				"refmodel": "tag",
 				"index": true,
 				"extended": true
@@ -4238,7 +4232,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParentRow",
+				
 				"refmodel": "row",
 				"index": true,
 				"extended": true
@@ -4247,7 +4241,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdValuta",
+				
 				"refmodel": "valuta",
 				"index": true,
 				"extended": true
@@ -4256,7 +4250,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdMeasure",
+				
 				"refmodel": "measure",
 				"index": true,
 				"extended": true
@@ -4265,7 +4259,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdFormat",
+				
 				"refmodel": "format",
 				"index": true,
 				"extended": true
@@ -4274,7 +4268,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdStyle",
+				
 				"refmodel": "style",
 				"index": true,
 				"extended": true
@@ -4283,7 +4277,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdBill",
+				
 				"refmodel": "bill",
 				"index": true,
 				"extended": true
@@ -4292,7 +4286,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdProd",
+				
 				"refmodel": "prod",
 				"index": true,
 				"extended": true
@@ -4301,7 +4295,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdAltOrg",
+				
 				"refmodel": "org",
 				"index": true,
 				"extended": true
@@ -4310,7 +4304,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdFilteredAltGrp",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -4319,7 +4313,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDogovor",
+				
 				"refmodel": "dogovor",
 				"index": true,
 				"extended": true
@@ -4328,7 +4322,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDogovorArt",
+				
 				"refmodel": "dogovorart",
 				"index": true,
 				"extended": true
@@ -4337,7 +4331,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrpEditFilter",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -4346,7 +4340,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRowLink",
+				
 				"refmodel": "row",
 				"index": true,
 				"extended": true
@@ -4374,7 +4368,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRoute",
+				
 				"refmodel": "route",
 				"index": true,
 				"extended": true
@@ -4383,7 +4377,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -4392,7 +4386,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdFileType",
+				
 				"refmodel": "filetype",
 				"index": true,
 				"extended": true
@@ -4401,7 +4395,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -4410,7 +4404,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriodGrp",
+				
 				"refmodel": "periodgrp",
 				"index": true,
 				"extended": true
@@ -4443,7 +4437,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDogovorType",
+				
 				"refmodel": "dogovortype",
 				"index": true,
 				"extended": true
@@ -4452,7 +4446,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDogovorArt",
+				
 				"refmodel": "dogovorart",
 				"index": true,
 				"extended": true
@@ -4505,7 +4499,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObj",
+				
 				"refmodel": "obj",
 				"index": true,
 				"extended": true
@@ -4514,7 +4508,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrp",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -4697,7 +4691,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -4706,7 +4700,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdTag",
+				
 				"refmodel": "tag",
 				"index": true,
 				"extended": true
@@ -4740,7 +4734,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdFinalState",
+				
 				"refmodel": "state",
 				"index": true,
 				"extended": true
@@ -4749,7 +4743,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdInitState",
+				
 				"refmodel": "state",
 				"index": true,
 				"extended": true
@@ -4777,7 +4771,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObj",
+				
 				"refmodel": "obj",
 				"index": true,
 				"extended": true
@@ -4786,7 +4780,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdTag",
+				
 				"refmodel": "tag",
 				"index": true,
 				"extended": true
@@ -4819,7 +4813,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdValuta",
+				
 				"refmodel": "valuta",
 				"index": true,
 				"extended": true
@@ -4828,7 +4822,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -4903,7 +4897,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdUser",
+				
 				"refmodel": "user",
 				"index": true,
 				"extended": true
@@ -4912,7 +4906,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRequest",
+				
 				"refmodel": "request",
 				"index": true,
 				"extended": true
@@ -4976,7 +4970,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdOtrasl",
+				
 				"refmodel": "otrasl",
 				"index": true,
 				"extended": true
@@ -4985,7 +4979,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDiv",
+				
 				"refmodel": "div",
 				"index": true,
 				"extended": true
@@ -4994,7 +4988,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdCity",
+				
 				"refmodel": "city",
 				"index": true,
 				"extended": true
@@ -5003,7 +4997,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParentOrg",
+				
 				"refmodel": "org",
 				"index": true,
 				"extended": true
@@ -5012,7 +5006,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdHoldingOrg",
+				
 				"refmodel": "org",
 				"index": true,
 				"extended": true
@@ -5095,7 +5089,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdTask",
+				
 				"refmodel": "task",
 				"index": true,
 				"extended": true
@@ -5104,7 +5098,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdFunction",
+				
 				"refmodel": "function",
 				"index": true,
 				"extended": true
@@ -5238,7 +5232,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -5247,7 +5241,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdUser",
+				
 				"refmodel": "user",
 				"index": true,
 				"extended": true
@@ -5256,7 +5250,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrp",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -5265,7 +5259,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriodGrp",
+				
 				"refmodel": "periodgrp",
 				"index": true,
 				"extended": true
@@ -5474,7 +5468,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdOrg",
+				
 				"refmodel": "org",
 				"index": true,
 				"extended": true
@@ -5483,7 +5477,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDepart",
+				
 				"refmodel": "depart",
 				"index": true,
 				"extended": true
@@ -5492,7 +5486,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObj",
+				
 				"refmodel": "obj",
 				"index": true,
 				"extended": true
@@ -5515,7 +5509,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObj",
+				
 				"refmodel": "obj",
 				"index": true,
 				"extended": true
@@ -5524,7 +5518,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdLabel",
+				
 				"refmodel": "label",
 				"index": true,
 				"extended": true
@@ -5533,7 +5527,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdUser",
+				
 				"refmodel": "user",
 				"index": true,
 				"extended": true
@@ -5561,7 +5555,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRow",
+				
 				"refmodel": "row",
 				"index": true,
 				"extended": true
@@ -5570,7 +5564,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdTag",
+				
 				"refmodel": "tag",
 				"index": true,
 				"extended": true
@@ -5593,7 +5587,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -5602,7 +5596,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdLinkPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -5630,7 +5624,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObjType",
+				
 				"refmodel": "objtype",
 				"index": true,
 				"extended": true
@@ -5639,7 +5633,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdTag",
+				
 				"refmodel": "tag",
 				"index": true,
 				"extended": true
@@ -5683,7 +5677,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObjClass",
+				
 				"refmodel": "objclass",
 				"index": true,
 				"extended": true
@@ -5722,7 +5716,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParamGrp",
+				
 				"refmodel": "paramgrp",
 				"index": true,
 				"extended": true
@@ -5731,7 +5725,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdListDefinition",
+				
 				"refmodel": "listdefinition",
 				"index": true,
 				"extended": true
@@ -5740,7 +5734,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParamSet",
+				
 				"refmodel": "paramset",
 				"index": true,
 				"extended": true
@@ -5768,7 +5762,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRoute",
+				
 				"refmodel": "route",
 				"index": true,
 				"extended": true
@@ -5777,7 +5771,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -5786,7 +5780,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDocType",
+				
 				"refmodel": "doctype",
 				"index": true,
 				"extended": true
@@ -5795,7 +5789,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrp",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -5828,7 +5822,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -5837,7 +5831,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdLabel",
+				
 				"refmodel": "label",
 				"index": true,
 				"extended": true
@@ -5846,7 +5840,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriodGrp",
+				
 				"refmodel": "periodgrp",
 				"index": true,
 				"extended": true
@@ -5869,7 +5863,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdProd",
+				
 				"refmodel": "prod",
 				"index": true,
 				"extended": true
@@ -5878,7 +5872,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdSumGrp",
+				
 				"refmodel": "sumgrp",
 				"index": true,
 				"extended": true
@@ -6008,7 +6002,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdReportPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -6032,7 +6026,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -6065,7 +6059,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -6074,7 +6068,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriodGrp",
+				
 				"refmodel": "periodgrp",
 				"index": true,
 				"extended": true
@@ -6083,7 +6077,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParam",
+				
 				"refmodel": "param",
 				"index": true,
 				"extended": true
@@ -6092,7 +6086,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParamSet",
+				
 				"refmodel": "paramset",
 				"index": true,
 				"extended": true
@@ -6115,7 +6109,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRoute",
+				
 				"refmodel": "route",
 				"index": true,
 				"extended": true
@@ -6124,7 +6118,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -6133,7 +6127,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRefPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -6156,7 +6150,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdUser",
+				
 				"refmodel": "user",
 				"index": true,
 				"extended": true
@@ -6165,7 +6159,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPermit",
+				
 				"refmodel": "permit",
 				"index": true,
 				"extended": true
@@ -6174,7 +6168,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrp",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -6183,7 +6177,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObj",
+				
 				"refmodel": "obj",
 				"index": true,
 				"extended": true
@@ -6281,7 +6275,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPermit",
+				
 				"refmodel": "permit",
 				"index": true,
 				"extended": true
@@ -6290,7 +6284,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriodGrp",
+				
 				"refmodel": "periodgrp",
 				"index": true,
 				"extended": true
@@ -6299,7 +6293,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRole",
+				
 				"refmodel": "role",
 				"index": true,
 				"extended": true
@@ -6332,7 +6326,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdRoute",
+				
 				"refmodel": "route",
 				"index": true,
 				"extended": true
@@ -6341,7 +6335,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDocType",
+				
 				"refmodel": "doctype",
 				"index": true,
 				"extended": true
@@ -6350,7 +6344,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdGrp",
+				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -6359,7 +6353,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -6368,7 +6362,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdCheckPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -6377,7 +6371,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdCheckState",
+				
 				"refmodel": "state",
 				"index": true,
 				"extended": true
@@ -6400,7 +6394,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriod",
+				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -6409,7 +6403,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdPeriodGrp",
+				
 				"refmodel": "periodgrp",
 				"index": true,
 				"extended": true
@@ -6432,7 +6426,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdDoc",
+				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -6441,7 +6435,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObjClass",
+				
 				"refmodel": "objclass",
 				"index": true,
 				"extended": true
@@ -6450,7 +6444,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdObjType",
+				
 				"refmodel": "objtype",
 				"index": true,
 				"extended": true
@@ -6459,7 +6453,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParentObjClass",
+				
 				"refmodel": "objclass",
 				"index": true,
 				"extended": true
@@ -6468,7 +6462,7 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				"dep": "IdParentObjTypes",
+				
 				"refmodel": "objtype",
 				"index": true,
 				"extended": true

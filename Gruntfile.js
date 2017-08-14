@@ -1,8 +1,8 @@
 module.exports = function(grunt) {
   grunt.initConfig({
-    pkg: {name:'ugmk_lib'},
+    pkg: {name:'jetcalc_lib'},
     concat: {
-      ugmk_lib_js: {
+      jetcalc_lib_js: {
         src: [
             "static/lib/jquery.js",
             "static/lib/EventEmitter.min.js",
@@ -51,7 +51,7 @@ module.exports = function(grunt) {
         ],
         dest: 'static/build/lib.js'
       },
-      ugmk_lib_css: {
+      jetcalc_lib_css: {
         src: [
           "static/css/opensans.css",
           "static/css/bootstrap.min.css",
@@ -72,7 +72,7 @@ module.exports = function(grunt) {
       }
     },
     cssmin: {
-      ugmk_lib_css: {
+      jetcalc_lib_css: {
         src:  'static/build/lib.css',
         dest: 'static/build/lib.min.css'
       }
@@ -91,7 +91,7 @@ module.exports = function(grunt) {
         }
     },      
     uglify: {
-      ugmk_lib_js: {
+      jetcalc_lib_js: {
         files: {
           'static/build/lib.min.js': ['static/build/lib.js'],
         }
@@ -102,7 +102,6 @@ module.exports = function(grunt) {
       // Clean any pre-commit hooks in .git/hooks directory
       hooks: ['.git/hooks/pre-commit']
     },
-
     // Run shell commands
     shell: {
       hooks: {
@@ -111,7 +110,6 @@ module.exports = function(grunt) {
       }
     }
   });
-
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-css');
   grunt.loadNpmTasks('grunt-contrib-uglify');
