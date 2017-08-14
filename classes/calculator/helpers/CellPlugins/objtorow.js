@@ -26,7 +26,11 @@ var ObjToRowStructure = function(Context,Data){
 	self.Data = Data;
 
 
-	self.FilterByYear = function(Objs){
+	self.FilterByYear = function(DocObjs){
+		var Objs = [];
+		for (var Code in DocObjs){
+			Objs = Objs.concat(DocObjs[Code])
+		}
 		var Y = Number(self.Context.Year);
 		var Good = [];
 		Objs.forEach(function(CodeObj){
@@ -43,7 +47,10 @@ var ObjToRowStructure = function(Context,Data){
 
 	self.BuildTreeArr = function(){
 		var Doc = _.clone(self.Data.Doc);
-		Objs = {}; Objs[self.Context.CodeObj] = self.FilterByYear(Doc.AllChildObjs[self.Context.CodeObj]);
+		Objs = {}; 
+		for (var Code in Doc.AllChildObjs){
+			Objs[Code] = self.FilterByYear(Doc.AllChildObjs[Code]);
+		}
 		var TreeArr = [], lft = 1;
 		if (!Doc.IsShowParentObj){			
 			for (var CodeObj in Objs){
