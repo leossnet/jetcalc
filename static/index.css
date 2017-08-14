@@ -1980,22 +1980,22 @@ table.dataTable.small-paddings>tbody>tr>td{
     box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.4);
 }
 .navbar.navbar-default.navbar-fixed-top{
-    z-index: 1049;
+    z-index: 1030;
 }
 #cascadeAddModal.modal.fade.in{
-    z-index: 1060;
+    z-index: 1080;
 }
 .modal.fade.in{
-    z-index: 1050;
+    z-index: 1080;
 }
 .wysiwyg-toolbar.btn-toolbar.toolH{
-    z-index: 1040;
+    z-index: 1029;
 }
 .wysiwyg-toolbar.btn-toolbar.toolH.Context{
-    z-index: 1035;
+    z-index: 1028;
 }
 .wysiwyg-toolbar.btn-toolbar.toolH.Aggregates{
-	z-index: 1030;
+	z-index: 1027;
 }
 .bottomPannel{
     z-index: 102;
@@ -2138,8 +2138,8 @@ div.row{
     background-color: white;   
 }
 .sidebar+.main-content .breadcrumbs-fixed{
-    z-index: 1050;
+    z-index: 1031;
 }
 #sidebar-left{
-    z-index: 1060;   
+    z-index: 1031;   
 }
