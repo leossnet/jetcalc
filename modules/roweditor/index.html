@@ -33,8 +33,12 @@
     <!-- ko with: MRowEditor.Error -->
     <div class="alert alert-danger"><span data-bind="html:$data"></span></div>
     <!-- /ko --> 
-
-
+    <!-- ko with:MRowEditor.CutRow -->
+        <div class='ClipBoard'>
+            <div class='CB-Name' data-bind='text:$data.CodeRow+". "+$data.NameRow'></div>
+            <div class='actionLink'><a data-bind='click:MRowEditor.ClearBuffer'>Очистить</a></div>
+        </div>
+    <!-- /ko -->
     <div class='handsonContainer'>
         <div class="handsontable single" ></div>    
     </div>

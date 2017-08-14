@@ -26,3 +26,27 @@ select.htSelectEditor{
     background-color: #e8e8e8;
     font-weight: bold;
 }
+
+div.ClipBoard{
+    position: absolute;
+    right: 0px;
+    border: 1px solid #989898;
+    z-index: 2000;
+    padding: 20px;
+    top: 70px;
+    background: #CFCFCF;
+    color: white;
+    white-space: nowrap;
+    width: 300px;
+}
+div.ClipBoard div.CB-Name{
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+div.actionLink a{
+    color: gray;
+    position: absolute;
+    right: 5px;
+}

@@ -7,6 +7,12 @@ var MRowEditor = (new function() {
 		return (!_.isEmpty(Doc.Link_docrow) || Doc.IsObjToRow) && PermChecker.CheckPrivelege("IsRowTuner",CxCtrl.CxPermDoc());
 	}
 
+	self.CutRow = ko.observable(null);
+
+	self.ClearBuffer = function(){
+		self.CutRow(null);		
+	}
+
 	self.ContextMenu = function(){
         var M = {
         	row_below: {
@@ -25,14 +31,34 @@ var MRowEditor = (new function() {
         	},
         	cut_row: {
 				name: 'Вырезать',
+				disabled:function(){
+					return !_.isEmpty(self.CutRow());
+				},
 				action:function(act,place){
-					console.log(act,place);
+					var Row = null;
+					try{
+						Row = self.Rows[place.end.row]
+					} catch (e){
+						console.debug(e);
+					}
+					if (Row) self.CutRow(Row);
 				}
         	},
         	paste_row: {
 				name: 'Вставить после',
+				disabled: function () {
+					if (_.isEmpty(self.CutRow())) return true;
+				},
 				action:function(act,place){
-					console.log(act,place);
+					var i = place.end.row;
+					var RowToAdd = self.Rows[i];
+					_.remove(self.Rows, {
+   						 CodeRow: self.CutRow().CodeRow
+					});
+					var realI = _.findIndex(self.Rows,{CodeRow:RowToAdd.CodeRow});
+					self.Rows.splice((realI+1), 0, self.CutRow());
+					self.CutRow(null);
+					self.AskForRender();
 				}
         	}
         }
