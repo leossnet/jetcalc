@@ -1980,7 +1980,7 @@ table.dataTable.small-paddings>tbody>tr>td{
     box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.4);
 }
 .navbar.navbar-default.navbar-fixed-top{
-    z-index: 1030;
+    z-index: 1032;
 }
 #cascadeAddModal.modal.fade.in{
     z-index: 1080;

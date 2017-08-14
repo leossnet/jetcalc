@@ -226,6 +226,7 @@ var CalcManager = function(Context){
 				})
 			},
 			afcells:function(done){
+				console.log("IsAFOnly");
 				RabbitManager.CalculateDocument(_.merge(self.Context,{IsAFOnly:true}),function(err,Result){
 
 				})

@@ -72,6 +72,7 @@ module.exports = {
 		})
 	},
 	CalculateByFormula:function(Context,Cells,done){
+		console.log(Cells);
 		Info.Load(function(err){
 			var Cont = _.clone(Context); Cont.IsExplain = true; Cont.UseCache = false;
 			var Unmapper = new Helper.Unmapper(Cont,Info);
