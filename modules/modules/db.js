@@ -7,7 +7,7 @@ module.exports = {
 			Password :{type:String, default:'', template:'form_password'},
 			MainRepoOwner:{type:String, default:'leossnet'},
 			LastSync:{type:Date, default:null},
-			DoBundle : {type : Boolean, default:false}
+			DoBundle : {type : Boolean, default:true}
 		},
 		msmodule:{
 			gitid:{type:Number, default:0, index:true},
