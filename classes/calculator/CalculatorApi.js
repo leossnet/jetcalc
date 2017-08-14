@@ -17,7 +17,6 @@ var Structure = require(__base+"classes/calculator/helpers/Structure.js");
 
 router.get('/api/calculator/structure', function(req,res,next){
 	var Context = lib.ReqContext(req);
-	console.log(Context);
 	var Worker = new Structure(Context);
 	Worker.get(function(err,Ans){
 		if (err) return next(err);
@@ -66,7 +65,6 @@ router.post('/api/cell/validateformula', function(req,res,next){
 			})
 		})
 		var Error = {};
-		console.log(ToTest);
 		async.each(_.keys(ToTest),function(Key,cb){
 			var Check = ToTest[Key];
 			if (_.isEmpty(Check)) return cb();
@@ -226,7 +224,6 @@ var CalcManager = function(Context){
 				})
 			},
 			afcells:function(done){
-				console.log("IsAFOnly");
 				RabbitManager.CalculateDocument(_.merge(self.Context,{IsAFOnly:true}),function(err,Result){
 
 				})
@@ -515,7 +512,6 @@ router.put('/api/cells', function(req,res){
 			if (config.dbsqlmap){
 				db.SetCells(Cells2Save,done);
 			} else {
-				console.log("setCellsSimple",Cells2Save);
 				db.SetCells(Cells2Save,done);
 			}
 		}
@@ -707,8 +703,6 @@ var FormulaUpdateSyntacis = function(){
 							}
 						break;
 						default:
-							console.log(Vars,Formula);
-							console.log(M);
 							die();
 					}
 				})

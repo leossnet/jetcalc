@@ -2,6 +2,7 @@ var mongoose   = require('mongoose');
 var _          = require('lodash');
 var async      = require('async');
 var Col = require(__base+"classes/calculator/helpers/Col.js");
+var Doc = require(__base+"classes/calculator/helpers/Doc.js");
 var Structure = require(__base+"classes/calculator/helpers/Structure.js");
 var Calc = require(__base+"classes/calculator/Calculator.js");
 var RabbitManager = require(__base+'/src/rabbitmq.js');
@@ -65,8 +66,21 @@ module.exports =  function(){
 		})
 	}
 
+	self.Round = function round(value) {
+	  var  exp = 5;
+	  if (typeof exp === 'undefined' || +exp === 0)
+	    return Math.round(value);
+	  value = +value;
+	  exp = +exp;
+	  if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+	    return NaN;
+	  value = value.toString().split('e');
+	  value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+	  value = value.toString().split('e');
+	  return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
+	}
+
 	self.SaveToDB = function(Cells,Context,done){
-		console.log("SAVE TO DB",Cells,Context);
 		var ToSaveReparsed = {};
 		Cells.forEach(function(Cell){
 			var CellName = Cell.Cell, Value = Cell.Value;
@@ -76,12 +90,12 @@ module.exports =  function(){
 				CodeUser:Context.CodeUser,
 				Comment:'',
 				CalcValue:'',
-				Value:Value,
+				Value:self.Round(Value),
 				CodeValuta:Context.CodeValuta
 			};
 		})
 		db.SetCells(_.values(ToSaveReparsed),function(err){
-			return done();
+			return done(err);
 		})
 	}
 
@@ -110,46 +124,57 @@ module.exports =  function(){
 	}
 
 	self.GetAF = function(Context,done){
+
 		var StrWorker = new Structure(Context);
 		var ColWorker = new Col(Context);
-		ColWorker.get(function(err,Ans){
-			var ColsByIndex = {}, Left = 2;
-			Ans.forEach(function(Col,Ind){
-				if (Col.IsAfFormula){
-					ColsByIndex[Ind+Left] = Col.AfFormula;
+		var DocWorker = new Doc(Context);
+		DocWorker.get(function(err,Doc){	
+			ColWorker.get(function(err,Ans){
+
+
+				var ColsByIndex = {}, Left = 2;
+				if (Doc.IsShowMeasure){
+					Left = 3;
 				}
-			})
-			StrWorker.get(function(err,Struct){
-				var Answer = [], ByIndex = {}, ToCalculate = {};
-				Struct.Cells.forEach(function(Row,RowInd){
-					var NR = [];
-					Row.forEach(function(Cell,ColInd){
-						if (Cell.IsPrimary && ColsByIndex[ColInd]){
-							NR.push(Cell.Cell+":"+ColsByIndex[ColInd]);
-							ByIndex[Cell.Cell+":"+ColsByIndex[ColInd]] = [RowInd,ColInd];
-							ToCalculate[Cell.Cell] = ColsByIndex[ColInd];
-						} else {
-							NR.push("");
-						}
-					})
-					Answer.push(NR);
-				})
-				Calc.CalculateByFormula(Context,ToCalculate,function(err,Result){
-					var VS = Result.Values || {};
-					for (var CellName in ByIndex){
-						var xy = ByIndex[CellName];
-						var Current = Answer[xy[0]][xy[1]].split(":");
-						var CellName = _.first(Current);
-						var Formula = _.last(Current);
-						Answer[xy[0]][xy[1]] = {
-							CellName:CellName,
-							Formula:Formula,
-							Value:VS[CellName]
-						}
+				Ans.forEach(function(Col,Ind){
+					if (Col.IsAfFormula){
+						ColsByIndex[Ind+Left] = Col.AfFormula;
 					}
-					return done(null,Answer);	
 				})
-			})	
+
+				StrWorker.get(function(err,Struct){
+					var Answer = [], ByIndex = {}, ToCalculate = {};
+					Struct.Cells.forEach(function(Row,RowInd){
+						var NR = [];
+						Row.forEach(function(Cell,ColInd){
+							if (Cell.IsPrimary && ColsByIndex[ColInd]){
+								NR.push(Cell.Cell+":"+ColsByIndex[ColInd]);
+								ByIndex[Cell.Cell+":"+ColsByIndex[ColInd]] = [RowInd,ColInd];
+								ToCalculate[Cell.Cell] = ColsByIndex[ColInd];
+							} else {
+								NR.push("");
+							}
+						})
+						Answer.push(NR);
+					})
+
+					Calc.CalculateByFormula(Context,ToCalculate,function(err,Result){
+						var VS = Result.Values || {};
+						for (var CellName in ByIndex){
+							var xy = ByIndex[CellName];
+							var Current = Answer[xy[0]][xy[1]].split(":");
+							var CellName = _.first(Current);
+							var Formula = _.last(Current);
+							Answer[xy[0]][xy[1]] = {
+								CellName:CellName,
+								Formula:Formula,
+								Value:self.Round(VS[CellName])
+							}
+						}
+						return done(null,Answer);	
+					})
+				})	
+			})
 		})
 	}
 

@@ -40,7 +40,6 @@ var Sql = (new function(){
 	}
 
 	self.GetCellsHistoryJSON = function(Fields, JSON_A, done){
-		console.log("SELECT public.\"GetCellsHistoryJSON\"  ('"+Fields.join(",")+"', '"+JSON_A+"')");
 		self.DB.Exec(
 			"SELECT public.\"GetCellsHistoryJSON\"  ('"+Fields.join(",")+"', '"+JSON_A+"')",
 			function(err,data){
