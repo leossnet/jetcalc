@@ -4,6 +4,7 @@ var MDebugFormula = (new function(){
 
   self.LastCoords = [];
 
+
   self.IsDebugAvailable = function(){
     var CellType = BlankDocument.LastCellType();
     return (CellType=="FRM");
@@ -11,14 +12,27 @@ var MDebugFormula = (new function(){
 
   self.DebugCell = function(){
     var Cell = BlankDocument.LastCell();
+    var T = BlankDocument.LastCellType();
     if (self.IsDebugAvailable){
-      self.Debug(Cell);
+      if (T!="PRM"){
+        self.Debug(Cell);
+      }
     }
   }
 
 	self.Debug = function(CellName){
         if (!CellName || !(CellName+'').indexOf('$')==-1){
             swal('','Выберите ячейку для отладки','error');
+        }
+        var AF = null;
+        try{
+           var Coords = BlankDocument.LastCoords;
+           var Meta = BlankDocument.table.getCellMeta(Coords[0],Coords[1]);
+           if (Meta.IsAFFormula){
+              AF = Meta.Formula;
+           }
+        }catch(e){
+           console.debug(e);
         }
     		FormulaEditor.History([]);
         FormulaEditor.History.push(CellName);
