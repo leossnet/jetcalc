@@ -61,7 +61,6 @@ var MapPeriods = (new function(){
 	self.Result = null;
 
 	self.GetMap = function(done){
-		if (self.Result) return done(null,self.Result);
 		self.Load(function(err){
 			self.DefineGroups(function(err,Result){
 				var Answer = {};
