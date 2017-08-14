@@ -19,6 +19,8 @@ var Unmapper = function(Context, InfoCacher){
 	var self = this;
 	self.Context = _.clone(Context);
 
+	self.ContextObj = !_.isEmpty(self.Context.ChildObj) ? self.Context.ChildObj:self.Context.CodeObj;
+
 	self.DebugInfo      = {}; // Расширенная информация для отладки
 
 	self.Matrix         = {}; // Результат
@@ -328,7 +330,7 @@ var Unmapper = function(Context, InfoCacher){
 	self.GetConsObjs = function(Mode,CodeObj,Filter){
 		if (!Filter || (Filter+'')=='undefined') Filter = null;
 		if (CodeObj=="^^"){
-			var T = self.Info.Data.Div[self.Context.CodeObj];
+			var T = self.Info.Data.Div[self.ContextObj];
 			if (T) {
 				if (!_.isEmpty(T.RootObj)){
 					CodeObj = T.RootObj;	
@@ -338,7 +340,7 @@ var Unmapper = function(Context, InfoCacher){
 			}
 		}
 		if (CodeObj=="^"){
-			var T = self.Info.Data.Div[self.Context.CodeObj];
+			var T = self.Info.Data.Div[self.ContextObj];
 			if (T) {
 				if (!_.isEmpty(T.CodeParentObj)){
 					CodeObj = T.CodeParentObj;	
@@ -386,7 +388,6 @@ var Unmapper = function(Context, InfoCacher){
 
 
 	self.ParamsFromIncompleteVar = function(v,Cell){
-
 		var _setVar = function(unparsed,name,regexp){
 	 		var t = unparsed.match(regexp);
 	 		var CellSet = Cell[name];
@@ -406,13 +407,13 @@ var Unmapper = function(Context, InfoCacher){
 	 		PeriodOp:null
 	 	}
 		if (R.Obj=="^^"){
-			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
+			var ObjInfo = self.Info.Data.Div[self.ContextObj];
 			if (ObjInfo.RootObj) {
 				R.Obj = ObjInfo.RootObj;
 			}
 		}
 		if (R.Obj=="^"){
-			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
+			var ObjInfo = self.Info.Data.Div[self.ContextObj];
 			if (ObjInfo.CodeParentObj) {
 				R.Obj = ObjInfo.CodeParentObj;
 			}
@@ -538,15 +539,15 @@ var Unmapper = function(Context, InfoCacher){
 		if (Obj=='0') return {Type:'FRM',FRM:0};
 		var CellName = Info.Cell;
 		var Result = null;
-		if (Info.Obj=="^$"){
-			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
+		if (Info.Obj=="^^"){
+			var ObjInfo = self.Info.Data.Div[self.ContextObj];
 			if (ObjInfo.RootObj) {
 				Info.Obj = ObjInfo.RootObj;
 				Result = {Type:'FRM',FRM:Info.Cell.split("#^^").join("#"+Info.Obj)};			
 			}
 		}
 		if (Info.Obj=="^"){
-			var ObjInfo = self.Info.Data.Div[self.Context.CodeObj];
+			var ObjInfo = self.Info.Data.Div[self.ContextObj];
 			if (ObjInfo.RootObj) {
 				Info.Obj = ObjInfo.CodeParentObj;
 				Result = {Type:'FRM',FRM:Info.Cell.split("#^").join("#"+Info.Obj)};			
@@ -715,7 +716,7 @@ var Unmapper = function(Context, InfoCacher){
 				self.Info.RowHelper.LoadRows(Rows2Load,function(err,Rows){
 					var Docs2Load = [];
 					Rows.forEach(function(Row){
-						var Doc2Load = self.Info.DocByRow(Row,self.Context.CodeObj,self.Context.CodeDoc);
+						var Doc2Load = self.Info.DocByRow(Row,self.ContextObj,self.Context.CodeDoc);
 						self.DocRowInfo[Row.CodeRow] = Doc2Load;
 						Docs2Load.push(Doc2Load);
 					})
