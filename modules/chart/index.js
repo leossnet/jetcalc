@@ -275,7 +275,7 @@ var MChart = (new function () {
 
     self.Mode = ko.observable(false);
     self.LegendPosition = ko.observable('inset');
-	self.LegendPosition.subscribe(function () {
+    self.LegendPosition.subscribe(function () {
         self.Create()
     })
     self.ShowGridX = ko.observable(true);
@@ -410,6 +410,15 @@ var MChart = (new function () {
             P.name = N;
             Data.forEach(function (V, j) {
                 P[V[0]] = V[Index + 1];
+            })
+            //Format cells
+            _.keys(P).forEach(function (k) {
+                if (k != 'name') {
+                    var t = parseInt(P[k]);
+                    if (!isNaN(t)) {
+                        P[k] = t;
+                    }
+                }
             })
             JSONdata.push(P);
         })
@@ -703,7 +712,7 @@ var MChart = (new function () {
                         "stroke-linejoin": "bevel"
                     });
                     switch (type) {
-						case 'area':
+                        case 'area':
                         case 'bar-line':
                             d3.selectAll('g.c3-bars path').each(function () {
                                 var box = this.getBBox();
@@ -713,7 +722,7 @@ var MChart = (new function () {
                                     text.attr('y', box.y + box.height / 2 + 6);
                                 }
                             });
-							d3.selectAll('circle.c3-circle').each(function () {
+                            d3.selectAll('circle.c3-circle').each(function () {
                                 var text = self._getTextOf(this).each(function () {
                                     var that = this;
                                     d3.selectAll('text.c3-text').each(function () {
@@ -726,7 +735,7 @@ var MChart = (new function () {
                             });
                             break;
                         case 'pie':
-							d3.selectAll('.c3-chart-arc text').each(function () {
+                            d3.selectAll('.c3-chart-arc text').each(function () {
                                 this.innerHTML = self._humanizeText(this.innerHTML);
                             });
                             break;
