@@ -43,7 +43,7 @@ var MRowEditor = (new function() {
 					}
 					if (Row) self.CutRow(Row);
 				}
-        	},
+        	}, 
         	paste_row: {
 				name: 'Вставить после',
 				disabled: function () {
