@@ -48,6 +48,16 @@ var MModelExtractor = (new function () {
         })
     }
 
+    self.ImportModel = function () {
+        $.ajax({
+            url: self.base + "import",
+            method: 'get',
+            data: {},
+            success: function (response) {},
+            error: function (err) {}
+        })
+    }
+
     return self;
 })
 

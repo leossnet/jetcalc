@@ -6,6 +6,89 @@ var router = require("express").Router();
 var LIB = require(__base + 'lib/helpers/lib.js');
 var HP = LIB.Permits;
 
+var ImportHelper = (new function () {
+    var self = this;
+
+    self.serverconfig = require(__base + 'modules/models/serverconfig.js');
+
+    self.import_no_links_works = 0;
+
+    self.import_json = function (CodeUser) {
+        console.log('start import')
+        var fs = require('fs');
+        var import_obj = JSON.parse(fs.readFileSync(__dirname + "/export.json", 'utf8'));
+        self.import_no_links_works = 1;
+        self.import_no_links(import_obj, CodeUser);
+        self.import_no_links_works -= 1;
+        var check_ready = function () {
+            if (self.import_no_links_works == 0) {
+                self.import_links(import_obj, CodeUser);
+            } else {
+                setTimeout(check_ready, 500);
+            }
+        }
+        check_ready();
+    }
+
+    self.import_no_links = function (import_obj, CodeUser) {
+        _.keys(import_obj).forEach(function (model) {
+            if (self.serverconfig[model].menuplace != "Link") {
+                var codename;
+                _.keys(self.serverconfig[model].fields).forEach(function (fk) {
+                    if (self.serverconfig[model].fields[fk].role === "code") {
+                        codename = fk;
+                    }
+                });
+                import_obj[model].forEach(function (obj) {
+                    var query = {};
+                    query[codename] = obj[codename];
+                    self.import_no_links_works += 1;
+                    self.add_model({
+                        model: model,
+                        data: obj,
+                        query: query,
+                    }, CodeUser);
+                })
+            }
+        })
+    }
+
+    self.import_links = function (import_obj, CodeUser) {
+        _.keys(import_obj).forEach(function (model) {
+            if (self.serverconfig[model].menuplace === "Link") {
+                var codename;
+                _.keys(self.serverconfig[model].fields).forEach(function (fk) {
+                    if (self.serverconfig[model].fields[fk].role === "code") {
+                        codename = fk;
+                    }
+                });
+                import_obj[model].forEach(function (obj) {
+                    var query = {};
+                    query[codename] = obj[codename];
+                    self.add_model({
+                        model: model,
+                        data: obj,
+                        query: query,
+                    }, CodeUser);
+                })
+            }
+        })
+    }
+
+    self.add_model = function (obj2save, CodeUser) {
+        console.log('Import', obj2save.model);
+        var Q = mongoose.model(obj2save.model).findOne(obj2save.query);
+        Q.remove().exec(function () {
+            var M = mongoose.model(obj2save.model);
+            var Obj = new M(obj2save.data);
+            Obj.save(CodeUser, function () {
+                self.import_no_links_works -= 1;
+            });
+        });
+    }
+
+    return self;
+})
 
 var ExtractorHelper = (new function () {
     var self = this;
@@ -251,7 +334,14 @@ router.post('/search', function (req, res, next) {
 router.get('/extract', function (req, res, next) {
     model = req.query.model;
     query = req.query.query;
-    return ExtractorHelper.extractModel(model, query);
+    ExtractorHelper.extractModel(model, query);
+    return res.json({});
+})
+
+router.get('/import', function (req, res, next) {
+    console.log('here')
+    var CodeUser = req.user.CodeUser;
+    ImportHelper.import_json(CodeUser);
     return res.json({});
 })
 
