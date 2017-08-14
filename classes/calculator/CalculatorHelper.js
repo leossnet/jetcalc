@@ -116,10 +116,13 @@ var Unmapper = function(Context, InfoCacher){
 	self.CacheInfo = {}
 
 	self.CompileDependancies  = function(done){
-		var DependanceTree = {}, counter = 2000000;
+		var DependanceTree = {}, counter = 500000;
 		var _recursiveFind = function(CellName){
 			var result = [];
-			if (--counter<0) return result			
+			if (--counter<0) {
+				console.log("_recursiveFind ","BREAK!!!!");
+				return result;	
+			}
 			var Info = self.Dependencies[CellName];
 			if (!Info) return result;
 			result = result.concat(Info);
@@ -129,7 +132,7 @@ var Unmapper = function(Context, InfoCacher){
 			return result;
 		}		
 		for (var CellName in self.Matrix){
-			counter = 50000;
+			counter = 500000;
 			DependanceTree[CellName] = _recursiveFind(CellName);
 		}
 		for (var CellName in DependanceTree){
@@ -141,6 +144,9 @@ var Unmapper = function(Context, InfoCacher){
 				self.CacheInfo[CellName].Dependable[V] = self.HowToCalculate[V];
 			})
 		}	
+		console.log(self.HowToCalculate["$i1101010@RATE.P710.Y2017#001_INVKOM_01?"]);
+		console.log(self.Dependencies["$i3101100@VAL.P710.Y2017#001_INVKOM_01?"]);
+		console.log(DependanceTree["$i3101100@VAL.P710.Y2017#001_INVKOM_01?"]);
 	}	
 
 	self.UpdateCache = function(done){
@@ -151,7 +157,6 @@ var Unmapper = function(Context, InfoCacher){
 			}
 		}
 		var Setter = _.omit(self.CacheInfo,self.LoadedCells);
-		console.log("Setting to cache",Setter["$i3101100@VAL.P710.Y2017#001_INVKOM_01?"]);
 		self.Redis.Set(Setter,done);
 	}
 
@@ -487,9 +492,6 @@ var Unmapper = function(Context, InfoCacher){
 		}
 		if (!P) {
 			Cell.Type = {FRM:0};
-
-			//self.Err.Set(Cell.Cell,'PERIOD:'+Cell.Period+': UNK');
-			//Cell.Type='ERR';
 			return Cell;
 		}		
 		var Obj = self.Info.Data.Div[Cell.Obj] || {}; 
@@ -1166,7 +1168,7 @@ var Evaluator = function(Unmapper){
  		self.LoadPrimaries(Primaries2Load,function(err){
 			if (err) return done(err);
 			self.HowToCalculate = RemainCells;
-			self.maxRecursions = 100;
+			self.maxRecursions = 1000;
 			self._calculate(function(err){
 				return done(err);
 			});
@@ -1294,7 +1296,7 @@ var Evaluator = function(Unmapper){
 		})
 	}
 
-	self.maxRecursions    = 100;
+	self.maxRecursions    = 1000;
 
 	self._calculate = function(done){
 		if (--self.maxRecursions==0) {
@@ -1308,6 +1310,8 @@ var Evaluator = function(Unmapper){
 				Unmapper.Err.Set(CellName,"RECURSION: "+self.HowToCalculate[CellName].FRM);
 			}
 			Unmapper.Err.Critical('Рекурсии в вычислениях');
+			console.log(self.HowToCalculate);
+			die();
 			return done();
 		}
 		var keys2omit = [];
@@ -1327,7 +1331,6 @@ var Evaluator = function(Unmapper){
 			}  
 		}
 		self.HowToCalculate = _.omit(self.HowToCalculate,keys2omit);
-		console.log(self.HowToCalculate);
 		if (!_.keys(self.HowToCalculate).length){
 			return done();
 		}
