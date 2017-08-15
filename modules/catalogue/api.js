@@ -164,6 +164,7 @@ var SearchQuery = function(ModelName){
 		if (M.IsSql) CountQuery.isactive();
 		CountQuery.exec(function(err,Count){
 			Answer.count = Count;
+			console.log("SET SORT",self.Sort);
 			var SearchQuery = M.find(Q,self.Fields.join(" ")).sort(self.Sort).skip(self.Skip).limit(self.Limit);
 			if (M.IsSql) SearchQuery.isactive();
 			SearchQuery.lean().exec(function(err,Models){
