@@ -28,7 +28,7 @@ var DocHelper = function(Context){
 	}
 
 	self.loadInfo = function(done){
-		self.query("doc",{CodeDoc:self.Context.CodeDoc},'-_id CodeDoc IsBiztranDoc NameDoc PrintNameDoc PrintNumDoc IsShowMeasure IsShowRoots IsActiveCondition IsPrimary IsAnalytic IsOlap IsInput IsChart IsPresent IsDivObj IsObjToRow IsShowParentObj CodeModel CodeGrp CodeRole CodeDocType HasChildObjs Link_docobjtype Link_docbill').populate('Link_docobjtype','-_id CodeObjClass CodeObjType').populate('Link_docbill','-_id CodeBill').isactive().exec(function(err,Docs){
+		self.query("doc",{CodeDoc:self.Context.CodeDoc},'-_id CodeDoc IsBiztranDoc NameDoc PrintNameDoc PrintNumDoc IsShowMeasure IsShowRoots IsActiveCondition IsPrimary IsAnalytic IsOlap IsInput IsChart IsPresent IsDivObj IsObjToRow IsShowParentObj CodeModel CodeGrp CodeRole CodeDocType HasChildObjs Link_docobjtype Link_docbill CodeStyleTotal CodeStyleSubtotal').populate('Link_docobjtype','-_id CodeObjClass CodeObjType').populate('Link_docbill','-_id CodeBill').isactive().exec(function(err,Docs){
 			if (err) return done(err);
 			self.Doc = _.first(Docs);
 			if (!self.Doc) return done("Документ "+self.Context.CodeDoc+" не найден");

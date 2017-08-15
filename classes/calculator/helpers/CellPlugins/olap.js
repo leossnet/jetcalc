@@ -9,7 +9,8 @@ var Tree = TreeHelper.Tree;
 var OlapHelper = (new function(){
 	var self = this;
 
-	self.ObjTree = function(Div,Context){
+	self.ObjTree = function(Data,Context){
+		var Div = Data.Div, Doc = Data.Doc, AllStyle = Doc.CodeStyleTotal, MinStyle = Doc.CodeStyleSubtotal;
 		var GT = Context.GroupType, Gr = Context.CodeGrp, GN = "Name"+GT.substring(4);
 		var Objs = _.filter(Div,function(o){
 			return o.Groups.indexOf(Gr)!=-1 ;
@@ -28,18 +29,19 @@ var OlapHelper = (new function(){
 					Codes = "["+Codes.join(",")+"]";
 				} 
 				Roots[O[GT]].Code += ":"+Codes;
+				Roots[O[GT]].Style = _.compact([MinStyle]);
 			}
 		})
 		Roots = [{
 			Code: 'ALL:['+_.map(Objs2Show,"CodeObj").join(",")+']',
     		Name: 'ВСЕГО',
-    		Objects:[]
+    		Objects:[],
+    		Style:_.compact([AllStyle])
 		}].concat(_.values(Roots));
 
 		var T = new Tree("ROOT",{});
-
 		Roots.forEach(function(R){
-			T.add(R.Code,{CodeRow:R.Code,NameRow:R.Name},"ROOT",T.traverseBF);
+			T.add(R.Code,{CodeRow:R.Code,NameRow:R.Name,Style:R.Style},"ROOT",T.traverseBF);
 			R.Objects.forEach(function(O){
 				T.add(O.CodeObj,{CodeRow:O.CodeObj,NameRow:O.NameObj},R.Code,T.traverseBF);
 			})
@@ -59,7 +61,7 @@ var OlapStructure = function(Context,Data){
 	self.Data = Data;
 
 	self.get = function(done){		
-		var Objs = OlapHelper.ObjTree(Data.Div,Context);
+		var Objs = OlapHelper.ObjTree(Data,Context);
 		var Rows = self.Data.Row, Cols = self.Data.Col, colspan = Cols.length;
 		var Answer = {Header:[[{label:"",colspan:1}],["Объект учета"]],Tree:{},Cells:[]};
 		Rows.forEach(function(R,I){
@@ -74,7 +76,7 @@ var OlapStructure = function(Context,Data){
 		Objs.forEach(function(Obj){
 			var EmptRow = [Obj.NameRow];
 			var CodeObj = _.last(Obj.CodeRow.split(":"));
-		    Rows.forEach(function(Row){		        
+		    Rows.forEach(function(Row){		  
 		    	Cols.forEach(function(Col){
 		        	var CellName = [
 		        		"$"+Row.CodeRow,
@@ -83,7 +85,7 @@ var OlapStructure = function(Context,Data){
 		        		".Y"+Col.Year,
 		        		"#"+CodeObj+"?"
 		        	].join("");
-		            EmptRow.push({Cell:CellName});
+		            EmptRow.push({Cell:CellName,Style:Obj.Style});
 		        })
 		    })
 		    Answer.Cells.push(EmptRow);
