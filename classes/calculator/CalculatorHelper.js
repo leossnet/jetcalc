@@ -1310,8 +1310,6 @@ var Evaluator = function(Unmapper){
 				Unmapper.Err.Set(CellName,"RECURSION: "+self.HowToCalculate[CellName].FRM);
 			}
 			Unmapper.Err.Critical('Рекурсии в вычислениях');
-			console.log(self.HowToCalculate);
-			die();
 			return done();
 		}
 		var keys2omit = [];

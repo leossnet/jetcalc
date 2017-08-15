@@ -2143,3 +2143,9 @@ div.row{
 #sidebar-left{
     z-index: 1031;   
 }
+.profile-user-info-striped .profile-info-name{
+    white-space: nowrap;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

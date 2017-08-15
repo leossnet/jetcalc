@@ -40,20 +40,22 @@ var MDocumentEditor = (new function() {
 	}
 
 
-	self.DocFieldsShablon = ['CodeDoc','NameDoc','SNameDoc','PrintNameDoc','PrintNumDoc','IsPrimary','IsAnalytic','IsOlap','IsInput','IsChart','IsPresent','IsShowMeasure','CodeMeasure','CodeGrp','FirstYear'];
+	self.DocFieldsShablon = ['CodeDoc','NameDoc','SNameDoc','PrintNameDoc','PrintNumDoc','IsPrimary','IsAnalytic','IsOlap','CodeStyleSubtotal','CodeStyleTotal','IsInput','IsChart','IsPresent','IsShowMeasure','CodeMeasure','CodeGrp','FirstYear'];
 	self.DocFields = ko.observableArray();
 
 	self.DocumentChange = function(D){
 		if (D){
 			var ToRemove = [];
 			if (D.IsOlap){
-				ToRemove = ToRemove.concat('IsInput','IsChart','IsPresent');
+				ToRemove = ToRemove.concat(['IsInput','IsChart','IsPresent']);
+			} else {
+				ToRemove = ToRemove.concat(['CodeStyleSubtotal','CodeStyleTotal']);
 			}
 			if (D.IsChart){
-				ToRemove = ToRemove.concat('IsOlap','IsInput','IsPresent');
+				ToRemove = ToRemove.concat(['IsOlap','IsInput','IsPresent']);
 			}			
 			if (D.IsPresent){
-				ToRemove = ToRemove.concat('IsOlap','IsInput','IsChart');
+				ToRemove = ToRemove.concat(['IsOlap','IsInput','IsChart']);
 			}
 			var Current = self.DocFieldsShablon;
 			Current = _.difference(Current,ToRemove);
@@ -68,7 +70,7 @@ var MDocumentEditor = (new function() {
 	}
 
 	self.InfoByMode = function(){
-		var Result = {Fields:self.DocFields(), Links :[]};
+		var Result = {Fields:_.uniq(self.DocFields().concat(['CodeStyleSubtotal','CodeStyleTotal'])), Links :[]};
 		switch(self.Mode()){
 			case "RootRows":
 				Result.Links = Result.Links.concat(['docrow','docheader']);

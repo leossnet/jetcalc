@@ -1998,9 +1998,24 @@ module.exports = {
 			"CodeMeasure": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "measure",
+				"index": true,
+				"extended": true
+			},
+			"CodeStyleSubtotal": {
+				"type": String,
+				"default": "",
+				"view": "none",				
+				"refmodel": "style",
+				"index": true,
+				"extended": true
+			},
+			"CodeStyleTotal": {
+				"type": String,
+				"default": "",
+				"view": "none",				
+				"refmodel": "style",
 				"index": true,
 				"extended": true
 			}

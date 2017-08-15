@@ -164,7 +164,15 @@ var SearchQuery = function(ModelName){
 		if (M.IsSql) CountQuery.isactive();
 		CountQuery.exec(function(err,Count){
 			Answer.count = Count;
-			var SearchQuery = M.find(Q,self.Fields.join(" ")).sort(self.Sort).skip(self.Skip).limit(self.Limit);
+			var Sort = _.compact(self.Sort);
+			var SearchQuery = M.find(Q,self.Fields.join(" "));
+			if (!_.isEmpty(Sort)){
+				SearchQuery.sort(self.Sort);
+			} else {
+				Sort = {}; Sort[self.Code] = 1;
+				SearchQuery.sort(Sort);
+			}
+			SearchQuery.skip(self.Skip).limit(self.Limit);
 			if (M.IsSql) SearchQuery.isactive();
 			SearchQuery.lean().exec(function(err,Models){
 				Answer.models = Models;

@@ -34,5 +34,8 @@
 	"UseOrg":"Исп.Ктр.Агент",
 	"UseDogovor":"Исп.Договор",
 	"UseDogovorArt":"Исп.Акт",
-	"IsDocumentDesigner":"Настройки документа"
+	"IsDocumentDesigner":"Настройки документа",
+	"CodeStyleSubtotal":"Стиль подитогов",
+	"CodeStyleTotal":"Стиль итога"
+
 }

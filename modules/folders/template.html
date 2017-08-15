@@ -2,7 +2,7 @@
 <!-- ko ifnot:MBreadCrumbs.CheckPath('adminpage') -->
 <!-- ko with:MFolders -->
 		<!-- ko with:DocTree -->
-				<li  data-bind='resize:$parent'></li>
+				<li  data-bind='resize:MFolders.AllOpened'></li>
 			<!-- ko foreach:_.keys($data) -->
 				 <li class='submenu-level-0' data-bind='attr:{"data-folder":$data},click:MFolders.Remember,css:{"open":MFolders.IsOpen($data)}'>
 					<a class="dropdown" >
