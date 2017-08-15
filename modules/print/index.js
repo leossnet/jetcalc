@@ -808,7 +808,7 @@ var PrintInterface = function() {
             '/css/printTable.css',
             "/css/handsontable.full.min.css",
             "/css/handsontable.custom.css",
-            "/modules/chart/c3.min.css",
+            "/lib/charts/c3/c3.min.css",
             "/modules/print/index.css"
         ];
 
