@@ -1,4 +1,6 @@
 var  crypto   = require('crypto');
+var  _   = require('lodash');
+var  mongoose   = require('mongoose');
 
 module.exports = {
 	models:{
@@ -31,6 +33,25 @@ module.exports = {
 	},
 	schema: {
 		user: function(schema){
+			schema.pre('save',function(next, CodeUser, done){
+				var self = this;
+				var SimilarQ = [];
+				if (!_.isEmpty(self.LoginUser)){
+					SimilarQ.push({LoginUser:self.LoginUser,_id:{$ne:self._id}});
+				}
+				if (!_.isEmpty(self.Mail)){
+					SimilarQ.push({Mail:self.Mail,_id:{$ne:self._id}});
+				}
+				mongoose.model("user").findOne({$or:SimilarQ},"-_id LoginUser Mail").isactive().exec(function(err,Similar){
+					if (Similar) {
+						var Errs = [];
+						if (!_.isEmpty(Similar.Mail) && Similar.Mail==self.Mail)return done("почта "+Similar.Mail+' уже используется');
+						if (!_.isEmpty(Similar.LoginUser) && Similar.LoginUser==self.LoginUser) return done("логин "+Similar.LoginUser+' уже используется');
+					}
+					return next();
+				})
+			});
+
 
 			schema.path('LoginUser').set(function(val){  return (val+'').toLowerCase().trim(); });
 			schema.path('Mail').set(function(val){ return (val+'').toLowerCase().trim(); });
