@@ -501,3 +501,21 @@ ko.bindingHandlers.moment = {
 }
 
 
+ko.bindingHandlers.doubleClick= {
+    init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        var handler = valueAccessor(),
+            delay = 200,
+            clickTimeout = false;
+
+        $(element).click(function() {
+            if(clickTimeout !== false) {
+                handler.call(viewModel);
+                clickTimeout = false;
+            } else {        
+                clickTimeout = setTimeout(function() {
+                    clickTimeout = false;
+                }, delay);
+            }
+        });
+    }
+};

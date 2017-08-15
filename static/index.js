@@ -48,6 +48,13 @@ var MSite = (new function(){
 
 	self.Me = ko.observable(null);
 
+	self.ReOpenUrl = function(){
+		var CurrentUrl = window.location.href;
+		var Host1 = 'http://jetcalc.jt.jetstyle.ru';
+		var Host2 = 'http://dev.jetcalc.com';
+		CurrentUrl = (CurrentUrl.indexOf(Host2)===0) ? CurrentUrl.replace(Host2,Host1) : CurrentUrl.replace(Host1,Host2);
+		console.log(CurrentUrl);
+	}
 
 	self.AnnounceTimeout = {
 		ctrls:null,
