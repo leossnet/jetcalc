@@ -1138,6 +1138,8 @@ var Evaluator = function(Unmapper){
 	self.Context = Unmapper.Context;
 	self.HowToCalculate = Unmapper.HowToCalculate;
 
+	self.Formats = {};
+
 	self.Valutas   = {"RUB":"ReportValue","USD":"ReportValue1","EUR":"ReportValue2"};
 	self.Field     = 'Value';
 
@@ -1198,7 +1200,11 @@ var Evaluator = function(Unmapper){
 				}
 			} 
 			try{
-				if (Formatter[RowCode] && (Value+'').length && Formatter[RowCode].length){
+				if (self.Formats[CellName]){
+					console.log("======================",self.Formats[CellName]);
+					Value = numeral(Value).format(self.Formats[CellName]);
+					Answer[CellName].Formatter = self.Formats[CellName];
+				} else if (Formatter[RowCode] && (Value+'').length && Formatter[RowCode].length){
 					Value = numeral(Value).format(Formatter[RowCode]);
 					Answer[CellName].Formatter = Formatter[RowCode];
 				} else {

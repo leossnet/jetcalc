@@ -72,7 +72,6 @@ module.exports = {
 		})
 	},
 	CalculateByFormula:function(Context,Cells,done){
-		console.log(Cells);
 		Info.Load(function(err){
 			var Cont = _.clone(Context); Cont.IsExplain = true; Cont.UseCache = false;
 			var Unmapper = new Helper.Unmapper(Cont,Info);
@@ -113,9 +112,8 @@ module.exports = {
 	},
 	CalculateDocument:function(Context,done,final){
 		var Structure = new StructureHelper(_.clone(Context));
-		console.log(Context);
-		Structure.getCells(function(err,Cells){
-			var AC = new Calculator(Context,Cells);	
+		Structure.getCells(function(err,Cells,Formats){
+			var AC = new Calculator(Context,Cells,Formats);	
 			AC.Do(function(err,Answer){
 				if (!Answer) return done("Критическая ошибка в калькуляторе");
 				AC = null;
@@ -174,12 +172,13 @@ module.exports = {
 
 
 
-var Calculator = function(Context,cells){	
+var Calculator = function(Context,cells,formats){	
 	
 	var self = this;
 
 	self.cells = cells;
 	self.Context = Context;
+	self.Formats = formats || {};
 
 	self.DoAF = function(done,aftersavedone){
 		var Unmapper = new Helper.Unmapper(self.Context,Info);
@@ -189,6 +188,20 @@ var Calculator = function(Context,cells){
 		})
 	}
 
+	self.ReparseFormats = function(done){
+		if (_.isEmpty(self.Formats)) return done();
+		var Reparsed = {};
+		mongoose.model("format").find({CodeFormat:{$in:_.compact(_.uniq(_.values(self.Formats)))}}).isactive().lean().exec(function(err,Formats){
+			var Indexed = {}; Formats.forEach(function(F){
+				Indexed[F.CodeFormat] = F.FormatValue;
+			})
+			for (var CellName in self.Formats){
+				Reparsed[CellName] = Indexed[self.Formats[CellName]];
+			}
+			self.Formats = Reparsed;
+			return done(err);
+		})
+	}
 
 	self.Do = function(done,aftersavedone){
 		var Timer = new TimerCreate();
@@ -198,37 +211,41 @@ var Calculator = function(Context,cells){
 		Unmapper.Unmap(self.cells,function(err){
 			Timer.End('Разбор формул'); 
 			if (err) return done(err);
-			var Evaluator = new Helper.Evaluator(Unmapper);
-			Timer.Start('Вычисление формул');			
-			Evaluator.Calculate(function(err){			
-				if (err) return done(err);
-				Timer.End('Вычисление формул');
-				Timer.End('Вычисление документа');
-				var AnswerToUser = {
-					Cells:Evaluator.FilterResults(),
-					CacheUsed:Unmapper.NoNeedToSave,
-					UnmapperErrors:Unmapper.UnmapErrors,
-					CalcErrors:Evaluator.CalcErrors,
-					UsedDocs:Unmapper.LoadedCodeDocs,
-					Time:Timer.Get('Вычисление документа'),
-					TimeLabels:{
-						'Разбор формул':Timer.Get('Разбор формул'),
-						'Вычисление формул':Timer.Get('Вычисление формул')
+			self.ReparseFormats(function(err){
+				var Evaluator = new Helper.Evaluator(Unmapper);
+				Evaluator.Formats = self.Formats;
+				Timer.Start('Вычисление формул');			
+				Evaluator.Calculate(function(err){			
+					if (err) return done(err);
+					Timer.End('Вычисление формул');
+					Timer.End('Вычисление документа');
+					var AnswerToUser = {
+						Cells:Evaluator.FilterResults(),
+						CacheUsed:Unmapper.NoNeedToSave,
+						UnmapperErrors:Unmapper.UnmapErrors,
+						CalcErrors:Evaluator.CalcErrors,
+						UsedDocs:Unmapper.LoadedCodeDocs,
+						Time:Timer.Get('Вычисление документа'),
+						TimeLabels:{
+							'Разбор формул':Timer.Get('Разбор формул'),
+							'Вычисление формул':Timer.Get('Вычисление формул')
+						}
 					}
-				}
-				if (!AnswerToUser.UsedDocs.length){
-					AnswerToUser.UsedDocs = _.uniq(_.map(AnswerToUser.Cells,'CodeDoc'));
-				}
-				setTimeout(function(){
-					console.log("Сохранение кэша");
-					Unmapper.UpdateCache(function(){						
-						Unmapper = null; Evaluator = null; Timer = null;
-						if (global.gc) { global.gc();}
-						aftersavedone && aftersavedone();
-					});
-				},0);
-				return done(null,AnswerToUser);				
-			})
+					if (!AnswerToUser.UsedDocs.length){
+						AnswerToUser.UsedDocs = _.uniq(_.map(AnswerToUser.Cells,'CodeDoc'));
+					}
+					setTimeout(function(){
+						console.log("Сохранение кэша");
+						Unmapper.UpdateCache(function(){						
+							Unmapper = null; Evaluator = null; Timer = null;
+							if (global.gc) { global.gc();}
+							aftersavedone && aftersavedone();
+						});
+					},0);
+					return done(null,AnswerToUser);				
+				})
+			})	
+
 		});
 	}
 }

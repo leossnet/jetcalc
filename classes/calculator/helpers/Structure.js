@@ -38,7 +38,11 @@ var StructureHelper = function(Context){
 			})
 			var Cells = _.filter(Result,_.isObject);
 			var CellNames = _.map(Cells,"Cell");
-			return done(err,_.uniq(CellNames));			
+			var CellFormats = {};
+			Cells.forEach(function(C){
+				if (C.Format) CellFormats[C.Cell] = C.Format;
+			})
+			return done(err,_.uniq(CellNames),CellFormats);			
 		})
 	}
 

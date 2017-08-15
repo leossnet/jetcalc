@@ -211,8 +211,7 @@ module.exports = {
 			"CodeStyle": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "style",
 				"index": true,
 				"extended": true
@@ -220,8 +219,7 @@ module.exports = {
 			"CodeDocSource": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -229,8 +227,7 @@ module.exports = {
 			"CodeFormat": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "format",
 				"index": true,
 				"extended": true

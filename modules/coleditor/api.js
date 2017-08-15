@@ -29,6 +29,7 @@ router.put('/savechanges', HP.TaskAccess("IsColsetTuner"), function(req,res,next
 	}
 	var ColsetCols = _.keys(Update);
 	if (_.isEmpty(ColsetCols)) return res.json({});
+
 	mongoose.model("colsetcol").find({CodeColsetCol:{$in:ColsetCols}}).isactive().exec(function(err,Current){
 		async.each(Current,function(C,cb){
 			var Fields = _.pick(C,["_id","CodeColsetCol"]), Links = {};

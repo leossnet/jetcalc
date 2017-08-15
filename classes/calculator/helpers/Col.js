@@ -202,7 +202,7 @@ var ColHelper = function(Context){
 			if (H.Type=='colsetcol'){      
 				var ColCodes = self.ChildrenCodes(H);
 				ColCodes.forEach(function(CC){
-					var ExFields = ['NameColsetCol','Condition','Year','CodePeriod','IsFixed','IsControlPoint','CodeStyle','IsAfFormula','AfFormula','Link_colsetcolperiodgrp','Link_colsetcolgrp','IndexColsetCol','CodeColsetCol'];
+					var ExFields = ['NameColsetCol','Condition','Year','CodePeriod','IsFixed','IsControlPoint','CodeStyle','CodeFormat','IsAfFormula','AfFormula','Link_colsetcolperiodgrp','Link_colsetcolgrp','IndexColsetCol','CodeColsetCol'];
 					if (H.IsAgFormula && H.AgFormula.length){
 						ExFields = ExFields.concat(["IsAgFormula", "AgFormula"]);
 					}

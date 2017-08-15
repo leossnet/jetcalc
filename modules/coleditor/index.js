@@ -168,7 +168,7 @@ var MColEditor = (new function() {
 		formula  :["InitialFormula","Formula","AfFormula","AgFormula"],
 		links    :["Link_coltag",'Link_colsetcolgrp','Link_colsetcolperiodgrp'],
 		select   :["CodePeriodGrp","CodePeriod"],
-		select_table   :["CodeStyle"],
+		select_table   :["CodeStyle","CodeFormat"],
 		checkbox :['IsInput',"IsFixed","IsControlPoint","IsFormula","IsAfFormula","IsAgFormula","AsAgFormula"],			
 	}
 
@@ -271,7 +271,7 @@ var MColEditor = (new function() {
 		var Cols = ["CodeCol","ShowName"];			
 		switch (self.Mode()){
 			case "MainFields":
-				Cols = Cols.concat(["InitialName","ContextPeriod","Year","InitialPeriod","InitialYear","CodeStyle","IsFixed","IsControlPoint","IndexHeader","IndexColsetCol"]);
+				Cols = Cols.concat(["CodeStyle","CodeFormat","InitialName","ContextPeriod","Year","InitialPeriod","InitialYear","IsFixed","IsControlPoint","IndexHeader","IndexColsetCol"]);
 			break;
 			case "Filter":
 				Cols = Cols.concat(["Condition","CodePeriodGrp",'IsInput','Link_colsetcolgrp','Link_colsetcolperiodgrp']);
@@ -283,10 +283,11 @@ var MColEditor = (new function() {
 		return Cols;
 	}
 
-	self.Editable = ["Condition","Link_colsetcolperiodgrp","Link_colsetcolgrp","CodeStyle","AfFormula","IsAfFormula","AgFormula","IsAgFormula","IsControlPoint","IsFixed","IndexColsetCol","NameColsetCol"];
+	self.Editable = ["Condition","Link_colsetcolperiodgrp","Link_colsetcolgrp","CodeStyle","CodeFormat","AfFormula","IsAfFormula","AgFormula","IsAgFormula","IsControlPoint","IsFixed","IndexColsetCol","NameColsetCol"];
 	
 	self.ModelsByField = {
-	    "CodeStyle":'style'
+	    "CodeStyle":'style',
+	    "CodeFormat":'format'
     }
 
 	self.DataForTable = function(){

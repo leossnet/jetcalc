@@ -56,6 +56,10 @@ var SimpleStructure = function(Context,Data){
                     IsSum:Row.IsSum,
                     Style:_.compact([Row.CodeStyle,Col.CodeStyle])
                 };
+                var Fs =  _.compact([Col.CodeFormat,Row.CodeFormat]);
+                if (!_.isEmpty(Fs)){
+                    CellInfo.Format = Fs;
+                }
                 CellInfo.IsEditablePrimary = (CellInfo.IsPrimary && !Col.IsFixed && self.Context.IsInput);
                 EmptRow.push(CellInfo);
             })
