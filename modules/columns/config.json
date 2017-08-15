@@ -17,5 +17,6 @@
       "IsColumnEditor":["col"],
       "IsColsetEditor":["colset","colsetcol"],
       "IsHeaderEditor":["header"]
-  }
+  },
+  "sort_index":10
 }

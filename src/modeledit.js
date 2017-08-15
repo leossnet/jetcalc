@@ -79,6 +79,7 @@ var ModelEdit = function(CodeUser,IsNew){
 		})
 	}
 
+
 	self.SyncLinks = function(ModelName, Query, Links, done){
 		var M = mongoose.model(ModelName), CFG = M.cfg(), EditFields = CFG.EditFields, ToSave = [], ToRemove = [];
 		Links = Links || [];

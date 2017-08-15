@@ -256,7 +256,6 @@ router.get('/validate', LIB.Require(['model','code']), function(req,res){
 	if (!_.isEmpty(_id)) Q._id = {$ne:_id};
 	Q[CodeField] = CodeValue;
 	M.count(Q).isactive().exec(function(err,C){
-		console.log("Validation query ",Q,C);
 		return res.json({validate:(C)?false:true});
 	})
 })
@@ -303,7 +302,6 @@ router.put('/model', HP.ModelAccessM(), function(req,res,next){
 		return F.indexOf("Link_")==-1;
 	}));
 	M.SaveModel(ModelName,ModelData,function(err){
-		console.log("WILL DO NEXT",err);
 		if (err) return next(err);
 		async.each(links,function(link, cb){
 			M.SaveLinks(link,Data["Link_"+link],cb);

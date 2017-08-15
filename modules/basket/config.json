@@ -1,0 +1,16 @@
+{
+  "id": "basket",
+  "title": "Корзина",
+  "icon": "fa-trash-o",
+  "class_name": "Basket",
+  "is_enabled": true,
+  "initial_load" :false,
+  "type":"adminpage",
+  "places":{
+      "adminpage"  : true
+  },
+  "permissions" : [
+      "IsBasketManager"
+  ],
+  "sort_index":20000
+}

@@ -919,10 +919,13 @@ module.exports = {
 		"tablename": "[spr].[StateCalendar]",
 		"menuplace": "Service",
 		"fields": {
-			"CodeStateCaledar": {
+			"CodeStateCalendar": {
 				"type": String,
 				"default": null,
-				"view": "none"
+				"view": "all",
+				"role": "code",
+				"index": true,
+				"unique": true
 			},
 			"NameStateCalendar": {
 				"type": String,
@@ -943,8 +946,7 @@ module.exports = {
 			"CodeRole": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "role",
 				"index": true,
 				"extended": true

@@ -1201,7 +1201,6 @@ var Evaluator = function(Unmapper){
 			} 
 			try{
 				if (self.Formats[CellName]){
-					console.log("======================",self.Formats[CellName]);
 					Value = numeral(Value).format(self.Formats[CellName]);
 					Answer[CellName].Formatter = self.Formats[CellName];
 				} else if (Formatter[RowCode] && (Value+'').length && Formatter[RowCode].length){

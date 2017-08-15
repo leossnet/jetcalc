@@ -1,0 +1,15 @@
+<div class="row adminbody" data-bind="with:MBasket">
+   <!-- ko if:$data.Mode()=='Links' -->
+    <div>Восстановление ссылок</div>
+   <!-- /ko -->
+	 <!-- ko if:$data.Mode()=='Code' -->
+    <div>Смена кода</div>
+   <!-- /ko -->
+</div>
+
+<div class="bottomPannel" data-bind="with:MBasket">
+	<ul class="toolPanel nav nav-tabs background-blue">
+      <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-tags',title:'Ссылки',mode:'Links'}} --><!-- /ko -->      
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-tag',title:'Смена кода',mode:'Code'}} --><!-- /ko -->    	
+	</ul>
+</div>

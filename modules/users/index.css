@@ -25,11 +25,6 @@ table.permission-table tr{
 table.permission-table td,table.permission-table th{
 	padding:5px;
 }
-.permsSelector .btn-colorpicker{
-	width:15px;
-	height: 15px;
-}
-
 .permsSelector .colorpick-btn.None{
     border: 1px solid #ddd;
 }
@@ -109,3 +104,25 @@ div.btn-group>.input-icon>.ace-icon {
     padding-bottom: 30px!important;
 }
 
+table.permission-table .btn-colorpicker.colorpick-btn{
+    position: relative;
+}
+
+table.permission-table .btn-colorpicker.colorpick-btn:after{
+    content: 'Н';
+    color:#FFFFFF;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+}
+table.permission-table .btn-colorpicker.colorpick-btn.DoBlock:after{
+    content: 'Б';
+}
+table.permission-table .btn-colorpicker.colorpick-btn.DoRead:after{
+    content: 'Ч';
+}
+table.permission-table .btn-colorpicker.colorpick-btn.DoWrite:after{
+    content: 'З';
+}
