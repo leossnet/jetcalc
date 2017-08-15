@@ -414,6 +414,7 @@ var MChart = (new function () {
             //Format cells
             _.keys(P).forEach(function (k) {
                 if (k != 'name') {
+                    P[k] = P[k].toString();
                     if (P[k].indexOf(',') != -1 || P[k].indexOf('%') != -1) {
                         P[k] = P[k].replace(',', '');
                         P[k] = P[k].replace('%', '')
