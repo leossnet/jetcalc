@@ -48,6 +48,7 @@ module.exports = {
   			, Servers           : {type: Array, default:[]} 
   			, UseRealMail       : {type: Boolean, default:false}   			
   			, Mails             : {type: Array, default:[]} 
+  			, MailService       : {type: String, default:'Yandex'}
   			, MailHost          : {type: String, default:'smtp.yandex.ru'}
 			, MailPort          : {type: Number, default:465}
   			, MailSecureConnection : {type: Boolean, default:true}   			

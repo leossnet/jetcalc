@@ -34,8 +34,7 @@ var Mailer = (new function(){
     }
 
     self.Settings = function(done){
-        mongoose.model("settings").findOne({},"TechPhone TechMail SystemName").exec(function(err,S){
-            if (!S) S = {TechPhone:"",TechMail:"",SystemName:""};
+        mongoose.model("settings").findOne({}).exec(function(err,S){
             return done(err,S);
         });
     }
@@ -54,10 +53,12 @@ var Mailer = (new function(){
 
     self._mail = function(TemplateId,Data,done){
         self.Settings(function(err,Set){
+            console.log(Set);
             self.MailCode(Data,function(err, UpdatedData){
                 var HTML = self.Template(TemplateId);
                 var Replaces = _.merge(UpdatedData,Set);
                 if (Replaces.UseMailCode) Replaces.MailCode = Replaces.BaseUrl+Replaces.MailCode;
+                Replaces.MailCode = Set.PortalName+Replaces.MailCode;
                 for (var ID in Replaces) HTML = HTML.split("["+ID+"]").join(Replaces[ID]);
                 var TParse = HTML.replace(/\s+/g,' ').match(/<title>(.*?)<\/title>/);
                 var Title = "";

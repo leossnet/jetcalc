@@ -96,7 +96,7 @@ var SignupHelper = (new function(){
         mongoose.model("user").findOne({CodeUser:CodeUser},"-_id NameUser Mail LoginUser").isactive().lean().exec(function(err,User){
             if (!User) return done();
             Mailer.CreateMail("requestcomplete",{
-                BaseUrl:config.portalname+'/api/modules/login/byemail/?code=',
+                BaseUrl:'/api/modules/login/byemail/?code=',
                 UseMailCode:true,
                 CodeUser:CodeUser,
                 LoginUser:User.LoginUser

@@ -60,7 +60,7 @@ router.get('/sendrequizites', LIB.Require(['CodeUser']), HP.TaskAccess("IsUserAc
 		if (!User.IsConfirmed) return next("usernotconfirmed");
 		if (_.isEmpty(User.LoginUser)) return next("nologinuser");
 		Mailer.CreateMail("ivite",{
-			BaseUrl:config.portalname+'/api/modules/login/byemail/?code=',
+			BaseUrl:'/api/modules/login/byemail/?code=',
 			UseMailCode:true,
 			LoginUser:User.LoginUser,
 			CodeUser:User.CodeUser

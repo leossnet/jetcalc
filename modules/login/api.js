@@ -68,7 +68,7 @@ router.post('/signup',  LIB.Require(['Mail','NameUser']), function(req, res, nex
 			R.save("",function(err){
 				if (err) return next(err);
 				Mailer.CreateSimpleMail("request_approve",{
-					MailCode:config.portalname+'/api/modules/login/requestconfirm/?code='+R.MailCode,
+					MailCode:'/api/modules/login/requestconfirm/?code='+R.MailCode,
 					NameUser:R.NameUser,
 					Mail:R.Mail,
 				},function(){
@@ -155,7 +155,7 @@ router.post('/byemail', function(req, res, next) {
 		if (!User.IsConfirmed) return next("usernotconfirmed");
 		var  Mailer   =  require(__base+'src/mailer.js');
 		Mailer.CreateMail("reset",{
-			BaseUrl:config.portalname+'/api/modules/login/byemail/?code=',
+			BaseUrl:'/api/modules/login/byemail/?code=',
 			UseMailCode:true,
 			CodeUser:User.CodeUser
 		},function(){

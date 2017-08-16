@@ -18,19 +18,76 @@ mongoose.Promise = global.Promise;
 mongoose.connect(config.mongoUrl,{safe:false});
 
 
-var mailer    = require('nodemailer');
-var transport = mailer.createTransport(config.mailer);
-
-
-
 mongoose.connection.on('connected', function(){
     var ModelInit = require(__base+'/classes/InitModels.js');
+
     ModelInit(function(){
         console.log("models inited");
     });
     var generateUUID = function(){
         return mongoose.Types.ObjectId()+'';
     }
+
+    var mail_worker = new RabbitMQWorker({
+        queue_id: rabbitPrefix+"send_mail",
+        worker: function(msg, done) {
+            var Model = mongoose.model("mail");
+            mongoose.model("settings").findOne({}).lean().exec(function(err,Settings){
+                Model.findOne({_id:msg.MailId, IsError:false, IsSent:false}).exec(function(err,M){
+                    if (!M) return done();
+                    if (!(M.ToMail+'').length) M.Error = "Некому посылать";
+                    if (!(M.FromMail+'').length) M.Error = "Не понятно от кого";
+                    if (M.Retries>=10) M.Error = "10 попыток отправки";
+                    if (M.Error.length){
+                        M.IsError = true;
+                        return M.save(done);
+                    } else {
+                        if (!Settings.UseRealMail) M.ToMail = Settings.Mails.join(", ");
+                        var ToMail = M.ToMail;                
+                        var mailer    = require('nodemailer');
+                        var TransportCFG = {
+                            host:Settings.MailHost,
+                            port:Settings.MailPort,
+                            secureConnection:Settings.MailSecureConnection,
+                            requiresAuth: Settings.RequiresAuth,
+                            auth: {
+                                user: Settings.MailAuthUser,
+                                pass: Settings.MailAuthPass,
+                            },
+                            from: {
+                                name: Settings.MailFromName,
+                                email:Settings.MailAuthUser
+                            }
+                        };
+                        var Transport = mailer.createTransport(TransportCFG);
+                        var MailCFG = {
+                            from: M.FromName+'<'+M.FromMail+'>',
+                            to: M.ToMail,
+                            subject:M.Title,
+                            html: M.Body
+                        };
+                        console.log("Transport",TransportCFG);
+                        console.log("Mail",MailCFG);
+                        Transport.sendMail(MailCFG, function(err){
+                            if (err) console.log(err);
+                            var Update = {};
+                            if (err){
+                                Update.IsError = true;
+                                Update.Error = err;
+                            } else {
+                                Update.IsSent = true;
+                            }
+                            Model.findByIdAndUpdate(M._id,Update).exec(function(err){
+                                return done(err);
+                            })
+                        });
+                    }
+                })
+            })
+        }
+    })
+
+
 
     var pdf_converter_worker = new RabbitMQWorker({
         queue_id: rabbitPrefix+"pdf_convert", 
@@ -55,36 +112,38 @@ mongoose.connection.on('connected', function(){
     var pdf_generator_worker = new RabbitMQWorker({
         queue_id: rabbitPrefix+"pdf_generator",
         worker: function(msg, done) {
-            var html = utf8.decode(base64.decode(JSON.parse(msg.html)));
-            html = html.replace(new RegExp("root_url", "g"), config.portalname);
-            var file_path = `${os.tmpdir()}/${generateUUID()}.pdf`;
-            var args = [
-                "wkhtmltopdf",
-                "-q",
-                "--viewport-size", "'1024x768'",
-                "--no-background",
-                "--print-media-type",
-                "--encoding",  "'utf-8'",
-                "--load-error-handling", "ignore",
-                "--load-media-error-handling", "ignore",
-                "-",
-                file_path
-            ]
-            var wkhtmltopdf = spawn(
-                "/bin/bash",
-                [
-                    "-c",
-                    args.join(" ") + " | cat ; exit ${PIPESTATUS[0]}"
+            mongoose.model("settings").findOne({},"PortalName").lean().exec(function(err,Settings){
+                var html = utf8.decode(base64.decode(JSON.parse(msg.html)));
+                html = html.replace(new RegExp("root_url", "g"), Settings.PortalName);
+                var file_path = `${os.tmpdir()}/${generateUUID()}.pdf`;
+                var args = [
+                    "wkhtmltopdf",
+                    "-q",
+                    "--viewport-size", "'1024x768'",
+                    "--no-background",
+                    "--print-media-type",
+                    "--encoding",  "'utf-8'",
+                    "--load-error-handling", "ignore",
+                    "--load-media-error-handling", "ignore",
+                    "-",
+                    file_path
                 ]
-            )
-            var stderr;
-            wkhtmltopdf.stderr.on("data", v => stderr += v.toString("utf8"))
-            wkhtmltopdf.on("close", () => {
-                if(stderr) return done(stderr);
-                return done(null, { file_path: file_path })
+                var wkhtmltopdf = spawn(
+                    "/bin/bash",
+                    [
+                        "-c",
+                        args.join(" ") + " | cat ; exit ${PIPESTATUS[0]}"
+                    ]
+                )
+                var stderr;
+                wkhtmltopdf.stderr.on("data", v => stderr += v.toString("utf8"))
+                wkhtmltopdf.on("close", () => {
+                    if(stderr) return done(stderr);
+                    return done(null, { file_path: file_path })
+                })
+                wkhtmltopdf.stdin.write(html)
+                wkhtmltopdf.stdin.end()
             })
-            wkhtmltopdf.stdin.write(html)
-            wkhtmltopdf.stdin.end()
         }
     })
 
@@ -112,46 +171,6 @@ mongoose.connection.on('connected', function(){
     })
 
 
-    var mail_worker = new RabbitMQWorker({
-        queue_id: rabbitPrefix+"send_mail",
-        worker: function(msg, done) {
-            var Model = mongoose.model("mail");
-            var Settings = mongoose.model("settings");
-            Settings.findOne({}).lean().exec(function(err,Settings){
-                Model.findOne({_id:msg.MailId, IsError:false, IsSent:false}).exec(function(err,M){
-                    if (!M) return done();
-                    if (!(M.ToMail+'').length) M.Error = "Некому посылать";
-                    if (!(M.FromMail+'').length) M.Error = "Не понятно от кого";
-                    if (M.Retries>=10) M.Error = "10 попыток отправки";
-                    if (M.Error.length){
-                        M.IsError = true;
-                        return M.save(done);
-                    } else {
-                        if (!Settings.UseRealMail) M.ToMail = Settings.Mails.join(", ");
-                        var ToMail = M.ToMail;                
-                        transport.sendMail({
-                            from: M.FromName+'<'+M.FromMail+'>',
-                            to: M.ToMail,
-                            subject:M.Title,
-                            html: M.Body
-                        }, function(err){
-                            if (err) console.log(err);
-                            var Update = {};
-                            if (err){
-                                Update.IsError = true;
-                                Update.Error = err;
-                            } else {
-                                Update.IsSent = true;
-                            }
-                            Model.findByIdAndUpdate(M._id,Update).exec(function(err){
-                                return done(err);
-                            })
-                        });
-                    }
-                })
-            })
-        }
-    })
 
     pdf_converter_worker.connect(function(err) {
         if(err) return console.error(err);    
