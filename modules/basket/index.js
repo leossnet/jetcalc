@@ -4,7 +4,7 @@ var MBasket = (new function() {
 
 
     self.IsAvailable = function(){
-        return PermChecker.CheckPrivelege(["IsBasketManager"]);
+        return PermChecker.CheckPrivelege("IsBasketManager");
     }
 
     self.MainModel = ko.observable("colset");
