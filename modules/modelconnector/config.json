@@ -4,5 +4,5 @@
   "icon": "fa-link",
   "class_name": "ModelConnector",
   "is_enabled": true,
-  "initial_load": true
+  "initial_load": false
 }
