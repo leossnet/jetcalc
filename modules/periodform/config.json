@@ -1,8 +1,0 @@
-{
-  "id": "periodform",
-  "title": "Форма редактирования периодов",
-  "icon": "fa-calendar",
-  "class_name": "PeriodForm",
-  "is_enabled": false,
-  "initial_load" :false
-}

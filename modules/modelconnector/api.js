@@ -7,48 +7,42 @@ var LIB = require(__base + 'lib/helpers/lib.js');
 var HP = LIB.Permits;
 
 
-router.get('/periodconnect', function (req, res, next) {
+router.get('/connect', function (req, res, next) {
     var Answer = {
-        MainPeriods: [],
-        LinkPeriods: []
+        MainModels: [],
+        LinkModels: []
     };
-    mongoose.model("period").find({
-        IsReportPeriod: true
-    }, "-_id CodePeriod NamePeriod").sort({
-        MCount: 1,
-        BeginDate: 1
-    }).isactive().exec(function (err, Main) {
-        Answer.MainPeriods = Main;
+    mongoose.model(req.body.source_model).find(req.body.get_query, req.body.get_fields).sort(req.body.get_sort).isactive().exec(function (err, Main) {
+        Answer.MainModels = Main;
         var query = {}
         query[req.body.indexfieldname] = 1;
         mongoose.model(req.body.model).find({}).sort(query).lean().isactive().exec(function (err, Ps) {
-            Answer.LinkPeriods = Ps;
+            Answer.LinkModels = Ps;
             return res.json(Answer);
         })
     })
 })
 
-router.put('/periodconnect', function (req, res, next) {
+router.put('/connect', function (req, res, next) {
     var ModelSaver = require(__base + 'src/modeledit.js'),
         CodeUser = req.user.CodeUser;
     var Data = JSON.parse(req.body.JSON);
     if (_.isEmpty(Data)) return res.json({});
     var Tasks = [];
-    for (var CodePeriod in Data.data) {
-        Tasks.push(function (Code, Links) {
+    for (var Code in Data.data) {
+        Tasks.push(function (Code2, Links) {
             return function (cb) {
                 var MS = new ModelSaver(CodeUser);
-                MS.SetModel("period", {
-                    CodePeriod: Code
-                }, function () {
-                    MS.SaveLinks(Data.model, Links, cb);
+                var Q = {}
+                Q[req.body.code_source_model] = Code2;
+                MS.SetModel(req.body.source_model, Q, function () {
+                    MS.SaveLinks(Data.target_model, Links, cb);
                 })
             }
-        }(CodePeriod, Data.data[CodePeriod]));
+        }(Code, Data.data[Code]));
     }
     async.parallel(Tasks, function (err) {
         if (err) return next(err);
-        MapPeriods.Result = null;
         return res.json({});
     })
 })
