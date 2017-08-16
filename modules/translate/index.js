@@ -4,9 +4,11 @@ var MTranslate = (new function () {
 
     self.IsLoading = ko.observable(false);
 
-    self.IsAvailable = function () {
-        return true;
+
+    self.IsAvailable = function(){
+        return PermChecker.CheckPrivelege(["IsLangEditor"]);
     }
+
 
     self.Error = ko.observable(null);
 

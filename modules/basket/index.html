@@ -1,6 +1,53 @@
-<div class="row adminbody" data-bind="with:MBasket">
+<script id="print_link" type="text/html">
+    <div class="row tabled_row" >
+      <!-- ko foreach:ModelClientConfig.CodeAndName(MBasket.LinkModel()) -->
+        <div class="col-xs-6" data-bind='text:$parent[$data]'></div>
+      <!-- /ko -->
+    </div>
+</script>
+
+
+<div class="row adminbody" style="padding:10px; margin: 10px" data-bind="with:MBasket">
+   <!-- ko template:'inline_error' --><!-- /ko -->
    <!-- ko if:$data.Mode()=='Links' -->
-    <div>Восстановление ссылок</div>
+    <div class="well row">
+          <div class='col-xs-2'><input type="text" placeholder="Модель" data-bind='value:MainModel'/></div>
+          <div class='col-xs-2'><input type="text" placeholder="Код" data-bind='value:MainCode'/></div>
+          <div class='col-xs-2'><input type="text" placeholder="Ссылка" data-bind='value:LinkModel'/></div>
+          <div class='col-xs-2'>
+            <a  data-bind="click:SearchLinks" class="btn btn-white btn-danger">
+                  <i class="ace-icon fa fa-trash bigger-60"></i>
+                  Поиск
+            </a>
+          </div>
+    </div>   
+    <div class="row" data-bind='with:Links'>      
+      <!-- ko with:$data.Existed -->
+
+        <h4 class="green smaller lighter">
+        <i class="fa fa-icon" data-bind='click:MBasket.Close("Existed"),css:{"fa-plus-square-o":MBasket.IsClosed("Existed"),"fa-minus-square-o":!MBasket.IsClosed("Existed")}'></i>
+        Текущие ссылки - <span data-bind='text:$data.length'></span></h4>
+        <!-- ko ifnot:MBasket.IsClosed("Existed") -->
+          <!-- ko foreach:$data -->
+            <!-- ko template:'print_link' --><!-- /ko -->
+          <!-- /ko -->
+        <!-- /ko -->
+      <!-- /ko -->
+      <!-- ko with:$data.Removed -->
+        <!-- ko foreach:_.keys($data) -->
+          <h4 class="green smaller lighter" >
+        <i class="fa fa-icon" data-bind='click:MBasket.Close($data),css:{"fa-plus-square-o":MBasket.IsClosed($data),"fa-minus-square-o":!MBasket.IsClosed($data)}'></i>
+          <span data-bind='text:$data'></span> - <span data-bind='text:$parent[$data].length'></span>
+            <a data-bind='click:MBasket.RestoreLinks.bind(MBasket,$data)'>Восстановить</a>
+          </h4>
+          <!-- ko ifnot:MBasket.IsClosed($data) -->
+            <!-- ko foreach:$parent[$data] -->
+              <!-- ko template:'print_link' --><!-- /ko -->
+            <!-- /ko -->
+          <!-- /ko -->
+        <!-- /ko -->
+      <!-- /ko -->
+    </div>
    <!-- /ko -->
 	 <!-- ko if:$data.Mode()=='Code' -->
     <div>Смена кода</div>
