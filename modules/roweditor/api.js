@@ -8,11 +8,9 @@ var Helper  = require('./helper.js');
 var StructureHelper = require('./lib.js');
 
 
-
-
 router.get('/rows',  HP.TaskAccess("IsRowTuner"), function(req,res,next){
 	var Context = LIB.ReqContext(req);
-	Helper.LoadRoots(Context.CodeDoc,function(err,Rows){
+	Helper.LoadRootsFiltered(Context,function(err,Rows){
 		var Answ = [];
 		for (var K in Rows){
 			Answ = Answ.concat(Rows[K]);

@@ -78,8 +78,7 @@ var Div = (new function(){
 				Data.Children = ChildrenInfo[Data.CodeObj] || [];
 				Data.AllChildren = _children(Data.CodeObj);				
 			}
-			console.log(self.Info);
-			return done(err);
+			return done(err,self.Info);
 		})
 
 	}

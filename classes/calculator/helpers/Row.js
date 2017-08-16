@@ -16,7 +16,7 @@ var RowHelper = function(Context){
 	Base.apply(self,Context);
 	self.Context = Context;		
 
-	self.CodeObj = self.Context.CodeObj;
+	self.CodeObj = !_.isEmpty(self.Context.ChildObj) ? self.Context.ChildObj:self.Context.CodeObj;
 	self.IsOlapDocument  = false;
 	self.NameOverride = {};
 	self.IsShowRoots = false;
@@ -398,7 +398,7 @@ var RowHelper = function(Context){
 				        N.IsRemoved = true;
 						result.push(N);
 				   	}
-				} else if (N.Filter.length){
+				} else if (!_.isEmpty(N.Filter)){
 				    var parents = self.parents(N.CodeRow,Indexed);
 				    var lastSet = false, Verdict = false;
 				    parents.forEach(function(P){
@@ -542,8 +542,7 @@ var RowHelper = function(Context){
 					level++;
 				}
 			}
-	      	Row.level = level;
-	      	
+	      	Row.level = level;	      	
 		},
 		sums:function(Row){
 			Row.Sums = _.map(Row.Link_rowsumgrp,'CodeSumGrp');

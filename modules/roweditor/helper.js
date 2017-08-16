@@ -24,6 +24,26 @@ var Helper = (new function(){
 		rowtag:['CodeTag','Value','CodeRow']
 	}
 
+	self.LoadRootsFiltered = function(Cx,done){
+		var Context = _.clone(Cx);
+		self.ObjInfo(Context,function(err,Result){
+			Context.ObjInfo = Result;
+			self.LoadRoots(Context.CodeDoc,function(err,Rows){
+				return done(err,self.Filter(Context,Rows));
+			})
+		})
+	}
+
+	self.ObjInfo = function(Context,done){
+		var DivHelper = require(__base+"/classes/jetcalc/Helpers/Div.js");
+		DivHelper.get(function(err,DivInfo){
+			var CodeObj = !_.isEmpty(Context.ChildObj) ? Context.ChildObj:Context.CodeObj;
+			var Info = DivInfo[CodeObj];
+			if (_.isEmpty(Info)) return done (err,[]);
+			return done(err,[Info.CodeObj,Info.CodeObjType].concat(Info.Groups));
+		})
+	}
+
 	self.LoadRoots = function(CodeDoc,done){
 		var Result = {};
 		mongoose.model("docrow").find({CodeDoc:CodeDoc,IsExpandTree:true},"-_id CodeRow IsExpandTree").sort({IndexRow:1}).isactive().lean().exec(function(err,Rows){
@@ -61,9 +81,176 @@ var Helper = (new function(){
 	self.AddParams = function(Rows){
 		Rows.forEach(function(Row){
 			Row.level = Math.max((Row.rowpath.split("/").length - 3),0);
+			Row.Sums = _.map(Row.Link_rowsumgrp,'CodeSumGrp');
+			Row.Filter = _.compact(_.uniq(
+				_.map(Row.Link_rowobj,'CodeObj')
+				.concat(
+				_.map(Row.Link_rowobj,'CodeObjGrp')
+				.concat(
+				_.map(Row.Link_rowobj,'CodeObjType')
+			))));
+			Row.Tags = _.map(Row.Link_rowtag, function(TI){
+				return TI.CodeTag+':'+(_.isEmpty(TI.Value) ? '*':TI.Value);
+			})
 		})
 		return Rows;
 	}
+
+	self._setStatus = function(Row, ForceShow, ForceRemove, Reason){
+		if (ForceShow) Row.ForceShow = ForceShow;
+		if (ForceRemove) Row.ForceRemove = ForceRemove;
+		if (!Row.Explain) Row.Explain = [];
+		if (Row.Explain.indexOf(Reason)==-1) Row.Explain.push(Reason);
+		if (ForceRemove){
+			if (!Row.RemoveComment) Row.RemoveComment = [];
+			if (Row.RemoveComment.indexOf(Reason)==-1){
+				Row.RemoveComment.push(Reason);
+			}
+		} 
+		if (ForceShow){
+			if (Row.RemoveComment) delete Row.RemoveComment;
+		}
+		return Row;
+	}
+
+  	self._parents = function (CodeRow,Indexed){ 
+   		var N = Indexed[CodeRow]; 
+    	return _.map(_.sortBy(_.filter(_.values(Indexed),function(Node){
+    		return Node.lft<N.lft && Node.rgt>N.rgt;
+    	}),{lft:1}),"CodeRow");
+    }
+
+    self._children = function (CodeRow,Indexed){ 
+    	var N = Indexed[CodeRow]; 
+    	return _.map(_.sortBy(_.filter(_.values(Indexed),function(Node){
+    		return Node.lft>N.lft && Node.rgt<N.rgt;
+    	}),{lft:1}),"CodeRow");
+	}	
+
+
+
+	self.Filter = function(Context,RowsIn){
+		var Result = {};
+		for (var CodeRow in RowsIn){
+			var Rows = RowsIn[CodeRow], Indexed = {}, RealResult = [];
+			Rows.forEach(function(Row){
+				Indexed[Row.CodeRow] = Row;
+			})
+ 			//  NoFiltered = Показываем в любом случае + всех парентов вверх
+            for (var CodeR in Indexed){
+				var N = Indexed[CodeR];
+				if (N.NoFiltered){
+					Indexed[CodeR] = self._setStatus(Indexed[CodeR],true,null,"NoFiltered");
+					var parents = self._parents(CodeR,Indexed);
+					parents && parents.forEach(function(P){
+						Indexed[P] = self._setStatus(Indexed[P],true,null,"NoFiltered Parent");
+					})
+				}
+            }		
+            // Если есть HasFilteredChild = отрываем всё, что не имеет rowObj ссылок
+			for (var CodeR in Indexed){
+				var N = Indexed[CodeR];
+				if (N.HasFilteredChild){
+					var children = self._children (N.CodeRow,Indexed);
+					children.forEach(function(C){
+						if (!Indexed[C].ForceShow){
+							if (!Indexed[C].Filter.length){
+								Indexed[C] = self._setStatus(Indexed[C],null,1,"HasFilteredChild");// -> No RowObj
+							}                     
+						}
+					})
+				}
+			}
+			// FromObsolete и FromYear -> отрываем все вместе с чаилдами
+			// NoOutput и NoInput -> отрываем все вместе с чаилдами
+			for (var CodeR in Indexed){
+				var N = Indexed[CodeR];
+				var RemoveStatus = [];
+				if (N.FromObsolete && Context.Year>=N.FromObsolete) RemoveStatus.push("FromObsolete");
+				if (N.FromYear && Context.Year<=N.FromYear) RemoveStatus.push("FromYear");
+				if (N.NoInput && Context.IsInput) RemoveStatus.push("NoInput");	
+				if (N.NoOutput && !Context.IsInput) RemoveStatus.push("NoOutput");	
+				if (RemoveStatus.length){
+					RemoveStatus.forEach(function(St){
+						N = self._setStatus(N,null,2,St);
+						var children = self._children(N.CodeRow,Indexed);
+						children.forEach(function(C){
+							Indexed[C] = self._setStatus(Indexed[C],null,2,St);			
+						})
+					})
+				}				
+			}	
+			// Пробегаем по рядам и выносим вердикт
+			var result = []; var parents2show = [];
+			for (var CodeR in Indexed){
+			    var N = Indexed[CodeR];
+			    if (N.ForceRemove===2){ // Фильтрация по годам или типу формы
+		        	N.IsRemoved = true;
+		          	result.push(N);
+				} else if (N.ForceRemove===1){ // Фильтрация по парентам            	 
+					var parents = self._parents(N.CodeRow,Indexed);
+				    var lastSet = false, Verdict = false;
+					parents.forEach(function(P){
+				    	if (Indexed[P].NoFiltered && !lastSet){
+				        	Verdict = true; lastSet = true;
+				        }
+				        if (Indexed[P].HasFilteredChild && !lastSet){
+				        	lastSet = true;
+				        }
+				    })
+					if (Verdict){
+				    	N.Error = "HasFilteredChild->NoFiltered->HasFilteredChild"; // Такого быть вроде не должно
+				        result.push(N);
+				    } else {
+				        N.IsRemoved = true;
+						result.push(N);
+				   	}
+				} else if (!_.isEmpty(N.Filter)){
+				    var parents = self._parents(N.CodeRow,Indexed);
+				    var lastSet = false, Verdict = false;
+				    parents.forEach(function(P){
+						if (Indexed[P].NoFiltered && !lastSet){
+							Verdict = true; lastSet = true;
+						}
+						if (Indexed[P].HasFilteredChild && !lastSet){
+							lastSet = true;
+						}
+					})
+				    if (!lastSet) Verdict = true;
+				    var TestInclude = _.intersection(N.Filter,Context.ObjInfo);
+				    if (TestInclude.length>0 || Verdict){
+	                 	if (TestInclude.length>0){
+	                 		parents2show = parents2show.concat(self._parents(N.CodeRow,Indexed));	
+	                 	}
+				        result.push(N);
+				    }  else {
+	               		N.IsRemoved = true;
+	               		if (!N.RemoveComment) N.RemoveComment = [];
+	               		N.RemoveComment.push("Link_rowobj");
+	               		result.push(N);
+					}
+				} else {
+					result.push(N);
+				}
+			}
+			parents2show = _.uniq(parents2show);
+        	var codes2stay = _.map(result,'CodeRow').concat(parents2show);
+			for (var CodeR in Indexed){
+				var N = Indexed[CodeR];
+				if (parents2show.indexOf(CodeR)>=0){
+               		N.IsRemoved = false;
+               		if (!N.Explain) N.Explain = [];
+               		N.Explain.push("Show as parent for not removed row");
+				}
+				if (codes2stay.indexOf(CodeR)>=0){
+					RealResult.push(N);
+				}
+			}
+			Result[CodeRow] = RealResult;
+		}
+		return Result;
+	}
+
 
 
 	return self;
