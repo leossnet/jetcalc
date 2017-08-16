@@ -347,7 +347,7 @@ var RowHelper = function(Context){
 					var children = self.children (N.CodeRow,Indexed);
 					children.forEach(function(C){
 						if (!Indexed[C].ForceShow){
-							if (!Indexed[C].Filter.length){
+							if (!Indexed[C].AllFilter.length){
 								Indexed[C] = setStatus(Indexed[C],null,1,"HasFilteredChild");// -> No RowObj
 							}                     
 						}
@@ -398,8 +398,8 @@ var RowHelper = function(Context){
 				        N.IsRemoved = true;
 						result.push(N);
 				   	}
-				} else if (!_.isEmpty(N.Filter)){
-				    var parents = self.parents(N.CodeRow,Indexed);
+				} else if (!_.isEmpty(N.AllFilter)){
+				    var parents = self.parents(N.CodeRow,Indexed).concat([N.CodeRow]);
 				    var lastSet = false, Verdict = false;
 				    parents.forEach(function(P){
 						if (Indexed[P].NoFiltered && !lastSet){
@@ -410,7 +410,7 @@ var RowHelper = function(Context){
 						}
 					})
 				    if (!lastSet) Verdict = true;
-				    var TestInclude = _.intersection(N.Filter,self.ObInfo);
+				    var TestInclude = _.intersection(N.AllFilter,self.ObInfo);
 				    if (TestInclude.length>0 || Verdict){
 	                 	if (TestInclude.length>0){
 	                 		parents2show = parents2show.concat(self.parents(N.CodeRow,Indexed));	
@@ -548,13 +548,13 @@ var RowHelper = function(Context){
 			Row.Sums = _.map(Row.Link_rowsumgrp,'CodeSumGrp');
 		},
 		filter:function(Row){
-			Row.Filter = _.uniq(
+			Row.Filter = _.compact(_.uniq(
 				_.map(Row.Link_rowobj,'CodeObj')
 				.concat(
-				_.map(Row.Link_rowobj,'CodeObjGrp')
+				_.map(Row.Link_rowobj,'CodeGrp')
 				.concat(
 				_.map(Row.Link_rowobj,'CodeObjType')
-				)));
+				))));
 		},
 		tags:function(Row){
 			Row.Tags = [];
@@ -571,6 +571,9 @@ var RowHelper = function(Context){
 		for (var methodName in self.rowInfo){
 			self.rowInfo[methodName](Row);
 		}
+
+
+
 		return Row;
 	}	
 
@@ -604,9 +607,21 @@ var RowHelper = function(Context){
 		.isactive()
 		.exec(function(err,Rows){
 			if (err) return done(err);
+			var Indexed = {};
 			Rows && Rows.forEach(function(Row,index){
-				Rows[index] = self._setRowInfo(Row);
+				Rows[index] = _.merge(self._setRowInfo(Row),{AllFilter:[]});
+				Indexed[Row.CodeRow] = Row;
 			})
+			for (var CodeRow in Indexed){
+				var R = Indexed[CodeRow];
+				if (!_.isEmpty(R.Filter)){
+					var Chs = self.children(CodeRow,Indexed).concat([CodeRow]);
+					Chs.forEach(function(C){
+						Indexed[C].AllFilter = Indexed[C].AllFilter.concat(R.Filter);
+					})
+				}
+			}
+			Rows = _.values(Indexed);
 			self.UpdateRowLinks(Rows,function(err,Rows){
 				return done(err,Rows);
 			});

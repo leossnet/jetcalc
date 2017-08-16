@@ -76,6 +76,8 @@ var MRowEditor = (new function() {
 
     self.BeforeShow = function(){
     	self.SubscribeDoc();
+  		MSite.Events.off("refresh",self.RollBack);
+        MSite.Events.on("refresh",self.RollBack);    	
     	self.Show();
     }
 
@@ -86,6 +88,7 @@ var MRowEditor = (new function() {
     		self.table.destroy();
     		self.table = null;
     	}
+    	MSite.Events.off("refresh",self.RollBack);
     }
 
     self.CxChange = function(){
