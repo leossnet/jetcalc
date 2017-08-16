@@ -540,22 +540,82 @@ router.get('/settings', HP.TaskAccess("IsModulesAdmin"), function (req, res, nex
 
 
 router.put('/settings', HP.TaskAccess("IsModulesAdmin"), function (req, res, next) {
-    ModulesHelper.MSSettings(function(err,Settings){
-        var Update = req.body;
-        for (var K in Update) Settings[K] = Update[K];
-        Settings.save(function(err){
-            if (Settings.usecron){
-                Cron.AddTask('git_sync',function(job, done){
-                    GitHub.SyncModules(false,done);
-                },"1 day");
-            } else {
-                Cron.RemoveTask('git_sync');
-            }   
-            ModulesHelper.ReCompile(Settings.DoBundle,function(err){
-                return res.json({});
-            });
-        })
-    })    
+    var SettingsPassed = req.body.settings;
+    var RequizitesPassed = req.body.requisites;
+    var UpdateSettings = function(Update){
+        return function(done){
+            ModulesHelper.MSSettings(function(err,Settings){
+                for (var K in Update) Settings[K] = Update[K];
+                Settings.save(function(err){
+                    if (Settings.usecron){
+                        Cron.AddTask('git_sync',function(job, done){
+                            GitHub.SyncModules(false,done);
+                        },"1 day");
+                    } else {
+                        Cron.RemoveTask('git_sync');
+                    }   
+                    ModulesHelper.ReCompile(Settings.DoBundle,done);
+                })
+            })    
+        }
+    }
+    var UpdateRequiztes = function(Update){
+        return function(done){
+            var Settings = mongoose.model("settings");
+            Settings.findOne().exec(function(err,S){
+                  if (!S) S = new Settings();
+                  var Fields = S.cfg().EditFields;
+                  Fields.forEach(function(F){
+                    S[F] = Update[F];
+                  })
+                  S.save(done);
+            })             
+        }
+    }
+    async.parallel([UpdateSettings(SettingsPassed),UpdateRequiztes(RequizitesPassed)],function(err){
+        if (err) return next(err);
+        return res.json({});
+    })
+
+})
+
+router.get ('/requisites',   function(req,res){
+  var Settings = mongoose.model("settings");
+  Settings.findOne().lean().exec(function(err,S){
+      if (!S){
+          S = new Settings({TechMail:config.adminmail,TechPhone:config.adminphone,Logo:""});
+          S.save(function(err){
+              return res.json(S);
+          })
+      } else {
+          return res.json(S);
+      }
+  })
+})
+
+
+router.get ('/favicon.ico',   function(req,res,next){
+  var Settings = mongoose.model("settings");
+  Settings.findOne().lean().exec(function(err,S){
+      if (S && !_.isEmpty(S.Icon) && false){
+        var gfs = require(__base+'src/gfs.js');
+        return gfs.PipeFileStreamToRes(S.Icon, res, next);
+      } else {
+        return res.sendFile(__base+"modules/modules/favicon.ico");
+      }
+  })
+})
+
+router.get ('/logo.png',   function(req,res,next){
+  var Settings = mongoose.model("settings");
+  Settings.findOne().lean().exec(function(err,S){
+      if (S && !_.isEmpty(S.Logo) && false){
+        var gfs = require(__base+'src/gfs.js');
+        return gfs.PipeFileStreamToRes(S.Logo, res, next);
+      } else {
+        return res.sendFile(__base+"modules/modules/logo.png");
+      }
+  })
 })
 
 

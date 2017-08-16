@@ -151,7 +151,6 @@ var MPeriods = (new function() {
 
     self.Init = function(done){
         self.rGet("init",{},function(data){
-            console.log(data);
             if (data.err) return self.Error(data.err);
             self.IsLoaded(true);
             var periods = {};
@@ -266,7 +265,7 @@ var MPeriods = (new function() {
             var K2 = _.first(_.keys(self.Table()[K1]));
             Roles = _.sortBy(_.keys(self.Table()[K1][K2]));
         } catch(e){
-            //console.log(e);
+            console.warn(e);
         }
         return Roles;
     }

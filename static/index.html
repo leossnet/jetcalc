@@ -2,7 +2,7 @@
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta charset="utf-8">
-    <!-- ko with:MSystem.Settings -->
+    <!-- ko with:MModules.Requizites -->
     <title data-bind='text:$data.SystemName'></title>
     <!-- /ko -->
 
@@ -10,13 +10,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 	<link rel="stylesheet" href="/build/lib.min.css">
-	<!-- ko with:MSystem.Settings -->
-		<!-- ko with:$data.Icon -->
-			<link href='/api/modules/system/favicon.ico' rel="shortcut icon">
-		<!-- /ko -->
-	<!-- /ko -->
-	<!-- <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"  data-apikey="19d876836126e83e5ed48c8971006e16"></script> -->
-
+	<link href='/api/modules/modules/favicon.ico' rel="shortcut icon">
+	
 	<script src='/build/lib.min.js'></script>
 	<script src="/src/parser.js"></script>
 	<script src="/src/customBindings.js"></script>
@@ -57,7 +52,7 @@
 					<div class="main-content-inner">
 						<!-- ko template:'breadcrumbs' --><!-- /ko -->
 						<div class="page-content-area full-area" >
-							<div data-bind='page:{id:"start",title:MSystem.Settings().SystemName()}' style='display:none'>
+							<div data-bind='page:{id:"start",title:MModules.Requizites().SystemName()}' style='display:none'>
 								<div class="ace-settings-container">
 									<!-- ko foreach:ModuleManager.HomePage() -->
 										<!-- ko template:'hpbutton_'+$data.id --><!-- /ko -->

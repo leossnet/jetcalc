@@ -11,5 +11,7 @@
       "IsModulesAdmin",
       "IsModelsAdmin"
   ],
+  "initial_load":true,
+  "guest_load":true,
   "sort_index":1100
 }

@@ -1,7 +1,7 @@
 var environment = "development";
 
-var cpus = require('os').cpus().length;
 process.setMaxListeners(0);
+
 global.__base = __dirname + "/";
 var main = "jetcalc";
 
@@ -12,36 +12,24 @@ var config = {
 		,rabbitPrefix     : main+"_"
 		,cookieConfig     : {
 	    	    secret            : main+" secret",
-		    key               : main+".sid",
+		    	key               : main+".sid",
         	    cookie            : { path:'/', httpOnly: true, maxAge: null},
 	    	    maxAge            : 24*60*60*1000,
     		    secure            : true,
         	    saveUninitialized : true,
         	    resave            : true
     		}
-		, portalname       : "http://localhost"
-		, adminmail        : "dkoviazin@gmail.com"
-		, adminphone       : "+79226052265"
-		, company          : "JETTECH"
 		, staticDir        : __dirname+'/static'
 		, dir              :__dirname
 		, port             : 2018
-		, modulebundle     : false
-		, debugRecording   : true
-		, debugPeriodsNum  : 7
 		, mongoUrl         : "mongodb://localhost/"+main
 		, mongoCacheUrl    : "mongodb://localhost/"+main+"_cache"
 		, agendaConnect    : 'mongodb://localhost/'+main+"_agenda"
 		, mochaConnect     : 'mongodb://localhost/'+main+"_mocha"
-		, gridfs           : {
-			host:'localhost',
-			dbname:main+'_files'
-		  }
-		, silent 	   : false
+		, gridfs           : {host:'localhost',dbname:main+'_files'}
+		, silent 	       : false
 		, debugRequests    : true
 		, errorCatch       : true
-		, cpus       	   : cpus
-		, useMultiThread   : true
 		, redis            : {prefix:main+"_"}
 		, db               : 'pgsql'
 		, dbsqlmap         : false
@@ -78,32 +66,12 @@ var config = {
 				}
 			}
 		}
-		, bitbucket:{
-			username:"user",
-			password:"password",
-			project:"jetcalc",
-			projectowner:"user"
-		}
 		, mongoSessionsDB : {
 		  	  db               : main+'_sessions'
 			, host             : 'localhost'
 			, autoReconnect    : true
 			, safe             : false
 			, url              : 'mongodb://localhost:27017/'+main+"_sessions"
-		},
-		mailer : {
-			host:'smtp.yandex.ru',
-			port: 465,
-  			secureConnection: true,
-  			requiresAuth: true,
-			auth: {
-				user       : 'jetcalc@yandex.ru',
-				pass       : 'derparole12j',
-			},
-			from: {
-				name: "Оповещения JetCalc",
-				email:"jetcalc@yandex.ru"
-			}
 		}
 	},
 	staging: {},

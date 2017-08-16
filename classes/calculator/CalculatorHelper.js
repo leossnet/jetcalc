@@ -591,6 +591,15 @@ var Unmapper = function(Context, InfoCacher){
 			if (Row.IsLeaf)  {
 				Result = {Type:"PRM"};
 				ResultDescription = "Первичная";
+				if (Info.Obj.indexOf("[")!=-1){
+					var Objs = Info.Obj.replace("[","").replace("]","").split(",");
+					var FRMArr = [];
+					Objs.forEach(function(SingleObj){
+						FRMArr.push(Info.Cell.replace(Info.Obj,SingleObj));
+					})
+					Result = {Type:"FRM",FRM:FRMArr.join("+")};
+					ResultDescription = "Суммирование первичных ячеек";
+				}
 			} else  {
 				Result = {Type:"HDR"};
 				ResultDescription = "Заголовок";

@@ -118,11 +118,9 @@
             <div class="navbar-header pull-left">
                 <a class="navbar-brand" data-bind='page-href:"/"'>
                     <small>
-                        <!-- ko with:MSystem.Settings -->
-                            <!-- ko with:$data.Icon -->
-                                <img src='/api/modules/system/favicon.ico' style='background: white;'/>
-                            <!-- /ko -->
-                        <span data-bind='text:$data.SystemName'></span>
+                        <!-- ko with:MModules.Requizites -->
+                            <img src='/api/modules/modules/favicon.ico' style='background: white;'/>
+                            <span data-bind='text:$data.SystemName'></span>
                         <!-- /ko -->
                     </small>
                 </a>

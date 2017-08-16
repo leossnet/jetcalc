@@ -35,7 +35,7 @@
 </div>
 
 
-<div class="row adminbody" data-bind="with:MModules" style='margin-top:50px;'>
+<div class="row adminbody" data-bind="with:MModules" style='margin-top:50px;padding-bottom: 100px;'>
     <div>
         <div class='row'><!-- ko template: 'inline_error' --><!-- /ko --></div>
         
@@ -106,9 +106,17 @@
 
         <!-- ko if:$data.Mode()=='Settings' -->
         	<div class='row'>
-                <div class="col-sm-6">
-
+                <div class='col-sm-6'>
+                    <!-- ko template:{
+                        name:'small_form_with_header',
+                        data:{Name:'Настройки системы',Fields:['PortalName','SystemName','TechPhone','TechMail','UseRealMail','Mails'],Model:MModules.Requizites}
+                    } --><!-- /ko -->
+                    <!-- ko template:{
+                        name:'small_form_with_header',
+                        data:{Name:'Почтовый сервер',Fields:['MailHost','MailPort','MailSecureConnection','RequiresAuth','MailFromName','MailAuthUser','MailAuthPass'],Model:MModules.Requizites}
+                    } --><!-- /ko -->
                 </div>
+                
                 <div class="col-sm-6 " data-bind='with:MModules.Settings'>
                     <!-- ko template:{
                         name:'small_form_with_header',
@@ -118,6 +126,10 @@
                         name:'small_form_with_header',
                         data:{Name:'Настройки Модулей',Fields:["DoBundle"],Model:$data}
                     } --><!-- /ko -->                
+                    <!-- ko template:{
+                        name:'small_form_with_header',
+                        data:{Name:'Картинки',Fields:['Logo','Icon'],Model:MModules.Requizites}
+                    } --><!-- /ko -->
                 </div>
         	</div>
         <!-- /ko -->

@@ -11,5 +11,15 @@
 	"all":"все",
 	"open":"открытые",
 	"closed":"закрытые",
-	"ChooseModules":"Выбор модулей"
+	"ChooseModules":"Выбор модулей",
+	"system":"Настройки системы",
+	"IsSystemSettingsEditor":"Глобальные настройки",
+	"Logo":"Логотип",
+	"TechPhone":"Телефон ТехПоддержки",
+	"SubName":"Название сервера",
+	"PortalName":"URL",
+	"SystemName":"Название системы",
+	"Mails":"Почтовые адреса",
+	"UseRealMail":"Исп.Настоящие.Адреса",
+	"TechMail":"Почта ТехПоддержки"
 }

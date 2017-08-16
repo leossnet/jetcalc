@@ -1,2 +1,23 @@
-<script id="ModuleManagerTemplate" type="text/html">
+<script id="login_requisites" type="text/html">
+	<div class=row style='margin-top:50px;color:gray;line-height: 20px;' data-bind='with:MModules.Requizites'>
+		<div style='position: absolute;left:40%'>
+			<div >Служба технической поддержки <span data-bind='text:$data.SystemName'></span></div>
+			<div >тел.: <span data-bind='text:$data.TechPhone'></span></div>
+			<div >e-mail: <a data-bind='text:$data.TechMail,attr:{href:"mailto:"+$data.TechMail()}'></a></div>
+		</div>
+	</div>
+</script>
+
+<script id="login_requisites_logo" type="text/html">
+	<div class="center" data-bind='with:MModules.Requizites'>
+		<table style='margin-top:50px;width: 100%;'>
+			<tr><td>
+				<img src="/api/modules/modules/logo.png"></img>
+			</td><td style='width: 100%;text-align: center;'>
+				<h1 ><span style='color: #F47C48;' data-bind='text:$data.SystemName'></span><span style='color:#a23522!important;margin-left:10px;' data-bind='text:$data.SubName'></h1>
+				<h4 class="blue"><a href='http://jet.team/'>© JetTeam 2017</a></h4>
+			</td>
+			</tr>
+		</table>
+	</div>
 </script>

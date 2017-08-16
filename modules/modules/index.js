@@ -2,6 +2,16 @@ var MModules = (new function () {
 
     var self = new Module("modules");
 
+    self.Requizites = ko.observable(null);
+
+    self.Init = function(done){
+        self.rGet("requisites",{},function(data){
+            self.Requizites(MModels.Create("settings",data));
+            return done && done();
+        })
+    }
+
+
     self.Selected = ko.observable(null);
 
     self.ModelsContent = ko.observable(null);
@@ -167,9 +177,19 @@ var MModules = (new function () {
 
     self.SaveChanges = function(){
         if (self.Mode()=='Settings'){
-            self.rPut("settings",self.Settings().toJS(),function(){
-                self.LoadSettings();
-            })
+            MModels.SaveFileToGfs(self.Requizites().Logo(),function(err,id){
+              if (id) self.Requizites().Logo(id);
+              MModels.SaveFileToGfs(self.Requizites().Icon(),function(err,id){
+                if (id) self.Requizites().Icon(id);
+                self.rPut("settings",{
+                    settings:self.Settings().toJS(),
+                    requisites:self.Requizites().toJS()   
+                },function(){
+                    self.LoadSettings();
+                    self.Init();
+                })
+              })
+            }) 
         }
     }
 
