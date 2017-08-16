@@ -1848,11 +1848,6 @@ module.exports = {
 				"default": false,
 				"view": "none"
 			},
-			"IsActiveCondition": {
-				"type": Boolean,
-				"default": false,
-				"view": "none"
-			},
 			"IsPrimary": {
 				"type": Boolean,
 				"default": false,

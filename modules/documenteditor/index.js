@@ -90,7 +90,6 @@ var MDocumentEditor = (new function() {
 			break;
 			case "ReportSettings":
 				Result.Links = Result.Links.concat(['docparamkey']);
-				Result.Fields = Result.Fields.concat(['IsActiveCondition']);
 			break;
 			case "Bistran":
 				Result.Links = Result.Links.concat(['docbill']);
