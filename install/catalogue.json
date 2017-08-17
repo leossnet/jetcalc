@@ -160,7 +160,6 @@
 			"CodeStyle",
 			"NameStyle",
 			"CSS",
-			"IsInput",
 			"IsForm",
 			"IsReport"
 		],
@@ -226,8 +225,7 @@
 			"CodeDoc",
 			"NameDoc",
 			"CodeRole",
-			"CodeGrp",
-			"CodeDocType"
+			"CodeGrp"
 		],
 		"EditFields": [
 			"CodeDoc",
@@ -245,7 +243,8 @@
 			"PrintNameDoc",
 			"IsObjToRow",
 			"FirstYear",
-			"IsShowRoots"
+			"IsShowRoots",
+			"CodeModel"
 		],
 		"Links": [
 			"docfolderdoc",
@@ -319,7 +318,14 @@
 			"Mail",
 			"CodeObj",
 			"InAttentive",
-			"IsConfirmed"
+			"IsConfirmed",
+			"IsAdmin",
+			"IsDepAdmin",
+			"IsOrgAdmin",
+			"IsDivAdmin",
+			"Server",
+			"IsTester",
+			"IsDesigner"
 		],
 		"Links": [
 			"labeluser"
@@ -335,7 +341,9 @@
 			"CodePermit",
 			"NamePermit",
 			"CodeObj",
-			"IsPublic"
+			"IsPublic",
+			"IsPersonal",
+			"SNamePermit"
 		],
 		"Links": []
 	},
@@ -355,7 +363,8 @@
 			"MobilePhone",
 			"Mail",
 			"NameObjs",
-			"Comments"
+			"Comments",
+			"LoginUser"
 		],
 		"Links": []
 	},
@@ -486,7 +495,8 @@
 	"valuta": {
 		"TableFields": [
 			"CodeValuta",
-			"NameValuta"
+			"NameValuta",
+			"IsReportValuta"
 		],
 		"EditFields": [
 			"CodeValuta",
@@ -672,55 +682,108 @@
 		],
 		"EditFields": [
 			"CodeDocBill",
-			"CodeDoc",
-			"CodeBill"
+			"CodeBill",
+			"CodeDoc"
 		],
 		"Links": []
+	},
+	"bill": {
+		"TableFields": [
+			"CodeBill",
+			"NameBill",
+			"NumBill"
+		],
+		"EditFields": [
+			"CodeBill",
+			"NameBill",
+			"NumBill",
+			"SNameBill",
+			"Comment",
+			"UseAltOrg"
+		],
+		"Links": [
+			"docbill",
+			"billrelation"
+		]
+	},
+	"docrelation": {
+		"TableFields": [
+			"CodeDocRelation",
+			"DoSetTree",
+			"DoFillCell",
+			"IsOuterLink",
+			"IsMirror",
+			"CodeDocSourse",
+			"CodeDocTarget"
+		],
+		"EditFields": [
+			"CodeDocRelation",
+			"DoSetTree",
+			"DoFillCell",
+			"IsOuterLink",
+			"IsMirror",
+			"CodeDocSourse",
+			"CodeGrpSource",
+			"CodeDocTarget",
+			"CodeGrpTarget"
+		],
+		"Links": [
+			"colrelation"
+		]
 	},
 	"billrelation": {
 		"TableFields": [
 			"CodeBillRelation",
 			"CodeBillSource",
 			"CodeBillTarget",
-			"CodeGrpSource",
-			"CodeGrpTarget"
+			"IsMirror"
 		],
 		"EditFields": [
 			"CodeBillRelation",
-			"IsNotGrpSource",
-			"IsNotGrpTarget",
-			"IsMirror",
-			"CodeBillSource",
+			"CodeGrpTarget",
 			"CodeBillTarget",
-			"CodeGrpSource",
-			"CodeGrpTarget"
+			"CodeBillSource",
+			"IsMirror",
+			"IsNotGrpTarget",
+			"IsNotGrpSource",
+			"CodeGrpSource"
 		],
 		"Links": []
-	},
-	"dogovortype": {
-		"TableFields": [
-			"CodeDogovorType",
-			"NameDogovorType"
-		],
-		"EditFields": [
-			"CodeDogovorType",
-			"NameDogovorType"
-		],
-		"Links": [
-			"dogovortypeart"
-		]
 	},
 	"prod": {
 		"TableFields": [
 			"CodeProd",
-			"NameProd"
+			"NameProd",
+			"NumProd",
+			"CodeMeasure",
+			"CodeParentProd",
+			"IsCalcSum"
 		],
 		"EditFields": [
 			"CodeProd",
-			"NameProd"
+			"NameProd",
+			"CodeParentProd",
+			"IsCalcSum",
+			"NumProd",
+			"SNameProd",
+			"Comment",
+			"CodeMeasure"
+		],
+		"Links": []
+	},
+	"objtype": {
+		"TableFields": [
+			"CodeObjType",
+			"NameObjType"
+		],
+		"EditFields": [
+			"CodeObjType",
+			"NameObjType"
 		],
 		"Links": [
-			"prodsumgrp"
+			"rowobj",
+			"docobjtype",
+			"objtypetag"
 		]
 	}
 }
