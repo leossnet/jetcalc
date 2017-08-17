@@ -7,6 +7,7 @@ var Bus = (new function(){
 	self.Events = new event();
 
 	self.On = self.Events.on;
+
 	self.Off = self.Events.off;
 
 	self.Emit = self.Events.emit;

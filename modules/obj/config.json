@@ -3,17 +3,18 @@
   "title": "Объекты учета",
   "icon": "fa-hospital-o",
   "class_name": "Obj",
-  "beforeShow": "MObj.BeforeShow",
   "is_enabled": true,
   "type":"adminpage",
   "places":{
       "adminpage"  : true
   },
   "permissions" : [
-  		"IsObjTunner"
+  		"IsObjTunner","IsLocationTunner","IsOrgTunner"
   ],
   "permissionsModels":{
-      "IsObjTunner":["objtype","objclass","obj","grp"]
+      "IsObjTunner":["objtype","objclass","obj","grp"],
+      "IsLocationTunner":["city","region","country"],
+      "IsOrgTunner":["org","otrasl","div","grp","depart"]
   },
   "sort_index":70
 }

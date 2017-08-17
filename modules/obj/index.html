@@ -1,7 +1,19 @@
 <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MObj'>
+	<div class="col-xs-6">
     <!-- ko template:'tb_simple_loader' --><!-- /ko -->
     <!-- ko template:'model_edit_buttons' --><!-- /ko -->
     <!-- ko template:'model_edit_search' --><!-- /ko -->    
+    </div>
+    <div class="col-xs-6">
+	<ul class="nav nav-tabs" style='display: inline-block;vertical-align: bottom;'>
+		<!-- ko foreach:["Orgs","Objs","Location"] -->
+			<li data-bind='css:{active:$data==$parent.SubMode()}'><a data-toggle="tab" class='toolbar-tab' data-bind='click:$parent.SubMode.bind(null,$data)'>
+				<i class='fa fa-icon' data-bind='css:MObj.Icon($data)'></i>
+				<span data-bind='lang:"SubMode"+$data'></span>
+			</a></li>
+		<!-- /ko -->
+	</ul>    
+	</div>
 </div>
 
 <div class="row adminbody" data-bind="with:MObj">
@@ -13,9 +25,10 @@
 
 <div class="bottomPannel" data-bind="with:MObj">
 	<ul class="toolPanel nav nav-tabs background-blue">
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-building-o',title:'Объекты учета',mode:'Objs'}} --><!-- /ko -->           
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-folder-open',title:'Типы объектов',mode:'ObjTypes'}} --><!-- /ko -->      
-    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-folder-open',title:'Классы объектов',mode:'ObjClasses'}} --><!-- /ko -->    	
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-folder-open',title:'Группы',mode:'Grps'}} --><!-- /ko -->     
+		<!-- ko foreach:$data.ByType[$data.SubMode()] -->
+			<!-- ko with:MObj -->
+				<!-- ko template:{name:'tb_mode_switch_li',data:{icon:MObj.Icon($parent),mode:$parent,title:Tr($parent)}} --><!-- /ko -->           
+			<!-- /ko -->
+		<!-- /ko -->        
 	</ul>
 </div>

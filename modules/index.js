@@ -466,6 +466,10 @@ var Module = function(id){
         self._request("delete",urlpart,data,done);
     }
 
+    self.rPing =  function(urlpart){
+        self._request("get",urlpart,{},function(){});
+    }
+
     return self;
 }
 

@@ -3,8 +3,36 @@ var MObj = (new function() {
     var self = new Module("obj"); 
 
     self.IsAvailable = function(){
-        return PermChecker.CheckPrivelege("IsObjTunner");
+        return PermChecker.CheckPrivelegeAny(["IsObjTunner","IsOrgTunner","IsLocationTunner"]);
     }
+    
+    self.SubMode = ko.observable("Orgs");
+
+    self.ByType = {
+        Objs:["Objs","ObjClasses","ObjTypes","Grps"],
+        Location:["Cities","Regions","Countries"],
+        Orgs:["Orgs","Otrasls","Divs","Department","Grps"]
+    };
+
+    self.Icons = {
+        Orgs:'fa-building-o',
+        Objs:'fa-hospital-o',
+        Cities:'fa-map-marker',
+        Countries:'fa-globe',
+        Regions:'fa-flag-o',
+        Location:'fa-globe'
+    }
+
+    self.Icon = function(data){
+        return self.Icons[data] || 'fa-folder-open';
+    }
+
+    self.SubMode.subscribe(function(NewValue){
+        var ToSet = _.first(self.ByType[NewValue]);
+        if (self.Mode()!=ToSet){
+            self.Mode(ToSet);
+        }
+    })
 
     self.BeforeShow = function(){
         self.Subscribe();
@@ -15,32 +43,16 @@ var MObj = (new function() {
         self.UnSubscribe();
     } 
 
-    self.ModelIsCreated = function(){
-
-    }
-
-    self.ModelIsLoaded = function(){
-
-    }
 
     self.ModelIsSaved = function(){
-
+        self.rPing("refresh");
     }
-    
-    self.ObjGrps = ko.observableArray();
-
-    self.LoadObjGrp = function(){
-        self.ColsetCols([]); 
-        var CodeGrp = ModelTableEdit.LoadedModel().CodeGrp(); 
-        self.rGet("objgrps",{CodeGrp:CodeGrp},function(data){
-            self.ColsetCols(data);
-        })
-    } 
-
-
-    self.Mode.subscribe(function(){
-        self.Show();
-    })
+    self.ModelIsCreated = function(){
+        self.rPing("refresh");
+    }
+    self.ModelIsDeleted = function(){
+        self.rPing("refresh");
+    }
 
     self.SaveChanges = function(){
         self.IsLoading(true);
@@ -63,6 +75,27 @@ var MObj = (new function() {
             case "Grps":
                 ModelTableEdit.InitModel("grp");
             break;
+            case "Cities":
+                ModelTableEdit.InitModel("city");
+            break;
+            case "Regions":
+                ModelTableEdit.InitModel("region");
+            break;            
+            case "Countries":
+                ModelTableEdit.InitModel("country");
+            break;
+            case "Otrasls":
+                ModelTableEdit.InitModel("otrasl");
+            break;            
+            case "Orgs":
+                ModelTableEdit.InitModel("org");
+            break;            
+            case "Divs":
+                ModelTableEdit.InitModel("div",{Idx:1});
+            break;
+            case "Department":
+                ModelTableEdit.InitModel("depart");
+            break; 
         }
         return done && done()
     }  

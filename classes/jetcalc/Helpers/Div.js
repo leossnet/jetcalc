@@ -1,10 +1,16 @@
 var async = require('async');
 var mongoose = require('mongoose');
 var _ = require('lodash');
+var Base = require(__base + 'classes/jetcalc/Helpers/Base.js');
+var Bus = require(__base + 'src/bus.js');
+
+
 
 var Div = (new function(){
 
-	var self = this;
+	var self = new Base("DIV");
+
+	Bus.On("DIVCHANGE",self.ClearCache);
 
 	self.Info = {};
 
@@ -21,25 +27,43 @@ var Div = (new function(){
 		'objtypetag':"-_id CodeObjType CodeTag Value"
 	};
 
-	var ParentsInfo = {}, ChildrenInfo = {};
-	var _rootParent = function(Code){
-		if (ParentsInfo[Code]==Code || !ParentsInfo[Code]) return Code;
-		return _rootParent(ParentsInfo[Code]);
-	}
-	var _children = function(Code){
-		var AllChildren = [];
-		AllChildren.push(Code);							
-		if (!ChildrenInfo[Code] || !ChildrenInfo[Code].length){
-			return AllChildren;
-		}
-		ChildrenInfo[Code].forEach(function(C){
-			AllChildren = AllChildren.concat(_children(C));
-		})
-		return AllChildren;
-	}	
-
 	self.get = function(done){
+		console.time(">> div get");
+		self.FromCache(function(err,Result){
+			if (Result) {
+				console.log(">> div info from cache");
+				console.timeEnd(">> div get");
+				return done (err,Result);	
+			}
+			self.load(function(err,Data){
+				console.log(">> div info loaded");
+				self.ToCache(Data,function(err){
+					if (err) console.log(">> div info set cache error");
+					console.timeEnd(">> div get");
+					return done(err,Data);
+				})
+			})
+		})
+	}
+
+	self.load = function(done){
 		var Models = {};
+		var ParentsInfo = {}, ChildrenInfo = {};
+		var _rootParent = function(Code){
+			if (ParentsInfo[Code]==Code || !ParentsInfo[Code]) return Code;
+			return _rootParent(ParentsInfo[Code]);
+		}
+		var _children = function(Code){
+			var AllChildren = [];
+			AllChildren.push(Code);							
+			if (!ChildrenInfo[Code] || !ChildrenInfo[Code].length){
+				return AllChildren;
+			}
+			ChildrenInfo[Code].forEach(function(C){
+				AllChildren = AllChildren.concat(_children(C));
+			})
+			return AllChildren;
+		}	
 		async.each(_.keys(self.FieldsByModel),function(modelName,cb){
 			mongoose.model(modelName).find({},self.FieldsByModel[modelName]).isactive().lean().exec(function(err,Objs){
 				Models[modelName] = Objs; 

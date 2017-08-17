@@ -486,7 +486,7 @@ router.get('/updategit', LIB.Require(['module']), HP.TaskAccess("IsModulesAdmin"
 })
 
 router.delete('/uninstallgit', LIB.Require(['module']), HP.TaskAccess("IsModulesAdmin"), function (req, res, next) {
-    mongoose.model("msmodule").findOne({ModuleName:req.query.module}).exec(function(err,M){
+    mongoose.model("msmodule").findOne({ModuleName:req.body.module}).exec(function(err,M){
         if (M.Type=='module'){
             ModulesHelper.ExecGit(req.body.module,"remove",function(err,Mod){
                 if (err) return next(info);
@@ -496,7 +496,7 @@ router.delete('/uninstallgit', LIB.Require(['module']), HP.TaskAccess("IsModules
                 })
             })
         } else {
-            console.log("Удаление модели ",req.query.module);
+            console.log("Удаление модели ",req.body.module);
         }
     })
 })

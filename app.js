@@ -25,6 +25,10 @@ var  config      = require('./config.js')
 , Bus = require('./src/bus.js');
 
 
+
+var DivHelper = require(__base+'classes/jetcalc/Helpers/Div.js');
+
+
 //var Unmapper = require(__base+"classes/jetcalc/Unmap.js");
 
 mongoose.Promise = global.Promise;
