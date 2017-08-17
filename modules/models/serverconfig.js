@@ -6054,11 +6054,6 @@ module.exports = {
 				"index": true,
 				"unique": true
 			},
-			"IsInput": {
-				"type": Boolean,
-				"default": false,
-				"view": "none"
-			},
 			"IsShow": {
 				"type": Boolean,
 				"default": false,
