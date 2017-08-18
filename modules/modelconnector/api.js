@@ -12,11 +12,13 @@ router.get('/connect', function (req, res, next) {
         MainModels: [],
         LinkModels: []
     };
-    mongoose.model(req.body.source_model).find(req.body.get_query, req.body.get_fields).sort(req.body.get_sort).isactive().exec(function (err, Main) {
+    mongoose.model(req.query.source_model).find(req.query.get_query, req.query.get_fields).sort(req.query.get_sort).isactive().exec(function (err, Main) {
         Answer.MainModels = Main;
         var query = {}
-        query[req.body.indexfieldname] = 1;
-        mongoose.model(req.body.model).find({}).sort(query).lean().isactive().exec(function (err, Ps) {
+        if (req.query.indexfieldname) {
+            query[req.query.indexfieldname] = 1;
+        }
+        mongoose.model(req.query.target_model).find({}).sort(query).lean().isactive().exec(function (err, Ps) {
             Answer.LinkModels = Ps;
             return res.json(Answer);
         })
@@ -26,7 +28,8 @@ router.get('/connect', function (req, res, next) {
 router.put('/connect', function (req, res, next) {
     var ModelSaver = require(__base + 'src/modeledit.js'),
         CodeUser = req.user.CodeUser;
-    var Data = JSON.parse(req.body.JSON);
+    var Data = req.body.JSON;
+    Data.data = JSON.parse(Data.data);
     if (_.isEmpty(Data)) return res.json({});
     var Tasks = [];
     for (var Code in Data.data) {
@@ -34,8 +37,8 @@ router.put('/connect', function (req, res, next) {
             return function (cb) {
                 var MS = new ModelSaver(CodeUser);
                 var Q = {}
-                Q[req.body.code_source_model] = Code2;
-                MS.SetModel(req.body.source_model, Q, function () {
+                Q[Data.code_source_model] = Code2;
+                MS.SetModel(Data.source_model, Q, function () {
                     MS.SaveLinks(Data.target_model, Links, cb);
                 })
             }

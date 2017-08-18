@@ -1,13 +1,26 @@
+<script id="model_connect_buttons" type="text/html">
+    <div class="btn-group">
+        <!-- ko template:'model_connect_save' -->
+        <!-- /ko -->
+    </div>
+</script>
+
+<script id="model_connect_save" type="text/html">
+    <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Сохранить',click:MModelConnector.SaveChanges" id='modelsave'>
+        <i class="ace-icon fa fa-save"></i>
+    </a>
+</script>
+
 <script id="connect_editor_text" type="text/html">
     <input type="text" class='small_input' data-bind='value:$data.Value'></input>
 </script>
 
 <script id="connect_editor_combobox" type="text/html">
-    <combobox-editor params="field:$data.Value,fieldname:$data.Name,refmodel:$data.SourceModel,mainmodel:$data.TargetModel">
+    <combobox-editor params="field:$data.Value,fieldname:$data.Name,refmodel:$data.TargetModel,mainmodel:$data.SourceModel">
     </combobox-editor>
 </script>
 
-<script id="connect_editor_checkbox" type="text/html">
+<script id="connect_editor_check" type="text/html">
     <input type="checkbox" class='ace ace-checkbox-2' data-bind='checked:$data.Value'>
     <span class="lbl"></span>
     </input>
@@ -85,7 +98,7 @@
                                                 Value: $parent[$data.field_name],
                                                 Name: $data.name,
                                                 SourceModel: MModelConnector.source_model(),
-                                                TargetModel: MModelConnector.target_model()
+                                                TargetModel: $data.target_model
                                             }
 			                             } -->
                                         <!-- /ko -->
@@ -100,7 +113,7 @@
                                 <!-- /ko -->
                                 <tr>
                                     <td colspan=5>
-                                        <a class="addLinkModel" data-bind="click:MModelConnector.AddLinkModel.bind(null,$data[MModelConnector.code_source_model()]()">Добавить период</a>
+                                        <a class="addLinkModel" data-bind="click:function(){MModelConnector.AddLinkModel($data[MModelConnector.code_source_model()]())}">Добавить</a>
                                     </td>
                                 </tr>
                                 <!-- /ko -->
