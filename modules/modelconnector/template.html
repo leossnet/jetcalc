@@ -132,5 +132,30 @@
                 </tr>
             </tbody>
         </table>
+        <button class="btn btn-white btn-sm btn-info" data-bind="click:MModelConnector.AddMainModel" style="margin-top:-85px; margin-left:10px;">
+	       <i class="ace-icon fa fa-plus"></i> Добавить
+        </button>
     </div>
 </script>
+
+
+<div id="add_main_model_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" data-bind="if:MModelConnector.empty_target_model_loaded">
+                <!-- ko template:{
+					name:'small_form_with_header',
+					data:{
+                        Name:'',
+                        Fields: [MModelConnector.code_source_model()],
+                        Model: MModelConnector.empty_target_model
+                    }
+			     } -->
+                <!-- /ko -->
+                <button class="btn btn-white btn-sm btn-info" data-bind="click:MModelConnector._AddMainModel" style="margin-top:10px; margin-left:10px;">
+	                <i class="ace-icon fa fa-plus"></i> Добавить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

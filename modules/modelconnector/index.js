@@ -5,6 +5,8 @@ var MModelConnector = (new function () {
     self.LinkModels = ko.observable();
     self.MainModels = ko.observableArray([]);
 
+    self.row_data = ko.observable();
+
     self.source_model = ko.observable();
     self.target_model = ko.observable();
     self.code_source_model = ko.observable();
@@ -17,11 +19,14 @@ var MModelConnector = (new function () {
     self.get_sort = ko.observable({});
     self.get_fields = ko.observable("-_id");
 
+    self.empty_target_model = ko.observable(null);
+    self.empty_target_model_loaded = ko.observable(false);
+
     self.model_edit_fields = ko.observableArray([]);
 
     self.RemoveLinkModel = function (Code) {
         self.LinkModels()[Code].remove(this);
-    }
+    };
 
     self.AddLinkModel = function (Code) {
         var link_for_add = {};
@@ -30,6 +35,31 @@ var MModelConnector = (new function () {
             link_for_add[self.source_index_field_name()] = self.LinkModels()[Code]().length + 1;
         }
         self.LinkModels()[Code].push(MModels.Create(self.target_model(), link_for_add));
+    }
+
+    self.AddMainModel = function () {
+        self.empty_target_model = ko.observable(MModels.Create(self.target_model(), {}));
+        self.empty_target_model_loaded(true);
+        $("#add_main_model_modal").modal('show');
+    }
+
+    self._AddMainModel = function () {
+        var main_for_add_code = self.empty_target_model()[self.code_source_model()]();
+        if (!self.LinkModels()[main_for_add_code]) {
+            self.LinkModels()[main_for_add_code] = ko.observableArray();
+            var MM = {};
+            self.row_data().MainModels.forEach(function (e) {
+                if (e[self.code_source_model()] === main_for_add_code) {
+                    MM = e;
+                }
+            })
+            if (!MM[self.name_source_model()]) {
+                MM[self.name_source_model()] = '';
+                MM[self.code_source_model()] = main_for_add_code;    
+            }
+            self.MainModels.push(MModels.Create(self.source_model(), MM))
+        }
+        $("#add_main_model_modal").modal('hide');
     }
 
     self.EditModel = ko.observable(null);
@@ -55,6 +85,7 @@ var MModelConnector = (new function () {
             get_sort: self.get_sort(),
             indexfieldname: self.source_index_field_name(),
         }, function (data) {
+            self.row_data(data);
             self.MainModels(_.map(data.MainModels, function (MM) {
                 return MModels.Create(self.source_model(), MM);
             }));
@@ -67,7 +98,16 @@ var MModelConnector = (new function () {
                     Str[LM[self.code_source_model()]].push(MModels.Create(self.target_model(), LM));
                 }
             })
-            self.LinkModels(Str);
+            Str2 = {};
+            _.keys(Str).forEach(function (k) {
+                if (!_.isEmpty(Str[k]())) {
+                    Str2[k] = Str[k];
+                }
+            })
+            self.LinkModels(Str2);
+            self.MainModels(_.filter(self.MainModels(), function (e) {
+                return self.LinkModels()[e[e.Code]()];
+            }))
             done && done();
         })
     }
@@ -95,7 +135,7 @@ var MModelConnector = (new function () {
             },
             success: function (data) {
                 self.Init();
-                self.LoadModels(function(){
+                self.LoadModels(function () {
                     swal("изменения сохранены", "Изменения успешно сохранены", "success");
                 });
             },
