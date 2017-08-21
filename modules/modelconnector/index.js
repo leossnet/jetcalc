@@ -54,7 +54,7 @@ var MModelConnector = (new function () {
             })
             if (!MM[self.name_source_model()]) {
                 MM[self.name_source_model()] = '';
-                MM[self.code_source_model()] = main_for_add_code;    
+                MM[self.code_source_model()] = main_for_add_code;
             }
             self.MainModels.push(MModels.Create(self.source_model(), MM))
         }
@@ -152,20 +152,130 @@ var MModelConnector = (new function () {
         if (data) {
             self.MainModels([]);
             self.LinkModels({});
+            ModelTableEdit.InitModel(data.target_model);
             self.source_model(data.source_model);
             self.target_model(data.target_model);
-            self.code_source_model(data.code_source_model);
-            self.name_source_model(data.name_source_model);
-            self.code_target_model(data.code_target_model);
-            self.source_model_field_name(data.source_model_field_name);
-            self.source_index_field_name(data.source_index_field_name);
-            self.get_query(data.get_query);
-            self.get_sort(data.get_sort);
-            self.get_fields(data.get_fields);
-            self.model_edit_fields(data.model_edit_fields);
+            self.code_source_model(data.code_source_model || self._get_code_source_model());
+            self.name_source_model(data.name_source_model || self._get_name_source_model());
+            self.code_target_model(data.code_target_model || self._get_code_target_model());
+            self.source_model_field_name(data.source_model_field_name || self.code_source_model());
+            self.source_index_field_name(data.source_index_field_name || null);
+            self.get_query(data.get_query || {});
+            self.get_sort(data.get_sort || {});
+            self.get_fields(data.get_fields || self._get_get_fields());
+            self.model_edit_fields(self._get_model_edit_fields(data.model_edit_fields));
             self.LoadModels();
         }
         done && done();
+    }
+
+    self._get_code_source_model = function () {
+        return _.filter(_.keys(MModels.Config[self.source_model()].fields), function (k) {
+            return MModels.Config[self.source_model()].fields[k].role === 'code';
+        })[0];
+    }
+
+    self._get_name_source_model = function () {
+        return _.filter(_.keys(MModels.Config[self.source_model()].fields), function (k) {
+            return MModels.Config[self.source_model()].fields[k].role === 'name';
+        })[0];
+    }
+
+    self._get_code_target_model = function () {
+        return _.filter(_.keys(MModels.Config[self.target_model()].fields), function (k) {
+            return MModels.Config[self.target_model()].fields[k].role === 'code';
+        })[0];
+    }
+
+    self._get_get_fields = function () {
+        return "-_id " + self.code_source_model() + " " + self.name_source_model();
+    }
+
+    self._get_model_edit_fields = function (mef) {
+        if (!mef) {
+            mef = ModelClientConfig.TableFields(self.target_model());
+            mef = _.filter(mef, function (f) {
+                return f != self.source_model_field_name()// && f != self.code_target_model();
+            })
+        }
+        var model_edit_fields = [];
+        mef.forEach(function (f) {
+            if ((typeof f) === "object") {
+                model_edit_fields.push(f);
+            } else {
+                var edit_params = self._get_field_edit_params(f);
+                var nf = {
+                    field_name: f,
+                    name: Tr(self.target_model(), f),
+                    class: '',
+                    target_model: edit_params.target_model,
+                    editor: edit_params.editor,
+                    wrapper: edit_params.wrapper,
+                }
+                model_edit_fields.push(nf);
+            }
+        })
+        return model_edit_fields;
+    }
+
+    self._get_field_edit_params = function (field_name) {
+        var cfg = MModels.Config[self.target_model()].fields[field_name];
+        if (cfg.refmodel) {
+            return {
+                target_model: cfg.refmodel,
+                wrapper: function (x) {
+                    return Catalogue.GetHtmlWithCode(cfg.refmodel, x())
+                },
+                editor: 'combobox',
+            };
+        }
+        if (cfg.type === "Boolean") {
+            return {
+                target_model: '',
+                editor: 'check',
+                wrapper: function (x) {
+                    var ret = "<input type='checkbox' onclick='return false;' class='ace ace-checkbox-2'";
+                    if (x()) {
+                        ret += 'checked';
+                    }
+                    ret += "><span class='lbl'></span></input>";
+                    return ret;
+                },
+            };
+        }
+        if (cfg.type === "Number") {
+            return {
+                target_model: '',
+                editor: 'number',
+                wrapper: function (x) {
+                    return x().toString()
+                },
+            };
+        }
+        return {
+            target_model: '',
+            editor: 'text',
+            wrapper: function (x) {
+                return x().toString();
+            },
+        };
+    }
+
+    self.Settings = function () {
+        $("#connector_settings_modal").modal("show");
+    }
+
+    self.SaveSettings = function () {
+        ModelClientConfig.Save({
+            ModelName: ModelTableEdit.ModelName(),
+            TableFields: ModelTableEdit.TableFieldsCheck(),
+            EditFields: ModelTableEdit.EditFieldsCheck(),
+            Links: ModelTableEdit.LinksCheck()
+        }, function () {
+            $("#connector_settings_modal").modal("hide");
+            ModelTableEdit.InitModel(ModelTableEdit.ModelName(), ModelTableEdit.Sort(), ModelTableEdit.Filter());
+            self.model_edit_fields(self._get_model_edit_fields());
+        })
     }
 
     return self;

@@ -3,6 +3,10 @@
         <!-- ko template:'model_connect_save' -->
         <!-- /ko -->
     </div>
+    <div class="btn-group">
+        <!-- ko template:'model_connect_settings' -->
+        <!-- /ko -->
+    </div>
 </script>
 
 <script id="model_connect_save" type="text/html">
@@ -11,8 +15,18 @@
     </a>
 </script>
 
+<script id="model_connect_settings" type="text/html">
+    <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Настройки',click:MModelConnector.Settings, css:{disabled:ModelTableEdit.NoAccess()}" id='modelsettings'>
+        <i class="ace-icon fa fa-cog"></i>
+    </a>
+</script>
+
 <script id="connect_editor_text" type="text/html">
     <input type="text" class='small_input' data-bind='value:$data.Value'></input>
+</script>
+
+<script id="connect_editor_number" type="text/html">
+    <input type="number" class='small_input' data-bind='value:$data.Value'></input>
 </script>
 
 <script id="connect_editor_combobox" type="text/html">
@@ -30,6 +44,15 @@
     <!-- ko if:$data.Editor == 'text' -->
     <!-- ko template:{
         name:'connect_editor_text',
+		data:{
+            Value: $data.Value,
+        }
+    } -->
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if:$data.Editor == 'number' -->
+    <!-- ko template:{
+        name:'connect_editor_number',
 		data:{
             Value: $data.Value,
         }
@@ -154,6 +177,40 @@
                 <!-- /ko -->
                 <button class="btn btn-white btn-sm btn-info" data-bind="click:MModelConnector._AddMainModel" style="margin-top:10px; margin-left:10px;">
 	                <i class="ace-icon fa fa-plus"></i> Добавить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="connector_settings_modal" class="modal fade">
+    <div class="modal-dialog" data-bind="with:ModelTableEdit" style="max-width: 800px;max-height: 600px;">
+        <div class="modal-content">
+            <h3 class='row header smaller lighter blue' style="padding-left: 5px;">Настройка отображения</h3>
+            <div class="modal-body">
+                <div class='row'>
+                    <div>
+                        <div>
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#ShowFields" aria-expanded="true"><i class="pink ace-icon fa fa-table bigger-110"></i>Поля таблицы</a></li>
+                            </ul>
+                            <div class="tab-content  padding-12" style='max-height: 500px;overflow-y: scroll;'>
+                                <div id="ShowFields" class="tab-pane active">
+                                    <!-- ko template:{
+                                            name:'model_settings_form',
+                                            data:{
+                                                AllValues:ModelTableEdit.AllEditFields,
+                                                Value:ModelTableEdit.TableFieldsCheck
+                                            }
+                                         } -->
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-white btn-sm btn-info" data-bind="click:MModelConnector.SaveSettings" style='margin-top:10px;'>
+					<i class="ace-icon fa fa-floppy-o"></i> Сохранить
                 </button>
             </div>
         </div>
