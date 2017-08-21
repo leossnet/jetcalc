@@ -136,11 +136,14 @@ var LinkEditorHelper = (new function(){
     
     var self = this;
 
-    self.FilterEditFields = function(mainmodelname,linkmodel,params){ 
+    self.FilterEditFields = function(mainmodelname,linkmodel,params,MainField){ 
         var AllFields = _.clone(MModels.Create(linkmodel,{}).EditFields);
         var UselessField = "";
         if (params!='ALL'){
             UselessField = ("code"+mainmodelname).toLowerCase();
+            if (_.isEmpty(UselessField) && !_.isEmpty(MainField)){
+                UselessField = MainField.toLowerCase();
+            }
         }
         var CodeField = 'code'+linkmodel;
         AllFields = _.filter(AllFields,function(F){

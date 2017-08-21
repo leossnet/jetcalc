@@ -20,5 +20,8 @@
 	"IsCustomReportPublicTuner":"Настройка публичных отчетов",
 	"IsCustomReportAdmin":"Управление всеми отчетами",
 	"delete":"Удалить",
-	"open":"Загрузить"
+	"open":"Загрузить",
+	"ModifyView":"Спрятать/Свернуть",
+	"SingleView":"Собрать заново",
+	"ColumnsView":"Настройка колонок"
 }

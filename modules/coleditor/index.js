@@ -164,7 +164,7 @@ var MColEditor = (new function() {
 
 	self._types = {
 		condition:["Condition"],
-		numeric  :["IndexHeader","IndexColsetCol",'Year'],
+		numeric  :["IndexHeader","IndexColsetCol",'Year','AfIndex'],
 		formula  :["InitialFormula","Formula","AfFormula","AgFormula"],
 		links    :["Link_coltag",'Link_colsetcolgrp','Link_colsetcolperiodgrp'],
 		select   :["CodePeriodGrp","CodePeriod"],
@@ -277,13 +277,13 @@ var MColEditor = (new function() {
 				Cols = Cols.concat(["Condition","CodePeriodGrp",'IsInput','Link_colsetcolgrp','Link_colsetcolperiodgrp']);
 			break;
 			case "Formula":
-				Cols = Cols.concat(["IsFormula","InitialFormula","Link_coltag","IsAfFormula","AfFormula","IsAgFormula","AsAgFormula","AgFormula"]);
+				Cols = Cols.concat(["IsFormula","InitialFormula","Link_coltag","IsAfFormula","AfIndex","AfFormula","IsAgFormula","AsAgFormula","AgFormula"]);
 			break;
 		}
 		return Cols;
 	}
 
-	self.Editable = ["Condition","Link_colsetcolperiodgrp","Link_colsetcolgrp","CodeStyle","CodeFormat","AfFormula","IsAfFormula","AgFormula","IsAgFormula","IsControlPoint","IsFixed","IndexColsetCol","NameColsetCol"];
+	self.Editable = ["Condition","Link_colsetcolperiodgrp","Link_colsetcolgrp","CodeStyle","CodeFormat","AfFormula","AfIndex","IsAfFormula","AgFormula","IsAgFormula","IsControlPoint","IsFixed","IndexColsetCol","NameColsetCol"];
 	
 	self.ModelsByField = {
 	    "CodeStyle":'style',

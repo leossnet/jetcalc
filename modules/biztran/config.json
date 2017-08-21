@@ -1,0 +1,15 @@
+{
+  "id": "biztran",
+  "title": "Настройка рядов бизтран",
+  "icon": "fa-table",
+  "type":"documentpage",
+  "places":{
+      "documentpage"  : true
+  },
+  "class_name":"Biztran",
+  "is_enabled": true,
+  "sort_index": 40,
+  "permissions" : [
+  		"IsBiztranTuner", "IsBiztranAcceptor"
+  ]
+}

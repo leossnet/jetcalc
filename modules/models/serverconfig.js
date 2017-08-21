@@ -157,6 +157,11 @@ module.exports = {
 				"default": "",
 				"view": "none"
 			},
+			"AfIndex": {
+				"type": Number,
+				"default": 0,
+				"view": "none"
+			},			
 			"IsAfFormula": {
 				"type": Boolean,
 				"default": false,
@@ -170,8 +175,7 @@ module.exports = {
 			"CodeColset": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "colset",
 				"index": true,
 				"extended": true
@@ -1502,8 +1506,7 @@ module.exports = {
 			"CodeDocSourse": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -1511,8 +1514,7 @@ module.exports = {
 			"CodeDocTarget": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -1520,8 +1522,7 @@ module.exports = {
 			"CodeGrpSource": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -1529,8 +1530,7 @@ module.exports = {
 			"CodeGrpTarget": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -6397,8 +6397,7 @@ module.exports = {
 			"CodePeriod": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -6406,13 +6405,73 @@ module.exports = {
 			"CodePeriodGrp": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "periodgrp",
 				"index": true,
 				"extended": true
 			}
 		}
+	},
+	"biztranrow": {
+		"tablename": "[link].[BiztranRow]",
+		"menuplace": "Link",
+		"fields": {
+			"CodeObj":{
+				"type": String,
+				"default": "",
+				"view": "none",				
+				"refmodel": "obj",
+				"index": true,
+			},
+			"CodeDoc":{
+				"type": String,
+				"default": "",
+				"view": "none",				
+				"refmodel": "doc",
+				"index": true,
+			},
+			"CodeRoot":{
+				"type": String,
+				"default": "",
+				"view": "none",				
+				"refmodel": "row",
+				"index": true,
+			},
+			"CodeBill":{
+				"type": String,
+				"default": "",
+				"view": "none",				
+				"refmodel": "bill",
+				"index": true,
+			},
+			"CodeProd":{
+				"type": String,
+				"default": "",
+				"view": "none",				
+				"refmodel": "prod",
+				"index": true,
+			},
+			"CodeOrg":{
+				"type": String,
+				"default": "",
+				"view": "none",				
+				"refmodel": "org",
+				"index": true,
+			},			
+			"CodeDogovor":{
+				"type": String,
+				"default": "",
+				"view": "none",				
+				"refmodel": "dogovor",
+				"index": true,
+			},
+			"Index":{
+				"type": Number,
+				"default": 1,
+				"view": "none",				
+				"index": true,
+			}
+		}	
 	},
 	"docobjtype": {
 		"tablename": "[link].[DocObjTypes]",

@@ -27,5 +27,6 @@
 	"IndexColsetCol":"Индекс",
 	"IsHeaderTuner":"Настройка заголовков",
 	"IsColEditor":"Редактирование колонок",
-	"IsColsetTuner":"Настройка колсетов"
+	"IsColsetTuner":"Настройка колсетов",
+	"AfIndex":"Приоритет.Авт"
 }

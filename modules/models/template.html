@@ -311,7 +311,7 @@
     <h3 class="row header smaller lighter blue" data-bind='lang:$data.Name'></h3>
     <!-- /ko -->
     <!-- ko with:$data.Model -->
-        <!-- ko if:!$data['Link_'+$parent.LinkModel]().length -->
+        <!-- ko if:_.isEmpty($data['Link_'+$parent.LinkModel]()) -->
             <div class='emptyLinks'>Ссылок - нет</div>
         <!-- /ko -->
         <ol class="dd-list" data-bind="foreach:$data['Link_'+$parent.LinkModel]">
@@ -325,7 +325,7 @@
                             <span ><i class="fa fa-icon fa-pencil bigger-130" ></i></span>
                         </a>
                     </div>
-                    <!-- ko foreach: LinkEditorHelper.FilterEditFields($parents[1].MainModel,$parents[1].LinkModel,$parents[1].FieldParams)  -->
+                    <!-- ko foreach: LinkEditorHelper.FilterEditFields($parents[1].MainModel,$parents[1].LinkModel,$parents[1].FieldParams,$parents[1].MainField)  -->
                         <div class="profile-info-row" data-bind="css:{'not-edited':!$parent.IsEdit()}">
                             <div class="profile-info-name" data-bind="model:$parent.modelname,lang:$data"></div>
                             <div class="profile-info-value">
@@ -353,7 +353,7 @@
                 </div>
             </li>
         </ol>
-        <a class='addLinkModel' data-bind="click:ModelEdit.AddLink.bind($parent.Model,$parent.LinkModel)">Добавить ссылку</a>
+        <a class='addLinkModel' data-bind="click:ModelEdit.AddLink.bind($parent.Model,$parent.LinkModel,$parent.MainField)">Добавить ссылку</a>
     <!-- /ko -->
     </div>  
 </script>

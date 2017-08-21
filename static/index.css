@@ -2149,3 +2149,6 @@ div.row{
     overflow: hidden;
     text-overflow: ellipsis;
 }
+div.select{
+    margin-top:10px;
+}

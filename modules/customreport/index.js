@@ -2,15 +2,150 @@ var MCustomReport = (new function() {
 	
 	var self = new Module("customreport");
 
+
+	self.EditTable = null;
+
+
+	self.EditTableCFG = function(){
+    	var Header  = Tr('customreport',['CodeRow','NameRow']), columns = [] , 
+    	addCols = [], FixedColsWidths = [100];
+    	if (self.Mode()=='SingleView'){
+    		addCols = ['IsShowOlap','IsShowWithParent','IsShowWithChildren'];
+    	} else {
+    		addCols = ['IsHidden','IsToggled'];
+    	}
+    	if (self.IsOlap()){
+    		if (self.Mode()!="SingleView"){
+    			self.Mode("SingleView");
+    		}
+    		addCols = ['IsShowOlap'];
+    	}
+    	Header = Tr('customreport',addCols).concat(Header);
+    	var HandsonRenders = new HandsonTableRenders.RenderController();	
+    	addCols.forEach(function(AC,Index){
+    		FixedColsWidths.shift(20);
+    		columns.push({data:AC,type:'checkbox'});
+    		HandsonRenders.RegisterRender(AC,[new RegExp("[0-9]*?,"+Index+"$")], self.CheckedRender);
+    	})
+    	columns = columns.concat([{data:'NumRow',type:'text'},{data:'NameRow',type:'text'}]);
+        HandsonRenders.RegisterRender("Code",[new RegExp("[0-9]*?,"+addCols.length+"$")], HandsonTableRenders.ReadOnlyText);
+        HandsonRenders.RegisterRender("Tree",[new RegExp("[0-9]*?,"+(addCols.length+1)+"$")], HandsonTableRenders.TreeRender);
+		HandsonRenders.RegisterRender("Filter",[/[0-9]*?,[0-9]*?/],self.FilterRender);            
+        var TreeArr = {}, TableCells = [];
+        self.Rows.forEach(function(R,I){
+            TreeArr[I] = _.pick(R,['lft','rgt','level']);
+        })
+        self.Rows.forEach(function(Row){
+        	var EmptRow = _.pick(Row,['CodeRow','lft','rgt','level','IsHidden','IsToggled','NumRow','NameRow','IsShowOlap','IsShowWithParent','IsShowWithChildren']);
+            TableCells.push(EmptRow)
+        })
+        var HandsonConfig = {
+        	data:TableCells,cells:HandsonRenders.UniversalRender,
+			fixedColumnsLeft:0,manualRowMove: true,autoRowSize:true,
+			afterChange:self.RegisterChange,columns:columns,
+			colWidths:FixedColsWidths,
+			colHeaders:Header, stretchH: 'last',								
+			tree:{
+		        data:TreeArr,
+		       	icon:function(){},
+		        colapsed:CxCtrl.Context().CodeDoc+'customreport'
+		    }
+        }
+        return HandsonConfig;
+	}
+
+	self.RenderEditTable = function(){
+    	var CFG = self.EditTableCFG();
+    	self.CreateHTable("EditTable",'.handsontable.single:visible',CFG,function(err,Table){
+    		new HandsonTableHelper.DiscretScroll(Table);
+    		new HandsonTableHelper.TreeView(Table);
+			self.Rows.forEach(function(Row,IndexRow){
+	    		var Meta = _.pick(Row,["CodeRow"]);
+	    		CFG.colHeaders.forEach(function(Col,IndexCol){
+					Table.setCellMetaObject(IndexRow,IndexCol,Meta);
+	    		})				
+	    	})
+	    	self.RenderHTable("EditTable");
+	    	self.EditTable = Table;	    	
+    	})
+    }
+
+    self.PreviewTableCFG = function(){
+		var Emulate = {}
+		self.ModFields.forEach(function(Field){
+			Emulate[Field] = self[Field];
+		})
+		TreeReparser.ResultTree(self.Rows,Emulate);
+		var Header  = Tr('customreport',['CodeRow','NameRow']);
+    	var HandsonRenders = new HandsonTableRenders.RenderController();	
+    	columns = [{data:'NumRow',type:'text'},{data:'NameRow',type:'text'}];
+        HandsonRenders.RegisterRender("Code",[new RegExp("[0-9]*?,0$")], HandsonTableRenders.ReadOnlyText);
+        HandsonRenders.RegisterRender("Tree",[new RegExp("[0-9]*?,1$")], HandsonTableRenders.TreeRender);
+        var TreeArr = {}, TableCells = [];
+        var Rows = TreeReparser.ResultTreeObjs;            
+        Rows.forEach(function(R,I){
+            TreeArr[I] = _.pick(R,['lft','rgt','level']);
+        })
+        Rows.forEach(function(Row){
+        	var EmptRow = _.pick(Row,['CodeRow','NumRow','NameRow','lft','rgt','level']);
+            TableCells.push(EmptRow)
+        })
+        var HandsonConfig = {
+        	data:TableCells,cells:HandsonRenders.UniversalRender,
+			fixedColumnsLeft:0,manualRowMove: false,autoRowSize:true,
+			afterChange:self.RegisterChange,columns:columns,
+			colWidths:[70],
+			colHeaders:Header, stretchH: 'last',				
+			tree:{
+		        data:TreeArr,
+		       	icon:function(){},
+		        colapsed:CxCtrl.Context().CodeDoc+'customreport_preview'
+		    }
+        }    
+        return 	HandsonConfig;
+    }
+
+    self.PreviewTable = null;
+
+	self.RenderPreviewTable = function(){
+    	if (self.Mode()=='ColumnsView') return;
+    	var CFG = self.PreviewTableCFG();
+    	self.CreateHTable("PreviewTable",'.handsontable.preview:visible',CFG,function(err,Table){
+    		new HandsonTableHelper.DiscretScroll(Table);
+    		new HandsonTableHelper.TreeView(Table);
+	    	self.RenderHTable("PreviewTable");
+	    	self.PreviewTable = Table;	    	
+    	})
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   	self.BeforeHide = function(){
         self.UnSubscribe();
+        self.EditTable = null;
+        self.DestroyHTable("EditTable");
     }
 
     self.BeforeShow = function(){
         self.Subscribe();
         self.Show();
     }        
-
 
 	self.table        = null;
 	self.previewTable = null;
@@ -20,6 +155,7 @@ var MCustomReport = (new function() {
 	self.IsAvailable = function(CodeDoc){
 		return true;
 	}
+
     self.IsOlap = function(){
     	var Doc = null;
     	if (CxCtrl.CodeDoc()) {
@@ -210,17 +346,17 @@ var MCustomReport = (new function() {
 	self.IsLoading = ko.observable(false);
 
 	self.CollapseAllRows = function(){
-        var Info = self.table.getSettings().tree;
+        var Info = self.EditTable.getSettings().tree;
         var RowCodes = [];
         for (var Index in Info.data){
             var R = Info.data[Index];
             if ((R.rgt-R.lft)>1){
                 RowCodes.push(parseInt(Index));
             }
-            self.table.collapsedRows(RowCodes);
+            self.EditTable.collapsedRows(RowCodes);
         }
         if (self.Mode()=='SingleView'){
-	        var Info2 = self.previewTable.getSettings().tree;
+	        var Info2 = self.PreviewTable.getSettings().tree;
 	        var RowCodes2 = [];
 	        for (var Index in Info2.data){
 	            var R = Info2.data[Index];
@@ -228,22 +364,14 @@ var MCustomReport = (new function() {
 	                RowCodes2.push(parseInt(Index));
 	            }
 	        }
-	        self.previewTable.collapsedRows(RowCodes2);
+	        self.PreviewTable.collapsedRows(RowCodes2);
     	}
     }
 
     self.ExpandAllRows = function(){
-        self.table && self.table.collapsedRows([]);
-        self.previewTable && self.previewTable.collapsedRows([]);
+        self.EditTable && self.EditTable.collapsedRows([]);
+        self.PreviewTable && self.PreviewTable.collapsedRows([]);
     }
-
-
-
-	/*self.Mode.subscribe(function(Value){
-		self.Render();
-		if (Value!='ColumnsView') setTimeout(self.Render,500);// Баг не обновляется ширина strechH last
-	}) 		
-*/
 
 	self.EditReport = ko.observable(null);
 
@@ -291,14 +419,7 @@ var MCustomReport = (new function() {
 		self.Init();
 	}
 
-	self.RenderT = null;
-
-	self.Render  = function(){
-		if (self.RenderT) clearTimeout(self.RenderT);
-		self.RenderT = setTimeout(self._render,500)
-	}
-
-	self._render = function(){
+	self.Render = function(){
 		var Emulate = {}
 		self.ModFields.forEach(function(Field){
 			Emulate[Field] = self[Field];
@@ -326,7 +447,7 @@ var MCustomReport = (new function() {
             case 'radio':
             case 'edit':
             	changes.forEach(function(change){
-            		var rI = change[0], prop = change[1], oldV = change[2], newV = change[3], meta = self.table.getCellMeta(rI,0);
+            		var rI = change[0], prop = change[1], oldV = change[2], newV = change[3], meta = self.EditTable.getCellMeta(rI,0);
             		var R = _.find(self.Rows,{CodeRow:meta.CodeRow});
             		var C = meta.CodeRow;
             		R[prop] = newV;
@@ -335,7 +456,7 @@ var MCustomReport = (new function() {
                 			if (newV){
                 				self.IsToggled.push(C);
                 				if (R.IsHidden){
-                					self.table.setDataAtCell(rI,0,false,'radio');
+                					self.EditTable.setDataAtCell(rI,0,false,'radio');
                 				}
                 			} else {
                 				self.IsToggled.remove(C);
@@ -344,7 +465,7 @@ var MCustomReport = (new function() {
 							if (newV){
                 				self.IsHidden.push(C);
                 				if (R.IsToggled){
-                					self.table.setDataAtCell(rI,1,false,'radio');
+                					self.EditTable.setDataAtCell(rI,1,false,'radio');
                 				}
                 			} else {
                 				self.IsHidden.remove(C);
@@ -357,7 +478,7 @@ var MCustomReport = (new function() {
                 			self[prop].remove(R.CodeRow);
                 		}
                 	}
-                	self.Render();
+                	self.RenderPreviewTable();
             	})                	
            break;
         }
@@ -395,8 +516,8 @@ var MCustomReport = (new function() {
 		    }
         };
         try{
-            self.table.destroy();
-            self.table = null;
+            //self.table.destroy();
+            //self.table = null;
         } catch(e){
             ;
         }
@@ -422,109 +543,11 @@ var MCustomReport = (new function() {
 	}
 
 
-    self.RenderEditTable = function(){
-    	var Header  = Tr('customreport',['CodeRow','NameRow']), columns = [] , 
-    	addCols = [], FixedColsWidths = [70], DomPlace = $('.handsontable.single:visible')[0];
-    	if (self.Mode()=='SingleView'){
-    		addCols = ['IsShowOlap','IsShowWithParent','IsShowWithChildren'];
-    	} else {
-    		addCols = ['IsHidden','IsToggled'];
-    	}
-    	if (self.IsOlap()){
-    		if (self.Mode()!="SingleView"){
-    			self.Mode("SingleView")
-    		}
-    		addCols = ['IsShowOlap'];
-    	}
-    	Header = Tr('customreport',addCols).concat(Header);
-    	var HandsonRenders = new HandsonTableRenders.RenderController();	
-    	addCols.forEach(function(AC,Index){
-    		FixedColsWidths.shift(20);
-    		columns.push({data:AC,type:'checkbox'});
-    		HandsonRenders.RegisterRender(AC,[new RegExp("[0-9]*?,"+Index+"$")], self.CheckedRender);
-    	})
-    	columns = columns.concat([{data:'NumRow',type:'text'},{data:'NameRow',type:'text'}]);
-        HandsonRenders.RegisterRender("Code",[new RegExp("[0-9]*?,"+addCols.length+"$")], HandsonTableRenders.ReadOnlyText);
-        HandsonRenders.RegisterRender("Tree",[new RegExp("[0-9]*?,"+(addCols.length+1)+"$")], HandsonTableRenders.TreeRender);
-		HandsonRenders.RegisterRender("Filter",[/[0-9]*?,[0-9]*?/],self.FilterRender);            
-        var TreeArr = {}, TableCells = [];
-        self.Rows.forEach(function(R,I){
-            TreeArr[I] = _.pick(R,['lft','rgt','level']);
-        })
-        self.Rows.forEach(function(Row){
-        	var EmptRow = _.pick(Row,['CodeRow','lft','rgt','level','IsHidden','IsToggled','NumRow','NameRow','IsShowOlap','IsShowWithParent','IsShowWithChildren']);
-            TableCells.push(EmptRow)
-        })
-        var HandsonConfig = {
-        	data:TableCells,cells:HandsonRenders.UniversalRender,
-			fixedColumnsLeft:0,manualRowMove: true,autoRowSize:true,
-			afterChange:self.RegisterChange,columns:columns,
-			colWidths:FixedColsWidths,
-			colHeaders:Header, stretchH: 'last',								
-			tree:{
-		        data:TreeArr,
-		       	icon:function(){},
-		        colapsed:CxCtrl.Context().CodeDoc+'customreport'
-		    }
-        }
-        try{
-            self.table.destroy();
-            self.table = null;
-        } catch(e){
-            ;
-        }
-        if (!self.table)
-        self.table = new Handsontable(DomPlace, HandsonConfig);
-        new HandsonTableHelper.DiscretScroll(self.table);
-        new HandsonTableHelper.TreeView(self.table);
-		self.Rows.forEach(function(Row,IndexRow){
-    		var Meta = _.pick(Row,["CodeRow"]);
-    		Header.forEach(function(Col,IndexCol){
-				self.table.setCellMetaObject(IndexRow,IndexCol,Meta);
-    		})				
-    	})
-        self.table.render();
-    }
 
-    self.RenderPreviewTable = function(){
-    	if (self.Mode()=='ColumnsView') return;
-		var Header  = Tr('customreport',['CodeRow','NameRow']), DomPlace = $('.handsontable.preview:visible')[0];
-    	var HandsonRenders = new HandsonTableRenders.RenderController();	
-    	columns = [{data:'NumRow',type:'text'},{data:'NameRow',type:'text'}];
-        HandsonRenders.RegisterRender("Code",[new RegExp("[0-9]*?,0$")], HandsonTableRenders.ReadOnlyText);
-        HandsonRenders.RegisterRender("Tree",[new RegExp("[0-9]*?,1$")], HandsonTableRenders.TreeRender);
-        var TreeArr = {}, TableCells = [];
-        var Rows = TreeReparser.ResultTreeObjs;            
-        Rows.forEach(function(R,I){
-            TreeArr[I] = _.pick(R,['lft','rgt','level']);
-        })
-        Rows.forEach(function(Row){
-        	var EmptRow = _.pick(Row,['CodeRow','NumRow','NameRow','lft','rgt','level']);
-            TableCells.push(EmptRow)
-        })
-        var HandsonConfig = {
-        	data:TableCells,cells:HandsonRenders.UniversalRender,
-			fixedColumnsLeft:0,manualRowMove: false,autoRowSize:true,
-			afterChange:self.RegisterChange,columns:columns,
-			colWidths:[40],
-			colHeaders:Header, stretchH: 'last',				
-			tree:{
-		        data:TreeArr,
-		       	icon:function(){},
-		        colapsed:CxCtrl.Context().CodeDoc+'customreport_preview'
-		    }
-        }
-        try{
-            self.previewTable.destroy();
-            self.previewTable = null;
-        } catch(e){
-            ;
-        }
-        self.previewTable = new Handsontable(DomPlace, HandsonConfig);
-        new HandsonTableHelper.DiscretScroll(self.previewTable);
-        new HandsonTableHelper.TreeView(self.previewTable);
-        self.previewTable.render();
-    }
+
+
+
+
 	return self;
 })
 
