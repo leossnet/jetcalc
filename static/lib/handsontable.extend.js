@@ -784,10 +784,12 @@ window.HandsonTableHelper = {
             }
             return rowOffset;
         }
-        self.table.addHook('modifyRow',function(row){
-            row =  row+self.visibleRowOffset(row);
-            return row<self.maxLen ? row:null;
-        })
+        if (!self.table.treeHook){
+            self.table.treeHook = self.table.addHook('modifyRow',function(row){
+                row =  row+self.visibleRowOffset(row);
+                return row<self.maxLen ? row:null;
+            })
+        }
         self.updateCollapsed = function(){
             var Exclude = {}, ChoosedCollapse = self.table.collapsedRows() || [];
             try{

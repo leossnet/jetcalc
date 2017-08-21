@@ -1,3 +1,82 @@
+var HTIController = (new function(){
+    
+    var self = this;
+
+
+    self.Tables = {};
+
+    self.createRetries = 10;
+    self.createRetriesTimeout = 100;
+
+    self.Create = function(ModuleName, TableName, DomPlace, Config, done){
+        if (!self.Tables[ModuleName]) self.Tables[ModuleName] = {};
+        if (self.Tables[ModuleName][TableName] && self.Tables[ModuleName][TableName].Table) {
+            console.log("TABLE UPDATED");
+            self.Update(ModuleName, TableName, Config);
+            return done(null,self.Tables[ModuleName][TableName].Table);
+        };
+        var Dom = $(DomPlace); self.createRetries = 10;
+        self._create(Dom, Config, function(err,Table){
+            if (err) throw err;
+            self.Tables[ModuleName][TableName] = {Table:Table,Dom:Dom};
+            console.log("Table Registered ",self.Tables);
+            return done(null, Table);
+        })
+    }
+
+    self.Update = function(ModuleName, TableName, Config){
+        if (self.Tables[ModuleName][TableName] && self.Tables[ModuleName][TableName].Table) {
+            self.Tables[ModuleName][TableName].Table.updateSettings(Config);
+        }
+    }
+
+    self._create = function(Dom, Config, done){
+        if (--self.createRetries<=0) throw "Нет дом элемента для таблицы";
+        if (_.isEmpty(Dom)){            
+            setTimeout(function(){
+                self._create(Dom, Config, done);
+            }, self.createRetriesTimeout);
+        }
+        var T = new Handsontable(Dom[0], Config);
+        return done(null,T);
+    }
+
+    self.Destroy = function(ModuleName,TableName){
+        if (self.Tables[ModuleName] && self.Tables[ModuleName][TableName] && self.Tables[ModuleName][TableName].Table){
+            self.Tables[ModuleName][TableName].Table.destroy();
+            self.Tables[ModuleName][TableName].Dom.empty();
+            delete self.Tables[ModuleName][TableName];
+        }
+    }
+
+    self.throttleTimer = null;
+    self.throttleTimeout = 100;
+    self._render = function(Instance){
+        if (self.throttleTimer){
+            clearTimeout(self.throttleTimer); self.throttleTimer = null;
+        }
+        self.throttleTimer = setTimeout(function(){
+            Instance.render();
+            clearTimeout(self.throttleTimer); self.throttleTimer = null;   
+        },self.throttleTimeout);
+    }
+
+    self.Render = function(ModuleName,TableName){
+        var Table = null;
+        try{
+            Table = self.Tables[ModuleName][TableName].Table;
+        }catch(e){
+            throw "Таблица "+ModuleName+" "+TableName+" не существует";
+        }
+        self._render(Table);        
+    }
+
+    return self;
+})
+
+
+
+
 var ModuleManager = (new function(){
 
     var self = this;
@@ -405,6 +484,25 @@ var Module = function(id){
     self.Init = function(done){
         return done && done();
     }
+
+// Для HandsonTable
+
+
+    self.CreateHTable = function(TableName, DomPlace, Config, done){
+        HTIController.Create(id,TableName,DomPlace, Config, done);
+    }
+
+    self.DestroyHTable = function(TableName){
+        HTIController.Destroy(id,TableName);
+    }
+
+    self.RenderHTable = function(TableName){
+        HTIController.Render(id,TableName);  
+    }
+
+
+
+
 
 
 

@@ -44,6 +44,7 @@ var MDocumentEditor = (new function() {
 	self.DocFields = ko.observableArray();
 
 	self.DocumentChange = function(D){
+		console.log(D);
 		if (D){
 			var ToRemove = [];
 			if (D.IsOlap){

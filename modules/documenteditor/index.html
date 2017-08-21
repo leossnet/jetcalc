@@ -86,10 +86,16 @@
 				name:'small_form_with_header',
 				data:{Name:'БизТран документ',Fields:['IsBiztranDoc','UseProd','UseOrg','UseDogovor','UseDogovorArt'],Model:Document}
 		} --><!-- /ko -->
-			<!-- ko template:{
-					name:'edit_links',
-					data:{Name:'Счета документа', MainModel:'doc', LinkModel:'docbill', Model:Document}
-			} --><!-- /ko -->
+		<!-- ko template:{
+				name:'edit_links',
+				data:{Name:'Счета документа', MainModel:'doc', LinkModel:'docbill', Model:Document}
+		} --><!-- /ko -->
+		<!-- ko if:false -->
+		<!-- ko template:{
+				name:'edit_links',
+				data:{Name:'Документы источники', MainModel:'doc', LinkModel:'docrelation', MainField:'CodeDocTarget', Model:Document}
+		} --><!-- /ko -->
+		<!-- /ko --> 
 		<!-- /ko --> 
 	</div>
 	<div class='col-xs-6 scrollable_col'>

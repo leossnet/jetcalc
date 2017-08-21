@@ -896,11 +896,12 @@ var ModelEdit = (new function () {
         return Document;
     }
 
-    self.AddLink = function (LinkName) {
+    self.AddLink = function (LinkName,Field) {
         var Init = {};
         var ParentModel = this();
+        Field = Field || ParentModel.Code;
         try {
-            Init[ParentModel.Code] = ParentModel[ParentModel.Code]();
+            Init[Field] = ParentModel[ParentModel.Code]();
         } catch (e) {
             console.log(e);
         }

@@ -23,7 +23,7 @@ var HeaderHelper = function(Context){
 		"docheader":'-_id CodeDocHeader CodeHeader CodePeriodGrp IsInput IndexDocHeader',
 		"header":"-_id CodeHeader CodeParentHeader IndexHeader NameHeader SNameHeader Condition Year CodePeriod IsFixed IsControlPoint CodeRole IsNoRoles CodeValid CodeStyle CodeColset Link_docheader",
 		"colset":"CodeColset NameColset SNameColset",
-		"colsetcol":'-_id CodeColsetCol CodeStyle CodeFormat CodeColset CodeCol Condition Year NameColsetCol SNameColsetCol CodePeriod IsFixed IsControlPoint Link_colsetcolperiodgrp Link_colsetcolgrp IndexColsetCol IsAgFormula AgFormula  IsAfFormula AfFormula CodeRole IsNoRole',
+		"colsetcol":'-_id CodeColsetCol CodeStyle CodeFormat CodeColset CodeCol Condition Year NameColsetCol SNameColsetCol CodePeriod IsFixed IsControlPoint Link_colsetcolperiodgrp Link_colsetcolgrp IndexColsetCol IsAgFormula AgFormula AfIndex IsAfFormula AfFormula CodeRole IsNoRole',
 		"col":'-_id AsAgFormula IsAgFormula AgFormula CodeCol Formula IsFormula Link_coltag DoSum NoCalcSum NoCalcSumHard NameCol Comment CodeValuta',
 	}
 

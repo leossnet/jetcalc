@@ -47,5 +47,6 @@
     "CodeObjType":"Код.Тип.Об.Уч",
     "level":"Вложенность",
     "CodeRowLink":"Ссылка.Ряд",
-    "CodeParentRow":"Код.Рдт.Ряда"
+    "CodeParentRow":"Код.Рдт.Ряда",
+    "CodeBill":"Код Счета"
 }
