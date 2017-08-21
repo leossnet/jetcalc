@@ -7,48 +7,48 @@ var ModelRestrict = (new function () {
                 CodeParentDocFolder: ""
             }
         },
-        routeperiod:{
-            CodePeriod:{
-                IsFormula:false
+        routeperiod: {
+            CodePeriod: {
+                IsFormula: false
             }
-        },    
-        statecalendardate:{
-            CodePeriod:{
-                IsFormula:false
+        },
+        statecalendardate: {
+            CodePeriod: {
+                IsFormula: false
             }
-        },      
-        file:{
-            CodePeriod:{
-                IsFormula:false
+        },
+        file: {
+            CodePeriod: {
+                IsFormula: false
             }
-        },      
-        data:{
-            CodePeriod:{
-                IsFormula:false
+        },
+        data: {
+            CodePeriod: {
+                IsFormula: false
             }
-        },        
-        periodredirect:{
-            CodePeriodToRedirect:{
-                IsFormula:false
+        },
+        periodredirect: {
+            CodePeriodToRedirect: {
+                IsFormula: false
             },
-            CodePeriod:{
-                IsFormula:false
+            CodePeriod: {
+                IsFormula: false
             }
-        },        
-        routecheckperiod:{
-            CodeCheckPeriod:{
-                IsFormula:false
+        },
+        routecheckperiod: {
+            CodeCheckPeriod: {
+                IsFormula: false
             },
-            CodePeriod:{
-                IsFormula:false
+            CodePeriod: {
+                IsFormula: false
             }
-        },        
-        routerefperiod:{
-            CodeRefPeriod:{
-                IsFormula:false
+        },
+        routerefperiod: {
+            CodeRefPeriod: {
+                IsFormula: false
             },
-            CodePeriod:{
-                IsFormula:false
+            CodePeriod: {
+                IsFormula: false
             }
         },
         docfolderdoc: {
@@ -80,42 +80,42 @@ var ModelRestrict = (new function () {
 })
 
 
-var ModelClientConfig = (new function(){
+var ModelClientConfig = (new function () {
     var self = this;
 
     self.Config = {};
 
-    self.CodeAndName = function(ModelName){
-        return [MModels.Config[ModelName].Code,MModels.Config[ModelName].Name];
+    self.CodeAndName = function (ModelName) {
+        return [MModels.Config[ModelName].Code, MModels.Config[ModelName].Name];
     }
 
-    self.TableFields = function(ModelName){
+    self.TableFields = function (ModelName) {
         return _.compact(_.isEmpty(self.Config[ModelName]) ? self.CodeAndName(ModelName) : self.Config[ModelName].TableFields);
     }
 
-    self.Links = function(ModelName){
+    self.Links = function (ModelName) {
         return _.compact(_.isEmpty(self.Config[ModelName]) ? [] : self.Config[ModelName].Links);
     }
 
-    self.EditFields = function(ModelName){
+    self.EditFields = function (ModelName) {
         return _.compact(_.isEmpty(self.Config[ModelName]) ? self.CodeAndName(ModelName) : self.Config[ModelName].EditFields);
     }
 
     self.base = '/api/modules/catalogue/';
 
-    self.Load = function(done){
-        $.getJSON(self.base+"clientsettings",function(data){
+    self.Load = function (done) {
+        $.getJSON(self.base + "clientsettings", function (data) {
             self.Config = data;
             return done && done();
         })
     }
 
-    self.Save = function(data,done){
+    self.Save = function (data, done) {
         $.ajax({
-            url:self.base+"clientsettings",
-            method:'post',
-            data:data,
-            success:function(){
+            url: self.base + "clientsettings",
+            method: 'post',
+            data: data,
+            success: function () {
                 self.Load(done);
             }
         })
@@ -276,7 +276,7 @@ var Catalogue = (new function () {
     }
 
 
- /*   self.throttled = {};
+    /*   self.throttled = {};
     self.throttledTimer = null;
     self.SearchThrottle = function(params,callback){
         if (!self.throttled[params.model]) self.throttled[params.model] = {};
@@ -525,27 +525,27 @@ var ModelTableEdit = (new function () {
 
     self.SaveSettings = function () {
         ModelClientConfig.Save({
-            ModelName:self.ModelName(),
-            TableFields:self.TableFieldsCheck(),
-            EditFields:self.EditFieldsCheck(),
-            Links:self.LinksCheck()
-        },function(){
+            ModelName: self.ModelName(),
+            TableFields: self.TableFieldsCheck(),
+            EditFields: self.EditFieldsCheck(),
+            Links: self.LinksCheck()
+        }, function () {
             $("#catalogue_settings_modal").modal("hide");
             self.InitModel(self.ModelName(), self.Sort(), self.Filter());
         })
     }
 
     self.LoadModel = function () {
-        self._loadModel(self.Choosed(),function () {
+        self._loadModel(self.Choosed(), function () {
             self.Events.emit("modelloaded");
         })
     }
-    self.ReloadModel = function (Code,done) {
+    self.ReloadModel = function (Code, done) {
         console.log("ReloadModel");
-        self._loadModel(Code,done);
+        self._loadModel(Code, done);
     }
 
-    self._loadModel = function (Code,done) {
+    self._loadModel = function (Code, done) {
         self.Error(null);
         self.IsLoading(true);
         $.ajax({
@@ -609,10 +609,10 @@ var ModelTableEdit = (new function () {
                     if (data.err) return self.Error(data.err);
                     self.LoadList();
                     var Code = self.Choosed() || data.code;
-                    self.ReloadModel(Code,function () {
-                        setTimeout(function(){
-                          self.Events.emit("modelsaved");  
-                        },0);
+                    self.ReloadModel(Code, function () {
+                        setTimeout(function () {
+                            self.Events.emit("modelsaved");
+                        }, 0);
                     })
                 }
             })
@@ -659,8 +659,8 @@ var ModelTableEdit = (new function () {
     self.InitModel = function (ModelName, Sort, Filter) {
         Filter = Filter || {};
         self.Clear();
-        self.ModelName(ModelName);        
-        
+        self.ModelName(ModelName);
+
         var TF = ModelClientConfig.TableFields(ModelName);
         self.TableFields(TF);
         self.TableFieldsCheck(TF);
@@ -676,10 +676,10 @@ var ModelTableEdit = (new function () {
         self.NameField(MModels.Config[ModelName].Name);
 
         self.AllTableFields(MModels.Config[ModelName].EditFields);
-        self.AllEditFields(_.filter(MModels.Config[ModelName].EditFields,function(V){
-            return V.indexOf("Link_")==-1;
+        self.AllEditFields(_.filter(MModels.Config[ModelName].EditFields, function (V) {
+            return V.indexOf("Link_") == -1;
         }));
-        self.AllLinks(_.uniq(MModels.Config[ModelName].Links)); 
+        self.AllLinks(_.uniq(MModels.Config[ModelName].Links));
         self.Filter(Filter);
         self.IsInited(true);
         self.LoadList();
@@ -705,7 +705,7 @@ var ModelTableEdit = (new function () {
 
         self.AllTableFields([]);
         self.AllEditFields([]);
-        self.AllLinks([]);        
+        self.AllLinks([]);
 
         self.CodeField(null);
         self.NameField(null);
@@ -718,7 +718,7 @@ var ModelTableEdit = (new function () {
         self.NoAccess(true);
         self.IsExtendEditor(false);
         self.IsOverrideList(false);
-        self.Filter(null);        
+        self.Filter(null);
     }
 
 
@@ -827,9 +827,9 @@ var ModelTableEdit = (new function () {
                     newref = self.refStack()[self.refStack().length - 2].model;
                     newref[fieldName](data.code);
                 } else {
-                    if (self.LoadedModel()){
+                    if (self.LoadedModel()) {
                         var ch = self.LoadedModel().toJS();
-                        self.LoadedModel()[fieldName](data.code);    
+                        self.LoadedModel()[fieldName](data.code);
                         self.refStack.pop();
                         if (self.refStack().length == 0) {
                             self.hideAddModal();
@@ -837,7 +837,7 @@ var ModelTableEdit = (new function () {
                     } else {
                         self.hideAddModal();
                         ModelChooser.SearchStr.valueHasMutated()
-                    }                    
+                    }
                 }
             }
         })
