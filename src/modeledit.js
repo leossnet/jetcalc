@@ -33,8 +33,8 @@ var ModelEdit = function(CodeUser,IsNew){
 
 	self.SetModel = function(ModelName, Query, done){
 		mongoose.model(ModelName).findOne(Query).isactive().exec(function(err,Found){
-			self.BaseModelCode = Found.cfg().Code
 			if (!Found) return done("modelnotfound");
+            self.BaseModelCode = Found.cfg().Code
 			self.BaseModel = Found;
 			return done();
 		})

@@ -1,14 +1,23 @@
 <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MWorkFlowSettings'>
     <!-- ko template:'tb_simple_loader' --><!-- /ko -->
+    <!-- ko if: MWorkFlowSettings.Mode() != 'AvPeriods' && MWorkFlowSettings.Mode() != 'CheckPeriods' && MWorkFlowSettings.Mode() != 'RefPeriods'  -->
     <!-- ko template:'model_edit_buttons' --><!-- /ko -->
     <!-- ko template:'model_edit_search' --><!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if: MWorkFlowSettings.Mode() == 'AvPeriods' || MWorkFlowSettings.Mode() == 'CheckPeriods' || MWorkFlowSettings.Mode() == 'RefPeriods' -->
+    <!-- ko template:'model_connect_buttons' --><!-- /ko -->
+    <!-- /ko -->
 </div>
 
 <div class="row adminbody" data-bind="with:MWorkFlowSettings">
 	<div  class='scrollable_page admin_page' >
 		<div class='row'><!-- ko template: 'inline_error' --><!-- /ko --></div>
-		
+		<!-- ko if: MWorkFlowSettings.Mode() == 'AvPeriods' || MWorkFlowSettings.Mode() == 'CheckPeriods' || MWorkFlowSettings.Mode() == 'RefPeriods'  -->
+        <!-- ko template:'connect_form' --><!-- /ko -->
+        <!-- /ko -->
+        <!-- ko if: MWorkFlowSettings.Mode() != 'AvPeriods' &&  MWorkFlowSettings.Mode() != 'CheckPeriods' && MWorkFlowSettings.Mode() != 'RefPeriods'-->
 		<!-- ko template:'model_edit' --><!-- /ko -->
+        <!-- /ko -->
 
 	</div>
 </div>
