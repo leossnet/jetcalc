@@ -13,7 +13,6 @@ var MModelConnector = (new function () {
     self.name_source_model = ko.observable();
     self.code_target_model = ko.observable();
     self.source_model_field_name = ko.observable();
-    self.target_model_field_name = ko.observable();
     self.source_index_field_name = ko.observable();
     self.get_query = ko.observable({});
     self.get_sort = ko.observable({});
@@ -151,6 +150,8 @@ var MModelConnector = (new function () {
 
     self.Init = function (data, done) {
         if (data) {
+            self.MainModels([]);
+            self.LinkModels({});
             self.source_model(data.source_model);
             self.target_model(data.target_model);
             self.code_source_model(data.code_source_model);

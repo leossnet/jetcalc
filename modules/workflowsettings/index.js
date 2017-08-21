@@ -26,21 +26,13 @@ var MWorkFlowSettings = (new function () {
                 ModelTableEdit.InitModel("route");
                 break;
             case "CheckPeriods":
-                ModelTableEdit.InitModel("routecheckperiod");
-                break;
-            case "RefPeriods":
-                ModelTableEdit.InitModel("routerefperiod");
-                break;
-            case "AvPeriods":
-                //ModelTableEdit.InitModel("routeperiod");
                 MModelConnector.Init({
                     source_model: 'period',
-                    target_model: 'routeperiod',
+                    target_model: 'routecheckperiod',
                     code_source_model: 'CodePeriod',
                     name_source_model: 'NamePeriod',
-                    code_target_model: 'CodeRoutePeriod',
+                    code_target_model: 'CodeRouteCheckPeriod',
                     source_model_field_name: 'CodePeriod',
-                    target_model_field_name: 'CodeRoute',
                     source_index_field_name: null,
                     get_query: {},
                     get_sort: {},
@@ -65,7 +57,105 @@ var MWorkFlowSettings = (new function () {
                         {
                             class: '',
                             wrapper: function (x) {
-                                return Catalogue.GetHtmlWithCode("roteperiod", x())
+                                return Catalogue.GetHtmlWithCode("route", x())
+                            },
+                            field_name: 'CodeRoute',
+                            editor: 'combobox',
+                            name: 'Маршрут',
+                            target_model: 'route'
+                        },
+                        {
+                            class: '',
+                            wrapper: function (x) {
+                                return Catalogue.GetHtmlWithCode("doctype", x())
+                            },
+                            field_name: 'CodeDocType',
+                            editor: 'combobox',
+                            name: 'Тип документа',
+                            target_model: 'doctype'
+                        },
+                        {
+                            class: '',
+                            wrapper: function (x) {
+                                return Catalogue.GetHtmlWithCode("grp", x())
+                            },
+                            field_name: 'CodeGrp',
+                            editor: 'combobox',
+                            name: 'Группа',
+                            target_model: 'grp'
+                        }
+                    ],
+                })
+                break;
+            case "RefPeriods":
+                MModelConnector.Init({
+                    source_model: 'period',
+                    target_model: 'routerefperiod',
+                    code_source_model: 'CodePeriod',
+                    name_source_model: 'NamePeriod',
+                    code_target_model: 'CodeRouteRefPeriod',
+                    source_model_field_name: 'CodePeriod',
+                    source_index_field_name: null,
+                    get_query: {},
+                    get_sort: {},
+                    get_fields: '-_id CodePeriod NamePeriod',
+                    model_edit_fields: [
+                        {
+                            class: '',
+                            wrapper: function (x) {
+                                return Catalogue.GetHtmlWithCode("route", x())
+                            },
+                            field_name: 'CodeRoute',
+                            editor: 'combobox',
+                            name: 'Маршрут',
+                            target_model: 'route'
+                        },
+                        {
+                            class: '',
+                            wrapper: function (x) {
+                                return Catalogue.GetHtmlWithCode("period", x())
+                            },
+                            field_name: 'CodeRefPeriod',
+                            editor: 'combobox',
+                            name: 'Связанный период',
+                            target_model: 'period'
+                        },
+                    ],
+                })
+                break;
+            case "AvPeriods":
+                MModelConnector.Init({
+                    source_model: 'period',
+                    target_model: 'routeperiod',
+                    code_source_model: 'CodePeriod',
+                    name_source_model: 'NamePeriod',
+                    code_target_model: 'CodeRoutePeriod',
+                    source_model_field_name: 'CodePeriod',
+                    source_index_field_name: null,
+                    get_query: {},
+                    get_sort: {},
+                    get_fields: '-_id CodePeriod NamePeriod',
+                    model_edit_fields: [
+                        {
+                            class: '',
+                            wrapper: function (x) {
+                                var ret = "<input type='checkbox' onclick='return false;' class='ace ace-checkbox-2'";
+                                if (x()) {
+                                    ret += 'checked';
+                                }
+                                ret += "><span class='lbl'></span></input>";
+                                return ret;
+                            },
+                            field_name: 'NoGrp',
+                            editor: 'check',
+                            name: 'Не в группе',
+                            target_model: ''
+
+                        },
+                        {
+                            class: '',
+                            wrapper: function (x) {
+                                return Catalogue.GetHtmlWithCode("route", x())
                             },
                             field_name: 'CodeRoute',
                             editor: 'combobox',
