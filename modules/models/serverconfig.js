@@ -322,7 +322,6 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
@@ -331,10 +330,14 @@ module.exports = {
 				"type": String,
 				"default": "",
 				"view": "none",
-				
 				"refmodel": "period",
 				"index": true,
 				"extended": true
+			},
+            "Idx": {
+				"type": Number,
+				"default": 1,
+				"view": "none"
 			}
 		}
 	},

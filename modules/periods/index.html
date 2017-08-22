@@ -23,11 +23,10 @@
        <!-- ko template:'save_changes' --><!-- /ko -->
     <!-- /ko -->
     <!-- ko if:Mode()=='PeriodMap' -->
-        <!-- ko template:'save_changes' --><!-- /ko -->
+        <!-- ko template:'model_connect_buttons' --><!-- /ko -->
     <!-- /ko -->
     <!-- ko if:Mode()=='PeriodAutoFill' -->
-        <!-- ko template:'save_changes' --><!-- /ko -->
-
+        <!-- ko template:'model_connect_buttons' --><!-- /ko -->
     <!-- /ko -->
 </div>
 
@@ -38,131 +37,11 @@
 			<!-- ko template:'model_edit' --><!-- /ko -->
 		<!-- /ko -->
         <!-- ko if:Mode()=='PeriodAutoFill' -->
-        <div class='row' >
-            <table class="table table-striped table-bordered table-hover dataTable no-footer small-paddings periodsMapTable">
-                <tbody data-bind='foreach:MPeriods.MainPeriodsAF'>
-                    <tr data-bind='css:{active:MPeriods.IsCurrentEditPeriodAF($data)}'>
-                        <td>
-                            <span class="action-buttons gray-icons">
-                                <a  data-bind="title:Lang.Tr('period','edit'), click:MPeriods.SetEditPeriodAF"><i class="ace-icon fa fa-pencil"></i></a>
-                            </span>
-                        </td>
-                        <td data-bind='text:$data.CodePeriod'></td>
-                        <td data-bind='text:$data.NamePeriod'></td>
-                        <td >
-                            <table class="table openperiods table-striped table-bordered table-hover dataTable no-footer" style='min-width: 600px;'>
-                                <thead data-bind='if:MPeriods.LinkPeriodsAF()[$data.CodePeriod()]().length'>
-                                    <tr>
-                                        <td>Индекс</td><td>Код.Периода</td>
-                                        <!-- ko if:MPeriods.IsCurrentEditPeriodAF($data) -->
-                                        <td></td>
-                                        <!-- /ko -->                                        
-                                    </tr>
-                                </thead>
-                                <tbody >
-                                <!-- ko if:MPeriods.IsCurrentEditPeriodAF($data) -->
-                                    <!-- ko foreach:MPeriods.LinkPeriodsAF()[$data.CodePeriod()] -->
-                                    <tr>
-                                        <td><input type="text"  class='small_input' data-bind='value:$data.Idx'></input></td>
-                                        <td  style='min-width: 200px' >
-                                            <combobox-editor params="field:$data.CodeTargetPeriod,fieldname:'Код.Периода',refmodel:'period',mainmodel:'periodautofill'">
-                                            </combobox-editor>
-                                        </td>
-                                        <td class='middle_check'>
-                                            <a data-bind="click:MPeriods.RemoveLinkPeriodAF.bind($data,$parent.CodePeriod())"><i class="fa fa-icon fa-times"></i></a>
-                                        </td>
-                                    </tr>                                    
-                                    <!-- /ko -->
-                                    <tr>
-                                        <td colspan=5>
-                                            <a class="addLinkModel" data-bind="click:MPeriods.AddLinkPeriodAF.bind(null,$data.CodePeriod())">Добавить период</a>
-                                        </td>
-                                    </tr>                                    
-                                <!-- /ko -->
-                                <!-- ko ifnot:MPeriods.IsCurrentEditPeriodAF($data) -->
-                                    <!-- ko foreach:MPeriods.LinkPeriodsAF()[$data.CodePeriod()] -->
-                                    <tr>
-                                        <td data-bind='text:$data.Idx'></td>
-                                        <td  style='min-width: 200px' data-bind='html:Catalogue.GetHtmlWithCode("period",$data.CodeTargetPeriod())'>
-                                        </td>
-                                    </tr>                                    
-                                    <!-- /ko -->
-                                <!-- /ko -->
-                                </tbody>
-                            </table>                            
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- ko template:'connect_form' --><!-- /ko -->
         <!-- /ko -->
 
         <!-- ko if:Mode()=='PeriodMap' -->
-        <div class='row' >
-            <table class="table table-striped table-bordered table-hover dataTable no-footer small-paddings periodsMapTable">
-                <tbody data-bind='foreach:MPeriods.MainPeriods'>
-                    <tr data-bind='css:{active:MPeriods.IsCurrentEditMapPeriod($data)}'>
-                        <td>
-                            <span class="action-buttons gray-icons">
-                                <a  data-bind="title:Lang.Tr('period','edit'), click:MPeriods.SetEditMapPeriod"><i class="ace-icon fa fa-pencil"></i></a>
-                            </span>
-                        </td>
-                        <td data-bind='text:$data.CodePeriod'></td>
-                        <td data-bind='text:$data.NamePeriod'></td>
-                        <td >
-                            <table class="table openperiods table-striped table-bordered table-hover dataTable no-footer" style='min-width: 600px;'>
-                                <thead data-bind='if:MPeriods.LinkPeriods()[$data.CodePeriod()]().length'>
-                                    <tr>
-                                        <td>Индекс</td><td>Код.Периода</td><td>Смещ.Год</td><td>Опциональный</td>
-                                        <!-- ko if:MPeriods.IsCurrentEditMapPeriod($data) -->
-                                        <td></td>
-                                        <!-- /ko -->                                        
-                                    </tr>
-                                </thead>
-                                <tbody >
-                                <!-- ko if:MPeriods.IsCurrentEditMapPeriod($data) -->
-                                    <!-- ko foreach:MPeriods.LinkPeriods()[$data.CodePeriod()] -->
-                                    <tr>
-                                        <td><input type="text"  class='small_input' data-bind='value:$data.IndexReportPeriod'></input></td>
-                                        <td  style='min-width: 200px' >
-                                            <combobox-editor params="field:$data.CodeReportPeriod,fieldname:'Код.Периода',refmodel:'period',mainmodel:'reportperiods'">
-                                            </combobox-editor>
-                                        </td>
-                                        <td><input type="text" class='small_input' data-bind='value:$data.ReportYear'></input></td>
-                                        <td class='middle_check'><input type="checkbox"  class='ace ace-checkbox-2' data-bind='checked:$data.IsOptional'>
-                                            <span class="lbl"></span>
-                                        </input></td>
-                                        <td class='middle_check'>
-                                            <a data-bind="click:MPeriods.RemoveLinkPeriod.bind($data,$parent.CodePeriod())"><i class="fa fa-icon fa-times"></i></a>
-                                        </td>
-                                    </tr>                                    
-                                    <!-- /ko -->
-                                    <tr>
-                                        <td colspan=5>
-                                            <a class="addLinkModel" data-bind="click:MPeriods.AddLinkPeriod.bind(null,$data.CodePeriod())">Добавить период</a>
-                                        </td>
-                                    </tr>                                    
-                                <!-- /ko -->
-                                <!-- ko ifnot:MPeriods.IsCurrentEditMapPeriod($data) -->
-                                    <!-- ko foreach:MPeriods.LinkPeriods()[$data.CodePeriod()] -->
-                                    <tr>
-                                        <td data-bind='text:$data.IndexReportPeriod'></td>
-                                        <td  style='min-width: 200px' data-bind='html:Catalogue.GetHtmlWithCode("period",$data.CodeReportPeriod())'>
-                                        </td>
-                                        <td data-bind='text:$data.ReportYear'></td>
-                                        <td class='middle_check'><input type="checkbox" readonly="readonly"  class='ace ace-checkbox-2' data-bind='checked:$data.IsOptional'>
-                                            <span class="lbl"></span>
-                                        </input></td>
-                                    </tr>                                    
-                                    <!-- /ko -->
-                                <!-- /ko -->
-                                </tbody>
-                            </table>                            
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- ko template:'connect_form' --><!-- /ko -->
         <!-- /ko -->
         <!-- ko if:Mode()=='PeriodEdit' -->
         <div class='row' data-bind='with:$data.Table'>

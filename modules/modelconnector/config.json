@@ -1,8 +1,0 @@
-{
-  "id": "modelconnector",
-  "title": "Форма для связанных моделей",
-  "icon": "fa-link",
-  "class_name": "ModelConnector",
-  "is_enabled": true,
-  "initial_load": false
-}

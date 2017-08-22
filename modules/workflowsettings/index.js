@@ -26,19 +26,19 @@ var MWorkFlowSettings = (new function () {
                 ModelTableEdit.InitModel("route");
                 break;
             case "CheckPeriods":
-                MModelConnector.Init({
+                ModelConnectorEdit.Init({
                     source_model: 'period',
                     target_model: 'routecheckperiod'
                 })
                 break;
             case "RefPeriods":
-                MModelConnector.Init({
+                ModelConnectorEdit.Init({
                     source_model: 'period',
                     target_model: 'routerefperiod'
                 })
                 break;
             case "AvPeriods":
-                MModelConnector.Init({
+                ModelConnectorEdit.Init({
                     source_model: 'period',
                     target_model: 'routeperiod'
                 })
