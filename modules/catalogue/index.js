@@ -1,3 +1,104 @@
+var ModelTreeEdit = (new function () {
+
+    var self = this;
+
+    self.Tree = ko.observable(null);
+
+    self.model = ko.observable();
+    self.parent_code_field = ko.observable();
+    self.code_field = ko.observable();
+    self.name_field = ko.observable();
+
+    self.LoadTree = function (done) {
+        $.getJSON('/api/modules/catalogue/tree-data', {
+            model: self.model()
+        }, function (data) {
+            var Tree = {};
+            var used = 0;
+            var current_level = [];
+            var tcurrent_level = [];
+            data.forEach(function (el) {
+                if (el[self.parent_code_field()] === "") {
+                    Tree[el[self.code_field()]] = {
+                        text: el[self.name_field()],
+                        code: el[self.code_field()],
+                        model: self.model(),
+                        type: 'item',
+                        'icon-class': '',
+                        additionalParameters: {
+                            children: {},
+                        }
+                    }
+                    used += 1;
+                    current_level.push(Tree[el[self.code_field()]]);
+                }
+            })
+            while (used < data.length) {
+                var change = false;
+                current_level.forEach(function (pel) {
+                    data.forEach(function (el) {
+                        if (el[self.parent_code_field()] === pel.code) {
+                            pel.type = 'folder';
+                            var new_el = {
+                                text: el[self.name_field()],
+                                code: el[self.code_field()],
+                                model: self.model(),
+                                type: 'item',
+                                'icon-class': '',
+                                additionalParameters: {
+                                    children: {},
+                                }
+                            }
+                            pel.additionalParameters.children[el[self.code_field()]] = new_el;
+                            tcurrent_level.push(new_el);
+                            used += 1;
+                            change = true;
+                        }
+                    })
+                })
+                if(!change){
+                    break;
+                }
+                current_level = tcurrent_level;
+                tcurrent_level = [];
+            }
+            self.Tree(Tree);
+            done && done();
+        })
+    }
+
+    self.DataSource = function (options, callback) {
+        var Answ = {};
+        if (!("text" in options) && !("type" in options)) {
+            return callback({
+                data: self.Tree()
+            });
+        } else if ("type" in options && options.type == "folder") {
+            var Answ = options.additionalParameters.children;
+        }
+        callback({
+            data: Answ
+        });
+    };
+
+    self.Init = function (data, done) {
+        if(data){
+            self.model(data.model);
+            self.parent_code_field(data.parent_code_field);
+            cn = ModelClientConfig.CodeAndName(self.model());
+            self.code_field(cn[0]);
+            self.name_field(cn[1]);
+            self.LoadTree(function(){
+                ModelTableEdit.InitModel(self.model());
+                ModelTableEdit.IsOverrideList(true);
+            });
+        }
+        done && done();
+    }
+
+    return self;
+})
+
 var ModelConnectorEdit = (new function () {
 
     var self = this;
@@ -132,6 +233,7 @@ var ModelConnectorEdit = (new function () {
                     target_model: self.target_model(),
                     code_source_model: self.source_model_field_name(),
                     use_sync_links: self.use_sync_links(),
+                    model: self.target_model(),
                 }
             },
             success: function (data) {

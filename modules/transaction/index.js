@@ -1,65 +1,67 @@
-var MTransaction = (new function() {
-   
+var MTransaction = (new function () {
+
     var self = new Module("transaction");
 
- 
-    self.BeforeHide = function(){
+
+    self.BeforeHide = function () {
         self.UnSubscribe();
     }
 
-    self.BeforeShow = function(){
+    self.BeforeShow = function () {
         self.Subscribe();
         self.Show();
-    }        
+    }
 
-    self.ModelIsCreated = function(){}
-    self.ModelIsLoaded = function(){}
-    self.ModelIsSaved = function(){}
+    self.ModelIsCreated = function () {}
+    self.ModelIsLoaded = function () {}
+    self.ModelIsSaved = function () {}
 
-    self.IsAvailable = function(){
+    self.IsAvailable = function () {
         return PermChecker.CheckPrivelegeAny(["IsTransactionTunner"]);
     }
 
-    self.Init = function(done){
+    self.Init = function (done) {
         return done && done();
     }
 
-    self.SaveChanges = function(){
-    }
+    self.SaveChanges = function () {}
 
-    self.Show = function(done){
+    self.Show = function (done) {
         if (!self.Mode()) return self.InitSetMode("BillRelations");
-        switch (self.Mode()){
+        switch (self.Mode()) {
             case "BillRelations":
                 ModelTableEdit.InitModel("billrelation");
-            break;
+                break;
             case "DocBills":
                 ModelTableEdit.InitModel("docbill");
-            break;            
+                break;
             case "DocRelations":
                 ModelTableEdit.InitModel("docrelation");
-            break;            
+                break;
             case "ColRelations":
                 ModelTableEdit.InitModel("colrelation");
-            break;            
+                break;
             case "Bills":
                 ModelTableEdit.InitModel("bill");
-            break;            
+                break;
             case "Prods":
-                ModelTableEdit.InitModel("prod");
-            break;           
+                ModelTreeEdit.Init({
+                    model: "prod",
+                    parent_code_field: "CodeParentProd",
+                });
+                break;
             case "Dogovors":
                 ModelTableEdit.InitModel("dogovor");
-            break;            
+                break;
             case "DogovorTypes":
                 ModelTableEdit.InitModel("dogovortype");
-            break;
+                break;
         }
         return done && done()
     }
-        
-  
-    
+
+
+
     return self;
 })
 

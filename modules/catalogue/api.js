@@ -435,5 +435,13 @@ router.put('/connector', function (req, res, next) {
     })
 })
 
+router.get('/tree-data', function (req, res, next) {
+    mongoose.model(req.query.model).find({}).isactive().exec(function (err, Data) {
+        if (!err) {
+            return res.json(Data);
+        }
+    })
+})
+
 
 module.exports = router;
