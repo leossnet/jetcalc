@@ -2043,8 +2043,7 @@ module.exports = {
 			"CodeDoc": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "doc",
 				"index": true,
 				"extended": true
@@ -2052,11 +2051,15 @@ module.exports = {
 			"CodeBill": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "bill",
 				"index": true,
 				"extended": true
+			},
+			"IndexDocBill": {
+				"type": Number,
+				"default": 0,
+				"index": true
 			}
 		}
 	},
@@ -2836,9 +2839,16 @@ module.exports = {
 			"CodeRow": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "row",
+				"index": true,
+				"extended": true
+			},
+			"CodeBiztranObj": {
+				"type": String,
+				"default": "",
+				"view": "none",				
+				"refmodel": "obj",
 				"index": true,
 				"extended": true
 			}
@@ -4307,12 +4317,11 @@ module.exports = {
 			"CodeProd": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "prod",
 				"index": true,
 				"extended": true
-			},
+			},			
 			"CodeAltOrg": {
 				"type": String,
 				"default": "",
@@ -4334,8 +4343,7 @@ module.exports = {
 			"CodeDogovor": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "dogovor",
 				"index": true,
 				"extended": true
@@ -4343,8 +4351,7 @@ module.exports = {
 			"CodeDogovorArt": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "dogovorart",
 				"index": true,
 				"extended": true
@@ -4352,8 +4359,7 @@ module.exports = {
 			"CodeGrpEditFilter": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "grp",
 				"index": true,
 				"extended": true
@@ -4361,8 +4367,7 @@ module.exports = {
 			"CodeRowLink": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "row",
 				"index": true,
 				"extended": true
@@ -4389,8 +4394,7 @@ module.exports = {
 			"CodeRoute": {
 				"type": String,
 				"default": "",
-				"view": "none",
-				
+				"view": "none",				
 				"refmodel": "route",
 				"index": true,
 				"extended": true

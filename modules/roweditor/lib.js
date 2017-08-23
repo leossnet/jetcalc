@@ -79,10 +79,11 @@ var Struct =  (new function(){
 	self.UpdateRoot = function(OldRowsH,NewRows,CodeUser,done){
 		var Row = mongoose.model("row");
 		Row.find({CodeRow:{$in:_.map(OldRowsH,"CodeRow")}}).isactive().exec(function(err,OldRows){
-
 			var ExistedIndexed = {}; OldRows.forEach(function(Branch){ ExistedIndexed[Branch.CodeRow] = Branch;});
 			var Root = _.first(OldRowsH).CodeRow, RootNode = ExistedIndexed[Root];
+			RootNode.CodeParentRow = "";
 			var ClientIndexed = {}; NewRows.forEach(function(Branch){ ClientIndexed[Branch.CodeRow] = Branch;});
+			ClientIndexed[Root].CodeParentRow = "";
 			var ToRemoveCodes = _.difference(_.map(OldRows,"CodeRow"),_.map(NewRows,"CodeRow").concat([Root])), 
 			ToRemove = _.map(ToRemoveCodes,function(C){ // Удаляем ненужные
 				return ExistedIndexed[C];
@@ -105,6 +106,10 @@ var Struct =  (new function(){
 				ByParents[(R.level+1)] = R.CodeRow; // Обновляем парентов и порядок
 				if (R.isModified()) ToUpdate.push(R); 
 			}	
+			ToUpdate.forEach(function(U,I){
+				if (U.CodeRow == Root) ToUpdate[I].CodeParentRow = "";
+			})
+			if (_.isEmpty(ToRemove) && _.isEmpty(ToUpdate)) return done();
 			self.CheckInFormula(_.map(ToRemove,"CodeRow"),function(err,Undeleted){
 				if (err) return done(err);
 				if (!_.isEmpty(Undeleted)){
