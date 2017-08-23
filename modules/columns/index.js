@@ -1,42 +1,49 @@
-var MColumns = (new function() {
+var MColumns = (new function () {
 
     var self = new Module("columns");
 
-    self.IsAvailable = function(){
-        return PermChecker.CheckPrivelegeAny(["IsColumnEditor","IsColsetEditor","IsHeaderEditor"]);
+    self.IsAvailable = function () {
+        return PermChecker.CheckPrivelegeAny(["IsColumnEditor", "IsColsetEditor", "IsHeaderEditor"]);
     }
 
     self.ColsetCols = ko.observableArray();
 
-    self.LoadColset = function(){
-        self.ColsetCols([]); 
+    self.LoadColset = function () {
+        self.ColsetCols([]);
         var CodeColset = ModelTableEdit.LoadedModel().CodeColset();
-        self.rGet("colsetcol",{CodeColset:CodeColset},function(data){
-            self.ColsetCols(_.map(data,function(d){
-                return MModels.Create("colsetcol",d);
+        self.rGet("colsetcol", {
+            CodeColset: CodeColset
+        }, function (data) {
+            self.ColsetCols(_.map(data, function (d) {
+                return MModels.Create("colsetcol", d);
             }));
         })
     }
 
-    self.RemoveColset = function(data){
+    self.RemoveColset = function (data) {
         self.ColsetCols.remove(data);
     }
 
-    self.AddColsetCol = function(){
+    self.AddColsetCol = function () {
         var CodeColset = ModelTableEdit.LoadedModel().CodeColset();
-        self.ColsetCols.push(MModels.Create("colsetcol",{CodeColset:CodeColset,IsEdit:true}));
+        self.ColsetCols.push(MModels.Create("colsetcol", {
+            CodeColset: CodeColset,
+            IsEdit: true
+        }));
     }
 
-    self.SaveColsetCols = function(){
+    self.SaveColsetCols = function () {
         var Code = ModelTableEdit.LoadedModel().CodeColset();
         var ColsetCols = [];
         var Data = {
-            CodeColset:Code,
-            Cols:_.map(self.ColsetCols(),function(Model){
-                return _.merge(_.pick(Model.toJS(),Model.EditFields),{CodeColset:Code});
-            })   
+            CodeColset: Code,
+            Cols: _.map(self.ColsetCols(), function (Model) {
+                return _.merge(_.pick(Model.toJS(), Model.EditFields), {
+                    CodeColset: Code
+                });
+            })
         };
-        self.rPut("colsetcol",Data,function(){
+        self.rPut("colsetcol", Data, function () {
             self.LoadColset();
         })
     }
@@ -44,81 +51,72 @@ var MColumns = (new function() {
 
     self.Tree = ko.observable(null);
 
-    self.LoadHeadersTree = function(done){
-        self.rGet("headerstree",{},function(data){
+    self.LoadHeadersTree = function (done) {
+        self.rGet("headerstree", {}, function (data) {
             self.Tree(data);
             return done && done();
         })
     }
 
-    self.HeadersDataSource = function(options, callback){
-        var Answ  = {};
-        if(!("text" in options) && !("type" in options)){
-            return callback({ data: self.Tree() });
-        } else if("type" in options && options.type == "folder") {
-            var Answ = options.additionalParameters.children;
-        }
-        callback({ data: Answ });
-    };
- 
-
-    self.BeforeShow = function(){
+    self.BeforeShow = function () {
         self.Subscribe();
         self.Show();
     }
 
-    self.BeforeHide = function(){
+    self.BeforeHide = function () {
         self.UnSubscribe();
     }
 
-    self.ModelIsLoaded = function(){
-        switch (self.Mode()){
+    self.ModelIsLoaded = function () {
+        switch (self.Mode()) {
             case "ColSet":
                 self.ColsetCols([]);
                 self.LoadColset();
-            break;
+                break;
         }
     }
 
-    self.ModelIsCreated = function(){
-        switch (self.Mode()){
+    self.ModelIsCreated = function () {
+        switch (self.Mode()) {
             case "ColSet":
                 self.ColsetCols([]);
-            break;
+                break;
         }
     }
 
-    self.ModelIsSaved = function(){
-        switch (self.Mode()){
+    self.ModelIsSaved = function () {
+        switch (self.Mode()) {
             case 'ColSet':
                 self.SaveColsetCols();
-            break;             
+                break;
             case 'Header':
                 self.LoadHeadersTree();
-            break;           
-        }        
+                break;
+        }
     }
 
-    self.Show = function(done){
-        if (!self.Mode())  return self.InitSetMode ("Cols");
-        switch (self.Mode()){
+    self.Show = function (done) {
+        if (!self.Mode()) return self.InitSetMode("Cols");
+        switch (self.Mode()) {
             case "Cols":
                 ModelTableEdit.InitModel("col");
-            break;            
+                break;
             case "Header":
-                self.LoadHeadersTree(function(){
-                    ModelTableEdit.InitModel("header");
-                    ModelTableEdit.IsOverrideList(true);
+                self.LoadHeadersTree(function () {
+                    ModelTreeEdit.Init({
+                        model: "header",
+                        Tree: self.Tree()
+                    });
                 })
-            break;            
+                break;
             case "ColSet":
                 ModelTableEdit.InitModel("colset");
-                ModelTableEdit.IsExtendEditor(true); 
-            break;            
+                ModelTableEdit.IsExtendEditor(true);
+                break;
         }
         return done && done()
-    }  
-    
+    }
+
     return self;
 })
 

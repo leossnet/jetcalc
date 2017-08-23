@@ -178,7 +178,14 @@
         <!-- /ko -->
         <!-- ko if: ModelTableEdit.IsOverrideList() -->
         <div class='col-xs-6  scrollable_col' style="margin-top:10px;">
+            <!-- ko if: ModelTableEdit.custom_overriding() -->
             <!-- ko template: 'override_model_edit_list_'+$data.ModelName() -->
+            <!-- /ko -->
+            <!-- /ko -->
+            <!-- ko ifnot: ModelTableEdit.custom_overriding() -->
+            <!-- ko with:ModelTreeEdit.Tree -->
+            <ul class='noselect' data-bind='treeSelector:{dataSource:ModelTreeEdit.DataSource,selected:ModelTableEdit.Choosed}'></ul>
+            <!-- /ko -->
             <!-- /ko -->
         </div>
         <!-- /ko -->

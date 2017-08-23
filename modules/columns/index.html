@@ -18,9 +18,3 @@
 		<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-sitemap',title:'Заголовки',mode:'Header'}} --><!-- /ko -->
 	</ul>
 </div>
-
-<script id="override_model_edit_list_header" type="text/html">
-	<!-- ko with:MColumns.Tree -->
- 		<ul class='noselect' data-bind='treeSelector:{dataSource:MColumns.HeadersDataSource,selected:ModelTableEdit.Choosed}'></ul>
- 	<!-- /ko -->
-</script>

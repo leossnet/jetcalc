@@ -1,38 +1,38 @@
-var MDocument = (new function() {
-    
-    var self = new Module("document"); 
+var MDocument = (new function () {
+
+    var self = new Module("document");
 
 
-    self.IsAvailable = function(){
+    self.IsAvailable = function () {
         return PermChecker.CheckPrivelege("IsDocumentCreator");
     }
 
 
-    self.BeforeHide = function(){
+    self.BeforeHide = function () {
         self.UnSubscribe()
     }
 
-    self.BeforeShow = function(){
+    self.BeforeShow = function () {
         self.Subscribe();
         self.Show();
-    }        
-
-    self.ModelIsLoaded = function(){
-        
     }
 
-    self.ModelIsSaved = function(){
-        if (self.Mode()=="Folders"){
+    self.ModelIsLoaded = function () {
+
+    }
+
+    self.ModelIsSaved = function () {
+        if (self.Mode() == "Folders") {
             self.LoadFolders();
         }
     }
 
-    self.ModelIsCreated = function(){
-        
+    self.ModelIsCreated = function () {
+
     }
 
-    self.ModelIsDeleted = function(){
-        if (self.Mode()=="Folders"){
+    self.ModelIsDeleted = function () {
+        if (self.Mode() == "Folders") {
             self.LoadFolders();
         }
     }
@@ -40,28 +40,36 @@ var MDocument = (new function() {
 
     self.FolderStructure = ko.observable(null);
 
-    self.FoldersDataSource = function(options, callback){
-        var Answ  = {};
-        if(!("text" in options) && !("type" in options)){
-            console.log("Answ:",self.FolderStructure);
-            return callback({ data: self.FolderStructure() });
-        } else if("type" in options && options.type == "folder") {
-            var Answ = options.additionalParameters.children;
-            console.log("Answ:",Answ);
-        }
-        callback({ data: Answ });
-    };
-
-    self.LoadFolders = function(done){
-        self.rGet("folders",{},function(List){
+    self.LoadFolders = function (done) {
+        self.rGet("folders", {}, function (List) {
             var Tree = {};
-            var FirstLevel = _.filter(List,{CodeParentDocFolder:""});
-            FirstLevel.forEach(function(FL){
-                Tree[FL.CodeDocFolder] = {text:"<i class='ace-icon fa "+FL.Icon+" orange'></i> "+FL.NameDocFolder, model:"docfolder",code:FL.CodeDocFolder,type: 'folder','icon-class':'red',additionalParameters:{children:{}}};
+            var FirstLevel = _.filter(List, {
+                CodeParentDocFolder: ""
+            });
+            FirstLevel.forEach(function (FL) {
+                Tree[FL.CodeDocFolder] = {
+                    text: "<i class='ace-icon fa " + FL.Icon + " orange'></i> " + FL.NameDocFolder,
+                    model: "docfolder",
+                    code: FL.CodeDocFolder,
+                    type: 'folder',
+                    'icon-class': 'red',
+                    additionalParameters: {
+                        children: {}
+                    }
+                };
             })
-            List.forEach(function(F){
-                if (F.CodeParentDocFolder!=""){
-                    Tree[F.CodeParentDocFolder]['additionalParameters'].children[F.CodeDocFolder] =  {text:"<i class='ace-icon fa "+F.Icon+" green'></i> "+F.NameDocFolder,type: 'folder','icon-class':'green',model:"docfolder",code:F.CodeDocFolder,additionalParameters:{children:{}}};
+            List.forEach(function (F) {
+                if (F.CodeParentDocFolder != "") {
+                    Tree[F.CodeParentDocFolder]['additionalParameters'].children[F.CodeDocFolder] = {
+                        text: "<i class='ace-icon fa " + F.Icon + " green'></i> " + F.NameDocFolder,
+                        type: 'folder',
+                        'icon-class': 'green',
+                        model: "docfolder",
+                        code: F.CodeDocFolder,
+                        additionalParameters: {
+                            children: {}
+                        }
+                    };
                 }
             })
             self.FolderStructure(Tree);
@@ -69,40 +77,53 @@ var MDocument = (new function() {
         })
     }
 
-    self.SaveChanges = function(){
+    self.SaveChanges = function () {
         self.IsLoading(true);
-        self.IsLoading(false); 
+        self.IsLoading(false);
     }
 
-    self.Show = function(done){
+    self.Show = function (done) {
         if (!self.Mode()) return self.InitSetMode("Docs");
-        switch (self.Mode()){
+        switch (self.Mode()) {
             case "Roles":
-                ModelTableEdit.InitModel("role",{IsExtended:1,CodeRole:1});
-            break;       
+                ModelTableEdit.InitModel("role", {
+                    IsExtended: 1,
+                    CodeRole: 1
+                });
+                break;
             case "Root":
-                ModelTableEdit.InitModel("row",{CodeRow:1},{CodeParentRow:{$in:[null,""]}});
-            break;            
+                ModelTableEdit.InitModel("row", {
+                    CodeRow: 1
+                }, {
+                    CodeParentRow: {
+                        $in: [null, ""]
+                    }
+                });
+                break;
             case "Folders":
-                self.LoadFolders(function(){
-                    ModelTableEdit.InitModel("docfolder");    
-                    ModelTableEdit.IsOverrideList(true);
-                })                
-            break;            
+                self.LoadFolders(function () {
+                    ModelTreeEdit.Init({
+                        model: "docfolder",
+                        Tree: self.FolderStructure(),
+                    });
+                })
+                break;
             case "Labels":
                 ModelTableEdit.InitModel("label");
-            break;             
+                break;
             case "DocTypes":
                 ModelTableEdit.InitModel("doctype");
-            break;   
+                break;
             case "Docs":
-                ModelTableEdit.InitModel("doc",{IndexDoc:1});
-            break;            
+                ModelTableEdit.InitModel("doc", {
+                    IndexDoc: 1
+                });
+                break;
         }
         return done && done()
-    }  
+    }
 
-    
+
     return self;
 })
 

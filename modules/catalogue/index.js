@@ -9,7 +9,14 @@ var ModelTreeEdit = (new function () {
     self.code_field = ko.observable();
     self.name_field = ko.observable();
 
-    self.LoadTree = function (done) {
+    self.LoadTree = function (tree, wrapper, done) {
+        if (tree) {
+            self.Tree(tree);
+            return done && done();
+        }
+        wrapper = wrapper || function (el) {
+            return el[self.name_field()]
+        };
         $.getJSON('/api/modules/catalogue/tree-data', {
             model: self.model()
         }, function (data) {
@@ -20,7 +27,7 @@ var ModelTreeEdit = (new function () {
             data.forEach(function (el) {
                 if (el[self.parent_code_field()] === "") {
                     Tree[el[self.code_field()]] = {
-                        text: el[self.name_field()],
+                        text: wrapper(el), //el[self.name_field()],
                         code: el[self.code_field()],
                         model: self.model(),
                         type: 'item',
@@ -56,14 +63,14 @@ var ModelTreeEdit = (new function () {
                         }
                     })
                 })
-                if(!change){
+                if (!change) {
                     break;
                 }
                 current_level = tcurrent_level;
                 tcurrent_level = [];
             }
             self.Tree(Tree);
-            done && done();
+            return done && done();
         })
     }
 
@@ -82,15 +89,16 @@ var ModelTreeEdit = (new function () {
     };
 
     self.Init = function (data, done) {
-        if(data){
+        if (data) {
             self.model(data.model);
             self.parent_code_field(data.parent_code_field);
             cn = ModelClientConfig.CodeAndName(self.model());
             self.code_field(cn[0]);
             self.name_field(cn[1]);
-            self.LoadTree(function(){
+            self.LoadTree(data.Tree, data.wrapper, function () {
                 ModelTableEdit.InitModel(self.model());
                 ModelTableEdit.IsOverrideList(true);
+                ModelTableEdit.custom_overriding(false);
             });
         }
         done && done();
@@ -838,6 +846,7 @@ var ModelTableEdit = (new function () {
 
     self.IsExtendEditor = ko.observable(false);
     self.IsOverrideList = ko.observable(false);
+    self.custom_overriding = ko.observable(true);
 
 
     self.TableFields = ko.observableArray();
@@ -1107,6 +1116,7 @@ var ModelTableEdit = (new function () {
         self.NoAccess(true);
         self.IsExtendEditor(false);
         self.IsOverrideList(false);
+        self.custom_overriding(true);
         self.Filter(null);
     }
 
