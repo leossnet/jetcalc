@@ -70,7 +70,10 @@ var MObj = (new function() {
                 ModelTableEdit.InitModel("objclass");
             break;            
             case "Objs":
-                ModelTableEdit.InitModel("obj",{IndexObj:1});
+                ModelTreeEdit.Init({
+                    model: "obj",
+                    parent_code_field: "CodeParentObj",
+                })
              break;
             case "Grps":
                 ModelTableEdit.InitModel("grp");

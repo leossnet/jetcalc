@@ -62,7 +62,7 @@ var MDocument = (new function () {
                 if (F.CodeParentDocFolder != "") {
                     Tree[F.CodeParentDocFolder]['additionalParameters'].children[F.CodeDocFolder] = {
                         text: "<i class='ace-icon fa " + F.Icon + " green'></i> " + F.NameDocFolder,
-                        type: 'folder',
+                        type: 'item',
                         'icon-class': 'green',
                         model: "docfolder",
                         code: F.CodeDocFolder,
