@@ -137,13 +137,13 @@
 
 <script id="read_field" type="text/html">
     <!-- ko if:$parent.Types[$data].Type=='Boolean' -->
-        <label>
+    <label>
             <input name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" readonly="true" data-bind='checked:$parent[$data]' />
             <span class="lbl"></span>
         </label>
     <!-- /ko -->
     <!-- ko ifnot:$parent.Types[$data].Type=='Boolean' -->
-        <span data-bind='text:$parent[$data]'> </span>
+    <span data-bind='text:$parent[$data]'> </span>
     <!-- /ko -->
 </script>
 
@@ -178,15 +178,22 @@
         <!-- /ko -->
         <!-- ko if: ModelTableEdit.IsOverrideList() -->
         <div class='col-xs-6  scrollable_col' style="margin-top:10px;">
+            <!-- ko if: ModelTableEdit.custom_overriding() -->
             <!-- ko template: 'override_model_edit_list_'+$data.ModelName() -->
+            <!-- /ko -->
+            <!-- /ko -->
+            <!-- ko ifnot: ModelTableEdit.custom_overriding() -->
+            <!-- ko with:ModelTreeEdit.Tree -->
+            <ul class='noselect' data-bind='treeSelector:{dataSource:ModelTreeEdit.DataSource,selected:ModelTableEdit.Choosed}'></ul>
+            <!-- /ko -->
             <!-- /ko -->
         </div>
         <!-- /ko -->
 
         <div class='col-xs-6 scrollable_col' style="margin-top:10px;" data-bind='with:LoadedModel'>
             <!-- ko ifnot:$data._id -->
-                <h3 class="row header smaller lighter blue no-margin-top">Добавление</h3>
-                <!-- ko template:{
+            <h3 class="row header smaller lighter blue no-margin-top">Добавление</h3>
+            <!-- ko template:{
                     name:'small_form_with_header',
                     data:{
                         Name:'',
@@ -194,11 +201,11 @@
                         Model:ModelTableEdit.LoadedModel
                     }
                 } -->
-                <!-- /ko -->
+            <!-- /ko -->
             <!-- /ko -->
             <!-- ko if:$data._id -->
-                <h3 class="row header smaller lighter blue no-margin-top">Редактирование</h3>
-                <!-- ko template:{
+            <h3 class="row header smaller lighter blue no-margin-top">Редактирование</h3>
+            <!-- ko template:{
                     name:'small_form_with_header',
                     data:{
                         Name:'',
@@ -206,11 +213,11 @@
                         Model:ModelTableEdit.LoadedModel
                     }
                 } -->
-                <!-- /ko -->
+            <!-- /ko -->
             <!-- /ko -->
             <!-- ko if:ModelTableEdit.Links().length -->
-                <!-- ko foreach:ModelTableEdit.Links() -->
-                    <!-- ko template:{
+            <!-- ko foreach:ModelTableEdit.Links() -->
+            <!-- ko template:{
                         name:'edit_links',
                         data:{
                             Name:Tr("Link_"+$data),
@@ -219,14 +226,14 @@
                             Model:ModelTableEdit.LoadedModel
                         }
                     } -->
-                    <!-- /ko -->
-                <!-- /ko -->
+            <!-- /ko -->
+            <!-- /ko -->
             <!-- /ko -->
             <!-- ko if:ModelTableEdit.IsExtendEditor() -->
-                <!-- ko template:{
+            <!-- ko template:{
                     name:'extend_model_edit_'+ModelTableEdit.ModelName()
                 } -->
-                <!-- /ko -->
+            <!-- /ko -->
             <!-- /ko -->
         </div>
     </div>
@@ -326,8 +333,8 @@
             <h3 class='row header smaller lighter blue' style="padding-left: 5px;">Настройка отображения</h3>
             <div class="modal-body">
                 <div class='row'>
-                    <div >
-                        <div >
+                    <div>
+                        <div>
                             <ul class="nav nav-tabs">
                                 <li class="active"><a data-toggle="tab" href="#ShowFields" aria-expanded="true"><i class="pink ace-icon fa fa-table bigger-110"></i>Поля таблицы</a></li>
                                 <li class=""><a data-toggle="tab" href="#EditFields" aria-expanded="false"><i class="blue ace-icon fa fa-tasks bigger-110"></i>Форма редактирования</a></li>
@@ -335,40 +342,260 @@
                             </ul>
                             <div class="tab-content  padding-12" style='max-height: 500px;overflow-y: scroll;'>
                                 <div id="ShowFields" class="tab-pane active">
-                                        <!-- ko template:{
+                                    <!-- ko template:{
                                             name:'model_settings_form',
                                             data:{
                                                 AllValues:ModelTableEdit.AllEditFields,
                                                 Value:ModelTableEdit.TableFieldsCheck
                                             }
                                          } -->
-                                        <!-- /ko -->
+                                    <!-- /ko -->
                                 </div>
                                 <div id="EditFields" class="tab-pane">
-                                        <!-- ko template:{
+                                    <!-- ko template:{
                                             name:'model_settings_form',
                                             data:{
                                                 AllValues:ModelTableEdit.AllEditFields,
                                                 Value:ModelTableEdit.EditFieldsCheck
                                             }
                                          } -->
-                                        <!-- /ko -->
+                                    <!-- /ko -->
                                 </div>
                                 <div id="Links" class="tab-pane">
-                                        <!-- ko template:{
+                                    <!-- ko template:{
                                             name:'model_settings_form',
                                             data:{
                                                 AllValues:ModelTableEdit.AllLinks,
                                                 Value:ModelTableEdit.LinksCheck
                                             }
                                          } -->
-                                        <!-- /ko -->
+                                    <!-- /ko -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <button class="btn btn-white btn-sm btn-info" data-bind="click:ModelTableEdit.SaveSettings" style='margin-top:10px;'>
+					<i class="ace-icon fa fa-floppy-o"></i> Сохранить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script id="model_connect_buttons" type="text/html">
+    <div class="btn-group">
+        <!-- ko template:'model_connect_save' -->
+        <!-- /ko -->
+    </div>
+    <div class="btn-group">
+        <!-- ko template:'model_connect_settings' -->
+        <!-- /ko -->
+    </div>
+</script>
+
+<script id="model_connect_save" type="text/html">
+    <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Сохранить',click:ModelConnectorEdit.SaveChanges" id='modelsave'>
+        <i class="ace-icon fa fa-save"></i>
+    </a>
+</script>
+
+<script id="model_connect_settings" type="text/html">
+    <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Настройки',click:ModelConnectorEdit.Settings" id='modelsettings'>
+        <i class="ace-icon fa fa-cog"></i>
+    </a>
+</script>
+
+<script id="connect_editor_text" type="text/html">
+    <input type="text" class='small_input' data-bind='value:$data.Value'></input>
+</script>
+
+<script id="connect_editor_number" type="text/html">
+    <input type="number" class='small_input' data-bind='value:$data.Value'></input>
+</script>
+
+<script id="connect_editor_combobox" type="text/html">
+    <combobox-editor params="field:$data.Value,fieldname:$data.Name,refmodel:$data.TargetModel,mainmodel:$data.SourceModel">
+    </combobox-editor>
+</script>
+
+<script id="connect_editor_check" type="text/html">
+    <input type="checkbox" class='ace ace-checkbox-2' data-bind='checked:$data.Value'>
+    <span class="lbl"></span>
+    </input>
+</script>
+
+<script id="connect_editor" type="text/html">
+    <!-- ko if:$data.Editor == 'text' -->
+    <!-- ko template:{
+        name:'connect_editor_text',
+		data:{
+            Value: $data.Value,
+        }
+    } -->
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if:$data.Editor == 'number' -->
+    <!-- ko template:{
+        name:'connect_editor_number',
+		data:{
+            Value: $data.Value,
+        }
+    } -->
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if:$data.Editor == 'check' -->
+    <!-- ko template:{
+        name:'connect_editor_check',
+		data:{
+            Value: $data.Value,
+        }
+    } -->
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if:$data.Editor == 'combobox' -->
+    <!-- ko template:{
+        name:'connect_editor_combobox',
+		data:{
+            Value: $data.Value,
+            Name: $data.Name,
+            TargetModel: $data.TargetModel,
+            SourceModel: $data.SourceModel,
+        }
+    } -->
+    <!-- /ko -->
+    <!-- /ko -->
+</script>
+
+<script id="connect_form" type="text/html">
+    <div class='row'>
+        <table class="table table-striped table-bordered table-hover dataTable no-footer small-paddings periodsMapTable">
+            <tbody data-bind='foreach:ModelConnectorEdit.MainModels'>
+                <tr data-bind='css:{active:ModelConnectorEdit.IsCurrentEditModel($data)}'>
+                    <td>
+                        <span class="action-buttons gray-icons">
+                                <a  data-bind="title:Lang.Tr('edit'), click:ModelConnectorEdit.SetEditModel">
+                                    <i class="ace-icon fa fa-pencil"></i>
+                                </a>
+                        </span>
+                    </td>
+                    <td data-bind='text:$data[ModelConnectorEdit.code_source_model()]'></td>
+                    <td data-bind='text:$data[ModelConnectorEdit.name_source_model()]'></td>
+                    <td>
+                        <table class="table openperiods table-striped table-bordered table-hover dataTable no-footer" style='min-width: 600px;'>
+                            <thead data-bind='if:ModelConnectorEdit.LinkModels()[$data[ModelConnectorEdit.code_source_model()]()]().length'>
+                                <tr>
+                                    <!-- ko foreach:ModelConnectorEdit.model_edit_fields -->
+                                    <td data-bind="text:$data.name"></td>
+                                    <!-- /ko -->
+                                    <!-- ko if:ModelConnectorEdit.IsCurrentEditModel($data) -->
+                                    <td></td>
+                                    <!-- /ko -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- ko if:ModelConnectorEdit.IsCurrentEditModel($data) -->
+                                <!-- ko foreach:ModelConnectorEdit.LinkModels()[$data[ModelConnectorEdit.code_source_model()]()] -->
+                                <tr>
+                                    <!-- ko foreach:ModelConnectorEdit.model_edit_fields -->
+                                    <td data-bind="attr:{class:$data.class}">
+                                        <!-- ko template:{
+                                            name:'connect_editor',
+				                            data:{
+                                                Editor: $data.editor,
+                                                Value: $parent[$data.field_name],
+                                                Name: $data.name,
+                                                SourceModel: ModelConnectorEdit.source_model(),
+                                                TargetModel: $data.target_model
+                                            }
+			                             } -->
+                                        <!-- /ko -->
+                                    </td>
+                                    <!-- /ko -->
+                                    <td class='middle_check'>
+                                        <a data-bind="click:ModelConnectorEdit.RemoveLinkModel.bind($data,$parent[ModelConnectorEdit.code_source_model()]())">
+                                            <i class="fa fa-icon fa-times"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <!-- /ko -->
+                                <tr>
+                                    <td colspan=5>
+                                        <a class="addLinkModel" data-bind="click:function(){ModelConnectorEdit.AddLinkModel($data[ModelConnectorEdit.code_source_model()]())}">Добавить</a>
+                                    </td>
+                                </tr>
+                                <!-- /ko -->
+                                <!-- ko ifnot:ModelConnectorEdit.IsCurrentEditModel($data) -->
+                                <!-- ko foreach:ModelConnectorEdit.LinkModels()[$data[ModelConnectorEdit.code_source_model()]()] -->
+                                <tr>
+                                    <!-- ko foreach:ModelConnectorEdit.model_edit_fields -->
+                                    <td data-bind="attr:{class:$data.class}, html:$data.wrapper($parent[$data.field_name])"></td>
+                                    <!-- /ko -->
+                                </tr>
+                                <!-- /ko -->
+                                <!-- /ko -->
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-white btn-sm btn-info" data-bind="click:ModelConnectorEdit.AddMainModel" style="margin-top:-85px; margin-left:10px;">
+	       <i class="ace-icon fa fa-plus"></i> Добавить
+        </button>
+    </div>
+</script>
+
+
+<div id="add_main_model_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" data-bind="if:ModelConnectorEdit.empty_target_model_loaded">
+                <!-- ko template:{
+					name:'small_form_with_header',
+					data:{
+                        Name:'',
+                        Fields: [ModelConnectorEdit.code_source_model()],
+                        Model: ModelConnectorEdit.empty_target_model
+                    }
+			     } -->
+                <!-- /ko -->
+                <button class="btn btn-white btn-sm btn-info" data-bind="click:ModelConnectorEdit._AddMainModel" style="margin-top:10px; margin-left:10px;">
+	                <i class="ace-icon fa fa-plus"></i> Добавить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="connector_settings_modal" class="modal fade">
+    <div class="modal-dialog" data-bind="with:ModelTableEdit" style="max-width: 800px;max-height: 600px;">
+        <div class="modal-content">
+            <h3 class='row header smaller lighter blue' style="padding-left: 5px;">Настройка отображения</h3>
+            <div class="modal-body">
+                <div class='row'>
+                    <div>
+                        <div>
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#ShowFields" aria-expanded="true"><i class="pink ace-icon fa fa-table bigger-110"></i>Поля таблицы</a></li>
+                            </ul>
+                            <div class="tab-content  padding-12" style='max-height: 500px;overflow-y: scroll;'>
+                                <div id="ShowFields" class="tab-pane active">
+                                    <!-- ko template:{
+                                            name:'model_settings_form',
+                                            data:{
+                                                AllValues:ModelTableEdit.AllEditFields,
+                                                Value:ModelTableEdit.TableFieldsCheck
+                                            }
+                                         } -->
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-white btn-sm btn-info" data-bind="click:ModelConnectorEdit.SaveSettings" style='margin-top:10px;'>
 					<i class="ace-icon fa fa-floppy-o"></i> Сохранить
                 </button>
             </div>

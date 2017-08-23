@@ -1,24 +1,36 @@
 <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MTransaction'>
-    <!-- ko template:'tb_simple_loader' --><!-- /ko -->
-   	<!-- ko template:'model_edit_buttons' --><!-- /ko -->
-   	<!-- ko template:'model_edit_search' --><!-- /ko -->
+    <!-- ko template:'tb_simple_loader' -->
+    <!-- /ko -->
+    <!-- ko template:'model_edit_buttons' -->
+    <!-- /ko -->
+    <!-- ko template:'model_edit_search' -->
+    <!-- /ko -->
 </div>
 
 <div class="row adminbody" data-bind="with:MTransaction">
-	<div>
-		<!-- ko template:'model_edit' --><!-- /ko -->
-	</div>
+    <div>
+        <!-- ko template:'model_edit' -->
+        <!-- /ko -->
+    </div>
 </div>
 
 <div class="bottomPannel" data-bind="with:MTransaction">
-	<ul class="toolPanel nav nav-tabs background-blue">
-    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar',title:'Проводки',mode:'BillRelations'}} --><!-- /ko -->    	
-    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-folder-open-o',title:'Счета документов',mode:'DocBills'}} --><!-- /ko -->    	
-    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-check-o',title:'Связи документов',mode:'DocRelations'}} --><!-- /ko -->    	
-      <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Связи колонок',mode:'ColRelations'}} --><!-- /ko -->       
-      <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Бухгалтерские счета',mode:'Bills'}} --><!-- /ko -->       
-      <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Продукция',mode:'Prods'}} --><!-- /ko -->       
-      <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Договоры',mode:'Dogovors'}} --><!-- /ko -->       
-      <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Типы договоров',mode:'DogovorTypes'}} --><!-- /ko -->       
-	</ul>
+    <ul class="toolPanel nav nav-tabs background-blue">
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar',title:'Проводки',mode:'BillRelations'}} -->
+        <!-- /ko -->
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-folder-open-o',title:'Счета документов',mode:'DocBills'}} -->
+        <!-- /ko -->
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-check-o',title:'Связи документов',mode:'DocRelations'}} -->
+        <!-- /ko -->
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Связи колонок',mode:'ColRelations'}} -->
+        <!-- /ko -->
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Бухгалтерские счета',mode:'Bills'}} -->
+        <!-- /ko -->
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Продукция',mode:'Prods'}} -->
+        <!-- /ko -->
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Договоры',mode:'Dogovors'}} -->
+        <!-- /ko -->
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Типы договоров',mode:'DogovorTypes'}} -->
+        <!-- /ko -->
+    </ul>
 </div>

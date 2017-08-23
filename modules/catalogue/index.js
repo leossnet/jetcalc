@@ -1,3 +1,400 @@
+var ModelTreeEdit = (new function () {
+
+    var self = this;
+
+    self.Tree = ko.observable(null);
+
+    self.model = ko.observable();
+    self.parent_code_field = ko.observable();
+    self.code_field = ko.observable();
+    self.name_field = ko.observable();
+
+    self.LoadTree = function (tree, wrapper, done) {
+        if (tree) {
+            self.Tree(tree);
+            return done && done();
+        }
+        wrapper = wrapper || function (el) {
+            return el[self.name_field()]
+        };
+        $.getJSON('/api/modules/catalogue/tree-data', {
+            model: self.model()
+        }, function (data) {
+            var Tree = {};
+            var used = 0;
+            var current_level = [];
+            var tcurrent_level = [];
+            data.forEach(function (el) {
+                if (el[self.parent_code_field()] === "") {
+                    Tree[el[self.code_field()]] = {
+                        text: wrapper(el), //el[self.name_field()],
+                        code: el[self.code_field()],
+                        model: self.model(),
+                        type: 'item',
+                        'icon-class': '',
+                        additionalParameters: {
+                            children: {},
+                        }
+                    }
+                    used += 1;
+                    current_level.push(Tree[el[self.code_field()]]);
+                }
+            })
+            while (used < data.length) {
+                var change = false;
+                current_level.forEach(function (pel) {
+                    data.forEach(function (el) {
+                        if (el[self.parent_code_field()] === pel.code) {
+                            pel.type = 'folder';
+                            var new_el = {
+                                text: el[self.name_field()],
+                                code: el[self.code_field()],
+                                model: self.model(),
+                                type: 'item',
+                                'icon-class': '',
+                                additionalParameters: {
+                                    children: {},
+                                }
+                            }
+                            pel.additionalParameters.children[el[self.code_field()]] = new_el;
+                            tcurrent_level.push(new_el);
+                            used += 1;
+                            change = true;
+                        }
+                    })
+                })
+                if (!change) {
+                    break;
+                }
+                current_level = tcurrent_level;
+                tcurrent_level = [];
+            }
+            self.Tree(Tree);
+            return done && done();
+        })
+    }
+
+    self.DataSource = function (options, callback) {
+        var Answ = {};
+        if (!("text" in options) && !("type" in options)) {
+            return callback({
+                data: self.Tree()
+            });
+        } else if ("type" in options && options.type == "folder") {
+            var Answ = options.additionalParameters.children;
+        }
+        callback({
+            data: Answ
+        });
+    };
+
+    self.Init = function (data, done) {
+        if (data) {
+            self.model(data.model);
+            self.parent_code_field(data.parent_code_field);
+            cn = ModelClientConfig.CodeAndName(self.model());
+            self.code_field(cn[0]);
+            self.name_field(cn[1]);
+            self.LoadTree(data.Tree, data.wrapper, function () {
+                ModelTableEdit.InitModel(self.model());
+                ModelTableEdit.IsOverrideList(true);
+                ModelTableEdit.custom_overriding(false);
+            });
+        }
+        done && done();
+    }
+
+    return self;
+})
+
+var ModelConnectorEdit = (new function () {
+
+    var self = this;
+
+    self.LinkModels = ko.observable();
+    self.MainModels = ko.observableArray([]);
+
+    self.row_data = ko.observable();
+
+    self.source_model = ko.observable();
+    self.target_model = ko.observable();
+    self.code_source_model = ko.observable();
+    self.name_source_model = ko.observable();
+    self.code_target_model = ko.observable();
+    self.source_model_field_name = ko.observable();
+    self.source_index_field_name = ko.observable();
+    self.get_query = ko.observable({});
+    self.get_sort = ko.observable({});
+    self.get_fields = ko.observable("-_id");
+    self.use_sync_links = ko.observable(false);
+
+    self.empty_target_model = ko.observable(null);
+    self.empty_target_model_loaded = ko.observable(false);
+
+    self.model_edit_fields = ko.observableArray([]);
+
+    self.RemoveLinkModel = function (Code) {
+        self.LinkModels()[Code].remove(this);
+    };
+
+    self.AddLinkModel = function (Code) {
+        var link_for_add = {};
+        link_for_add[self.source_model_field_name()] = Code;
+        if (self.source_index_field_name()) {
+            link_for_add[self.source_index_field_name()] = self.LinkModels()[Code]().length + 1;
+        }
+        self.LinkModels()[Code].push(MModels.Create(self.target_model(), link_for_add));
+    }
+
+    self.AddMainModel = function () {
+        self.empty_target_model = ko.observable(MModels.Create(self.target_model(), {}));
+        self.empty_target_model_loaded(true);
+        $("#add_main_model_modal").modal('show');
+    }
+
+    self._AddMainModel = function () {
+        var main_for_add_code = self.empty_target_model()[self.code_source_model()]();
+        if (!self.LinkModels()[main_for_add_code]) {
+            self.LinkModels()[main_for_add_code] = ko.observableArray();
+            var MM = {};
+            self.row_data().MainModels.forEach(function (e) {
+                if (e[self.code_source_model()] === main_for_add_code) {
+                    MM = e;
+                }
+            })
+            if (!MM[self.name_source_model()]) {
+                MM[self.name_source_model()] = '';
+                MM[self.code_source_model()] = main_for_add_code;
+            }
+            self.MainModels.push(MModels.Create(self.source_model(), MM))
+        }
+        $("#add_main_model_modal").modal('hide');
+    }
+
+    self.EditModel = ko.observable(null);
+
+    self.SetEditModel = function (data) {
+        if (self.IsCurrentEditModel(data)) {
+            self.EditModel(null);
+        } else {
+            self.EditModel(data);
+        }
+    }
+
+    self.IsCurrentEditModel = function (data) {
+        return self.EditModel() == data;
+    }
+
+    self.LoadModels = function (done) {
+        $.getJSON('/api/modules/catalogue/connector', {
+            source_model: self.source_model(),
+            target_model: self.target_model(),
+            get_query: self.get_query(),
+            get_fields: self.get_fields(),
+            get_sort: self.get_sort(),
+            indexfieldname: self.source_index_field_name(),
+        }, function (data) {
+            self.row_data(data);
+            self.MainModels(_.map(data.MainModels, function (MM) {
+                return MModels.Create(self.source_model(), MM);
+            }));
+            var Str = {};
+            data.MainModels.forEach(function (MM) {
+                Str[MM[self.code_source_model()]] = ko.observableArray();
+            })
+            data.LinkModels.forEach(function (LM) {
+                if (Str[LM[self.source_model_field_name()]]) {
+                    Str[LM[self.source_model_field_name()]].push(MModels.Create(self.target_model(), LM));
+                }
+            })
+            Str2 = {};
+            _.keys(Str).forEach(function (k) {
+                if (!_.isEmpty(Str[k]())) {
+                    Str2[k] = Str[k];
+                }
+            })
+            self.LinkModels(Str2);
+            self.MainModels(_.filter(self.MainModels(), function (e) {
+                return self.LinkModels()[e[e.Code]()];
+            }))
+            done && done();
+        })
+    }
+
+    self.SaveChanges = function () {
+        var FieldsToPass = MModels.Create(self.target_model()).EditFields.concat(["_id"]);
+        var Data = ko.toJS(self.LinkModels),
+            Reparsed = {};
+        for (var Key in Data) {
+            Reparsed[Key] = _.filter(_.map(Data[Key], function (M) {
+                return _.pick(M, FieldsToPass);
+            }), function (D) {
+                return !_.isEmpty(D[self.source_model_field_name()]);
+            })
+        }
+        $.ajax({
+            url: '/api/modules/catalogue/connector',
+            data: {
+                JSON: {
+                    data: JSON.stringify(Reparsed),
+                    source_model: self.source_model(),
+                    target_model: self.target_model(),
+                    code_source_model: self.source_model_field_name(),
+                    use_sync_links: self.use_sync_links(),
+                    model: self.target_model(),
+                }
+            },
+            success: function (data) {
+                self.Init();
+                self.LoadModels(function () {
+                    swal("изменения сохранены", "Изменения успешно сохранены", "success");
+                });
+            },
+            type: 'PUT',
+        })
+    }
+
+    self.IsAvailable = function () {
+        return true;
+    }
+
+    self.IsLoaded = ko.observable(false);
+
+    self.Init = function (data, done) {
+        if (data) {
+            self.MainModels([]);
+            self.LinkModels({});
+            ModelTableEdit.InitModel(data.target_model);
+            self.source_model(data.source_model);
+            self.target_model(data.target_model);
+            self.code_source_model(data.code_source_model || self._get_code_source_model());
+            self.name_source_model(data.name_source_model || self._get_name_source_model());
+            self.code_target_model(data.code_target_model || self._get_code_target_model());
+            self.source_model_field_name(data.source_model_field_name || self.code_source_model());
+            self.source_index_field_name(data.source_index_field_name || null);
+            self.get_query(data.get_query || {});
+            self.get_sort(data.get_sort || {});
+            self.get_fields(data.get_fields || self._get_get_fields());
+            self.use_sync_links(data.use_sync_links || false);
+            self.model_edit_fields(self._get_model_edit_fields(data.model_edit_fields));
+            self.LoadModels();
+        }
+        done && done();
+    }
+
+    self._get_code_source_model = function () {
+        return _.filter(_.keys(MModels.Config[self.source_model()].fields), function (k) {
+            return MModels.Config[self.source_model()].fields[k].role === 'code';
+        })[0];
+    }
+
+    self._get_name_source_model = function () {
+        return _.filter(_.keys(MModels.Config[self.source_model()].fields), function (k) {
+            return MModels.Config[self.source_model()].fields[k].role === 'name';
+        })[0];
+    }
+
+    self._get_code_target_model = function () {
+        return _.filter(_.keys(MModels.Config[self.target_model()].fields), function (k) {
+            return MModels.Config[self.target_model()].fields[k].role === 'code';
+        })[0];
+    }
+
+    self._get_get_fields = function () {
+        return "-_id " + self.code_source_model() + " " + self.name_source_model();
+    }
+
+    self._get_model_edit_fields = function (mef) {
+        if (!mef) {
+            mef = ModelClientConfig.TableFields(self.target_model());
+            mef = _.filter(mef, function (f) {
+                return f != self.source_model_field_name() // && f != self.code_target_model();
+            })
+        }
+        var model_edit_fields = [];
+        mef.forEach(function (f) {
+            if ((typeof f) === "object") {
+                model_edit_fields.push(f);
+            } else {
+                var edit_params = self._get_field_edit_params(f);
+                var nf = {
+                    field_name: f,
+                    name: Tr(self.target_model(), f),
+                    class: '',
+                    target_model: edit_params.target_model,
+                    editor: edit_params.editor,
+                    wrapper: edit_params.wrapper,
+                }
+                model_edit_fields.push(nf);
+            }
+        })
+        return model_edit_fields;
+    }
+
+    self._get_field_edit_params = function (field_name) {
+        var cfg = MModels.Config[self.target_model()].fields[field_name];
+        if (cfg.refmodel) {
+            return {
+                target_model: cfg.refmodel,
+                wrapper: function (x) {
+                    return Catalogue.GetHtmlWithCode(cfg.refmodel, x())
+                },
+                editor: 'combobox',
+            };
+        }
+        if (cfg.type === "Boolean") {
+            return {
+                target_model: '',
+                editor: 'check',
+                wrapper: function (x) {
+                    var ret = "<input type='checkbox' onclick='return false;' class='ace ace-checkbox-2'";
+                    if (x()) {
+                        ret += 'checked';
+                    }
+                    ret += "><span class='lbl'></span></input>";
+                    return ret;
+                },
+            };
+        }
+        if (cfg.type === "Number") {
+            return {
+                target_model: '',
+                editor: 'number',
+                wrapper: function (x) {
+                    return x().toString()
+                },
+            };
+        }
+        return {
+            target_model: '',
+            editor: 'text',
+            wrapper: function (x) {
+                return x().toString();
+            },
+        };
+    }
+
+    self.Settings = function () {
+        $("#connector_settings_modal").modal("show");
+    }
+
+    self.SaveSettings = function () {
+        ModelClientConfig.Save({
+            ModelName: ModelTableEdit.ModelName(),
+            TableFields: ModelTableEdit.TableFieldsCheck(),
+            EditFields: ModelTableEdit.EditFieldsCheck(),
+            Links: ModelTableEdit.LinksCheck()
+        }, function () {
+            $("#connector_settings_modal").modal("hide");
+            ModelTableEdit.InitModel(ModelTableEdit.ModelName(), ModelTableEdit.Sort(), ModelTableEdit.Filter());
+            self.model_edit_fields(self._get_model_edit_fields());
+        })
+    }
+
+    return self;
+});
+
+
 var ModelRestrict = (new function () {
     var self = this;
 
@@ -7,48 +404,48 @@ var ModelRestrict = (new function () {
                 CodeParentDocFolder: ""
             }
         },
-        routeperiod:{
-            CodePeriod:{
-                IsFormula:false
+        routeperiod: {
+            CodePeriod: {
+                IsFormula: false
             }
-        },    
-        statecalendardate:{
-            CodePeriod:{
-                IsFormula:false
+        },
+        statecalendardate: {
+            CodePeriod: {
+                IsFormula: false
             }
-        },      
-        file:{
-            CodePeriod:{
-                IsFormula:false
+        },
+        file: {
+            CodePeriod: {
+                IsFormula: false
             }
-        },      
-        data:{
-            CodePeriod:{
-                IsFormula:false
+        },
+        data: {
+            CodePeriod: {
+                IsFormula: false
             }
-        },        
-        periodredirect:{
-            CodePeriodToRedirect:{
-                IsFormula:false
+        },
+        periodredirect: {
+            CodePeriodToRedirect: {
+                IsFormula: false
             },
-            CodePeriod:{
-                IsFormula:false
+            CodePeriod: {
+                IsFormula: false
             }
-        },        
-        routecheckperiod:{
-            CodeCheckPeriod:{
-                IsFormula:false
+        },
+        routecheckperiod: {
+            CodeCheckPeriod: {
+                IsFormula: false
             },
-            CodePeriod:{
-                IsFormula:false
+            CodePeriod: {
+                IsFormula: false
             }
-        },        
-        routerefperiod:{
-            CodeRefPeriod:{
-                IsFormula:false
+        },
+        routerefperiod: {
+            CodeRefPeriod: {
+                IsFormula: false
             },
-            CodePeriod:{
-                IsFormula:false
+            CodePeriod: {
+                IsFormula: false
             }
         },
         docfolderdoc: {
@@ -80,42 +477,42 @@ var ModelRestrict = (new function () {
 })
 
 
-var ModelClientConfig = (new function(){
+var ModelClientConfig = (new function () {
     var self = this;
 
     self.Config = {};
 
-    self.CodeAndName = function(ModelName){
-        return [MModels.Config[ModelName].Code,MModels.Config[ModelName].Name];
+    self.CodeAndName = function (ModelName) {
+        return [MModels.Config[ModelName].Code, MModels.Config[ModelName].Name];
     }
 
-    self.TableFields = function(ModelName){
+    self.TableFields = function (ModelName) {
         return _.compact(_.isEmpty(self.Config[ModelName]) ? self.CodeAndName(ModelName) : self.Config[ModelName].TableFields);
     }
 
-    self.Links = function(ModelName){
+    self.Links = function (ModelName) {
         return _.compact(_.isEmpty(self.Config[ModelName]) ? [] : self.Config[ModelName].Links);
     }
 
-    self.EditFields = function(ModelName){
+    self.EditFields = function (ModelName) {
         return _.compact(_.isEmpty(self.Config[ModelName]) ? self.CodeAndName(ModelName) : self.Config[ModelName].EditFields);
     }
 
     self.base = '/api/modules/catalogue/';
 
-    self.Load = function(done){
-        $.getJSON(self.base+"clientsettings",function(data){
+    self.Load = function (done) {
+        $.getJSON(self.base + "clientsettings", function (data) {
             self.Config = data;
             return done && done();
         })
     }
 
-    self.Save = function(data,done){
+    self.Save = function (data, done) {
         $.ajax({
-            url:self.base+"clientsettings",
-            method:'post',
-            data:data,
-            success:function(){
+            url: self.base + "clientsettings",
+            method: 'post',
+            data: data,
+            success: function () {
                 self.Load(done);
             }
         })
@@ -276,7 +673,7 @@ var Catalogue = (new function () {
     }
 
 
- /*   self.throttled = {};
+    /*   self.throttled = {};
     self.throttledTimer = null;
     self.SearchThrottle = function(params,callback){
         if (!self.throttled[params.model]) self.throttled[params.model] = {};
@@ -449,6 +846,7 @@ var ModelTableEdit = (new function () {
 
     self.IsExtendEditor = ko.observable(false);
     self.IsOverrideList = ko.observable(false);
+    self.custom_overriding = ko.observable(true);
 
 
     self.TableFields = ko.observableArray();
@@ -525,27 +923,27 @@ var ModelTableEdit = (new function () {
 
     self.SaveSettings = function () {
         ModelClientConfig.Save({
-            ModelName:self.ModelName(),
-            TableFields:self.TableFieldsCheck(),
-            EditFields:self.EditFieldsCheck(),
-            Links:self.LinksCheck()
-        },function(){
+            ModelName: self.ModelName(),
+            TableFields: self.TableFieldsCheck(),
+            EditFields: self.EditFieldsCheck(),
+            Links: self.LinksCheck()
+        }, function () {
             $("#catalogue_settings_modal").modal("hide");
             self.InitModel(self.ModelName(), self.Sort(), self.Filter());
         })
     }
 
     self.LoadModel = function () {
-        self._loadModel(self.Choosed(),function () {
+        self._loadModel(self.Choosed(), function () {
             self.Events.emit("modelloaded");
         })
     }
-    self.ReloadModel = function (Code,done) {
+    self.ReloadModel = function (Code, done) {
         console.log("ReloadModel");
-        self._loadModel(Code,done);
+        self._loadModel(Code, done);
     }
 
-    self._loadModel = function (Code,done) {
+    self._loadModel = function (Code, done) {
         self.Error(null);
         self.IsLoading(true);
         $.ajax({
@@ -609,10 +1007,10 @@ var ModelTableEdit = (new function () {
                     if (data.err) return self.Error(data.err);
                     self.LoadList();
                     var Code = self.Choosed() || data.code;
-                    self.ReloadModel(Code,function () {
-                        setTimeout(function(){
-                          self.Events.emit("modelsaved");  
-                        },0);
+                    self.ReloadModel(Code, function () {
+                        setTimeout(function () {
+                            self.Events.emit("modelsaved");
+                        }, 0);
                     })
                 }
             })
@@ -659,8 +1057,8 @@ var ModelTableEdit = (new function () {
     self.InitModel = function (ModelName, Sort, Filter) {
         Filter = Filter || {};
         self.Clear();
-        self.ModelName(ModelName);        
-        
+        self.ModelName(ModelName);
+
         var TF = ModelClientConfig.TableFields(ModelName);
         self.TableFields(TF);
         self.TableFieldsCheck(TF);
@@ -676,10 +1074,10 @@ var ModelTableEdit = (new function () {
         self.NameField(MModels.Config[ModelName].Name);
 
         self.AllTableFields(MModels.Config[ModelName].EditFields);
-        self.AllEditFields(_.filter(MModels.Config[ModelName].EditFields,function(V){
-            return V.indexOf("Link_")==-1;
+        self.AllEditFields(_.filter(MModels.Config[ModelName].EditFields, function (V) {
+            return V.indexOf("Link_") == -1;
         }));
-        self.AllLinks(_.uniq(MModels.Config[ModelName].Links)); 
+        self.AllLinks(_.uniq(MModels.Config[ModelName].Links));
         self.Filter(Filter);
         self.IsInited(true);
         self.LoadList();
@@ -705,7 +1103,7 @@ var ModelTableEdit = (new function () {
 
         self.AllTableFields([]);
         self.AllEditFields([]);
-        self.AllLinks([]);        
+        self.AllLinks([]);
 
         self.CodeField(null);
         self.NameField(null);
@@ -718,7 +1116,8 @@ var ModelTableEdit = (new function () {
         self.NoAccess(true);
         self.IsExtendEditor(false);
         self.IsOverrideList(false);
-        self.Filter(null);        
+        self.custom_overriding(true);
+        self.Filter(null);
     }
 
 
@@ -827,9 +1226,9 @@ var ModelTableEdit = (new function () {
                     newref = self.refStack()[self.refStack().length - 2].model;
                     newref[fieldName](data.code);
                 } else {
-                    if (self.LoadedModel()){
+                    if (self.LoadedModel()) {
                         var ch = self.LoadedModel().toJS();
-                        self.LoadedModel()[fieldName](data.code);    
+                        self.LoadedModel()[fieldName](data.code);
                         self.refStack.pop();
                         if (self.refStack().length == 0) {
                             self.hideAddModal();
@@ -837,7 +1236,7 @@ var ModelTableEdit = (new function () {
                     } else {
                         self.hideAddModal();
                         ModelChooser.SearchStr.valueHasMutated()
-                    }                    
+                    }
                 }
             }
         })
@@ -896,7 +1295,7 @@ var ModelEdit = (new function () {
         return Document;
     }
 
-    self.AddLink = function (LinkName,Field) {
+    self.AddLink = function (LinkName, Field) {
         var Init = {};
         var ParentModel = this();
         Field = Field || ParentModel.Code;
