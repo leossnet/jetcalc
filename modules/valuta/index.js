@@ -33,7 +33,6 @@ var MValuta = (new function () {
 
 
     self.GetValutas = function () {
-        //[_.find(MAggregate.AllObjs(),{CodeObj:CxCtrl.CodeObj()}).CodeValuta,
         return _.compact(_.uniq([self.ReportValuta(), self.ReportValuta1(), self.ReportValuta2()]));
     }
 
@@ -43,14 +42,18 @@ var MValuta = (new function () {
 
     self.UpdateRateValuta = function (Code) {
         self.RateValuta(Code);
-        self.LoadValutaRates();
+        self.LoadValutaRates({
+            IsReportPeriod: true
+        });
     }
 
     self.Year = ko.observable((new Date()).getFullYear());
 
     self.UpdateYear = function (Year) {
         self.Year(Year);
-        self.LoadValutaRates();
+        self.LoadValutaRates({
+            IsReportPeriod: true
+        });
     }
 
     self.Init = function (done) {
