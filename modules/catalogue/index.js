@@ -1096,7 +1096,6 @@ var ModelTableEdit = (new function () {
         self.EditFields([]);
         self.Links([]);
 
-
         self.TableFieldsCheck([]);
         self.EditFieldsCheck([]);
         self.LinksCheck([]);

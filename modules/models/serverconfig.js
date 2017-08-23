@@ -992,6 +992,16 @@ module.exports = {
 				"default": 0,
 				"view": "none"
 			},
+            "IsFormula": {
+				"type": Boolean,
+				"default": false,
+				"view": "none"
+			},
+            "Formula": {
+				"type": String,
+				"default": null,
+				"view": "none"
+			},
 			"CodeValuta": {
 				"type": String,
 				"default": "",
