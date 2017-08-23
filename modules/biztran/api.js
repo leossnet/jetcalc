@@ -11,7 +11,7 @@ var BizHelper = (new function(){
 	var self = this;
 
 	self.CFG = {
-		"prod":{query:{},sort:{"NumProd":1},fields:["-_id","CodeProd","NumProd","NameProd","CodeParentProd"]},
+		"prod":{query:{},sort:{"NumProd":1},fields:["-_id","CodeProd","NumProd","NameProd","CodeParentProd","CodeMeasure"]},
 		"org":{query:{},sort:{NameOrg:1},fields:["-_id","CodeOrg","NameOrg"]},		
 		"dogovor":{query:{},sort:{"NameDogovor":1},fields:["-_id","CodeDogovor","NameDogovor"]},		
 		"dogovorart":{query:{},sort:{"NameDogovorArt":1},fields:["-_id","CodeDogovorArt","NameDogovorArt"]},
@@ -160,7 +160,8 @@ var BizHelper = (new function(){
 											CodeProd:OrgRow.CodeProd,
 											CodeBill:OrgRow.CodeBill,
 											CodeAltOrg:OrgRow.CodeOrg,
-											NameRow:SprIndexed.org[OrgRow.CodeOrg].NameOrg
+											NameRow:SprIndexed.org[OrgRow.CodeOrg].NameOrg,
+											CodeMeasure:SprIndexed.prod[OrgRow.CodeProd].CodeMeasure
 										},PCod);
 									}
 								})

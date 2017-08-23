@@ -1,12 +1,5 @@
 #!/bin/bash
 
-echo Имя пользователя github:
-read GitUser
-echo Пароль github:
-read Password
-
-echo $GitUser with $Password
-
 mkdir /htdocs
 cd /htdocs/
 
@@ -20,7 +13,7 @@ apt-get install -y git \
     build-essential \
     g++
 
-git clone https://$GitUser:$Password@github.com/leossnet/jetcalc.git
+git clone https://github.com/leossnet/jetcalc.git
 chmod -R 777 /htdocs
 cd /htdocs/jetcalc
 git config core.fileMode false
