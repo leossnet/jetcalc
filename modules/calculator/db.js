@@ -37,8 +37,8 @@ module.exports = {
 				})
 		  	}
 
-		  	schema.methods.IndexNewTree = function(CodeUser,final){
-		  		this._indexTree(CodeUser,false,final);
+		  	schema.methods.IndexNewTree = function(CodeUser,done){
+		  		this._indexTree(CodeUser,false,done);
 		  	}
 		  	schema.methods.IndexTree = function(CodeUser,final){
 		  		this._indexTree(CodeUser,true,final);
@@ -56,7 +56,6 @@ module.exports = {
 				var ToSave = [RootNode];
 
 				var TreeQuery = UseOldPath ? {OldPathRow:{$regex:new RegExp(".*?\/"+RootNode.CodeRow+"\/.*?")}} : {treeroot:RootNode.CodeRow};
-
 	  			mongoose.model("row").find(TreeQuery).exec(function(err,Children){
 	  				if (UseOldPath){
 		  				Children = _.sortBy(Children,function(R){
@@ -73,6 +72,9 @@ module.exports = {
 	  					var Parents = [], Parent = ByParents[CodeRow];
 	  					while (Parent){
 	  						Parents.unshift(Parent);
+	  						if (Parent == ByParents[Parent]){
+	  							break;
+	  						}
 	  						Parent = ByParents[Parent];
 	  					}
 	  					return {

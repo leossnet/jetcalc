@@ -55,7 +55,7 @@ var StructureHelper = function(Context){
 			PluginName = "objtorow";
 		}
 		if (Doc && Doc.IsBiztranDoc){
-			PluginName = "biztran";
+			PluginName = "simple";
 		}
 		var Plugin = require(__base+"classes/calculator/helpers/CellPlugins/"+PluginName+".js");
 		return Plugin;

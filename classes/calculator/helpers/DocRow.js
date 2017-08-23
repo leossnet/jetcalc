@@ -51,7 +51,6 @@ var DocRowHelper = function(Context){
 								if (Rs.length==1){
 									Result[_.first(Rs).CodeRow] = CodeDoc;	
 								} else {
-									cosole.log("Unknown",Rs);
 									Result[_.first(Rs).CodeRow] = CodeDoc;	
 								}
 							}

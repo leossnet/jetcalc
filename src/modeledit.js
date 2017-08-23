@@ -83,13 +83,11 @@ var ModelEdit = function(CodeUser,IsNew){
 	self.SyncLinks = function(ModelName, Query, Links, done){
 		var M = mongoose.model(ModelName), CFG = M.cfg(), EditFields = CFG.EditFields, ToSave = [], ToRemove = [];
 		Links = Links || [];
-		console.log(Query);
 		M.find(Query).isactive().exec(function(err,Existed){
 			var IndexedOld = {};
 			Existed.forEach(function(Ex){
 				IndexedOld[Ex._id+""] = Ex;
 			})
-			console.log(IndexedOld);
 			Links.forEach(function(NL){
 				if (!_.isEmpty(NL._id)){
 					if (IndexedOld[NL._id+'']){

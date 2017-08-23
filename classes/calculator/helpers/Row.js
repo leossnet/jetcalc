@@ -446,6 +446,7 @@ var RowHelper = function(Context){
 
 	self.LoadRootRows = function(done){
 		var Tasks = {}, Remap = {};
+
 		self.RootRows.forEach(function(R,index){
 			Remap[R.CodeRow] = {};
 			Tasks[R.CodeRow] = function(Row){
@@ -484,7 +485,10 @@ var RowHelper = function(Context){
 						self.Bills = _.map(D.Link_docbill,"CodeBill")
 					}
 					if (D.IsObjToRow) self.IsObjToRow = true;
-					self.query('docrow',{CodeDoc:self.Context.CodeDoc},'-_id CodeRow IsExpandTree PrintNameRow IndexRow').sort({IndexRow:1}).exec(function(err,RootRows){
+					self.query('docrow',{CodeDoc:self.Context.CodeDoc},'-_id CodeRow IsExpandTree PrintNameRow IndexRow CodeBiztranObj').sort({IndexRow:1}).exec(function(err,RootRows){
+						if (self.IsBiztranDoc) {
+							RootRows = _.filter(RootRows,{CodeBiztranObj:self.CodeObj});
+						}
 						if (!RootRows.length) err = err || "У документа "+self.Context.CodeDoc+" не выбраны ряды [docrow]";
 						if (err) return cb(err);
 						RootRows.forEach(function(RR){

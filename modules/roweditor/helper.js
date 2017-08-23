@@ -26,12 +26,18 @@ var Helper = (new function(){
 
 	self.LoadRootsFiltered = function(Cx,done){
 		var Context = _.clone(Cx);
-		self.ObjInfo(Context,function(err,Result){
-			Context.ObjInfo = Result;
-			self.LoadRoots(Context.CodeDoc,function(err,Rows){
-				return done(err,self.Filter(Context,Rows));
+		self.DocInfo(Context.CodeDoc,function(err,Doc){
+			self.ObjInfo(Context,function(err,Result){
+				Context.ObjInfo = Result;
+				self.LoadRoots(Doc,Context,function(err,Rows){
+					return done(err,self.Filter(Context,Rows));
+				})
 			})
 		})
+	}
+
+	self.DocInfo = function(CodeDoc,done){
+		mongoose.model("doc").findOne({CodeDoc:CodeDoc}).isactive().lean().exec(done);
 	}
 
 	self.ObjInfo = function(Context,done){
@@ -44,11 +50,15 @@ var Helper = (new function(){
 		})
 	}
 
-	self.LoadRoots = function(CodeDoc,done){
+	self.LoadRoots = function(Doc,Cx,done){
 		var Result = {};
-		mongoose.model("docrow").find({CodeDoc:CodeDoc,IsExpandTree:true},"-_id CodeRow IsExpandTree").sort({IndexRow:1}).isactive().lean().exec(function(err,Rows){
+		var CodeDoc = Doc.CodeDoc;
+		mongoose.model("docrow").find({CodeDoc:CodeDoc,IsExpandTree:true},"-_id CodeRow CodeBiztranObj IsExpandTree").sort({IndexRow:1}).isactive().lean().exec(function(err,Rows){
 			if (err) return done(err);
 			if (_.isEmpty(Rows)) return done(null,Result);
+			if (Doc.IsBiztranDoc){
+				Rows = _.filter(Rows,{CodeBiztranObj:Cx.CodeObj});
+			}
 			var Roots = _.map(Rows,"CodeRow"); Roots.forEach(function(R){Result[R] = [];});
 			async.each(Roots,function(CodeRow,cb){
 				self.LoadRoot(CodeRow,function(err,Rows){
@@ -81,6 +91,7 @@ var Helper = (new function(){
 	self.AddParams = function(Rows){
 		var Indexed = {};
 		Rows.forEach(function(Row){
+			Row.rowpath = Row.rowpath || "";
 			Row.level = Math.max((Row.rowpath.split("/").length - 3),0);
 			Row.Sums = _.map(Row.Link_rowsumgrp,'CodeSumGrp');
 			Row.AllFilter = [];

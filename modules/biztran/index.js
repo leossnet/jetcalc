@@ -87,7 +87,7 @@ var MBiztran = (new function() {
     }
 
 	self.SaveChanges = function(){
-		self.rPut("modifyrows",{Context:CxCtrl.CxPermDoc(),Rows:self.Rows},function(){
+		self.rPost("modifyrows",{Context:CxCtrl.CxPermDoc(),Rows:self.Rows},function(data){
 			self.FlushChanges();
 			self.Show();
 		})
