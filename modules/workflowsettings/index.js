@@ -43,9 +43,6 @@ var MWorkFlowSettings = (new function () {
                     target_model: 'routeperiod'
                 })
                 break;
-            case "Attaches":
-                ModelTableEdit.InitModel("routefiletype");
-                break;
             case "FileTypes":
                 ModelTableEdit.InitModel("filetype");
                 break;
