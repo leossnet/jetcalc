@@ -87,6 +87,17 @@ var MValuta = (new function () {
     self.Rates = ko.observableArray();
     self.Editor = null;
 
+    self._humanizeRates = function () {
+        self.Rates().forEach(function (r, i) {
+            if (self.Rates()[i].Value1() != 0) {
+                self.Rates()[i].Value1(1 / self.Rates()[i].Value1())
+            }
+            if (self.Rates()[i].Value2() != 0) {
+                self.Rates()[i].Value2(1 / self.Rates()[i].Value2())
+            }
+        })
+    }
+
     self.LoadValutaRates = function (period_filter) {
         period_filter = period_filter || {};
         self.rGet("valutarates", {
@@ -97,6 +108,7 @@ var MValuta = (new function () {
             self.Rates(_.map(data, function (D) {
                 return MModels.Create("valutarate", D);
             }));
+            self._humanizeRates();
             if (!self.Editor) {
                 self.Editor = new HandsonComponent(self.Rates(), {
                     CodePeriod: Tr("Period"),
@@ -128,6 +140,7 @@ var MValuta = (new function () {
 
     self.SaveChanges = function () {
         if (self.Mode() == 'ValutaRates') {
+            self._humanizeRates();
             self.rPut("valutarates", {
                 CodeValuta: self.RateValuta(),
                 Year: self.Year(),
@@ -155,7 +168,10 @@ var MValuta = (new function () {
                 break;
             case "ValutaRatesFormulas":
                 if (self.Editor) delete self.Editor;
-                ModelTableEdit.InitModel("valutarate");
+                ModelTableEdit.InitModel("period");
+                ModelTableEdit.TableFields(["CodePeriod", "NamePeriod"]);
+                ModelTableEdit.EditFields(["ValutaRateFormula"]);
+                ModelTableEdit.Links([]);
                 break;
         }
         return done && done()

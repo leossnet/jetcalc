@@ -9,14 +9,6 @@ module.exports = {
             },
             Value2: {
                 mask: "0.00000"
-            },
-            IsFormula: {
-                type: Boolean,
-                default: false
-            },
-            Formula: {
-                type: String,
-                default: null
             }
         },
         valuta: {
