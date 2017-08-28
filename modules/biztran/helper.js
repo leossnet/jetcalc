@@ -108,7 +108,8 @@ module.exports = (new function(){
 										CodeRow:Root+"_"+CodeBill,
 										treeroot:Root,
 										NameRow:SprIndexed.bill[CodeBill].NameBill,
-										CodeBill:CodeBill
+										CodeBill:CodeBill,
+										HasFilteredChild:true
 									},Root);
 								}
 							}
@@ -132,6 +133,7 @@ module.exports = (new function(){
 											CodeBill:BizRow.CodeBill,
 											CodeProd:Pr.CodeProd,
 											CodeMeasure:AllProds[Pr.CodeProd].CodeMeasure,
+											HasFilteredChild:false,
 											IsSum:AllProds[Pr.CodeProd].IsCalcSum
 										},PCode);
 									}
@@ -150,6 +152,7 @@ module.exports = (new function(){
 											CodeBill:OrgRow.CodeBill,
 											CodeAltOrg:OrgRow.CodeOrg,
 											NameRow:SprIndexed.org[OrgRow.CodeOrg].NameOrg,
+											HasFilteredChild:false,
 											CodeMeasure:SprIndexed.prod[OrgRow.CodeProd].CodeMeasure
 										},PCod);
 									}
@@ -161,6 +164,38 @@ module.exports = (new function(){
 						return done(err,FlatTree);
 					})
 				})
+			})
+		})
+	}
+
+	self.SetFilters = function(CodeDoc,CodeUser,done){
+		var Helper = require(__base+"modules/roweditor/helper.js");
+		var Link = mongoose.model("rowobj");
+		Helper.LoadRoots(CodeDoc,function(err,RowsWithRoots){
+			var Rows = RowsWithRoots[_.first(_.keys(RowsWithRoots))];
+			mongoose.model("biztranrow").find({CodeDoc:CodeDoc}).isactive().lean().sort({Index:1}).exec(function(err,BRows){
+				var AllowObjs = {};
+				Rows.forEach(function(Row){
+					if (Row.CodeBill && Row.CodeProd && Row.CodeAltOrg){
+						AllowObjs[Row.CodeRow] = _.uniq(_.map(_.filter(_.clone(BRows),{CodeBill:Row.CodeBill,CodeProd:Row.CodeProd,CodeOrg:Row.CodeAltOrg}),"CodeObj"));
+					}					
+				})
+				async.each(_.keys(AllowObjs),function(CodeRow,cb){
+					Link.find({CodeRow:CodeRow}).isactive().lean().exec(function(err,Existed){
+						var Links = _.map(_.uniq(AllowObjs[CodeRow]),function(CodeObj){
+							var R = {CodeRow:CodeRow,CodeObj:CodeObj};
+							var F = _.find(Existed,R);
+							if (F) R._id = F._id;
+							return R;
+						});
+						var SaverH = require(__base+"src/modeledit.js");
+						var Saver = new SaverH(CodeUser);
+						Saver.SyncLinks("rowobj", {CodeRow:CodeRow}, Links, cb);
+					})
+				},function(err){
+					if (err) console.log("SET FILTER ERR",err);
+					return done(err);
+				});
 			})
 		})
 	}
@@ -179,12 +214,21 @@ module.exports = (new function(){
 		var Helper = require(__base+"modules/roweditor/helper.js");
 		self.GenerateTree(CodeDoc,CodeUser,function(err,Rows){
 			Helper.LoadRoot(_.first(Rows).CodeRow,function(err,Current){
-				Struct.UpdateRoot(Current,Rows,CodeUser,function(err){
-					return done();
+				Struct.UpdateRoot(Current,Rows,["NumRow","CodeRow","CodeProd","CodeBill","CodeAltOrg","NameRow","CodeMeasure","treeroot","HasFilteredChild"],CodeUser,function(err){
+					self.SetFilters(CodeDoc,CodeUser,function(){
+						return done();	
+					})					
 				});				
 			})
 		})
 	}
+
+
+	setTimeout(function(){
+		self.SyncTree("sale","admin",function(err){
+			console.log("Sync is done");
+		})
+	},2000)
 
 	return self;
 })

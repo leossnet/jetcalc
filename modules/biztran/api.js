@@ -30,7 +30,7 @@ router.get('/rows',  HP.TaskAccess("IsBiztranTuner"), function(req,res,next){
 
 
 router.post('/modifyrows',  HP.TaskAccess("IsBiztranTuner"), function(req,res,next){
-	var CodeDoc = req.body.Context.CodeDoc, CodeObj = req.body.Context.CodeObj, Rows = req.body.Rows, CodeUser = _.clone(req.user.CodeUser); 
+	var CodeDoc = req.body.Context.CodeDoc, CodeObj = req.body.Context.CodeObj, Rows = req.body.Rows || [], CodeUser = req.user.CodeUser; 
 	Rows.forEach(function(Row){
 		Row.CodeDoc = CodeDoc;
 		Row.CodeObj = CodeObj;
@@ -41,10 +41,19 @@ router.post('/modifyrows',  HP.TaskAccess("IsBiztranTuner"), function(req,res,ne
 	var Editor = require(__base+"src/modeledit.js");
 	var Saver = new Editor(CodeUser);
 	Saver.SyncLinks("biztranrow", {CodeDoc:CodeDoc,CodeObj:CodeObj}, Rows, function(err){
-		return res.end();
+		if (_.isEmpty(Rows)){
+			var BizHelper = require(__base+"modules/biztran/helper.js");
+			BizHelper.SyncTree(CodeDoc,CodeUser,function(err){
+				return res.end();
+			})
+		} else {
+			return res.end();	
+		}
+		
 	})
 })
 
 
 
-module.exports = router
+module.exports = router;
+

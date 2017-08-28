@@ -76,7 +76,7 @@ var Struct =  (new function(){
 		return Chunks;
 	}
 
-	self.UpdateRoot = function(OldRowsH,NewRows,CodeUser,done){
+	self.UpdateRoot = function(OldRowsH,NewRows,Fields2Update,CodeUser,done){
 		var Row = mongoose.model("row");
 		Row.find({CodeRow:{$in:_.map(OldRowsH,"CodeRow")}}).isactive().exec(function(err,OldRows){
 			var ExistedIndexed = {}; OldRows.forEach(function(Branch){ ExistedIndexed[Branch.CodeRow] = Branch;});
@@ -96,7 +96,7 @@ var Struct =  (new function(){
 			var ToUpdate = [], ByParents = {1:RootNode.CodeRow};
 			for (var CodeRow in ClientIndexed){
 				var R = ExistedIndexed[CodeRow], C = ClientIndexed[CodeRow];
-				["NumRow","NameRow","CodeRowLink"].forEach(function(F){
+				Fields2Update.forEach(function(F){
 					R[F] = C[F];
 				})
 				R.level = Number(C.level);

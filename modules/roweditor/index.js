@@ -281,7 +281,7 @@ var MRowEditor = (new function() {
 		numeric       :["FromObsolete", "FromYear","FormulaFromYear", "FormulaFromObsolete"],
 		formula       :["AgFormula","AfFormula","Formula"],
 		link          :["Link_rowsumgrp", "Link_rowtag", "Link_rowobj"],
-		select_table  :["CodeMeasure", "CodeFormat", "CodeStyle", "CodeValuta","CodeGrpEditFilter","CodeProd", "CodeAltOrg", "CodeDogovor", "CodeFilteredAltGrp", "CodeDogovorAkt", "CodeRowLink"],//,"CodeParentRow"
+		select_table  :["CodeMeasure", "CodeFormat", "CodeStyle", "CodeValuta","CodeGrpEditFilter","CodeProd", "CodeAltOrg", "CodeDogovor", "CodeFilteredAltGrp", "CodeDogovorAkt", "CodeRowLink","CodeBill"],//,"CodeParentRow"
 		autocomplete  :[]
 	}
 
@@ -289,6 +289,7 @@ var MRowEditor = (new function() {
 		"CodeMeasure":'measure',
         "CodeFormat":'format',
         "CodeProd":'prod',
+        "CodeBill":'bill',
         "CodeAltOrg":'org',
         "CodeDogovor":'dogovor',
         "CodeFilteredAltGrp":'grp',
@@ -480,7 +481,7 @@ var MRowEditor = (new function() {
 				Cols = Cols.concat(["Link_rowtag", "IsFormula", "Formula", "FormulaFromYear", "FormulaFromObsolete", "IsAgFormula","AsAgFormula","AgFormula","IsAfFormula","AfFormula","IsVirtual"]);
 			break;
 			case "Bistran":
-				Cols = Cols.concat(["CodeProd", "CodeAltOrg", "CodeDogovor", "CodeFilteredAltGrp", "CodeDogovorArt"]);
+				Cols = Cols.concat(["CodeBill","CodeProd", "CodeAltOrg", "CodeDogovor", "CodeFilteredAltGrp", "CodeDogovorArt"]);
 			break;
 		}
 		return Cols;

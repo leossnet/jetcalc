@@ -108,7 +108,7 @@ router.put('/structure',  HP.TaskAccess("IsRowTuner"), function(req,res,next){
 		Helper.LoadRoots(Context.CodeDoc,function(err,CurrentRows){
 			if (err) return next(err);
 			async.each(_.intersection(_.keys(CurrentRows),_.keys(Rows)),function(CodeRow,cb){
-				StructureHelper.UpdateRoot(CurrentRows[CodeRow],Rows[CodeRow],CodeUser,cb);
+				StructureHelper.UpdateRoot(CurrentRows[CodeRow],Rows[CodeRow],["NumRow","NameRow","CodeRowLink"],CodeUser,cb);
 			},function(err){
 				if (err) return next(err);
 				return res.json({});
