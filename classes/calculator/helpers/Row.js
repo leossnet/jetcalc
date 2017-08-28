@@ -486,9 +486,9 @@ var RowHelper = function(Context){
 					}
 					if (D.IsObjToRow) self.IsObjToRow = true;
 					self.query('docrow',{CodeDoc:self.Context.CodeDoc},'-_id CodeRow IsExpandTree PrintNameRow IndexRow CodeBiztranObj').sort({IndexRow:1}).exec(function(err,RootRows){
-						if (self.IsBiztranDoc) {
+						/*if (self.IsBiztranDoc) {
 							RootRows = _.filter(RootRows,{CodeBiztranObj:self.CodeObj});
-						}
+						}*/
 						if (!RootRows.length) err = err || "У документа "+self.Context.CodeDoc+" не выбраны ряды [docrow]";
 						if (err) return cb(err);
 						RootRows.forEach(function(RR){

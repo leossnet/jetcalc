@@ -6447,13 +6447,6 @@ module.exports = {
 				"refmodel": "doc",
 				"index": true,
 			},
-			"CodeRoot":{
-				"type": String,
-				"default": "",
-				"view": "none",				
-				"refmodel": "row",
-				"index": true,
-			},
 			"CodeBill":{
 				"type": String,
 				"default": "",

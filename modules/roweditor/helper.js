@@ -53,12 +53,15 @@ var Helper = (new function(){
 	self.LoadRoots = function(Doc,Cx,done){
 		var Result = {};
 		var CodeDoc = Doc.CodeDoc;
+		done = done || function(){
+			console.log("no done function");
+		}
 		mongoose.model("docrow").find({CodeDoc:CodeDoc,IsExpandTree:true},"-_id CodeRow CodeBiztranObj IsExpandTree").sort({IndexRow:1}).isactive().lean().exec(function(err,Rows){
 			if (err) return done(err);
 			if (_.isEmpty(Rows)) return done(null,Result);
-			if (Doc.IsBiztranDoc){
+			/*if (Doc.IsBiztranDoc){
 				Rows = _.filter(Rows,{CodeBiztranObj:Cx.CodeObj});
-			}
+			}*/
 			var Roots = _.map(Rows,"CodeRow"); Roots.forEach(function(R){Result[R] = [];});
 			async.each(Roots,function(CodeRow,cb){
 				self.LoadRoot(CodeRow,function(err,Rows){
