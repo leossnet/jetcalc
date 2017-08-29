@@ -8,13 +8,9 @@
     <!-- /ko -->
     <!-- /ko -->
     <!-- ko if:Mode()=='ValutaRatesFormulas' -->
-    <!-- ko template:'tb_simple_loader' -->
+    <!-- ko template:'valutarate_valuta_filter' -->
     <!-- /ko -->
-    <div class="btn-group">
-    <!-- ko template:'model_edit_save' -->
-    <!-- /ko -->
-    </div>
-    <!-- ko template:'model_edit_search' -->
+    <!-- ko template:'valutarate_year_filter' -->
     <!-- /ko -->
     <!-- /ko -->
     <!-- ko if:Mode()=='ValutaRates' -->
@@ -50,8 +46,7 @@
         <div class="valutarate"></div>
         <!-- /ko -->
         <!-- ko if:Mode()=='ValutaRatesFormulas' -->
-        <!-- ko template:'model_edit' -->
-        <!-- /ko -->
+        <div class="valutarate"></div>
         <!-- /ko -->
     </div>
 </div>
@@ -60,9 +55,9 @@
     <ul class="toolPanel nav nav-tabs background-blue">
         <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-money',title:'Валюта',mode:'Valutas'}} -->
         <!-- /ko -->
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-line-chart',title:'Курсы валют',mode:'ValutaRates'}} -->
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-edit',title:'Отчетные курсы валют',mode:'ValutaRates'}} -->
         <!-- /ko -->
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-edit',title:'Формулы курсов валют',mode:'ValutaRatesFormulas'}} -->
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-line-chart',title:'Формульные курсы валют',mode:'ValutaRatesFormulas'}} -->
         <!-- /ko -->
     </ul>
 </div>
