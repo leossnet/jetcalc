@@ -15,7 +15,11 @@ var MValuta = (new function () {
             Current.forEach(function (C) {
                 var Vls = data[C.CodePeriod()];
                 ["Value", "Value1", "Value2"].forEach(function (V) {
-                    C[V](Vls[V]);
+                    if (Vls[V] != 0) {
+                        C[V](1 / Vls[V])
+                    } else {
+                        C[V](Vls[V])
+                    }
                 })
             })
             self.Rates(Current);
@@ -94,11 +98,17 @@ var MValuta = (new function () {
         })
     }
 
-    self.LoadValutaRates = function () {
+    self.ForceLoadValutaRates = function () {
+        self.LoadValutaRates(true);
+    }
+
+    self.LoadValutaRates = function (force) {
+        force = force || false;
         self.rGet("valutarates", {
             Year: self.Year(),
             CodeValuta: self.RateValuta(),
             Mode: self.Mode(),
+            force: force ? force : null,
         }, function (data) {
             if (data.length == 0) {
                 if (self.Editor) {
@@ -145,7 +155,7 @@ var MValuta = (new function () {
     }
 
     self.SaveChanges = function () {
-        if (self.Mode() == 'ValutaRates') {
+        if (self.Mode() == 'ValutaRates' || self.Mode() == 'ValutaRatesFormulas') {
             self._humanizeRates();
             self.rPut("valutarates", {
                 CodeValuta: self.RateValuta(),
@@ -153,9 +163,7 @@ var MValuta = (new function () {
                 Rates: _.map(self.Rates(), function (R) {
                     return _.pick(R.toJS(), ["CodeValutaRate", "CodePeriod", "Value", "Value1", "Value2"])
                 })
-            }, function () {
-
-            })
+            }, function () {})
         }
     }
 
