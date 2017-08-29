@@ -288,3 +288,16 @@ ko.bindingHandlers.selectize_tags = {
 }
 
 
+ko.bindingHandlers['handson-table'] = {
+    init: function(element, valueAccessor, allBindings, data, context) {
+        var params = ko.utils.unwrapObservable(valueAccessor());
+        console.log("PARAMS IN BINDING ",params);
+        ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+            ;
+        });
+    },
+    update: function (element, valueAccessor, allBindingsAccessor) {
+        var Params = ko.utils.unwrapObservable(valueAccessor());
+
+    }
+};

@@ -2,6 +2,26 @@ var MCustomReport = (new function() {
 	
 	var self = new Module("customreport");
 
+	self.ETableConfig = ko.observable();
+	self.ETable = ko.observable();
+	self.EChanges = ko.observable();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	self.EditTable = null;
 
@@ -56,6 +76,8 @@ var MCustomReport = (new function() {
 
 	self.RenderEditTable = function(){
     	var CFG = self.EditTableCFG();
+    	self.ETableConfig(CFG);
+    	/*
     	self.CreateHTable("EditTable",'.handsontable.single:visible',CFG,function(err,Table){
     		new HandsonTableHelper.DiscretScroll(Table);
     		new HandsonTableHelper.TreeView(Table);
@@ -68,6 +90,7 @@ var MCustomReport = (new function() {
 	    	self.RenderHTable("EditTable");
 	    	self.EditTable = Table;	    	
     	})
+    	*/
     }
 
     self.PreviewTableCFG = function(){

@@ -95,7 +95,7 @@ var ModelEdit = function(CodeUser,IsNew){
 							IndexedOld[NL._id+''][NK] = NL[NK];
 						})
 					}
-					if (IndexedOld[NL._id+""].isModified()){
+					if (IndexedOld[NL._id+""] && IndexedOld[NL._id+""].isModified()){
 						ToSave.push(IndexedOld[NL._id+""]);
 					}
 					delete IndexedOld[NL._id+""];

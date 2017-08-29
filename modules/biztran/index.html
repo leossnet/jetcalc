@@ -12,7 +12,9 @@
           </a>
           <!-- ko template:'tb_simple_loader' --><!-- /ko -->
         </div>
-        <!-- ko template: 'tb_aggregate_small' --><!-- /ko -->
+        <!-- ko if:MBiztran.IsUseOrg() -->
+          <!-- ko template: 'tb_aggregate_small' --><!-- /ko -->
+        <!-- /ko -->
     </div>
     <!-- ko with: MBiztran.Error -->
     <div class="alert alert-danger"><span data-bind="html:$data"></span></div>

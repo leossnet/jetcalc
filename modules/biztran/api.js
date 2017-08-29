@@ -22,8 +22,13 @@ router.get('/biztraninfo',  HP.TaskAccess("IsBiztranTuner"), function(req,res,ne
 })
 
 router.get('/rows',  HP.TaskAccess("IsBiztranTuner"), function(req,res,next){
-	var CodeDoc = req.query.CodeDoc, CodeObj = req.query.CodeObj; 
-	mongoose.model("biztranrow").find({CodeDoc:CodeDoc,CodeObj:CodeObj}).isactive().sort({Index:1}).lean().exec(function(err,List){
+	var CodeDoc = req.query.CodeDoc, CodeObj = req.query.CodeObj;
+	var Q = {CodeDoc:CodeDoc};
+	if (LIB.parseBoolean(req.query.UseOrg)) {
+		Q.CodeObj = CodeObj;
+	}
+	console.log("Query",Q);
+	mongoose.model("biztranrow").find(Q).isactive().sort({Index:1}).lean().exec(function(err,List){
 		return res.json(List);
 	})	
 })
