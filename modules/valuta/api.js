@@ -7,14 +7,102 @@ var LIB = require(__base + 'lib/helpers/lib.js');
 var HP = LIB.Permits;
 
 
+var ValutaRateFormulaEvaluator = (new function () {
+    var self = this;
+
+    self.regexp = /.P([0-9])+/g;
+
+    self._evaluateValue = function (periods, formula, field, CodeValuta, Year, done) {
+        var replaceToValue = function (codePeriod, period, done) {
+            mongoose.model("period")
+                .findOne({
+                    CodePeriod: codePeriod
+                })
+                .isactive()
+                .lean()
+                .exec(function (e, p) {
+                    if (!p.IsReportPeriod) {
+                        formula = formula.replace(period, '0');
+                        done();
+                    } else {
+                        mongoose.model("valutarate")
+                            .findOne({
+                                CodeValuta: CodeValuta,
+                                Year: Year,
+                                CodePeriod: codePeriod
+                            })
+                            .isactive()
+                            .lean()
+                            .exec(function (e, vr) {
+                                if (vr) {
+                                    var value = vr[field];
+                                    formula = formula.replace(period, (1 / value).toString());
+                                } else {
+                                    formula = formula.replace(period, '0');
+                                }
+                                done();
+                            });
+                    }
+                });
+        }
+        var works = periods.length;
+        async.each(periods, function (period) {
+            var codePeriod = period.substr(2);
+            replaceToValue(codePeriod, period, function () {
+                works -= 1;
+                if (works == 0) {
+                    try {
+                        var value = eval(formula);
+                        if (value != 0) {
+                            value = 1 / value;
+                        }
+                    } catch (e) {
+                        var value = 0;
+                    }
+                    done(value);
+                }
+            });
+        })
+    }
+
+    self.evaluate = function (formula, CodeValuta, Year, done) {
+        if (!formula) {
+            return done(0, 0);
+        }
+        var periods = formula.match(self.regexp);
+        var val1_calculated = false;
+        var val1 = 0;
+        self._evaluateValue(periods, formula, 'Value1', CodeValuta, Year, function (res) {
+            val1_calculated = true;
+            val1 = res;
+        });
+        var val2_calculated = false;
+        var val2 = 0;
+        self._evaluateValue(periods, formula, 'Value2', CodeValuta, Year, function (res) {
+            val2_calculated = true;
+            val2 = res;
+        });
+        var checkEnd = function () {;
+            if (val1_calculated && val2_calculated) {
+                done(val1, val2);
+            } else {
+                setTimeout(checkEnd, 200);
+            }
+        }
+        setTimeout(checkEnd, 200);
+    }
+
+    return self;
+});
+
 var ValutaHelper = (new function () {
     var self = this;
 
-    self.Periods = function (period_filter, done) {
+    self.Periods = function (done) {
         mongoose.model("period")
-            .find(_.merge({
+            .find({
                 IsFormula: false
-            }, period_filter), "-_id CodePeriod NamePeriod EndDateText")
+            })
             .isactive()
             .sort({
                 IsFormula: -1,
@@ -52,9 +140,9 @@ var ValutaHelper = (new function () {
             .exec(done);
     }
 
-    self.BuildTable = function (CodeValuta, Year, period_filter, done) {
+    self.BuildTable = function (CodeValuta, Year, mode, done) {
         var Table = [];
-        self.Periods(period_filter, function (err, Periods) {
+        self.Periods(function (err, Periods) {
             self.ValutaRates(CodeValuta, Year, function (err, Rates) {
                 var Indexed = {};
                 Rates.forEach(function (R) {
@@ -70,27 +158,43 @@ var ValutaHelper = (new function () {
                     var Rv3 = _.find(Valutas, {
                         IsReportValuta2: true
                     }).CodeValuta;
-                    Periods.forEach(function (Period) {
-                        var CodePeriod = Period.CodePeriod,
-                            Current = Indexed[CodePeriod] ? Indexed[CodePeriod] : {
-                                Value: 0,
-                                Value1: 0,
-                                Value2: 0
-                            };
-                        Table.push({
-                            CodeValutaRate: [CodeValuta, Rv1, Rv2, Rv3, Year, CodePeriod].join("_"),
-                            CodeReportValuta: Rv1,
-                            CodeReportValuta1: Rv2,
-                            CodeReportValuta2: Rv3,
-                            CodeValuta: CodeValuta,
-                            CodePeriod: CodePeriod,
-                            Value: Current.Value,
-                            Value1: Current.Value1,
-                            Value2: Current.Value2,
-                            Year: Year,
-                        })
-                    })
-                    return done(null, Table);
+                    var works = Periods.length;
+                    async.each(
+                        Periods,
+                        function (Period) {
+                            var CodePeriod = Period.CodePeriod;
+                            ValutaRateFormulaEvaluator.evaluate(Period.ValutaRateFormula, CodeValuta, Year, function (val1, val2) {
+                                var Current = Indexed[CodePeriod] ? Indexed[CodePeriod] : {
+                                    Value: 1,
+                                    Value1: val1,
+                                    Value2: val2,
+                                };
+                                if ((mode == 'ValutaRates' && Period.IsReportPeriod) || (mode == 'ValutaRatesFormulas' && !Period.IsReportPeriod && (Current.Value1 != 0 || Current.Value2 != 0))) {
+                                    Table.push({
+                                        CodeValutaRate: [CodeValuta, Rv1, Rv2, Rv3, Year, CodePeriod].join("_"),
+                                        CodeReportValuta: Rv1,
+                                        CodeReportValuta1: Rv2,
+                                        CodeReportValuta2: Rv3,
+                                        CodeValuta: CodeValuta,
+                                        CodePeriod: CodePeriod,
+                                        Value: Current.Value,
+                                        Value1: Current.Value1,
+                                        Value2: Current.Value2,
+                                        Year: Year,
+                                    })
+                                }
+                                works -= 1;
+                            })
+                        }
+                    )
+                    var checkEnd = function () {
+                        if (works == 0) {
+                            return done(null, Table);
+                        } else {
+                            setTimeout(checkEnd, 200);
+                        }
+                    }
+                    checkEnd();
                 })
             })
         })
@@ -193,9 +297,7 @@ var SyncHelper = (new function () {
                             _.map(js.ValCurs.Valute, function (V) {
                                 Data[V["$"].ID] = Number(_.first(V.Value).replace(",", ".")) / Number(_.first(V.Nominal));
                             })
-                        } catch (e) {
-                            //console.log(e);
-                        }
+                        } catch (e) {}
                         _.keys(Map).forEach(function (ID) {
                             Result[Map[ID]] = self.round(1 / Data[ID]);
                         })
@@ -254,11 +356,7 @@ var SyncHelper = (new function () {
 
 
 router.get('/valutarates', LIB.Require(['Year', 'CodeValuta']), HP.TaskAccess("IsValutaRateOperator"), function (req, res, next) {
-    var period_filter = {};
-    if (req.query.PeriodFilter) {
-        period_filter = JSON.parse(req.query.PeriodFilter);
-    }
-    ValutaHelper.BuildTable(req.query.CodeValuta, parseInt(req.query.Year), period_filter, function (err, Table) {
+    ValutaHelper.BuildTable(req.query.CodeValuta, parseInt(req.query.Year), req.query.Mode, function (err, Table) {
         return res.json(Table);
     });
 })

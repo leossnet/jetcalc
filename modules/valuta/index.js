@@ -42,18 +42,14 @@ var MValuta = (new function () {
 
     self.UpdateRateValuta = function (Code) {
         self.RateValuta(Code);
-        self.LoadValutaRates({
-            IsReportPeriod: true
-        });
+        self.LoadValutaRates();
     }
 
     self.Year = ko.observable((new Date()).getFullYear());
 
     self.UpdateYear = function (Year) {
         self.Year(Year);
-        self.LoadValutaRates({
-            IsReportPeriod: true
-        });
+        self.LoadValutaRates();
     }
 
     self.Init = function (done) {
@@ -98,13 +94,19 @@ var MValuta = (new function () {
         })
     }
 
-    self.LoadValutaRates = function (period_filter) {
-        period_filter = period_filter || {};
+    self.LoadValutaRates = function () {
         self.rGet("valutarates", {
             Year: self.Year(),
             CodeValuta: self.RateValuta(),
-            PeriodFilter: JSON.stringify(period_filter)
+            Mode: self.Mode(),
         }, function (data) {
+            if (data.length == 0) {
+                if (self.Editor) {
+                    delete self.Editor
+                }
+                $('.valutarate')[0].innerHTML = ''
+                return;
+            }
             self.Rates(_.map(data, function (D) {
                 return MModels.Create("valutarate", D);
             }));
@@ -117,7 +119,9 @@ var MValuta = (new function () {
                     Value2: self.ReportValuta2()
                 }, ".valutarate");
                 self.Editor.FixedWidths = [400, 100, 100, 100];
-                self.Editor.Editable = ["Value2", "Value1", "Value"];
+                if (self.Mode() == 'ValutaRates') {
+                    self.Editor.Editable = ["Value2", "Value1", "Value"];
+                }
             } else {
                 self.Editor.data = self.Rates();
             }
@@ -133,7 +137,9 @@ var MValuta = (new function () {
     }
 
     self.BeforeHide = function () {
-        if (self.Editor) delete self.Editor;
+        if (self.Editor) {
+            delete self.Editor
+        }
         MSite.Events.off("save", self.SaveChanges);
         self.UnSubscribe();
     }
@@ -158,20 +164,22 @@ var MValuta = (new function () {
         if (!self.Mode()) return self.InitSetMode("Valutas");
         switch (self.Mode()) {
             case "Valutas":
-                if (self.Editor) delete self.Editor;
+                if (self.Editor) {
+                    delete self.Editor
+                }
                 ModelTableEdit.InitModel("valuta");
                 break;
             case "ValutaRates":
-                self.LoadValutaRates({
-                    IsReportPeriod: true
-                });
+                if (self.Editor) {
+                    delete self.Editor
+                }
+                self.LoadValutaRates();
                 break;
             case "ValutaRatesFormulas":
-                if (self.Editor) delete self.Editor;
-                ModelTableEdit.InitModel("period");
-                ModelTableEdit.TableFields(["CodePeriod", "NamePeriod"]);
-                ModelTableEdit.EditFields(["ValutaRateFormula"]);
-                ModelTableEdit.Links([]);
+                if (self.Editor) {
+                    delete self.Editor
+                }
+                self.LoadValutaRates();
                 break;
         }
         return done && done()
