@@ -292,7 +292,15 @@ var SyncHelper = (new function () {
                 self.parserXml(data.body, function (err, js) {
                     Result[R.CodeValuta] = 1;
                     var Mult = 0;
-                    if (!js.ValCurs.Valute) {
+                    var badRes = false;
+                    try {
+                        badRes = parseInt(js.ValCurs["$"].Date.split('.')[1]) != parseInt(Date.split('/')[1]);
+                    } catch (e) {}
+                    if (badRes) {
+                        Result[R1.CodeValuta] = 0;
+                        Result[R2.CodeValuta] = 0;
+                        if (R.CodeValuta == Valuta.CodeValuta) Mult = 1;
+                    } else if (!js.ValCurs.Valute) {
                         Result[R1.CodeValuta] = 0;
                         Result[R2.CodeValuta] = 0;
                         if (R.CodeValuta == Valuta.CodeValuta) Mult = 1;
