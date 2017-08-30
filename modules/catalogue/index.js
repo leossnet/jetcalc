@@ -8,6 +8,7 @@ var ModelTreeEdit = (new function () {
     self.parent_code_field = ko.observable();
     self.code_field = ko.observable();
     self.name_field = ko.observable();
+    self.inited = ko.observable(false);
 
     self.LoadTree = function (tree, wrapper, done) {
         if (tree) {
@@ -15,7 +16,7 @@ var ModelTreeEdit = (new function () {
             return done && done();
         }
         wrapper = wrapper || function (el) {
-            return el[self.name_field()]
+            return el[self.name_field()] + '.' + el[self.code_field()]
         };
         $.getJSON('/api/modules/catalogue/tree-data', {
             model: self.model()
@@ -47,7 +48,7 @@ var ModelTreeEdit = (new function () {
                         if (el[self.parent_code_field()] === pel.code) {
                             pel.type = 'folder';
                             var new_el = {
-                                text: el[self.name_field()],
+                                text: wrapper(el),
                                 code: el[self.code_field()],
                                 model: self.model(),
                                 type: 'item',
@@ -73,6 +74,8 @@ var ModelTreeEdit = (new function () {
             return done && done();
         })
     }
+    
+    self.leafs_with_listeners = ko.observableArray([]);
 
     self.DataSource = function (options, callback) {
         var Answ = {};
@@ -99,6 +102,7 @@ var ModelTreeEdit = (new function () {
                 ModelTableEdit.InitModel(self.model());
                 ModelTableEdit.IsOverrideList(true);
                 ModelTableEdit.custom_overriding(false);
+                self.inited(true);
             });
         }
         done && done();
@@ -865,6 +869,10 @@ var ModelTableEdit = (new function () {
 
     self.TableFieldsModel = ko.observable(null);
 
+    self.ChangeMode = function () {
+        self.IsOverrideList(!self.IsOverrideList());
+    }
+
 
     self.GetEditFields = function () {
         if (self.EditFields().length) return self.EditFields();
@@ -1084,6 +1092,7 @@ var ModelTableEdit = (new function () {
         self.skip = 0;
         self.limit = 50;
         self.NoAccess(!PermChecker.ModelAccess(ModelName));
+        ModelTreeEdit.inited(false);
     }
 
     self.Clear = function () {

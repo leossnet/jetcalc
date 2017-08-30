@@ -48,7 +48,7 @@ var MDocument = (new function () {
             });
             FirstLevel.forEach(function (FL) {
                 Tree[FL.CodeDocFolder] = {
-                    text: "<i class='ace-icon fa " + FL.Icon + " orange'></i> " + FL.NameDocFolder,
+                    text: "<i class='ace-icon fa " + FL.Icon + " orange'></i> " + FL.NameDocFolder + "." + FL.CodeDocFolder,
                     model: "docfolder",
                     code: FL.CodeDocFolder,
                     type: 'folder',
@@ -61,7 +61,7 @@ var MDocument = (new function () {
             List.forEach(function (F) {
                 if (F.CodeParentDocFolder != "") {
                     Tree[F.CodeParentDocFolder]['additionalParameters'].children[F.CodeDocFolder] = {
-                        text: "<i class='ace-icon fa " + F.Icon + " green'></i> " + F.NameDocFolder,
+                        text: "<i class='ace-icon fa " + F.Icon + " green'></i> " + F.NameDocFolder + "." + F.CodeDocFolder,
                         type: 'item',
                         'icon-class': 'green',
                         model: "docfolder",
