@@ -65,7 +65,10 @@ var ValutaRateFormulaEvaluator = (new function () {
         })
     }
 
-    self.evaluate = function (formula, CodeValuta, Year, done) {
+    self.evaluate = function (formula, CodeValuta, Year, force, done) {
+        if (!force) {
+            return done(0, 0);
+        }
         if (!formula) {
             return done(0, 0);
         }
@@ -140,7 +143,7 @@ var ValutaHelper = (new function () {
             .exec(done);
     }
 
-    self.BuildTable = function (CodeValuta, Year, mode, done) {
+    self.BuildTable = function (CodeValuta, Year, mode, force, done) {
         var Table = [];
         self.Periods(function (err, Periods) {
             self.ValutaRates(CodeValuta, Year, function (err, Rates) {
@@ -163,11 +166,12 @@ var ValutaHelper = (new function () {
                         Periods,
                         function (Period) {
                             var CodePeriod = Period.CodePeriod;
-                            ValutaRateFormulaEvaluator.evaluate(Period.ValutaRateFormula, CodeValuta, Year, function (val1, val2) {
-                                var Current = Indexed[CodePeriod] ? Indexed[CodePeriod] : {
+                            var exist = (typeof Indexed[CodePeriod] != 'undefined');
+                            ValutaRateFormulaEvaluator.evaluate(Period.ValutaRateFormula, CodeValuta, Year, (!exist || force), function (val1, val2) {
+                                var Current = {
                                     Value: 1,
-                                    Value1: val1,
-                                    Value2: val2,
+                                    Value1: val1 == 0 ? (Indexed[CodePeriod] ? Indexed[CodePeriod].Value1 : 0) : val1,
+                                    Value2: val2 == 0 ? (Indexed[CodePeriod] ? Indexed[CodePeriod].Value2 : 0) : val2,
                                 };
                                 if ((mode == 'ValutaRates' && Period.IsReportPeriod) || (mode == 'ValutaRatesFormulas' && !Period.IsReportPeriod && (Current.Value1 != 0 || Current.Value2 != 0))) {
                                     Table.push({
@@ -288,7 +292,15 @@ var SyncHelper = (new function () {
                 self.parserXml(data.body, function (err, js) {
                     Result[R.CodeValuta] = 1;
                     var Mult = 0;
-                    if (!js.ValCurs.Valute) {
+                    var badRes = false;
+                    try {
+                        badRes = parseInt(js.ValCurs["$"].Date.split('.')[1]) != parseInt(Date.split('/')[1]);
+                    } catch (e) {}
+                    if (badRes) {
+                        Result[R1.CodeValuta] = 0;
+                        Result[R2.CodeValuta] = 0;
+                        if (R.CodeValuta == Valuta.CodeValuta) Mult = 1;
+                    } else if (!js.ValCurs.Valute) {
                         Result[R1.CodeValuta] = 0;
                         Result[R2.CodeValuta] = 0;
                         if (R.CodeValuta == Valuta.CodeValuta) Mult = 1;
@@ -356,7 +368,7 @@ var SyncHelper = (new function () {
 
 
 router.get('/valutarates', LIB.Require(['Year', 'CodeValuta']), HP.TaskAccess("IsValutaRateOperator"), function (req, res, next) {
-    ValutaHelper.BuildTable(req.query.CodeValuta, parseInt(req.query.Year), req.query.Mode, function (err, Table) {
+    ValutaHelper.BuildTable(req.query.CodeValuta, parseInt(req.query.Year), req.query.Mode, req.query.force, function (err, Table) {
         return res.json(Table);
     });
 })
