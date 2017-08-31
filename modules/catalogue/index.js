@@ -726,21 +726,6 @@ var Catalogue = (new function () {
     }
 
 
-    /*   self.throttled = {};
-    self.throttledTimer = null;
-    self.SearchThrottle = function(params,callback){
-        if (!self.throttled[params.model]) self.throttled[params.model] = {};
-        if (!self.throttled[params.model][params.q]) self.throttled[params.model][params.q] = [];
-        self.throttled[params.model][params.q].push(callback);
-        if (self.throttledTimer) clearTimeout(self.throttledTimer);
-        self.throttledTimer = setTimeout(function(){
-            console.log(self.throttled);
-
-        },1000);
-    }
-*/
-
-
     self.DoSearch = function (params, callback) {
         //return self.SearchThrottle(params, callback);
         self.Error(null);
@@ -798,33 +783,53 @@ var Catalogue = (new function () {
         return "<span class='label label-info'>" + id + "</span> <span data-catalogue='" + model + "_" + id + "'>" + r + "</span>";
     }
 
+    self.Ref = function(modelName,Code){
+        if (!self.References[modelName]) self.References[modelName] = {};
+        if (!self.References[modelName][Code]) self.References[modelName][Code] = "";
+        return self.References[modelName][Code];
+    }
+
+    self.ForceLoad = function(Trs,done){
+        var P = [];
+        for (var ModelName in Trs){
+            P = P.concat(_.map(Trs[ModelName],function(C){
+                return [ModelName,C].join("_");
+            }))
+        }
+        self._load(P,done);
+    }
+
     self.Load = ko.computed(function () {
         var classesToLoad = self.ToLoad();
         self.ToLoad([]);
-        if (!classesToLoad.length) return;
+        if (_.isEmpty(classesToLoad)) return;
         setTimeout(function () {
-            $.ajax({
-                url: self.base + '/translate',
-                type: 'post',
-                data: {
-                    ToLoad: classesToLoad
-                },
-                success: function (res) {
-                    for (var modelName in res) {
-                        if (!self.References[modelName]) self.References[modelName] = {};
-                        self.References[modelName] = _.merge(self.References[modelName], res[modelName]);
-                        var Loaded = _.keys(res[modelName]);
-                        Loaded.forEach(function (L) {
-                            _.pull(self.InProgress, modelName + '_' + L);
-                        })
-                    }
-                    setTimeout(self.UpdateDom, 0);
-                }
-            })
+           self._load(classesToLoad,function(){
+                setTimeout(self.UpdateDom, 0);
+           });
         }, 0)
     }).extend({
         throttle: 500
     })
+
+    self._load = function(models,done){
+        $.ajax({
+            url: self.base + '/translate',
+            type: 'post',
+            data: {ToLoad: models},
+            success: function (res) {
+                for (var modelName in res) {
+                    if (!self.References[modelName]) self.References[modelName] = {};
+                    self.References[modelName] = _.merge(self.References[modelName], res[modelName]);
+                    var Loaded = _.keys(res[modelName]);
+                    Loaded.forEach(function (L) {
+                        _.pull(self.InProgress, modelName + '_' + L);
+                    })
+                }     
+                return done();               
+            }
+        })
+    }
 
     self.UpdateDom = function () {
         $('[data-catalogue]').each(function (index, node) {
@@ -1418,5 +1423,6 @@ var ModelEdit = (new function () {
 
     return self;
 })
+
 
 ModuleManager.Modules.Catalogue = Catalogue;

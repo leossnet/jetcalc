@@ -151,7 +151,7 @@ module.exports = (new function(){
 											CodeProd:OrgRow.CodeProd,
 											CodeBill:OrgRow.CodeBill,
 											CodeAltOrg:OrgRow.CodeOrg,
-											NameRow:SprIndexed.org[OrgRow.CodeOrg].NameOrg,
+											NameRow: (_.isEmpty(OrgRow.CodeOrg)) ? OrgRow.CodeProd:SprIndexed.org[OrgRow.CodeOrg].NameOrg,
 											HasFilteredChild:false,
 											CodeMeasure:SprIndexed.prod[OrgRow.CodeProd].CodeMeasure
 										},PCod);
@@ -224,11 +224,11 @@ module.exports = (new function(){
 	}
 
 
-	setTimeout(function(){
+/*	setTimeout(function(){
 		self.SyncTree("sale","admin",function(err){
 			console.log("Sync is done");
 		})
 	},2000)
-
+*/
 	return self;
 })

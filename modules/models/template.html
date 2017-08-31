@@ -462,4 +462,15 @@
 </div>
 
 
+<script id="menu_li_mode" type="text/html">
+    <ul class="nav nav-tabs" style='display: inline-block;vertical-align: bottom;'>  
+      <!-- ko foreach:$data -->
+        <li data-bind='css:{active:$data==$parents[1].Mode()}'>
+          <a data-toggle="tab" class='toolbar-tab' data-bind='click:$parents[1].Mode.bind(null,$data)'>
+            <span data-bind='lang:$data'></span>
+          </a>
+        </li>
+      <!-- /ko -->
+    </ul>     
+</script>
 

@@ -1,0 +1,9 @@
+{
+  "id": "predict",
+  "title": "Гадалка",
+  "icon": "fa-code-fork",
+  "is_enabled": true,
+  "class_name": "Predict",
+  "initial_load":false,
+  "guest_load":false
+}

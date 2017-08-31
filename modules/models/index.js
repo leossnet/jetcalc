@@ -286,5 +286,3 @@ ko.bindingHandlers.selectize_tags = {
     }
 
 }
-
-

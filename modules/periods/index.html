@@ -44,6 +44,11 @@
             <!-- ko template:'connect_form' --><!-- /ko -->
         <!-- /ko -->
         <!-- ko if:Mode()=='PeriodEdit' -->
+            <div class='handsonContainer'>
+                <div class="handsontable single"  data-bind="handson-table:MPeriods.PeriodEditConfig,handson-table-result:MPeriods.PeriodEditResult"></div>  
+            </div>
+        <!-- /ko -->
+        <!-- ko if:false -->
         <div class='row' data-bind='with:$data.Table'>
             <!-- ko foreach: _.keys($data) -->
             <div class='widget-box transparent'>

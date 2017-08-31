@@ -1,35 +1,31 @@
 <div class="intab-container">
 	 <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MCustomReport'>
-	 	<div class="btn-group">
-          <a class='btn btn-sm btn-info btn-white ' data-bind="title:'Новый отчет',click:NewReport">
+      <div class="btn-group">
+          <a class='btn btn-sm  btn-white ' data-bind="title:'Новый отчет',click:NewReport">
             <i class="ace-icon fa fa-file-o"></i>
           </a>
-          <a class='btn btn-sm btn-warning btn-white ' data-bind="title:'Загрузить',click:LoadReport">
+          <a class='btn btn-sm  btn-white ' data-bind="title:'Загрузить',click:LoadReport">
             <i class="ace-icon fa fa-folder-open-o"></i>
           </a>
-	 	</div>
-        <div class="btn-group">
-          <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Сохранить данные',click:SaveChanges">
-            <i class="ace-icon fa fa-save"></i>
-          </a>
-          <a class='btn btn-sm btn-warning btn-white ' data-bind="title:'Отменить все изменения',click:RollBack">
-            <i class="ace-icon fa fa-undo"></i>
-          </a>
-          <!-- ko template:'tb_simple_loader' --><!-- /ko -->
-        </div>
-        <div class="btn-group">
-            <!-- ko template:'tb_colapse_expand' --><!-- /ko -->      
-        </div>
-        <div class="btn-group">
-            <!-- ko ifnot:IsOlap() -->
-              <!-- ko template:{name:'tb_mode_switch',data:{mode:'ModifyView'}} --><!-- /ko -->      
-            <!-- /ko -->
-            <!-- ko template:{name:'tb_mode_switch',data:{mode:'SingleView'}} --><!-- /ko -->      
-            <!-- ko template:{name:'tb_mode_switch',data:{mode:'ColumnsView'}} --><!-- /ko -->      
-        </div>
+      </div>
+      <div class="btn-group">
+      <a class='btn btn-sm  btn-white ' data-bind="title:'Сохранить данные',click:SaveChanges">
+        <i class="ace-icon fa fa-save"></i>
+      </a>
+      <a class='btn btn-sm  btn-white ' data-bind="title:'Отменить все изменения',click:RollBack">
+        <i class="ace-icon fa fa-refresh"></i>
+      </a>
+      <!-- ko template:'tb_simple_loader' --><!-- /ko -->
+      </div>
+
+      <!-- ko ifnot:IsOlap() -->
+        <!-- ko template:{name:'menu_li_mode',data:['ModifyView','SingleView','ColumnsView']} --><!-- /ko -->
+      <!-- /ko -->
+      <!-- ko if:IsOlap() -->
+        <!-- ko template:{name:'menu_li_mode',data:['ModifyView','SingleView','ColumnsView']} --><!-- /ko -->
+      <!-- /ko -->
 
     </div>
-    <!-- ko template:'contextBar' --><!-- /ko -->
 
     <!-- ko with: MCustomReport.Error -->
 		<div class="alert alert-danger"><span data-bind="text:$data"></span></div>
@@ -40,7 +36,11 @@
    <div class='row'>
       <div class='col-xs-6' style='padding: 0px;'>
          <div class='handsonContainer' >
-              <div class="handsontable single" ></div>    
+              <div class="handsontable single" data-bind='handson-table:{
+                  Table:MCustomReport.ETable,
+                  Config:MCustomReport.ETableConfig,
+                  Changes:MCustomReport.EChanges
+              }'></div>    
          </div>
       </div>
       <div class='col-xs-6' style='padding: 0px;'>

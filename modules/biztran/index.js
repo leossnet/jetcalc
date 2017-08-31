@@ -14,6 +14,8 @@ var MBiztran = (new function() {
     	self.Show();
     }
 
+    self.IsUseOrg = ko.observable(false);
+
     self.BeforeHide = function(){
     	self.UnSubscribeDoc();
     	self.Rows = [];
@@ -31,13 +33,14 @@ var MBiztran = (new function() {
     self.BiztranInfo = {};
 
     self.LoadBiztranInfo = function(done){
+    	self.IsUseOrg(MFolders.FindDocument(CxCtrl.CodeDoc()).UseOrg);
     	self.rGet("biztraninfo",CxCtrl.CxPermDoc(),function(data){
     		for (var ModelName in data){
     			var Arr = ModelClientConfig.CodeAndName(ModelName);
 				self.BiztranInfo[ModelName] = _.map(data[ModelName],function(D){
 					return _.pick(D,Arr);
 				});
-    		}
+    		}    		
     		return done();
     	})
     }
@@ -240,7 +243,7 @@ var MBiztran = (new function() {
 	}
 
 	self.LoadExisted = function(done){
-		self.rGet("rows",CxCtrl.CxPermDoc(),function(data){
+		self.rGet("rows",_.merge(CxCtrl.CxPermDoc(),{UseOrg:self.IsUseOrg()}),function(data){
 			self.Rows = data;
 			return done();
 		})
