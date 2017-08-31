@@ -968,7 +968,7 @@ var ModelTableEdit = (new function () {
         delete template["_id"];
         template.Links.forEach(function(ln){
             template['Link_' + ln]().forEach(function(l){
-                delete l[l.code];
+                delete l[l.Code];
                 delete l["_id"]
             })
         })
