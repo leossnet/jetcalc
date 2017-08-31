@@ -9,72 +9,115 @@ var ModelTreeEdit = (new function () {
     self.code_field = ko.observable();
     self.name_field = ko.observable();
     self.inited = ko.observable(false);
+    self.wrapper = ko.observable(null);
+    self.row_data = ko.observableArray([]);
+    self.current_data = ko.observableArray([]);
 
-    self.LoadTree = function (tree, wrapper, done) {
+    self.BuildTree = function (data) {
+        var Tree = {};
+        var used = 0;
+        var current_level = [];
+        var tcurrent_level = [];
+        data.forEach(function (el) {
+            if (el[self.parent_code_field()] === "") {
+                Tree[el[self.code_field()]] = {
+                    text: wrapper(el), //el[self.name_field()],
+                    code: el[self.code_field()],
+                    model: self.model(),
+                    type: 'item',
+                    'icon-class': '',
+                    additionalParameters: {
+                        children: {},
+                    }
+                }
+                used += 1;
+                current_level.push(Tree[el[self.code_field()]]);
+            }
+        })
+        while (used < data.length) {
+            var change = false;
+            current_level.forEach(function (pel) {
+                data.forEach(function (el) {
+                    if (el[self.parent_code_field()] === pel.code) {
+                        pel.type = 'folder';
+                        var new_el = {
+                            text: wrapper(el),
+                            code: el[self.code_field()],
+                            model: self.model(),
+                            type: 'item',
+                            'icon-class': '',
+                            additionalParameters: {
+                                children: {},
+                            }
+                        }
+                        pel.additionalParameters.children[el[self.code_field()]] = new_el;
+                        tcurrent_level.push(new_el);
+                        used += 1;
+                        change = true;
+                    }
+                })
+            })
+            if (!change) {
+                break;
+            }
+            current_level = tcurrent_level;
+            tcurrent_level = [];
+        }
+        self.Tree(Tree);
+    }
+
+    self.CutTree = function (data) {
+        var prep_data = [];
+        var prep_data_codes = [];
+        data.forEach(function (el) {
+            var cur = _.filter(self.row_data(), function (el2) {
+                    return el[self.code_field()] === el2[self.code_field()];
+                })[0];
+            while (cur[self.parent_code_field()] != '') {
+                if (prep_data_codes.indexOf(cur[self.code_field()]) == -1) {
+                    prep_data.push(cur);
+                    prep_data_codes.push(cur[self.code_field()])
+                }
+                cur = _.filter(self.row_data(), function (el2) {
+                    return el2[self.code_field()] === cur[self.parent_code_field()];
+                })[0];
+            }
+            if (prep_data_codes.indexOf(cur[self.code_field()]) == -1) {
+                prep_data.push(cur);
+                prep_data_codes.push(cur[self.code_field()]);
+            }
+        })
+        self.current_data(prep_data);
+        self.BuildTree(prep_data);
+    }
+
+    self.ReloadTree = function (data) {
+        if (self.current_data().length != data.length) {
+            self.CutTree(data);
+        } else {
+            self.current_data(self.row_data());
+            self.BuildTree(self.row_data());
+        }
+    }
+
+    self.LoadTree = function (tree, done) {
         if (tree) {
             self.Tree(tree);
             return done && done();
         }
-        wrapper = wrapper || function (el) {
+        wrapper = self.wrapper() || function (el) {
             return el[self.name_field()] + '.' + el[self.code_field()]
         };
         $.getJSON('/api/modules/catalogue/tree-data', {
             model: self.model()
         }, function (data) {
-            var Tree = {};
-            var used = 0;
-            var current_level = [];
-            var tcurrent_level = [];
-            data.forEach(function (el) {
-                if (el[self.parent_code_field()] === "") {
-                    Tree[el[self.code_field()]] = {
-                        text: wrapper(el), //el[self.name_field()],
-                        code: el[self.code_field()],
-                        model: self.model(),
-                        type: 'item',
-                        'icon-class': '',
-                        additionalParameters: {
-                            children: {},
-                        }
-                    }
-                    used += 1;
-                    current_level.push(Tree[el[self.code_field()]]);
-                }
-            })
-            while (used < data.length) {
-                var change = false;
-                current_level.forEach(function (pel) {
-                    data.forEach(function (el) {
-                        if (el[self.parent_code_field()] === pel.code) {
-                            pel.type = 'folder';
-                            var new_el = {
-                                text: wrapper(el),
-                                code: el[self.code_field()],
-                                model: self.model(),
-                                type: 'item',
-                                'icon-class': '',
-                                additionalParameters: {
-                                    children: {},
-                                }
-                            }
-                            pel.additionalParameters.children[el[self.code_field()]] = new_el;
-                            tcurrent_level.push(new_el);
-                            used += 1;
-                            change = true;
-                        }
-                    })
-                })
-                if (!change) {
-                    break;
-                }
-                current_level = tcurrent_level;
-                tcurrent_level = [];
-            }
-            self.Tree(Tree);
+            self.row_data(data);
+            self.current_data(data);
+            self.BuildTree(data);
             return done && done();
         })
     }
-    
+
     self.leafs_with_listeners = ko.observableArray([]);
 
     self.DataSource = function (options, callback) {
@@ -98,7 +141,8 @@ var ModelTreeEdit = (new function () {
             cn = ModelClientConfig.CodeAndName(self.model());
             self.code_field(cn[0]);
             self.name_field(cn[1]);
-            self.LoadTree(data.Tree, data.wrapper, function () {
+            self.wrapper(data.wrapper);
+            self.LoadTree(data.Tree, function () {
                 ModelTableEdit.InitModel(self.model());
                 ModelTableEdit.IsOverrideList(true);
                 ModelTableEdit.custom_overriding(false);
@@ -1139,6 +1183,9 @@ var ModelTableEdit = (new function () {
                 return MModels.Create(self.ModelName(), M);
             }));
             self.ModelsCount(data.count);
+            if (self.IsOverrideList()) {
+                ModelTreeEdit.ReloadTree(data.models);
+            }
         })
     }
 
