@@ -36,7 +36,7 @@ var HeadersLoader = (new function(){
 					Link[Code] =  {
 						model:"header",
 						code:Code,
-						text:Map[Code].NameHeader+" ("+Code+")",
+						text:Map[Code].NameHeader+"."+Code,
 						type:(_.isEmpty(_children(Code))) ? 'item':'folder',
 						additionalParameters:{
 							children:{}
@@ -50,7 +50,7 @@ var HeadersLoader = (new function(){
 				HeadersTree[r.CodeHeader]	= {
 					model:"header",
 					code:r.CodeHeader,
-					text:Map[r.CodeHeader].NameHeader+" ("+r.CodeHeader+")",
+					text:Map[r.CodeHeader].NameHeader+"."+r.CodeHeader,
 					type:(_.isEmpty(_children(r.CodeHeader))) ? 'item':'folder',
 					additionalParameters:{
 						children:{}

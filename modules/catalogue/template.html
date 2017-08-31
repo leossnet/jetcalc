@@ -113,6 +113,19 @@
     </a>
 </script>
 
+<script id="model_edit_mode" type="text/html">
+    <!-- ko if: ModelTableEdit.IsOverrideList -->
+    <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Таблица',click:ModelTableEdit.ChangeMode,css:{disabled:ModelTableEdit.NoAccess()}" id='modelmodetable'>
+        <i class="ace-icon fa fa-table"></i>
+    </a>
+    <!-- /ko -->
+    <!-- ko ifnot: ModelTableEdit.IsOverrideList -->
+    <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Дерево',click:ModelTableEdit.ChangeMode,css:{disabled:ModelTableEdit.NoAccess()}" id='modelmodetree'>
+        <i class="ace-icon fa fa-indent"></i>
+    </a>
+    <!-- /ko -->
+</script>
+
 <script id="model_edit_buttons" type="text/html">
     <div class="btn-group">
         <!-- ko template:'model_edit_add' -->
@@ -122,6 +135,10 @@
         <!-- ko template:'model_edit_delete' -->
         <!-- /ko -->
         <!-- ko template:'model_edit_settings' -->
+        <!-- /ko -->
+        <!-- ko if: ModelTreeEdit.inited -->
+        <!-- ko template:'model_edit_mode' -->
+        <!-- /ko -->
         <!-- /ko -->
     </div>
 </script>
