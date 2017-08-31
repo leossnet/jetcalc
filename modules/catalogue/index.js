@@ -71,8 +71,8 @@ var ModelTreeEdit = (new function () {
         var prep_data_codes = [];
         data.forEach(function (el) {
             var cur = _.filter(self.row_data(), function (el2) {
-                    return el[self.code_field()] === el2[self.code_field()];
-                })[0];
+                return el[self.code_field()] === el2[self.code_field()];
+            })[0];
             while (cur[self.parent_code_field()] != '') {
                 if (prep_data_codes.indexOf(cur[self.code_field()]) == -1) {
                     prep_data.push(cur);
@@ -697,6 +697,11 @@ var Catalogue = (new function () {
                 ModelTableEdit.Add();
             }
         })
+        MSite.Events.on("addrecordtemplate", function () {
+            if (!ModelTableEdit.NoAccess() && ModelTableEdit.Choosed()) {
+                ModelTableEdit.AddByTemplate();
+            }
+        })
         ModelClientConfig.Load(done);
     }
 
@@ -951,6 +956,47 @@ var ModelTableEdit = (new function () {
         var n = MModels.Create(self.ModelName(), {});
         self.LoadedModel(n);
         self.Events.emit("modelcreated");
+    }
+
+    self.AddByTemplate = function () {
+        var template = self.LoadedModel()
+        delete template["_id"];
+        template.Links.forEach(function(ln){
+            template['Link_' + ln]().forEach(function(l){
+                delete l[l.code];
+                delete l["_id"]
+            })
+        })
+        var wrong_code = self.Choosed();
+        self.Choosed(null);
+        delete self.LoadedModel(template)
+        self.Events.emit("modelcreated");
+        setTimeout(function () {
+            input = _.filter($('input'), function (el) {
+                return el.value === wrong_code;
+            })[0];
+            input.setAttribute("style", "background-color: #ffeaf5;");
+            input.parentElement.setAttribute("style", "background-color: #ffeaf5;");
+            input.focus();
+            input.addEventListener('keyup', function (e) {
+                self.Links().forEach(function (ln) {
+                    self.LoadedModel()['Link_' + ln]().forEach(function (l) {
+                        var cl = _.filter(_.keys(MModels.Config[ln].fields), function (k) {
+                            return MModels.Config[ln].fields[k].refmodel == self.ModelName();
+                        })[0]
+                        l[cl](e.target.value);
+                    })
+                })
+                if (e.target.value != wrong_code) {
+                    input.setAttribute("style", "background-color: white;");
+                    input.parentElement.setAttribute("style", "background-color: white;");
+
+                } else {
+                    input.setAttribute("style", "background-color: #ffeaf5;");
+                    input.parentElement.setAttribute("style", "background-color: #ffeaf5;");
+                }
+            }, false)
+        }, 500)
     }
 
     self.Delete = function () {

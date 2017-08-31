@@ -95,6 +95,12 @@
     </a>
 </script>
 
+<script id="model_edit_add_template" type="text/html">
+    <a class='btn btn-sm btn-success btn-white ' data-bind="title:'Новый по шаблону <u>Ctrl+Shift+Ins</u>',click:ModelTableEdit.AddByTemplate,css:{disabled:ModelTableEdit.NoAccess() || !ModelTableEdit.Choosed()}" id='modeladdtemplate'>
+        <i class="ace-icon fa fa-file-text-o"></i>
+    </a>
+</script>
+
 <script id="model_edit_delete" type="text/html">
     <a class='btn btn-sm btn-warning btn-white ' data-bind="title:'Удалить',click:ModelTableEdit.Delete,css:{disabled:ModelTableEdit.NoAccess() || !ModelTableEdit.LoadedModel()}">
         <i class="ace-icon fa fa-trash-o"></i>
@@ -129,6 +135,8 @@
 <script id="model_edit_buttons" type="text/html">
     <div class="btn-group">
         <!-- ko template:'model_edit_add' -->
+        <!-- /ko -->
+        <!-- ko template:'model_edit_add_template' -->
         <!-- /ko -->
         <!-- ko template:'model_edit_save' -->
         <!-- /ko -->
