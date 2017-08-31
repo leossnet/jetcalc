@@ -129,6 +129,8 @@ var MPeriods = (new function () {
         return done && done()
     }
 
+    
+
     // PeriodEdit
     self.Table = ko.observable();
     self.Year = ko.observable();
@@ -174,14 +176,60 @@ var MPeriods = (new function () {
         self.LoadTable();
     }
 
+    self.PeriodEditConfig = ko.observable();
+    self.PeriodEditResult = ko.observableArray();
+
     self.LoadTable = function () {
         if (!self.Year()) self.Year(CxCtrl.Year());
         self.rGet('table', {
             Year: self.Year()
         }, function (data) {
             self.Table(data);
+            var ColWidths = [200];
+            var ToTranslate = {}
+            var Header = [[{label:'Группа документов',colspan:1}],[{label:'',colspan:1}]], Rows = {}, Columns = [{data:"Name",renderer: "text",readOnly:true}];
+
+            var Trs = {periodgrp:[],period:[],role:[]};
+            for (var CodePeriodGrp in data){
+                Trs.periodgrp.push(CodePeriodGrp);
+                for (var CodePeriod in data[CodePeriodGrp]){
+                    Trs.period.push(CodePeriod);
+                    for (var CodeRole in data[CodePeriodGrp][CodePeriod]){
+                        Trs.role.push(CodeRole);
+                    }                    
+                }                    
+            }
+            for (var K in Trs) Trs[K] = _.uniq(Trs[K]);
+            Catalogue.ForceLoad(Trs,function(){
+                for (var CodePeriodGrp in data){
+                    var PeriodsInfo = data[CodePeriodGrp];
+                    Header[0].push({label:Catalogue.References["periodgrp"][CodePeriodGrp],colspan:_.keys(PeriodsInfo).length});
+                    for (var CodePeriod in PeriodsInfo){
+                        Header[1].push({label:Catalogue.References["period"][CodePeriod],colspan:1});
+                        Columns.push ({type:"checkbox",data:CodePeriod})
+                        ColWidths.push(70);
+                        var DataOpened = PeriodsInfo[CodePeriod];
+                        for (var CodeRole in DataOpened){
+                            if (!Rows[CodeRole]) Rows[CodeRole] = {CodeRole:CodeRole,Name:Catalogue.References["role"][CodeRole]};
+                            Rows[CodeRole][CodePeriod] = DataOpened[CodeRole];
+                        }
+                    }
+                }
+                var Config = {
+                    Header:Header,
+                    Columns:Columns,
+                    Rows:Rows,
+                    Plugins:["Header"],
+                    GetData:self.PeriodEditResult,
+                    CFG:{
+                        colWidths: ColWidths
+                    }
+                }
+                self.PeriodEditConfig(Config);
+            })
         })
     }
+
 
     return self;
 })
@@ -243,12 +291,3 @@ ko.components.register('period-formula-editor', {
     },
     template: '<table data-bind="if:ParsedArray().length" class="table table-striped table-bordered table-hover dataTable no-footer small-paddings" style="width: initial;"><theader><tr><td >Исх.Период</td><td >Цел.Период</td><td >Згл.Период</td><td >Смещ.Год</td><td ></td></tr></theader><tbody data-bind="foreach:ParsedArray()"><tr><td><input data-bind="value:$data.From" style="width: 50px;"></input></td><td><input data-bind="value:$data.To" style="width: 50px;"></input></td><td><input data-bind="value:$data.Header" style="width: 50px;"></input></td><td><input data-bind="value:$data.Year" style="width: 50px;"></input></td><td><a data-bind="click:$parent.RemoveFormula"><i class="fa fa-icon fa-times"></i></a></td></tr></tbody></table><a class="addLinkModel" data-bind="click:AddFormula">Добавить</a>',
 });
-
-ko.bindingHandlers.mask = {
-    init: function (element, valueAccessor, allBindingsAccessor) {
-        var value = ko.utils.unwrapObservable(valueAccessor());
-        if (value) {
-            $(element).mask(value);
-        }
-    },
-};

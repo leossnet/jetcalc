@@ -1,3 +1,110 @@
+var HEditor = function(dom,params,ResultObservable){
+    var self = this;
+
+    self.Dom = dom;
+    self.Params = params;
+
+    self.AddChange = function(changes, source){
+        console.log("Changes ",arguments);
+    }
+
+    self.DiscretChanges = {};
+    self.InitialValues  = {};
+
+    self.BaseConfig ={
+        rowHeaders:true,
+        colHeaders:true,
+        autoRowSize:true,
+        minSpareRows: 0,
+        minSpareCols: 0,
+        currentColClassName: 'currentCol',
+        currentRowClassName: 'currentRow',
+        fixedRowsTop: 0,
+        fixedColumnsLeft: 1,
+        manualColumnResize: true,
+        afterChange: self.AddChange,
+        trimDropdown: false,
+        data:[]
+    };
+
+
+    self.Table = null;
+
+    self.RenderTimeout = null;
+    self.Render = function(){
+        if (self.RenderTimeout) {
+            clearTimeout(self.RenderTimeout);
+            self.RenderTimeout = null;
+            self.RenderTimeout = setTimeout(function(){
+                self.RenderTimeout = null;
+                self.Table.render();
+            },100);
+        }        
+    }
+
+    self.Config = function(Params){
+        Params = Params || self.Params;
+        var Result = _.clone(self.BaseConfig);
+        if (_.isEmpty(Params)) return Result;
+        if (!_.isEmpty(Params.CFG)) Result = _.merge(Result,Params.CFG);
+        Result.columns = Params.Columns;
+        Result.data = _.values(Params.Rows);
+        if (!_.isEmpty(Params.Header)){
+          Result.headers = Params.Header;
+        }
+        return Result;
+    }
+    
+    self.Init = function(){
+        var CFG = self.Config();
+        if (CFG.GetData) CFG.GetData = self.GetData;
+        self.Table  =  new Handsontable(self.Dom, CFG);
+        if (!_.isEmpty(CFG.headers)){
+            new HandsonTableHelper.HeaderGenerator(self.Table);  
+        }
+
+    }
+
+    self.Dispose = function(){
+        self.Table.destroy();
+        self.Table = null;
+    }
+
+    self.Update = function(params){
+        var CFG = self.Config(params);
+        self.Table.loadData(CFG.data);
+        ResultObservable(CFG.data);
+    }
+    
+    return self;
+}
+
+
+ko.bindingHandlers['handson-table'] = {
+    init: function(element, valueAccessor, allBindings, data, context) {
+        var params = ko.utils.unwrapObservable(valueAccessor());
+        var result = allBindings()['handson-table-result'];
+        var Editor = new HEditor(element,params,result);                
+        element.HTable = Editor;
+        element.HTable.Init();
+        ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+            element.HTable.Dispose()
+            delete element.HTable;
+        });
+    },
+    update: function (element, valueAccessor, allBindingsAccessor) {
+        var params = ko.utils.unwrapObservable(valueAccessor());
+        element.HTable.Update(params);
+    }
+};
+
+
+
+
+
+
+
+
 
 ko.bindingHandlers.treeSelector = {
     init: function(element, valueAccessor, allBindingsAccessor) {
@@ -518,6 +625,15 @@ ko.bindingHandlers.doubleClick= {
             }
         });
     }
+};
+
+ko.bindingHandlers.mask = {
+    init: function (element, valueAccessor, allBindingsAccessor) {
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        if (value) {
+            $(element).mask(value);
+        }
+    },
 };
 
 
