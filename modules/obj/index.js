@@ -43,15 +43,19 @@ var MObj = (new function() {
         self.UnSubscribe();
     } 
 
+    self.Update = function(){
+    	self.rPing("refresh");
+    	self.Show();
+    }
 
     self.ModelIsSaved = function(){
-        self.rPing("refresh");
+        self.Update();
     }
     self.ModelIsCreated = function(){
-        self.rPing("refresh");
+     	self.Update();
     }
     self.ModelIsDeleted = function(){
-        self.rPing("refresh");
+        self.Update();
     }
 
     self.SaveChanges = function(){
