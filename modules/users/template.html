@@ -99,6 +99,9 @@
 			<button class="btn btn-sm btn-white btn-success" data-bind="click: MUsers.AcceptNewUser">
 				<i class="ace-icon fa fa-check fa-2" aria-hidden="true"></i>Подтвердить
 			</button>
+            <button style="float:right" class="btn btn-sm btn-white btn-danger" data-bind="click: MUsers.RejectNewUser">
+				<i class="ace-icon fa fa-lock fa-2" aria-hidden="true"></i>Отказать
+			</button>
 		</div>
 	<!-- /ko -->
 </script>
@@ -114,6 +117,9 @@
 		<div class='m10_p5'>
 			<button class="btn btn-sm btn-white btn-success" data-bind="click: MUsers.AcceptRequest">
 				<i class="ace-icon fa fa-check fa-2" aria-hidden="true"></i>Подтвердить
+			</button>
+            <button style="float:right" class="btn btn-sm btn-white btn-danger" data-bind="click: MUsers.RejectRequest">
+				<i class="ace-icon fa fa-lock fa-2" aria-hidden="true"></i>Отказать
 			</button>
 		</div>
 	<!-- /ko -->
