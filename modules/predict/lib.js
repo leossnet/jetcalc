@@ -1,6 +1,6 @@
 var _ = require("lodash");
 var async = require("async");
-//var csv = require('csv-parser')
+var csv = require('csv-parser')
 var fs = require('fs')
 
 var Reparse = (new function(){
