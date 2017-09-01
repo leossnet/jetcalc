@@ -60,6 +60,19 @@ var MSite = (new function () {
         console.log(CurrentUrl);
     }
 
+    self.Subscribe = function(CFG){
+        self.UnSubscribe(CFG);
+        for (var EvName in CFG){
+            self.Events.on(EvName, CFG[EvName]);
+        }
+    }
+
+    self.UnSubscribe = function(CFG){
+        for (var EvName in CFG){
+            self.Events.off(EvName, CFG[EvName]);
+        }
+    }
+
     self.AnnounceTimeout = {
         ctrls: null,
         scroll: null,

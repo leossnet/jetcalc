@@ -163,7 +163,15 @@ var MBiztran = (new function() {
 	}
 
 	self.DataForTable = function(){
-		var Cols2Show = ["Index","CodeBill","CodeProd","CodeOrg","CodeDogovor"], TableCells  = [];
+		var Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
+		var AddCols = [];
+		["Prod","Org","Dogovor","DogovorArt"].forEach(function(F){
+			if (Doc["Use"+F]==true){
+				AddCols.push("Code"+F);
+			}
+		})
+		var Cols2Show = ["Index","CodeBill"].concat(AddCols);
+		var TableCells  = [];
 		self.Rows.forEach(function(R){
 			TableCells.push(_.pick(R,Cols2Show))
 		})

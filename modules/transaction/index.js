@@ -12,9 +12,20 @@ var MTransaction = (new function () {
         self.Show();
     }
 
-    self.ModelIsCreated = function () {}
-    self.ModelIsLoaded = function () {}
-    self.ModelIsSaved = function () {}
+    self.Update = function(){
+        self.Show();
+    }
+
+    self.ModelIsCreated = function () {
+        self.Update();
+    }
+
+    self.ModelIsSaved = function () {
+        self.Update();
+    }
+    self.ModelIsDeleted = function(){
+        self.Update();
+    }
 
     self.IsAvailable = function () {
         return PermChecker.CheckPrivelegeAny(["IsTransactionTunner"]);

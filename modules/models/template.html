@@ -474,3 +474,40 @@
     </ul>     
 </script>
 
+
+<script id="save_with_count" type="text/html">
+    <a class="btn btn-sm btn-white" data-bind="
+        title:Tr('savechanges'),
+        click:$data.save,
+        css:{
+            'disabled btn-info':!$data.count(),
+            'btn-warning':$data.count()
+        }" >
+        <i class="ace-icon fa fa-save" data-bind="css:{'faa-vertical animated':$data.count()}"></i>
+        <!-- ko if:$data.count() -->
+            <strong class="fa-stack-1x calendar-text" data-bind="text:$data.count()"></strong>
+        <!-- /ko -->
+    </a>
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
