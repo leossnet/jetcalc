@@ -30,7 +30,8 @@ var Reparse = (new function(){
 		var lvl = function(text){
 			return (text.length-(text.trim()).length)/2;
 		}
-		async.eachSeries(["Младенческая смертность.csv","Число разводов.csv","Число браков.csv","Численность умерших.csv","Численность родившихся.csv"],
+		//"Число разводов.csv",
+		async.eachSeries(["Младенческая смертность.csv","Число браков.csv","Численность умерших.csv","Численность родившихся.csv"],
 		function(filename,cb){
 			self.toJSON(filename,function(err,rows){
 				rows.forEach(function(row){
@@ -42,9 +43,9 @@ var Reparse = (new function(){
 					var Data = {};
 					for (var date in row){
 						var cleared = date.replace(/[^а-я0-9 ]/g,"").split(" ");
-						var year = cleared[1], month = cleared[0];
+						var year = parseInt(cleared[1]), month = cleared[0];
 						if (!Data[year]) Data[year] = {};
-						Data[year][self.PeriodTranslate[month]] = parseInt(row[date]);					
+						Data[year][parseInt(self.PeriodTranslate[month])] = parseInt(row[date]);					
 					}
 					var ReWorked = {};
 					for (var Year in Data){

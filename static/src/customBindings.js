@@ -1,15 +1,50 @@
-var HEditor = function(dom,params,ResultObservable){
+var HEditor = function(dom,params,ResultObservable,ChangesCount,DiscretChangesLink){
     var self = this;
 
     self.Dom = dom;
     self.Params = params;
 
+    self.ChangesCount = ChangesCount;
+    self.ResultObservable = ResultObservable;
+    self.DiscretChanges = {};
+
     self.AddChange = function(changes, source){
-        console.log("Changes ",arguments);
+        if (!_.isEmpty(changes)){
+            changes.forEach(function(change){
+                var ind = change[0], col = change[1], oldv = change[2], newv = change[3], index = [ind,col].join("_");
+                  if (self.DiscretChanges[index] && self.DiscretChanges[index].old == newv){
+                      delete self.DiscretChanges[index];
+                  } else {
+                      if (self.DiscretChanges[index]){
+                          self.DiscretChanges[index].new = newv;
+                      } else {
+                          self.DiscretChanges[index] = {old:oldv,new:newv}
+                      }                      
+                  }
+            })
+            if (!self.DiscretChanges) self.DiscretChanges = {};
+            self.ChangesCount(_.keys(self.DiscretChanges).length);
+            DiscretChangesLink(self.DiscretChanges);
+        }
     }
 
-    self.DiscretChanges = {};
-    self.InitialValues  = {};
+    self.FlushChangesTimer = null;
+    self.FlushChanges = function(){
+        if (self.FlushChangesTimer) {
+            clearTimeout(self.FlushChangesTimer);
+            self.FlushChangesTimer = null;
+        }
+        self.FlushChangesTimer = setTimeout(function(){
+            self.FlushChangesTimer = null;
+            self._flushChanges();
+        },100);
+    }
+
+    self._flushChanges = function(){
+        self.DiscretChanges = {};
+        DiscretChangesLink(self.DiscretChanges);
+        self.ChangesCount(0);
+    }
 
     self.BaseConfig ={
         rowHeaders:true,
@@ -24,9 +59,12 @@ var HEditor = function(dom,params,ResultObservable){
         manualColumnResize: true,
         afterChange: self.AddChange,
         trimDropdown: false,
+        afterLoadData:self.FlushChanges,
+        fillHandle: {
+          autoInsertRow: false,
+        },
         data:[]
     };
-
 
     self.Table = null;
 
@@ -35,11 +73,11 @@ var HEditor = function(dom,params,ResultObservable){
         if (self.RenderTimeout) {
             clearTimeout(self.RenderTimeout);
             self.RenderTimeout = null;
-            self.RenderTimeout = setTimeout(function(){
-                self.RenderTimeout = null;
-                self.Table.render();
-            },100);
-        }        
+        }
+        self.RenderTimeout = setTimeout(function(){
+            self.RenderTimeout = null;
+            self.Table.render();
+        },100);
     }
 
     self.Config = function(Params){
@@ -62,7 +100,6 @@ var HEditor = function(dom,params,ResultObservable){
         if (!_.isEmpty(CFG.headers)){
             new HandsonTableHelper.HeaderGenerator(self.Table);  
         }
-
     }
 
     self.Dispose = function(){
@@ -73,7 +110,8 @@ var HEditor = function(dom,params,ResultObservable){
     self.Update = function(params){
         var CFG = self.Config(params);
         self.Table.loadData(CFG.data);
-        ResultObservable(CFG.data);
+        self.ResultObservable(CFG.data);
+        self.Render();        
     }
     
     return self;
@@ -84,7 +122,9 @@ ko.bindingHandlers['handson-table'] = {
     init: function(element, valueAccessor, allBindings, data, context) {
         var params = ko.utils.unwrapObservable(valueAccessor());
         var result = allBindings()['handson-table-result'];
-        var Editor = new HEditor(element,params,result);                
+        var count = allBindings()['handson-table-changes-count'];
+        var changes = allBindings()['handson-table-changes'];
+        var Editor = new HEditor(element,params,result,count,changes);                
         element.HTable = Editor;
         element.HTable.Init();
         ko.utils.domNodeDisposal.addDisposeCallback(element, function() {

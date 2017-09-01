@@ -6,6 +6,12 @@
     <!-- /ko -->
     <!-- ko if:Mode()=='PeriodEdit' -->
         <div class="btn-group">
+            <!-- ko template:{name:'save_with_count',data:{save:MPeriods.SaveChanges,count:MPeriods.PeriodEditChangesCount}} --><!-- /ko -->
+            <a class="btn btn-sm btn-white" data-bind="'Отменить все изменения',click:MPeriods.RollBack">
+                <i class="ace-icon fa fa-refresh"></i>
+            </a>
+        </div>
+        <div class="btn-group">
             <a class="btn btn-sm btn-white btn-primary dropdown-toggle" data-toggle="dropdown">
               <span data-bind="text: $data.Year()"></span>
               <i class="fa fa-angle-down icon-on-right fa-light"></i>
@@ -20,7 +26,6 @@
                <!-- /ko -->
            </ul>
        </div>
-       <!-- ko template:'save_changes' --><!-- /ko -->
     <!-- /ko -->
     <!-- ko if:Mode()=='PeriodMap' -->
         <!-- ko template:'model_connect_buttons' --><!-- /ko -->
@@ -44,8 +49,13 @@
             <!-- ko template:'connect_form' --><!-- /ko -->
         <!-- /ko -->
         <!-- ko if:Mode()=='PeriodEdit' -->
-            <div class='handsonContainer'>
-                <div class="handsontable single"  data-bind="handson-table:MPeriods.PeriodEditConfig,handson-table-result:MPeriods.PeriodEditResult"></div>  
+            <div class='handsonContainer' data-bind='with:MPeriods.PeriodEditConfig'>
+                <div class="handsontable single"  data-bind="
+                    handson-table:MPeriods.PeriodEditConfig,
+                    handson-table-result:MPeriods.PeriodEditResult,
+                    handson-table-changes:MPeriods.PeriodEditChanges,
+                    handson-table-changes-count:MPeriods.PeriodEditChangesCount
+                "></div>  
             </div>
         <!-- /ko -->
         <!-- ko if:false -->

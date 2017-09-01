@@ -2,12 +2,26 @@ var MPeriods = (new function () {
 
     var self = new Module("periods");
 
+    self.IsUseOrg = ko.observable(false);
+
+    self.RollBack = function(){
+        self.Show();
+    }
 
     self.BeforeHide = function () {
         self.UnSubscribe();
+        MSite.UnSubscribe({
+            save:self.SaveChanges,
+            refresh:self.RollBack
+        })
     }
+
     self.BeforeShow = function () {
         self.Subscribe();
+        MSite.Subscribe({
+            save:self.SaveChanges,
+            refresh:self.RollBack
+        })
         self.Show();
     }
 
@@ -60,8 +74,6 @@ var MPeriods = (new function () {
             self.Map(prepared);
             self.Opened(data.Opened);
             self.Redirects(data.Redirect);
-            MSite.Events.off("save", self.SaveChanges);
-            MSite.Events.on("save", self.SaveChanges);
             return done && done();
         })
     }
@@ -113,7 +125,7 @@ var MPeriods = (new function () {
                 ModuleManager.IsLoading(false);
                 break;
             case "PeriodEdit":
-                self.UpdateYear();
+                self.LoadTable();
                 break;
             case "PeriodMap":
                 ModelConnectorEdit.Init({
@@ -134,61 +146,23 @@ var MPeriods = (new function () {
     // PeriodEdit
     self.Table = ko.observable();
     self.Year = ko.observable();
-
-    self.SaveChangesPEdit = function () {
-        var NewV = [];
-        var T = self.Table();
-        for (var PG in T) {
-            for (var P in T[PG]) {
-                for (var R in T[PG][P]) {
-                    if (T[PG][P][R]) {
-                        NewV.push({
-                            CodePeriod: P,
-                            CodeRole: R
-                        });
-                    }
-                }
-            }
-        }
-        self.rPut("update", {
-            Year: self.Year(),
-            Value: NewV
-        }, function (data) {
-            self.LoadTable();
-            self.Init();
-        })
-    }
-
-    self.Roles = function () {
-        var Roles = [];
-        try {
-            var K1 = _.first(_.keys(self.Table()));
-            var K2 = _.first(_.keys(self.Table()[K1]));
-            Roles = _.sortBy(_.keys(self.Table()[K1][K2]));
-        } catch (e) {
-            console.warn(e);
-        }
-        return Roles;
-    }
-
     self.UpdateYear = function (Year) {
         self.Year(Year);
         self.LoadTable();
     }
-
     self.PeriodEditConfig = ko.observable();
     self.PeriodEditResult = ko.observableArray();
+    self.PeriodEditChangesCount = ko.observable(0);
+    self.PeriodEditChanges = ko.observable();
 
     self.LoadTable = function () {
         if (!self.Year()) self.Year(CxCtrl.Year());
         self.rGet('table', {
             Year: self.Year()
         }, function (data) {
-            self.Table(data);
             var ColWidths = [200];
             var ToTranslate = {}
             var Header = [[{label:'Группа документов',colspan:1}],[{label:'',colspan:1}]], Rows = {}, Columns = [{data:"Name",renderer: "text",readOnly:true}];
-
             var Trs = {periodgrp:[],period:[],role:[]};
             for (var CodePeriodGrp in data){
                 Trs.periodgrp.push(CodePeriodGrp);
@@ -230,6 +204,25 @@ var MPeriods = (new function () {
         })
     }
 
+    self.SaveChangesPEdit = function () {
+        var NewV = _.flatten(_.map(self.PeriodEditResult(),function(Row){
+            var CodeRole = Row.CodeRole;
+            var Enabled = [];
+            for (var CodePeriod in Row){
+                if (Row[CodePeriod]===true){
+                    Enabled.push({CodeRole:CodeRole,CodePeriod:CodePeriod});
+                }
+            }
+            return Enabled;
+        }));
+        self.rPut("update", {
+            Year: self.Year(),
+            Value: NewV
+        }, function (data) {
+            self.LoadTable();
+            self.Init();
+        })
+    }
 
     return self;
 })
