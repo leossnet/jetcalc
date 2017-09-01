@@ -783,20 +783,20 @@ var Catalogue = (new function () {
         return "<span class='label label-info'>" + id + "</span> <span data-catalogue='" + model + "_" + id + "'>" + r + "</span>";
     }
 
-    self.Ref = function(modelName,Code){
+    self.Ref = function (modelName, Code) {
         if (!self.References[modelName]) self.References[modelName] = {};
         if (!self.References[modelName][Code]) self.References[modelName][Code] = "";
         return self.References[modelName][Code];
     }
 
-    self.ForceLoad = function(Trs,done){
+    self.ForceLoad = function (Trs, done) {
         var P = [];
-        for (var ModelName in Trs){
-            P = P.concat(_.map(Trs[ModelName],function(C){
-                return [ModelName,C].join("_");
+        for (var ModelName in Trs) {
+            P = P.concat(_.map(Trs[ModelName], function (C) {
+                return [ModelName, C].join("_");
             }))
         }
-        self._load(P,done);
+        self._load(P, done);
     }
 
     self.Load = ko.computed(function () {
@@ -804,19 +804,21 @@ var Catalogue = (new function () {
         self.ToLoad([]);
         if (_.isEmpty(classesToLoad)) return;
         setTimeout(function () {
-           self._load(classesToLoad,function(){
+            self._load(classesToLoad, function () {
                 setTimeout(self.UpdateDom, 0);
-           });
+            });
         }, 0)
     }).extend({
         throttle: 500
     })
 
-    self._load = function(models,done){
+    self._load = function (models, done) {
         $.ajax({
             url: self.base + '/translate',
             type: 'post',
-            data: {ToLoad: models},
+            data: {
+                ToLoad: models
+            },
             success: function (res) {
                 for (var modelName in res) {
                     if (!self.References[modelName]) self.References[modelName] = {};
@@ -825,8 +827,8 @@ var Catalogue = (new function () {
                     Loaded.forEach(function (L) {
                         _.pull(self.InProgress, modelName + '_' + L);
                     })
-                }     
-                return done();               
+                }
+                return done();
             }
         })
     }
@@ -966,8 +968,8 @@ var ModelTableEdit = (new function () {
     self.AddByTemplate = function () {
         var template = self.LoadedModel()
         delete template["_id"];
-        template.Links.forEach(function(ln){
-            template['Link_' + ln]().forEach(function(l){
+        template.Links.forEach(function (ln) {
+            template['Link_' + ln]().forEach(function (l) {
                 delete l[l.Code];
                 delete l["_id"]
             })
@@ -980,8 +982,7 @@ var ModelTableEdit = (new function () {
             input = _.filter($('input'), function (el) {
                 return el.value === wrong_code;
             })[0];
-            input.setAttribute("style", "background-color: #ffeaf5;");
-            input.parentElement.setAttribute("style", "background-color: #ffeaf5;");
+            input.value = '';
             input.focus();
             input.addEventListener('keyup', function (e) {
                 self.Links().forEach(function (ln) {
@@ -992,14 +993,6 @@ var ModelTableEdit = (new function () {
                         l[cl](e.target.value);
                     })
                 })
-                if (e.target.value != wrong_code) {
-                    input.setAttribute("style", "background-color: white;");
-                    input.parentElement.setAttribute("style", "background-color: white;");
-
-                } else {
-                    input.setAttribute("style", "background-color: #ffeaf5;");
-                    input.parentElement.setAttribute("style", "background-color: #ffeaf5;");
-                }
             }, false)
         }, 500)
     }
