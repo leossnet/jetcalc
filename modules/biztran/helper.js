@@ -91,77 +91,81 @@ module.exports = (new function(){
 						}					
 					})
 				}
-				mongoose.model("biztranrow").find({CodeDoc:CodeDoc}).isactive().lean().sort({Index:1}).exec(function(err,BRows){
-					mongoose.model("docbill").find({CodeDoc:CodeDoc},"-_id CodeBill").isactive().lean().sort({IndexDocBill:1}).lean().exec(function(err,Bills){
-						Tree.add(Root,{
-							CodeRow:Root,
-							treeroot:Root,
-							CodeParentRow:"",
-						},"ROOT");
-						var UsedBills = _.map(BRows,"CodeBill"), AlreadyAdded = [], AllBills = _.map(Bills,"CodeBill");
-						AllBills.forEach(function(CodeBill){
-							if (UsedBills.indexOf(CodeBill)!=-1){
-								if (AlreadyAdded.indexOf(CodeBill)==-1){
-									AlreadyAdded.push(CodeBill);									
-									Tree.add(CodeBill,{
-										NumRow:CodeBill,
-										CodeRow:Root+"_"+CodeBill,
-										treeroot:Root,
-										NameRow:SprIndexed.bill[CodeBill].NameBill,
-										CodeBill:CodeBill,
-										HasFilteredChild:true
-									},Root);
-								}
-							}
-						})
-						UsedBills.forEach(function(CodeBill){
-							var _bRows = _.filter(BRows,{CodeBill:CodeBill});
-							_bRows.forEach(function(BizRow){
-								var Prod = _.find(Sprs.prod,function(PInfo){
-									return PInfo.prod.CodeProd == BizRow.CodeProd;
-								})
-								_.reverse(Prod.tree).concat(Prod.prod).forEach(function(Pr){
-									var Cod = [BizRow.CodeBill,Pr.CodeProd].join("_");
-									var PCode = _.isEmpty(Pr.CodeParentProd) ? CodeBill : [BizRow.CodeBill,Pr.CodeParentProd].join("_")
-									if (AlreadyAdded.indexOf(Cod)==-1){
-										AlreadyAdded.push(Cod);									
-										Tree.add(Cod,{
-											NumRow:Pr.CodeProd,
-											CodeRow:Root+"_"+Cod,
+				mongoose.model("doc").findOne({CodeDoc:CodeDoc},"UseDogovorArt UseDogovor UseOrg UseProd").isactive().lean().exec(function(err,BDocument){
+					mongoose.model("biztranrow").find({CodeDoc:CodeDoc}).isactive().lean().sort({Index:1}).exec(function(err,BRows){
+						mongoose.model("docbill").find({CodeDoc:CodeDoc},"-_id CodeBill").isactive().lean().sort({IndexDocBill:1}).lean().exec(function(err,Bills){
+							Tree.add(Root,{
+								CodeRow:Root,
+								treeroot:Root,
+								CodeParentRow:"",
+							},"ROOT");
+							var UsedBills = _.map(BRows,"CodeBill"), AlreadyAdded = [], AllBills = _.map(Bills,"CodeBill");
+							AllBills.forEach(function(CodeBill){
+								if (UsedBills.indexOf(CodeBill)!=-1){
+									if (AlreadyAdded.indexOf(CodeBill)==-1){
+										AlreadyAdded.push(CodeBill);									
+										Tree.add(CodeBill,{
+											NumRow:CodeBill,
+											CodeRow:Root+"_"+CodeBill,
 											treeroot:Root,
-											NameRow:Pr.NameProd,
-											CodeBill:BizRow.CodeBill,
-											CodeProd:Pr.CodeProd,
-											CodeMeasure:AllProds[Pr.CodeProd].CodeMeasure,
-											HasFilteredChild:false,
-											IsSum:AllProds[Pr.CodeProd].IsCalcSum
-										},PCode);
+											NameRow:SprIndexed.bill[CodeBill].NameBill,
+											CodeBill:CodeBill,
+											HasFilteredChild:(BDocument.UseOrg) ? true:false
+										},Root);
 									}
-								})
-								var _pRows = _.filter(_bRows,{CodeProd:Prod.prod.CodeProd});
-								_pRows.forEach(function(OrgRow){
-									var Cod = [OrgRow.CodeBill,OrgRow.CodeProd,OrgRow.CodeOrg].join("_");
-									if (AlreadyAdded.indexOf(Cod)==-1){
-										var PCod = [OrgRow.CodeBill,OrgRow.CodeProd].join("_");	
-										AlreadyAdded.push(Cod);
-										Tree.add(Cod,{
-											NumRow:OrgRow.CodeOrg,
-											CodeRow:Root+"_"+Cod,
-											treeroot:Root,
-											CodeProd:OrgRow.CodeProd,
-											CodeBill:OrgRow.CodeBill,
-											CodeAltOrg:OrgRow.CodeOrg,
-											NameRow: (_.isEmpty(OrgRow.CodeOrg)) ? OrgRow.CodeProd:SprIndexed.org[OrgRow.CodeOrg].NameOrg,
-											HasFilteredChild:false,
-											CodeMeasure:SprIndexed.prod[OrgRow.CodeProd].CodeMeasure
-										},PCod);
+								}
+							})
+							UsedBills.forEach(function(CodeBill){
+								var _bRows = _.filter(BRows,{CodeBill:CodeBill});
+								_bRows.forEach(function(BizRow){
+									var Prod = _.find(Sprs.prod,function(PInfo){
+										return PInfo.prod.CodeProd == BizRow.CodeProd;
+									})
+									_.reverse(Prod.tree).concat(Prod.prod).forEach(function(Pr){
+										var Cod = [BizRow.CodeBill,Pr.CodeProd].join("_");
+										var PCode = _.isEmpty(Pr.CodeParentProd) ? CodeBill : [BizRow.CodeBill,Pr.CodeParentProd].join("_")
+										if (AlreadyAdded.indexOf(Cod)==-1){
+											AlreadyAdded.push(Cod);									
+											Tree.add(Cod,{
+												NumRow:Pr.CodeProd,
+												CodeRow:Root+"_"+Cod,
+												treeroot:Root,
+												NameRow:Pr.NameProd,
+												CodeBill:BizRow.CodeBill,
+												CodeProd:Pr.CodeProd,
+												CodeMeasure:AllProds[Pr.CodeProd].CodeMeasure,
+												HasFilteredChild:false,
+												IsSum:AllProds[Pr.CodeProd].IsCalcSum
+											},PCode);
+										}
+									})
+									if (BDocument.UseOrg){
+										var _pRows = _.filter(_bRows,{CodeProd:Prod.prod.CodeProd});
+										_pRows.forEach(function(OrgRow){
+											var Cod = [OrgRow.CodeBill,OrgRow.CodeProd,OrgRow.CodeOrg].join("_");
+											if (AlreadyAdded.indexOf(Cod)==-1){
+												var PCod = [OrgRow.CodeBill,OrgRow.CodeProd].join("_");	
+												AlreadyAdded.push(Cod);
+												Tree.add(Cod,{
+													NumRow:OrgRow.CodeOrg,
+													CodeRow:Root+"_"+Cod,
+													treeroot:Root,
+													CodeProd:OrgRow.CodeProd,
+													CodeBill:OrgRow.CodeBill,
+													CodeAltOrg:OrgRow.CodeOrg,
+													NameRow: (_.isEmpty(OrgRow.CodeOrg)) ? OrgRow.CodeProd:SprIndexed.org[OrgRow.CodeOrg].NameOrg,
+													HasFilteredChild:false,
+													CodeMeasure:SprIndexed.prod[OrgRow.CodeProd].CodeMeasure
+												},PCod);
+											}
+										})
 									}
 								})
 							})
+							var FlatTree = Tree.getFlat();
+							FlatTree = self.SetParams(FlatTree);
+							return done(err,FlatTree);
 						})
-						var FlatTree = Tree.getFlat();
-						FlatTree = self.SetParams(FlatTree);
-						return done(err,FlatTree);
 					})
 				})
 			})
