@@ -9,19 +9,17 @@ var MPeriods = (new function () {
     }
 
     self.BeforeHide = function () {
-        self.UnSubscribe();
-        MSite.UnSubscribe({
+        self.UnSubscribe({
             save:self.SaveChanges,
             refresh:self.RollBack
-        })
+        });
     }
 
     self.BeforeShow = function () {
-        self.Subscribe();
-        MSite.Subscribe({
+        self.Subscribe({
             save:self.SaveChanges,
             refresh:self.RollBack
-        })
+        });
         self.Show();
     }
 
@@ -205,19 +203,18 @@ var MPeriods = (new function () {
     }
 
     self.SaveChangesPEdit = function () {
-        var NewV = _.flatten(_.map(self.PeriodEditResult(),function(Row){
-            var CodeRole = Row.CodeRole;
-            var Enabled = [];
-            for (var CodePeriod in Row){
-                if (Row[CodePeriod]===true){
-                    Enabled.push({CodeRole:CodeRole,CodePeriod:CodePeriod});
-                }
-            }
-            return Enabled;
-        }));
         self.rPut("update", {
             Year: self.Year(),
-            Value: NewV
+            Value: _.flatten(_.map(self.PeriodEditResult(),function(Row){
+                var CodeRole = Row.CodeRole;
+                var Enabled = [];
+                for (var CodePeriod in Row){
+                    if (Row[CodePeriod]===true){
+                        Enabled.push({CodeRole:CodeRole,CodePeriod:CodePeriod});
+                    }
+                }
+                return Enabled;
+            }))
         }, function (data) {
             self.LoadTable();
             self.Init();

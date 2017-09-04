@@ -51,9 +51,6 @@ var MObj = (new function() {
     self.ModelIsSaved = function(){
         self.Update();
     }
-    self.ModelIsCreated = function(){
-     	self.Update();
-    }
     self.ModelIsDeleted = function(){
         self.Update();
     }

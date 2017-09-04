@@ -36,7 +36,7 @@
 
 <script id="extend_model_edit_user" type="text/html">
 	<!-- ko ifnot:_.isEmpty(ModelTableEdit.LoadedModel().CodeUser()) -->
-	<div  data-bind='with:MUsers,Permit:{Id:"IsDocPermissionAssigner",CodeUser:ModelTableEdit.LoadedModel().CodeUser(),Type:"UserTask"}' class='split-bottom'>
+	<div  data-bind='with:MUsers,Permit:{Id:"IsDocPermissionAssigner",CodeUser:ModelTableEdit.LoadedModel().CodeUser(),Type:"UserTask"}' class='split-bottom' style='margin-top: 30px;border-top: 1px solid #F0F0F0;'>
 		<button type="button" class="btn btn-white btn-success btn-permit-add float-right no-border" style='padding:2px 4px 2px 4px;' data-bind='click:MUsers.AddUserPermit'>Добавить пропуск</button>			
 		<h3 class="row header smaller lighter blue" >Пропуска</h3>					
 		<table class="table table-bordered table-hover dataTable no-footer ">
@@ -61,7 +61,7 @@
 			</tbody>				
 		</table>	
 	</div>
-	<div data-bind='with:MUsers,Permit:{Id:"IsFunctionAssigner",CodeUser:ModelTableEdit.LoadedModel().CodeUser(),Type:"UserTask"}' class='split-bottom'>
+	<div data-bind='with:MUsers,Permit:{Id:"IsFunctionAssigner",CodeUser:ModelTableEdit.LoadedModel().CodeUser(),Type:"UserTask"}' class='split-bottom' >
 		<button type="button" class="btn btn-white btn-success btn-permit-add float-right no-border" style='padding:2px 4px 2px 4px;' data-bind='click:MUsers.AddUserTask'>Добавить роль</button>			
 		<h3 class="row header smaller lighter blue" >Роли</h3>					
 		<table class="table  table-bordered table-hover dataTable no-footer ">

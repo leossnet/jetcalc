@@ -76,7 +76,7 @@ var HEditor = function(dom,params,ResultObservable,ChangesCount,DiscretChangesLi
         }
         self.RenderTimeout = setTimeout(function(){
             self.RenderTimeout = null;
-            self.Table.render();
+            self.Table && self.Table.render();
         },100);
     }
 
@@ -99,7 +99,11 @@ var HEditor = function(dom,params,ResultObservable,ChangesCount,DiscretChangesLi
         self.Table  =  new Handsontable(self.Dom, CFG);
         if (!_.isEmpty(CFG.headers)){
             new HandsonTableHelper.HeaderGenerator(self.Table);  
+        }        
+        if (!_.isEmpty(CFG.tree)){
+            new HandsonTableHelper.TreeView(self.Table);
         }
+        new HandsonTableHelper.DiscretScroll(self.Table);
     }
 
     self.Dispose = function(){

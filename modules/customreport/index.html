@@ -1,5 +1,5 @@
 <div class="intab-container">
-	 <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MCustomReport'>
+	 <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:CustomReport'>
       <div class="btn-group">
           <a class='btn btn-sm  btn-white ' data-bind="title:'Новый отчет',click:NewReport">
             <i class="ace-icon fa fa-file-o"></i>
@@ -9,9 +9,10 @@
           </a>
       </div>
       <div class="btn-group">
-      <a class='btn btn-sm  btn-white ' data-bind="title:'Сохранить данные',click:SaveChanges">
-        <i class="ace-icon fa fa-save"></i>
-      </a>
+
+      <!-- ko template:{name:'save_with_count',data:{save:MPeriods.SaveChanges,count:CustomReport.EditChangesCount}} --><!-- /ko -->
+
+
       <a class='btn btn-sm  btn-white ' data-bind="title:'Отменить все изменения',click:RollBack">
         <i class="ace-icon fa fa-refresh"></i>
       </a>
@@ -24,24 +25,24 @@
       <!-- ko if:IsOlap() -->
         <!-- ko template:{name:'menu_li_mode',data:['ModifyView','SingleView','ColumnsView']} --><!-- /ko -->
       <!-- /ko -->
-
     </div>
 
-    <!-- ko with: MCustomReport.Error -->
+    <!-- ko with: CustomReport.Error -->
 		<div class="alert alert-danger"><span data-bind="text:$data"></span></div>
     <!-- /ko --> 
 
 
-   <!-- ko ifnot:MCustomReport.Mode()=='ColumnsView' -->
+   <!-- ko ifnot:CustomReport.Mode()=='ColumnsView' -->
    <div class='row'>
       <div class='col-xs-6' style='padding: 0px;'>
-         <div class='handsonContainer' >
-              <div class="handsontable single" data-bind='handson-table:{
-                  Table:MCustomReport.ETable,
-                  Config:MCustomReport.ETableConfig,
-                  Changes:MCustomReport.EChanges
-              }'></div>    
-         </div>
+         <div class='handsonContainer' data-bind='with:CustomReport.EditConfig'>
+                <div class="handsontable single"  data-bind="
+                    handson-table:CustomReport.EditConfig,
+                    handson-table-result:CustomReport.EditResult,
+                    handson-table-changes:CustomReport.EditChanges,
+                    handson-table-changes-count:CustomReport.EditChangesCount
+                "></div>  
+            </div>
       </div>
       <div class='col-xs-6' style='padding: 0px;'>
          <div class='handsonContainer' >
@@ -51,7 +52,7 @@
     </div>      
    <!-- /ko -->
 
-   <!-- ko if:MCustomReport.Mode()=='ColumnsView' -->
+   <!-- ko if:CustomReport.Mode()=='ColumnsView' -->
      <div class='handsonContainer' >
           <div class="handsontable single" ></div>    
       </div>

@@ -1,4 +1,4 @@
-<div class="modal fade" id="savereport_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind='with:MCustomReport'>
+<div class="modal fade" id="savereport_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind='with:CustomReport'>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -11,7 +11,7 @@
           <!-- /ko -->
     			<!-- ko template:{
     					name:'small_form_with_header',
-    					data:{Name:'',Fields:MCustomReport.EditFields(),Model:MCustomReport.EditReport}
+    					data:{Name:'',Fields:CustomReport.EditFields(),Model:CustomReport.EditReport}
     			} --><!-- /ko -->
       </div>   
       <div class="modal-footer">
@@ -22,7 +22,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="loadreport_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind='with:MCustomReport'>
+<div class="modal fade" id="loadreport_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind='with:CustomReport'>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">

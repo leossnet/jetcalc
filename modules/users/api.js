@@ -10,6 +10,20 @@ var config   =  require(__base+'config.js');
 
 var SignupHelper = require(__base+'src/signupflow.js');
 
+
+router.get('/regworkflow', HP.TaskAccess("IsRequestApprover"), function(req,res,next){
+	var Result = {
+		RequestApprover:[],
+		UserAcceptors:{
+
+		}
+	};
+	//SignupHelper.UserAcceptors
+	//SignupHelper.RequestApproveUsers
+
+})
+
+
 // Registration
 router.get('/regcounts',function(req,res,next){
 	var R = {Requests:0,NewUsers:0};

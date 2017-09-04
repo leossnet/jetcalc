@@ -8,21 +8,27 @@ var config = require(__base+"config.js");
 var SignupHelper = (new function(){
     var self = this;
 
-    self.RequestApprovers = function(done){
+    self.RequestApproveUsers = function(done){
+        var Result = [];
         mongoose.model("taskprivelege").find({CodePrivelege:"IsRequestApprover"},"-_id CodeTask").isactive().lean().exec(function(err,Tasks){
-            var Tasks = _.map(Tasks,"CodeTask");
-            if (!Tasks.length) return done(null,[]);
-            mongoose.model("usertask").find({CodeTask:{$in:Tasks}},"-_id CodeUser").isactive().lean().exec(function(err,UserCodes){
-                if (!UserCodes.length) return done(null,[]);
-                var Users = _.map(UserCodes,"CodeUser");
-                mongoose.model("user").find({CodeUser:{$in:Users}},"-_id NameUser Mail").isactive().lean().exec(function(err,Real){
-                    var ToSend = _.filter(Real,function(R){
-                        return R.Mail && R.Mail.length;
-                    })
-                    return done(null,ToSend);
-                })
+            if (_.isEmpty(Tasks)) return done(null,Result);
+            mongoose.model("usertask").find({CodeTask:{$in:_.map(Tasks,"CodeTask")}},"-_id CodeUser").isactive().lean().exec(function(err,UserCodes){
+                if (_.isEmpty(UserCodes)) return done(null,Result);
+                return done(err,_.map(UserCodes,"CodeUser"));
             })
         })
+    }
+
+
+    self.RequestApprovers = function(done){
+        self.RequestApproveUsers(function(err,UserCodes){
+            mongoose.model("user").find({CodeUser:{$in:UserCodes}},"-_id NameUser Mail").isactive().lean().exec(function(err,Real){
+                var ToSend = _.filter(Real,function(R){
+                    return R.Mail && R.Mail.length;
+                })
+                return done(null,ToSend);
+            })
+        })       
     }
 
     self.UserAcceptors = function(CodeRequest,done){

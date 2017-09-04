@@ -409,7 +409,6 @@ var Module = function(id){
         CxCtrl.Events.on("documentchanged",self.CxChange);
         CxCtrl.Events.on("contextchanged",self.CxChange);
         MSite.Events.on("save",self.SaveChanges);
-
     }
 
     self.UnSubscribeDoc = function(){
@@ -455,22 +454,29 @@ var Module = function(id){
         history.replaceState({},'',state);
     }
 
-    self.Subscribe = function(){
+    self.Subscribe = function(options){
         ModelTableEdit.Events.on("modelloaded",self.ModelIsLoaded);
         ModelTableEdit.Events.on("modelsaved",self.ModelIsSaved);
         ModelTableEdit.Events.on("modelcreated",self.ModelIsCreated);
         ModelTableEdit.Events.on("modeldeleted",self.ModelIsDeleted);
         self._error     = ModelTableEdit.Error.subscribe(self.Error); 
         self._isLoading = ModelTableEdit.IsLoading.subscribe(self.IsLoading); 
+        if (!_.isEmpty(options)){
+            MSite.Subscribe(options);
+        }
     }
 
-    self.UnSubscribe = function(){
+
+    self.UnSubscribe = function(options){
         ModelTableEdit.Events.off("modelloaded",self.ModelIsLoaded);
         ModelTableEdit.Events.off("modelsaved",self.ModelIsSaved);
         ModelTableEdit.Events.off("modelcreated",self.ModelIsCreated);
         ModelTableEdit.Events.off("modeldeleted",self.ModelIsDeleted);
         if (self._error) self._error.dispose();
         if (self._isLoading) self._isLoading.dispose();
+        if (!_.isEmpty(options)){
+            MSite.Subscribe(options);
+        }
     }
 
     self.BeforeShow = function(){

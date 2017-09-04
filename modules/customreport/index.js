@@ -1,3 +1,269 @@
+var CustomReport = (new function() {
+	var self = new Module("customreport");
+
+	self.EditConfig = ko.observable();
+	self.EditResult = ko.observable();
+	self.EditChanges = ko.observable();
+	self.EditChangesCount = ko.observable();
+
+    self.IsOlap = function(){
+    	var Doc = null;
+    	if (CxCtrl.CodeDoc()) {
+			Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
+    	}
+    	return Doc && Doc.IsOlap; 
+    }
+	self.NewReport = function(){
+		self.CurrentReport('default');
+		self.DoLoadReport();
+	}
+	self.CurrentReport = ko.observable(null);
+	self.LoadReport = function(){
+		self.PrepareTree();
+		self.IsLoadReportsShow(true);
+		$("#loadreport_modal").modal("show");
+		$("#loadreport_modal").on("hide.bs.modal", function(e) {
+			self.IsLoadReportsShow(false);
+        })	
+	}
+
+	self.DoLoadReport = function(){
+		var Report = _.find(SettingController.Reports(),{CodeReport:self.CurrentReport()});
+		self.ModFields.forEach(function(Field){
+			if (Report.code=='default'){
+				self[Field] = [];
+			} else {
+				var F = {}; F[Field] = true;
+				self[Field] = _.map(_.filter(Report.Link_reportrow,F),"CodeRow");
+			}
+		})
+		var ReMerge = {}; var Null = {};
+		self.ModFields.forEach(function(Set){ Null[Set] = false;})
+		self.ModFields.forEach(function(Field){
+			self[Field].forEach(function(CodeRow){
+				if (!ReMerge[CodeRow]){
+					ReMerge[CodeRow] = _.clone(Null);
+				}
+				ReMerge[CodeRow][Field] = true;
+			})
+		})
+		self.Rows.forEach(function(R,I){
+			if (ReMerge[R.CodeRow]){
+				self.Rows[I] = _.merge(self.Rows[I],ReMerge[R.CodeRow]);
+			} else {
+				self.Rows[I] = _.merge(self.Rows[I],_.clone(Null));
+			}
+		})
+		self.Render();
+		if (self.Mode()!=self.ReportType() && self.Mode()!='ColumnsView'){
+			self.Mode(self.ReportType());
+		}
+		SettingController.SelectReport(Report);
+		$("#loadreport_modal").modal("hide");
+	}
+
+	self.DeleteReport = function(){
+		self.rDelete ("report",{CodeReport:MCustomReport.CurrentReport()},function(){
+			SettingController.LoadDefault(true,function(){
+				SettingController.Init();
+				$("#loadreport_modal").modal("hide");	
+			});				
+		})
+	}
+
+	self.EditReport = ko.observable(null);
+	self.IsLoadReportsShow = ko.observable(false);
+	self.SaveError = ko.observable(null);
+
+	self.SaveChanges = function(){
+		var u = MSite.Me().CodeUser();
+		var _defaults = {
+			IsPrivate:true
+		};
+		var n = MModels.Create("report",_.merge({CodeDoc:CxCtrl.CodeDoc()},_defaults));
+		self.EditReport(n);
+		$("#savereport_modal").modal("show");
+	}
+
+
+	self.SaveReport = function(){
+		self.SaveError(null);
+		var RowsModifiers = {};
+		self.ModFields.forEach(function(F){
+			RowsModifiers[F] = self[F];
+		})
+		var Data = {
+			Report:self.EditReport().toJS(),
+			Rows:RowsModifiers,
+			Params:ko.toJS(SettingController.resParams)
+		}
+		$.ajax({
+			url:self.base+'/createreport',
+			method:"post",
+			data:Data,
+			success:function(answer){
+				if (answer.err) return self.Error(answer.err);
+				SettingController.LoadDefault(true);
+				SettingController.Init(true);
+				SettingController.IsShowList(true);				
+				$("#savereport_modal").modal("hide");
+				self.Init();
+			}
+		})
+
+	}
+
+	self.RollBack = function(){
+		self.Init();
+	}
+
+
+
+
+  	self.BeforeHide = function(){
+        self.UnSubscribe({
+        	save:self.SaveChanges
+        });
+        self.UnSubscribeChanges();
+    }
+
+    self.BeforeShow = function(){
+        self.Subscribe({
+        	save:self.SaveChanges
+        });
+        self.SubscribeChanges();
+        self.Show();
+    }        
+
+	self.IsHidden = [];
+	self.IsToggled = [];
+
+	self.IsShowOlap = [];
+	self.IsShowWithParent = [];
+	self.IsShowWithChildren = [];
+
+  	self.ModFields = ["IsHidden","IsToggled","IsShowOlap","IsShowWithParent","IsShowWithChildren"];
+
+	self.ReportType = function(){
+		if (_.sum([self.IsShowOlap.length,self.IsShowWithParent.length,self.IsShowWithChildren.length]) || self.IsOlap()){
+			return "SingleView";
+		} 
+		return "ModifyView";
+	}
+
+
+	self.Show = function(done){
+        if (!self.Mode()) return self.InitSetMode("SingleView");
+        switch(self.Mode()){
+        	case "SingleView":
+        		self.RenderShow();
+        	break;
+        	case "ModifyView":
+        		self.RenderShow();
+        	break;
+        	case "ColumnsView":
+        		self.RenderShow();
+        	break;
+        }
+	}
+
+
+
+	self.EditChangesSubscription = null;
+	self.UnSubscribeChanges = function(){
+		if (self.EditChangesSubscription) self.EditChangesSubscription.dispose();
+	}
+	self.SubscribeChanges = function(){
+		self.UnSubscribeChanges();
+		self.EditChangesSubscription = self.EditChanges.subscribe(self.OnChanges);
+	}
+	self.OnChanges = function(V){
+		self.ModFields.forEach(function(ModField){
+			var Q = {}; Q[ModField] = true;
+			self[ModField] = _.map(_.filter(self.Rows,Q),"CodeRow");
+		})
+		self.RenderPreview();
+	}
+	
+
+	self.RenderShow = function(){
+		self.LoadStructure(function(){				
+ 			var ColWidths = [];
+            var ToTranslate = {}
+            var Columns = [], EditCols = (self.Mode()=='SingleView') ? ["IsShowOlap","IsShowWithParent","IsShowWithChildren"]:["IsHidden","IsToggled"];
+            if(self.IsOlap()) {
+            	self.Mode("SingleView"); EditCols = ["IsShowOlap"];
+            }
+            EditCols.forEach(function(ColName){
+            	Columns.push({type:"checkbox",data:ColName,title:Tr(ColName)});
+            	ColWidths.push(40);
+            })
+            Columns.push({type:"text",data:"NumRow",title:Tr("NumRow"),readOnly:true}); ColWidths.push(70);
+            Columns.push({type:"text",data:"NameRow",title:Tr("NameRow"),readOnly:true,renderer:HandsonTableRenders.TreeRender}); ColWidths.push(400);
+			var TreeArr = {};
+        	self.Rows.forEach(function(R,I){
+            	TreeArr[I] = _.pick(R,['lft','rgt','level']);
+        	})            
+            var Config = {
+                Columns:Columns,
+                Rows:self.Rows,
+                CFG:{
+                    colWidths: ColWidths,
+                    colHeaders: true,
+                    stretchH:'last',
+                    Plugins:["Tree"],
+                    tree:{
+		        		data:TreeArr,
+		       			icon:function(){},
+		        		colapsed:CxCtrl.Context().CodeDoc+'customreport'
+		        	}
+                }
+			}
+            self.EditConfig(Config);	
+            self.SubscribeChanges();
+		})
+	}
+
+	self.Rows = [];
+	self.Cols = [];
+
+	self.LoadStructure  = function(done){
+		self.rGet('structure',CxCtrl.CxPermDoc(),function(data){
+			self.Rows = data.Rows;
+			self.Rows.forEach(function(R,index){
+				self.Rows[index] = self.Rows[index];
+			})
+			self.UpdateRowsParams();
+			self.Cols = data.Cols;
+			return done();
+		})
+	}
+	self.UpdateRowsParams = function(){
+		self.Rows.forEach(function(R,index){
+			var Mods = {}; 
+			self.ModFields.forEach(function(Field){
+				Mods[Field] = self[Field].indexOf(R.CodeRow)!=-1;
+			})
+			self.Rows[index] = _.merge(self.Rows[index],Mods);
+		})
+	}
+
+	self.RenderPreview = function(){
+
+	}
+
+
+
+	return self;
+})
+
+
+
+
+
+
+
+
 var MCustomReport = (new function() {
 	
 	var self = new Module("customreport");
@@ -119,23 +385,6 @@ var MCustomReport = (new function() {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   	self.BeforeHide = function(){
         self.UnSubscribe();
         self.EditTable = null;
@@ -172,54 +421,9 @@ var MCustomReport = (new function() {
     	return Base;
     }
 
-	self.IsHidden = [];
-	self.IsToggled = [];
 
-	self.IsShowOlap = [];
-	self.IsShowWithParent = [];
-	self.IsShowWithChildren = [];	    
 
-	self.Show = function(done){
-        if (!self.Mode()) return self.InitSetMode("ModifyView");
-        switch(self.Mode()){
-        	case "SingleView":
-        		self.RenderShow();
-        		console.log("SingleView");
-        	break;
-        	case "ModifyView":
-        		self.RenderShow();
-				console.log("ModifyView");
-        	break;
-        	case "ColumnsView":
-        		self.RenderShow();
-				console.log("ColumnsView");
-        	break;
-        }
 
-	}
-
-	self.RenderShow = function(){
-		self.LoadStructure(function(){				
-			SettingController.Init();
-			self.Render();
-		})
-	}
-
-	self.ModFields = ["IsHidden","IsToggled","IsShowOlap","IsShowWithParent","IsShowWithChildren"];
-
-	self.ReportType = function(){
-		if (_.sum([self.IsShowOlap.length,self.IsShowWithParent.length,self.IsShowWithChildren.length]) || self.IsOlap()){
-			return "SingleView";
-		} 
-		return "ModifyView";
-	}
-
-	self.NewReport = function(){
-		self.CurrentReport('default');
-		self.DoLoadReport();
-	}
-
-	self.CurrentReport = ko.observable(null);
 
 
 
@@ -265,60 +469,9 @@ var MCustomReport = (new function() {
 		tree_data = _.merge(tree_data,additional);
 		self.ReportLoadTree = tree_data;
 	}
-	self.IsLoadReportsShow = ko.observable(false);
+
 	
-	self.LoadReport = function(){
-		self.PrepareTree();
-		self.IsLoadReportsShow(true);
-		$("#loadreport_modal").modal("show");
-		$("#loadreport_modal").on("hide.bs.modal", function(e) {
-			self.IsLoadReportsShow(false);
-        })	
-	}
 
-	self.DoLoadReport = function(){
-		var Report = _.find(SettingController.Reports(),{CodeReport:self.CurrentReport()});
-		self.ModFields.forEach(function(Field){
-			if (Report.code=='default'){
-				self[Field] = [];
-			} else {
-				var F = {}; F[Field] = true;
-				self[Field] = _.map(_.filter(Report.Link_reportrow,F),"CodeRow");
-			}
-		})
-		var ReMerge = {}; var Null = {};
-		self.ModFields.forEach(function(Set){ Null[Set] = false;})
-		self.ModFields.forEach(function(Field){
-			self[Field].forEach(function(CodeRow){
-				if (!ReMerge[CodeRow]){
-					ReMerge[CodeRow] = _.clone(Null);
-				}
-				ReMerge[CodeRow][Field] = true;
-			})
-		})
-		self.Rows.forEach(function(R,I){
-			if (ReMerge[R.CodeRow]){
-				self.Rows[I] = _.merge(self.Rows[I],ReMerge[R.CodeRow]);
-			} else {
-				self.Rows[I] = _.merge(self.Rows[I],_.clone(Null));
-			}
-		})
-		self.Render();
-		if (self.Mode()!=self.ReportType() && self.Mode()!='ColumnsView'){
-			self.Mode(self.ReportType());
-		}
-		SettingController.SelectReport(Report);
-		$("#loadreport_modal").modal("hide");
-	}
-
-	self.DeleteReport = function(){
-		self.rDelete ("report",{CodeReport:MCustomReport.CurrentReport()},function(){
-			SettingController.LoadDefault(true,function(){
-				SettingController.Init();
-				$("#loadreport_modal").modal("hide");	
-			});				
-		})
-	}
 
 	self.LoadStructure  = function(done){
 		self.rGet('structure',CxCtrl.CxPermDoc(),function(data){
@@ -332,15 +485,6 @@ var MCustomReport = (new function() {
 		})
 	}
 
-	self.UpdateRowsParams = function(){
-		self.Rows.forEach(function(R,index){
-			var Mods = {}; 
-			self.ModFields.forEach(function(Field){
-				Mods[Field] = self[Field].indexOf(R.CodeRow)!=-1;
-			})
-			self.Rows[index] = _.merge(self.Rows[index],Mods);
-		})
-	}
 
 
 	self.IsLoading = ko.observable(false);
@@ -372,52 +516,6 @@ var MCustomReport = (new function() {
         self.EditTable && self.EditTable.collapsedRows([]);
         self.PreviewTable && self.PreviewTable.collapsedRows([]);
     }
-
-	self.EditReport = ko.observable(null);
-
-	self.SaveError = ko.observable(null);
-
-	self.SaveChanges = function(){
-		var u = MSite.Me().CodeUser();
-		var _defaults = {
-			IsPrivate:true
-		};
-		var n = MModels.Create("report",_.merge({CodeDoc:CxCtrl.CodeDoc()},_defaults));
-		self.EditReport(n);
-		$("#savereport_modal").modal("show");
-	}
-
-
-	self.SaveReport = function(){
-		self.SaveError(null);
-		var RowsModifiers = {};
-		self.ModFields.forEach(function(F){
-			RowsModifiers[F] = self[F];
-		})
-		var Data = {
-			Report:self.EditReport().toJS(),
-			Rows:RowsModifiers,
-			Params:ko.toJS(SettingController.resParams)
-		}
-		$.ajax({
-			url:self.base+'/createreport',
-			method:"post",
-			data:Data,
-			success:function(answer){
-				if (answer.err) return self.Error(answer.err);
-				SettingController.LoadDefault(true);
-				SettingController.Init(true);
-				SettingController.IsShowList(true);				
-				$("#savereport_modal").modal("hide");
-				self.Init();
-			}
-		})
-
-	}
-
-	self.RollBack = function(){
-		self.Init();
-	}
 
 	self.Render = function(){
 		var Emulate = {}
@@ -552,4 +650,4 @@ var MCustomReport = (new function() {
 })
 
 
-ModuleManager.Modules.CustomReport = MCustomReport;
+ModuleManager.Modules.CustomReport = CustomReport;
