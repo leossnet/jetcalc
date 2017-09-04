@@ -53,7 +53,6 @@ var Mailer = (new function(){
 
     self._mail = function(TemplateId,Data,done){
         self.Settings(function(err,Set){
-            console.log(Set);
             self.MailCode(Data,function(err, UpdatedData){
                 var HTML = self.Template(TemplateId);
                 var Replaces = _.merge(UpdatedData,Set);

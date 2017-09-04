@@ -67,6 +67,19 @@ router.post('/requestaccept', LIB.Require(['CodeObj']), HP.TaskAccess("IsRequest
 	})
 });
 
+router.post('/requestreject', HP.TaskAccess("IsRequestApprover"), function(req,res,next){
+	var D = req.body;
+	mongoose.model("request").findOne({CodeRequest:D.CodeRequest}).isactive().exec(function(err,Request){
+		if (!Request) return next("Запрос не найден");
+        var CR = Request.CodeRequest;
+        Request.remove(req.user.CodeUser,function(err){})
+        SignupHelper.RejectRequest(CR, D.reason, function(){
+            console.log("RejectRequest");
+        });
+        return res.end();        
+	})
+});
+
 router.get('/sendrequizites', LIB.Require(['CodeUser']), HP.TaskAccess("IsUserAcceptor"), function(req,res,next){
 	var Mailer   =  require(__base+'src/mailer.js'), CodeUser = req.query.CodeUser;
 	mongoose.model("user").findOne({CodeUser:CodeUser}).isactive().exec(function(err,User){
