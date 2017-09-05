@@ -16,10 +16,6 @@ var MTransaction = (new function () {
         self.Show();
     }
 
-    self.ModelIsCreated = function () {
-        self.Update();
-    }
-
     self.ModelIsSaved = function () {
         self.Update();
     }
