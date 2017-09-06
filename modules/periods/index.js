@@ -314,7 +314,9 @@ ko.components.register('period-formula-editor', {
 
         }
         self.RemoveFormula = function (data) {
+            $(".formula-editor-year").last().off();
             self.ParsedArray.remove(data);
+            setTimeout(self.AddLastCellListener, 200);
         }
         ko.computed(function () {
             return ko.toJSON(self.ParsedArray);
