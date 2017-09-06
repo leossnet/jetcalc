@@ -113,10 +113,16 @@ router.get('/requestapprovers', function (req, res, next) {
 router.get('/userapprovers', function (req, res, next) {
     var ToSend = [];
     var works = 1;
-    mongoose.model("obj").find({}, "-_id CodeObj NameObj").isactive().lean().exec(function (err, Os) {
+    mongoose.model("obj").find({}, "-_id CodeObj NameObj CodeParentObj").isactive().lean().exec(function (err, Os) {
         works = Os.length;
         Os.forEach(function (O) {
-            mongoose.model("objgrp").find({}, "CodeObjGrp").isactive().lean().exec(function (err, Ls) {
+            if(O.CodeParentObj != ''){
+                works -= 1;
+                return;
+            }
+            mongoose.model("objgrp").find({
+                CodeObj: O.CodeObj
+            }, "CodeGrp").isactive().lean().exec(function (err, Ls) {
                 mongoose.model("taskprivelege").find({
                     CodePrivelege: "IsUserAcceptor"
                 }, "-_id CodeTask").isactive().lean().exec(function (err, Tasks) {
@@ -129,7 +135,7 @@ router.get('/userapprovers', function (req, res, next) {
                             $in: Tasks
                         }
                     }, "-_id CodeUser CodeObj CodeObjGrp").isactive().lean().exec(function (err, Users) {
-                        var Grps = _.map(Ls, "CodeObjGrp");
+                        var Grps = _.map(Ls, "CodeGrp");
                         var Obj = O.CodeObj;
                         var Announce = _.map(_.filter(Users, function (U) {
                             return (!U.CodeObj && !U.CodeObjGrp) || (U.CodeObj && U.CodeObj == Obj) || (U.CodeObjGrp && Grps.indexOf(U.CodeObjGrp) != -1);

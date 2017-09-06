@@ -49,7 +49,7 @@ var SignupHelper = (new function () {
                 if (!O || !O.CodeObj) return done("nouser");
                 mongoose.model("objgrp").find({
                     CodeObj: O.CodeObj
-                }, "CodeObjGrp").isactive().lean().exec(function (err, Ls) {
+                }, "CodeGrp").isactive().lean().exec(function (err, Ls) {
                     if (!O) return done("nouser");
                     mongoose.model("taskprivelege").find({
                         CodePrivelege: "IsUserAcceptor"
@@ -61,7 +61,7 @@ var SignupHelper = (new function () {
                                 $in: Tasks
                             }
                         }, "-_id CodeUser CodeObj CodeObjGrp").isactive().lean().exec(function (err, Users) {
-                            var Grps = _.map(Ls, "CodeObjGrp");
+                            var Grps = _.map(Ls, "CodeGrp");
                             var Obj = O.CodeObj;
                             var Announce = _.map(_.filter(Users, function (U) {
                                 return (!U.CodeObj && !U.CodeObjGrp) || (U.CodeObj && U.CodeObj == Obj) || (U.CodeObjGrp && Grps.indexOf(U.CodeObjGrp) != -1);
