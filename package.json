@@ -27,6 +27,7 @@
     "cookie-parser": "*",
     "cookies": "*",
     "cors": "*",
+    "csv-parser": "^1.11.0",
     "debug": "*",
     "events": "*",
     "express": "*",
@@ -79,6 +80,6 @@
     "ua-parser-js": "*",
     "utf8": "*",
     "xml2js": "*",
-	"xss": "*"
+    "xss": "*"
   }
 }
