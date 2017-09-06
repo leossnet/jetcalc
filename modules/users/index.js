@@ -65,6 +65,24 @@ var MUsers = (new function () {
         })
     }
 
+    self.RequestApprovers = ko.observableArray([]);
+
+    self.LoadRequestApprovers = function () {
+        $.getJSON(self.base + "requestapprovers", function (data) {
+            if (data.err) return self.Error(data.err);
+            self.RequestApprovers(data);
+        })
+    }
+
+    self.UserApprovers = ko.observableArray([]);
+
+    self.LoadUserApprovers = function () {
+        $.getJSON(self.base + "userapprovers", function (data) {
+            if (data.err) return self.Error(data.err);
+            self.UserApprovers(data);
+        })
+    }
+
 
     self.BeforeHide = function () {
         self.UnSubscribe();
@@ -191,6 +209,10 @@ var MUsers = (new function () {
                     }
                 });
                 ModelTableEdit.IsExtendEditor(true);
+                break;
+            case 'Approvers':
+                self.LoadRequestApprovers();
+                self.LoadUserApprovers();
                 break;
             default:
                 console.log(self.Mode(), "Выбран");
@@ -612,7 +634,7 @@ var MUsers = (new function () {
             }
         });
     }
-    
+
     return self;
 });
 
