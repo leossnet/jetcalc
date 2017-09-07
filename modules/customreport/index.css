@@ -2,3 +2,7 @@ td.removed_by_filter.customreport{
 	color:#A3A3A3!important;
 	background-color: #F9F9FB!important;
 }
+div.params_form{
+	border:1px solid #CFCFCF;
+	padding: 10px;
+}

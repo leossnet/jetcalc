@@ -1,6 +1,6 @@
 var redis = require(__base+"src/redis");
 var _ = require("lodash");
-
+var Bus = require(__base + 'src/bus.js');
 
 
 module.exports = function(Name){
@@ -33,6 +33,29 @@ module.exports = function(Name){
 
 	self.ClearCache = function(done){
 		redis.del([self.Name], done);
+	}
+
+
+	self.FlushTimeout = null;
+	self.Flush = function(){
+		if (self.FlushTimeout){
+			clearTimeout(self.FlushTimeout);
+			self.FlushTimeout = null;
+		}
+		self.FlushTimeout = setTimeout(function(){
+			console.log("FLUSH FOR:",self.Name);
+			self.ClearCache();
+			clearTimeout(self.FlushTimeout);
+			self.FlushTimeout = null;
+		},500);
+	}
+
+	self.SubscribeChanges = function(models){
+		Bus.On("modelchange",function(modelName){
+			if (models.indexOf(modelName)!=-1){
+				self.Flush();
+			}
+		})
 	}
 
 	return self;

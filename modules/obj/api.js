@@ -7,15 +7,6 @@ var HP = require(__base+'lib/helpers/lib.js').Permits;
 var Bus = require(__base + 'src/bus.js');
 
 
-router.get('/refresh', function(req, res, next){
-	Bus.Emit("DIVCHANGE");
-	return res.end();
-})
-
-router.get('/orgs', function(req, res, next){
-	return res.json([]);
-})  
-
 
 
 

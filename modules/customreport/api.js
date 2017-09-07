@@ -11,13 +11,13 @@ var CustomReportHelper = (new function(){
 	self.SandBox = {};
 
 	self.Rows = function(done){
-		var Row = require(__base+'/classes/calculator/helpers/Row.js');
+		var Row = require(__base+'classes/calculator/helpers/Row.js');
 		var RowHelper = new Row(self.Context);
 		RowHelper.get(done);
 	}
 
 	self.Cols = function(done){
-		var Col = require(__base+'/classes/calculator/helpers/Col.js');
+		var Col = require(__base+'classes/calculator/helpers/Col.js');
 		var ColHelper = new Col(self.Context);
 		ColHelper.get(done); 
 	}
@@ -34,6 +34,14 @@ var CustomReportHelper = (new function(){
 	return self;
 })
 
+
+router.get('/params', function(req,res,next){
+	var SetHelper = require(__base+'classes/jetcalc/Helpers/Set.js');	
+	SetHelper.get(req.query,function(err,Result){
+		if (err) return next(err);
+		return res.json(Result);
+	})
+})
 
 
 router.get('/structure', function(req,res,next){

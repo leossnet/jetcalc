@@ -1,6 +1,6 @@
 <div class="intab-container">
 	 <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:CustomReport'>
-      <div class="btn-group">
+      <div class="btn-group" data-bind='with:ReportManager'>
           <a class='btn btn-sm  btn-white ' data-bind="title:'Новый отчет',click:NewReport">
             <i class="ace-icon fa fa-file-o"></i>
           </a>
@@ -33,7 +33,7 @@
 
 
    <!-- ko ifnot:CustomReport.Mode()=='ColumnsView' -->
-   <div class='row'>
+   <div class='row' style="margin-bottom: 50px;">
       <div class='col-xs-6' style='padding: 0px;'>
          <div class='handsonContainer' data-bind='with:CustomReport.EditConfig'>
                 <div class="handsontable single"  data-bind="
@@ -42,20 +42,37 @@
                     handson-table-changes:CustomReport.EditChanges,
                     handson-table-changes-count:CustomReport.EditChangesCount
                 "></div>  
-            </div>
+         </div>
       </div>
       <div class='col-xs-6' style='padding: 0px;'>
-         <div class='handsonContainer' >
-              <div class="handsontable preview" ></div>    
+        <div class='handsonContainer' data-bind='with:CustomReport.PreviewConfig'>
+                <div class="handsontable single"  data-bind="
+                    handson-table:CustomReport.PreviewConfig,
+                    handson-table-result:CustomReport.PreviewResult,
+                    handson-table-changes:CustomReport.PreviewChanges,
+                    handson-table-changes-count:CustomReport.PreviewChangesCount
+                "></div>  
          </div>
       </div>      
     </div>      
    <!-- /ko -->
-
    <!-- ko if:CustomReport.Mode()=='ColumnsView' -->
-     <div class='handsonContainer' >
-          <div class="handsontable single" ></div>    
+   <div class='row' style="margin-bottom: 50px;">   
+      <div class='col-xs-10' style='padding: 0px;'>
+         <div class='handsonContainer' data-bind='with:CustomReport.ColumnConfig'>
+                    <div class="handsontable single"  data-bind="
+                        handson-table:CustomReport.ColumnConfig,
+                        handson-table-result:CustomReport.ColumnResult,
+                        handson-table-changes:CustomReport.ColumnChanges,
+                        handson-table-changes-count:CustomReport.ColumnChangesCount
+                    "></div>  
+             </div>
+       </div>             
+      <div class='col-xs-2' style='padding: 0px;'>
+          <!-- ko template:'param_form' --><!-- /ko -->
       </div>
+    </div>
+
    <!-- /ko -->
     
 </div>    

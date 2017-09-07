@@ -44,7 +44,6 @@ var MObj = (new function() {
     } 
 
     self.Update = function(){
-    	self.rPing("refresh");
     	self.Show();
     }
 

@@ -27,6 +27,7 @@ var  config      = require('./config.js')
 
 
 var DivHelper = require(__base+'classes/jetcalc/Helpers/Div.js');
+var SetHelper = require(__base+'classes/jetcalc/Helpers/Set.js');
 
 
 //var Unmapper = require(__base+"classes/jetcalc/Unmap.js");

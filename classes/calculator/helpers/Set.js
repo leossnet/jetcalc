@@ -4,15 +4,6 @@ var _ = require('lodash');
 var f = require('../../../lib/functions.js');
 var Base = require('./Base.js');
 
-/*
-	Возвращает дефолтное значение параметров и форму для настройки персональных отчетов
-
-	Проверяем а есть вообще настройки в данном контексте 
-	1. IsInput = true и у документа есть параметр IsActiveCondition = true
-	2. IsInput = false
-
-*/
-
 
 
 var SetHelper = function(Context){
@@ -20,7 +11,7 @@ var SetHelper = function(Context){
 	Context = _.clone(Context);
 	Context.PluginName = "SET";
 	var self = this;
-	Context.CacheFields = ['CodePeriod','IsInput','CodeDoc'];
+	Context.CacheFields = ['CodePeriod','CodeDoc'];
 	Base.apply(self,Context);
 	self.Context = Context;		
 
@@ -83,15 +74,7 @@ var SetHelper = function(Context){
 
 
 	self.check = function(done){
-		if (self.IsInput){
-			self.query('doc',{CodeDoc:self.Context.CodeDoc},'IsActiveCondition').exec(function(err,Docs){
-				var Doc = _.first(Docs);
-				if (!Doc.IsActiveCondition)  err = err || "У документа не установлен параметр IsActiveCondition для режима ввода";
-				return done(err)
-			})
-		} else {
-			return done();
-		}
+		return done();
 	}
 
 	self.CodePeriodGrps = [];
@@ -109,7 +92,7 @@ var SetHelper = function(Context){
 		var tabs = {}, grps = {}, params = {}, result = {};
 	    self.getPeriodGrps(function(err){
 	    	if (err) return done(err);
-	        self.query('docparamkey',{CodeDoc:self.Context.CodeDoc,CodePeriodGrp:{$in:self.CodePeriodGrps},IsInput:self.Context.IsInput,IsShow:true},"-_id CodeParam CodeParamSet").exec(function(err,cDs){
+	        self.query('docparamkey',{CodeDoc:self.Context.CodeDoc,CodePeriodGrp:{$in:self.CodePeriodGrps},IsShow:true},"-_id CodeParam CodeParamSet").exec(function(err,cDs){
 	    	  if (err) return done(err);	        	
 	          var MAP = f.remap(cDs,'CodeParam','CodeParamSet');
 	          var allParams  = _.map (cDs,'CodeParam');
