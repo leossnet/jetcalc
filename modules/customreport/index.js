@@ -1,15 +1,30 @@
 var ParamManager = (new function(){
 	var self = this;
 
-	self.rawData =  {tabs:[], grps:[], params:[], List:[]};
-    self.choosedTab = ko.observable(null);
-    self.choosedGrp = ko.observable(null);
+	//self.rawData =  {tabs:[], grps:[], params:[], List:[]};
+    //self.choosedTab = ko.observable(null);
+    //self.choosedGrp = ko.observable(null);
+
+    self.Params = ko.observable();
+    self.Groups = ko.observableArray();
+    self.ParamsByGroup = function(CodeGroup){
+    	return _.filter(self.Params,{CodeParamGrp:CodeGroup});
+    }
+
  	
 	self.Load = function(done){
 		console.log("Loading Params For ",CxCtrl.CodeDoc());
          var Params = {};
          CustomReport.rGet("params",CxCtrl.CxPermDoc(),function(data){
-         	console.log(data);
+         	self.Params(data.Params);
+         	var Groups = {}, GInd;
+         	_.values(data.Params).forEach(function(P){
+         		if (!GInd[P.CodeParamGrp]) {
+         			GInd[P.CodeParamGrp] = 1;
+         			Groups.push(_.pick(P,["CodeParamGrp","NameParamGrp"]));
+         		}
+         	})
+         	self.Groups(Groups);
          })
 /*
     	 $.ajax({
