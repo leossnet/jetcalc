@@ -4,21 +4,21 @@ var MPeriods = (new function () {
 
     self.IsUseOrg = ko.observable(false);
 
-    self.RollBack = function(){
+    self.RollBack = function () {
         self.Show();
     }
 
     self.BeforeHide = function () {
         self.UnSubscribe({
-            save:self.SaveChanges,
-            refresh:self.RollBack
+            save: self.SaveChanges,
+            refresh: self.RollBack
         });
     }
 
     self.BeforeShow = function () {
         self.Subscribe({
-            save:self.SaveChanges,
-            refresh:self.RollBack
+            save: self.SaveChanges,
+            refresh: self.RollBack
         });
         self.Show();
     }
@@ -116,8 +116,13 @@ var MPeriods = (new function () {
                     target_model: 'periodautofill',
                     source_index_field_name: 'Idx',
                     source_model_field_name: 'CodeSourcePeriod',
-                    get_sort: {MCount:1,BeginDate:1},
-                    get_query: {IsReportPeriod:true},
+                    get_sort: {
+                        MCount: 1,
+                        BeginDate: 1
+                    },
+                    get_query: {
+                        IsReportPeriod: true
+                    },
                     use_sync_links: true,
                 });
                 ModuleManager.IsLoading(false);
@@ -130,8 +135,13 @@ var MPeriods = (new function () {
                     source_model: 'period',
                     target_model: 'reportperiods',
                     source_index_field_name: 'IndexReportPeriod',
-                    get_sort: {MCount:1,BeginDate:1},
-                    get_query: {IsReportPeriod:true},
+                    get_sort: {
+                        MCount: 1,
+                        BeginDate: 1
+                    },
+                    get_query: {
+                        IsReportPeriod: true
+                    },
                 });
                 ModuleManager.IsLoading(false);
                 break;
@@ -139,7 +149,7 @@ var MPeriods = (new function () {
         return done && done()
     }
 
-    
+
 
     // PeriodEdit
     self.Table = ko.observable();
@@ -160,40 +170,68 @@ var MPeriods = (new function () {
         }, function (data) {
             var ColWidths = [200];
             var ToTranslate = {}
-            var Header = [[{label:'Группа документов',colspan:1}],[{label:'',colspan:1}]], Rows = {}, Columns = [{data:"Name",renderer: "text",readOnly:true}];
-            var Trs = {periodgrp:[],period:[],role:[]};
-            for (var CodePeriodGrp in data){
+            var Header = [[{
+                    label: 'Группа документов',
+                    colspan: 1
+                }], [{
+                    label: '',
+                    colspan: 1
+                }]],
+                Rows = {},
+                Columns = [{
+                    data: "Name",
+                    renderer: "text",
+                    readOnly: true
+                }];
+            var Trs = {
+                periodgrp: [],
+                period: [],
+                role: []
+            };
+            for (var CodePeriodGrp in data) {
                 Trs.periodgrp.push(CodePeriodGrp);
-                for (var CodePeriod in data[CodePeriodGrp]){
+                for (var CodePeriod in data[CodePeriodGrp]) {
                     Trs.period.push(CodePeriod);
-                    for (var CodeRole in data[CodePeriodGrp][CodePeriod]){
+                    for (var CodeRole in data[CodePeriodGrp][CodePeriod]) {
                         Trs.role.push(CodeRole);
-                    }                    
-                }                    
+                    }
+                }
             }
             for (var K in Trs) Trs[K] = _.uniq(Trs[K]);
-            Catalogue.ForceLoad(Trs,function(){
-                for (var CodePeriodGrp in data){
+            Catalogue.ForceLoad(Trs, function () {
+                for (var CodePeriodGrp in data) {
                     var PeriodsInfo = data[CodePeriodGrp];
-                    Header[0].push({label:Catalogue.References["periodgrp"][CodePeriodGrp],colspan:_.keys(PeriodsInfo).length});
-                    for (var CodePeriod in PeriodsInfo){
-                        Header[1].push({label:Catalogue.References["period"][CodePeriod],colspan:1});
-                        Columns.push ({type:"checkbox",data:CodePeriod})
+                    Header[0].push({
+                        label: Catalogue.References["periodgrp"][CodePeriodGrp],
+                        colspan: _.keys(PeriodsInfo).length
+                    });
+                    for (var CodePeriod in PeriodsInfo) {
+                        Header[1].push({
+                            label: Catalogue.References["period"][CodePeriod],
+                            colspan: 1
+                        });
+                        Columns.push({
+                            type: "checkbox",
+                            data: CodePeriod
+                        })
                         ColWidths.push(70);
                         var DataOpened = PeriodsInfo[CodePeriod];
-                        for (var CodeRole in DataOpened){
-                            if (!Rows[CodeRole]) Rows[CodeRole] = {CodeRole:CodeRole,Name:Catalogue.References["role"][CodeRole]};
+                        for (var CodeRole in DataOpened) {
+                            if (!Rows[CodeRole]) Rows[CodeRole] = {
+                                CodeRole: CodeRole,
+                                Name: Catalogue.References["role"][CodeRole]
+                            };
                             Rows[CodeRole][CodePeriod] = DataOpened[CodeRole];
                         }
                     }
                 }
                 var Config = {
-                    Header:Header,
-                    Columns:Columns,
-                    Rows:Rows,
-                    Plugins:["Header"],
-                    GetData:self.PeriodEditResult,
-                    CFG:{
+                    Header: Header,
+                    Columns: Columns,
+                    Rows: Rows,
+                    Plugins: ["Header"],
+                    GetData: self.PeriodEditResult,
+                    CFG: {
                         colWidths: ColWidths
                     }
                 }
@@ -205,12 +243,15 @@ var MPeriods = (new function () {
     self.SaveChangesPEdit = function () {
         self.rPut("update", {
             Year: self.Year(),
-            Value: _.flatten(_.map(self.PeriodEditResult(),function(Row){
+            Value: _.flatten(_.map(self.PeriodEditResult(), function (Row) {
                 var CodeRole = Row.CodeRole;
                 var Enabled = [];
-                for (var CodePeriod in Row){
-                    if (Row[CodePeriod]===true){
-                        Enabled.push({CodeRole:CodeRole,CodePeriod:CodePeriod});
+                for (var CodePeriod in Row) {
+                    if (Row[CodePeriod] === true) {
+                        Enabled.push({
+                            CodeRole: CodeRole,
+                            CodePeriod: CodePeriod
+                        });
                     }
                 }
                 return Enabled;
@@ -254,12 +295,28 @@ ko.components.register('period-formula-editor', {
 
         self.ParsedArray(result);
 
+        self.AddLastCellListener = function () {
+            $(".formula-editor-year").last().keydown(function (e) {
+                if (e.keyCode == 9) {
+                    self.AddFormula()
+                    return false;
+                }
+            })
+        }
+
+        setTimeout(self.AddLastCellListener, 500)
+
         self.AddFormula = function () {
+            $(".formula-editor-year").last().off();
             var Obj = ko.mapping.fromJS(_.clone(Base));
             self.ParsedArray.push(Obj);
+            setTimeout(self.AddLastCellListener, 200);
+
         }
         self.RemoveFormula = function (data) {
+            $(".formula-editor-year").last().off();
             self.ParsedArray.remove(data);
+            setTimeout(self.AddLastCellListener, 200);
         }
         ko.computed(function () {
             return ko.toJSON(self.ParsedArray);
@@ -279,5 +336,5 @@ ko.components.register('period-formula-editor', {
             params.field(StrArr.join(","));
         });
     },
-    template: '<table data-bind="if:ParsedArray().length" class="table table-striped table-bordered table-hover dataTable no-footer small-paddings" style="width: initial;"><theader><tr><td >Исх.Период</td><td >Цел.Период</td><td >Згл.Период</td><td >Смещ.Год</td><td ></td></tr></theader><tbody data-bind="foreach:ParsedArray()"><tr><td><input data-bind="value:$data.From" style="width: 50px;"></input></td><td><input data-bind="value:$data.To" style="width: 50px;"></input></td><td><input data-bind="value:$data.Header" style="width: 50px;"></input></td><td><input data-bind="value:$data.Year" style="width: 50px;"></input></td><td><a data-bind="click:$parent.RemoveFormula"><i class="fa fa-icon fa-times"></i></a></td></tr></tbody></table><a class="addLinkModel" data-bind="click:AddFormula">Добавить</a>',
+    template: '<table data-bind="if:ParsedArray().length" class="table table-striped table-bordered table-hover dataTable no-footer small-paddings" style="width: initial;"><theader><tr><td >Исх.Период</td><td >Цел.Период</td><td >Згл.Период</td><td >Смещ.Год</td><td ></td></tr></theader><tbody data-bind="foreach:ParsedArray()"><tr><td><input data-bind="value:$data.From" style="width: 50px;"></input></td><td><input data-bind="value:$data.To" style="width: 50px;"></input></td><td><input data-bind="value:$data.Header" style="width: 50px;"></input></td><td><input class="formula-editor-year" data-bind="value:$data.Year" style="width: 50px;"></input></td><td><a data-bind="click:$parent.RemoveFormula"><i class="fa fa-icon fa-times"></i></a></td></tr></tbody></table><a class="addLinkModel" data-bind="click:AddFormula">Добавить</a>',
 });

@@ -1,3 +1,4 @@
+<!-- ko ifnot:MUsers.Mode() == 'Approvers' -->
 <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MUsers'>
     <!-- ko template:'tb_simple_loader' -->
     <!-- /ko -->
@@ -37,8 +38,8 @@
         </a>
     </div>
     <!-- /ko -->
-
 </div>
+<!-- /ko -->
 
 <div class="row adminbody" data-bind="with:MUsers">
     <div class='scrollable_page admin_page'>
@@ -46,6 +47,28 @@
             <!-- ko template: 'inline_error' -->
             <!-- /ko -->
         </div>
+        <!-- ko if:MUsers.Mode() == 'Approvers' -->
+        <h1 class="row header smaller lighter blue">Подтверждение заявок</h1>
+        <ul>
+            <!-- ko foreach: MUsers.RequestApprovers() -->
+            <li data-bind="text:$data.NameUser"></li>
+            <!-- /ko -->
+        </ul>
+        <h1 class="row header smaller lighter blue">Подтверждение пользователей</h1>
+        <ul style="margin-bottom:50px;">
+            <!-- ko foreach: MUsers.UserApprovers() -->
+            <li>
+                <div data-bind="text:_.keys($data)[0]"></div>
+                <ul>
+                    <!-- ko foreach: _.values($data)[0] -->
+                    <li data-bind="text:$data.NameUser"></li>
+                    <!-- /ko -->
+                </ul>
+            </li>
+            <!-- /ko -->
+        </ul>
+        <!-- /ko -->
+        <!-- ko ifnot:MUsers.Mode() == 'Approvers' -->
         <!-- ko template:'model_edit' -->
         <!-- /ko -->
 
@@ -137,6 +160,7 @@
             <div class='col-xs-6 m10_p5'></div>
         </div>
         <!-- /ko -->
+        <!-- /ko -->
     </div>
 </div>
 
@@ -208,7 +232,7 @@
 
 <div class="bottomPannel" data-bind="with:MUsers">
     <ul class="toolPanel nav nav-tabs background-blue">
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-user-secret',title:'Пользователи',mode:'Users'}} -->
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-users',title:'Пользователи',mode:'Users'}} -->
         <!-- /ko -->
         <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-shield',title:'Пропуска',mode:'Permits'}} -->
         <!-- /ko -->
@@ -217,6 +241,8 @@
         <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-address-card',title:'Заявки',mode:'Requests',badge:MUsers.Requests()}} -->
         <!-- /ko -->
         <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-user-circle',title:'Новые пользователи',mode:'NewUsers',badge:MUsers.NewUsers()}} -->
+        <!-- /ko -->
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-user-secret',title:'Регистраторы',mode:'Approvers'}} -->
         <!-- /ko -->
     </ul>
 </div>

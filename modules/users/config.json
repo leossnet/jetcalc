@@ -11,8 +11,8 @@
   	  "adminpage"  : true
   },
   "permissions" : [
-    "IsLoginAsTester", 
-    "IsDocPermissionAssigner", 
+    "IsLoginAsTester",
+    "IsDocPermissionAssigner",
     "IsFunctionAssigner",
     "IsFunctionEditor",
     "IsDocPermissionEditor",
@@ -26,6 +26,6 @@
     "IsDocPermissionEditor":["permit"],
     "IsFunctionEditor":["task"]
   },
-  "initial_load":false,
+  "initial_load":true,
   "sort_index":1
 }

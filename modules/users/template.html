@@ -1,129 +1,150 @@
 <script type="text/html" id="users_topmenu">
-    <!-- ko with: MUsers -->
-    	<!-- ko if:$data.IsEmulate() -->
-	    	<li class="purple"  data-bind='title:"Вернуться в свой аккаунт"'>
-	        	<a class="dropdown-toggle" data-bind="click: EmulateStop">
-	            	<i class="ace-icon fa fa-undo" style='margin-top:12px;'></i>							            
+	<!-- ko with: MUsers -->
+	<!-- ko if:$data.ReqUsers() > 0 -->
+	<li class="purple" data-bind="title:'Заявки'">
+		<a class="dropdown-toggle" data-bind="page-href:'/adminpage/users/'">
+					<i class="ace-icon fa fa-user-plus" data-bind="css:{'icon-animated-vertical':MUsers.ReqUsers() > 0}" style="margin-top:12px;"></i>
+					<span data-bind="text:MUsers.ReqUsers,css:{'badge badge-important': MUsers.ReqUsers() > 0}" class="badge badge-important"></span>
+			</a>
+	</li>
+	<!-- /ko -->
+	<!-- ko if:$data.IsEmulate() -->
+	<li class="purple" data-bind='title:"Вернуться в свой аккаунт"'>
+		<a class="dropdown-toggle" data-bind="click: EmulateStop">
+	            	<i class="ace-icon fa fa-undo" style='margin-top:12px;'></i>
 		       </a>
-	    	</li>
-	    <!-- /ko -->
-    <!-- /ko -->
+	</li>
+	<!-- /ko -->
+	<!-- /ko -->
 </script>
 
 
 <script id="objselect" type="text/html">
 	<div class="btn-group" style='white-space: nowrap' data-bind="with: MUsers">
-			<a class="btn btn-sm btn-white btn-primary dropdown-toggle" style='width:150px;overflow: hidden;text-overflow: ellipsis;text-align: left;' data-toggle="dropdown">
+		<a class="btn btn-sm btn-white btn-primary dropdown-toggle" style='width:150px;overflow: hidden;text-overflow: ellipsis;text-align: left;' data-toggle="dropdown">
 			<!-- ko with: MUsers.SelectedObj -->
-			  <!-- ko template:{name:'catalogue',data:{model:'obj',id:$data}} --><!-- /ko -->
+			<!-- ko template:{name:'catalogue',data:{model:'obj',id:$data}} -->
+			<!-- /ko -->
 			<!-- /ko -->
 			<i class="fa fa-angle-down icon-on-right fa-light" style="float:right;"></i>
-			</a>
-			<!-- ko with:MUsers.AvPrivelegeObj -->
-			<ul class="dropdown-menu dropdown-caret dropdown-menu-right" style='width: 100%;min-width: 400px;' >
-				<li><a data-bind="click: MUsers.SetObj.bind(null,null),lang:'noobjchoose'">
-				      
-				</a></li>				
-				<!-- ko foreach:$data -->
-				<li><a data-bind="click: MUsers.SetObj">
-				      <!-- ko template:{name:'catalogue',data:{model:'obj',id:$data}} --><!-- /ko -->
-				 </a></li>				
-				 <!-- /ko -->	
-			</ul>
-			<!-- /ko -->			
+		</a>
+		<!-- ko with:MUsers.AvPrivelegeObj -->
+		<ul class="dropdown-menu dropdown-caret dropdown-menu-right" style='width: 100%;min-width: 400px;'>
+			<li><a data-bind="click: MUsers.SetObj.bind(null,null),lang:'noobjchoose'">
+
+				</a></li>
+			<!-- ko foreach:$data -->
+			<li>
+				<a data-bind="click: MUsers.SetObj">
+					<!-- ko template:{name:'catalogue',data:{model:'obj',id:$data}} -->
+					<!-- /ko -->
+				</a>
+			</li>
+			<!-- /ko -->
+		</ul>
+		<!-- /ko -->
 	</div>
 </script>
 
 <script id="extend_model_edit_user" type="text/html">
 	<!-- ko ifnot:_.isEmpty(ModelTableEdit.LoadedModel().CodeUser()) -->
-	<div  data-bind='with:MUsers,Permit:{Id:"IsDocPermissionAssigner",CodeUser:ModelTableEdit.LoadedModel().CodeUser(),Type:"UserTask"}' class='split-bottom' style='margin-top: 30px;border-top: 1px solid #F0F0F0;'>
-		<button type="button" class="btn btn-white btn-success btn-permit-add float-right no-border" style='padding:2px 4px 2px 4px;' data-bind='click:MUsers.AddUserPermit'>Добавить пропуск</button>			
-		<h3 class="row header smaller lighter blue" >Пропуска</h3>					
+	<div data-bind='with:MUsers,Permit:{Id:"IsDocPermissionAssigner",CodeUser:ModelTableEdit.LoadedModel().CodeUser(),Type:"UserTask"}' class='split-bottom' style='margin-top: 30px;border-top: 1px solid #F0F0F0;'>
+		<button type="button" class="btn btn-white btn-success btn-permit-add float-right no-border" style='padding:2px 4px 2px 4px;' data-bind='click:MUsers.AddUserPermit'>Добавить пропуск</button>
+		<h3 class="row header smaller lighter blue">Пропуска</h3>
 		<table class="table table-bordered table-hover dataTable no-footer ">
 			<tbody data-bind='foreach:UserPermits'>
-				<tr class='clickable permit '> 
+				<tr class='clickable permit '>
 					<td class='tdnowrap' data-bind='click:MUsers.EditUserPermit'>
 						<!-- ko ifnot:$data.CodeGrp -->
-							<!-- ko template:{name:'catalogue',data:{model:'obj',id:$data.CodeObj}} --><!-- /ko -->
+						<!-- ko template:{name:'catalogue',data:{model:'obj',id:$data.CodeObj}} -->
+						<!-- /ko -->
 						<!-- /ko -->
 						<!-- ko if:$data.CodeGrp -->
-							<i class='ace-icon fa fa-folder'></i>
-							<!-- ko template:{name:'catalogue',data:{model:'grp',id:$data.CodeGrp}} --><!-- /ko -->
+						<i class='ace-icon fa fa-folder'></i>
+						<!-- ko template:{name:'catalogue',data:{model:'grp',id:$data.CodeGrp}} -->
+						<!-- /ko -->
 						<!-- /ko -->
 					</td>
-					<td class='tdnowrap'  data-bind='click:MUsers.EditUserPermit'>
-						<!-- ko template:{name:'catalogue',data:{model:'permit',id:$data.CodePermit}} --><!-- /ko -->
+					<td class='tdnowrap' data-bind='click:MUsers.EditUserPermit'>
+						<!-- ko template:{name:'catalogue',data:{model:'permit',id:$data.CodePermit}} -->
+						<!-- /ko -->
 					</td>
 					<td style='width:100px;'>
 						<button class="btn btn-white btn-warning btn-in-table" data-bind='click:MUsers.DeleteUserPermit'><i class="ace-icon fa fa-trash-o orange"></i>Удалить</button>
 					</td>
 				</tr>
-			</tbody>				
-		</table>	
+			</tbody>
+		</table>
 	</div>
-	<div data-bind='with:MUsers,Permit:{Id:"IsFunctionAssigner",CodeUser:ModelTableEdit.LoadedModel().CodeUser(),Type:"UserTask"}' class='split-bottom' >
-		<button type="button" class="btn btn-white btn-success btn-permit-add float-right no-border" style='padding:2px 4px 2px 4px;' data-bind='click:MUsers.AddUserTask'>Добавить роль</button>			
-		<h3 class="row header smaller lighter blue" >Роли</h3>					
+	<div data-bind='with:MUsers,Permit:{Id:"IsFunctionAssigner",CodeUser:ModelTableEdit.LoadedModel().CodeUser(),Type:"UserTask"}' class='split-bottom'>
+		<button type="button" class="btn btn-white btn-success btn-permit-add float-right no-border" style='padding:2px 4px 2px 4px;' data-bind='click:MUsers.AddUserTask'>Добавить роль</button>
+		<h3 class="row header smaller lighter blue">Роли</h3>
 		<table class="table  table-bordered table-hover dataTable no-footer ">
 			<tbody data-bind='foreach:UserTasks'>
-				<tr class='clickable permit ' > 
+				<tr class='clickable permit '>
 					<td class='tdnowrap' data-bind='click:MUsers.EditUserTask'>
 						<!-- ko if:$data.CodeObj -->
-							<!-- ko template:{name:'catalogue',data:{model:'obj',id:$data.CodeObj}} --><!-- /ko -->
+						<!-- ko template:{name:'catalogue',data:{model:'obj',id:$data.CodeObj}} -->
+						<!-- /ko -->
 						<!-- /ko -->
 						<!-- ko if:$data.CodeObjGrp -->
-							<i class='ace-icon fa fa-folder'></i>
-							<!-- ko template:{name:'catalogue',data:{model:'grp',id:$data.CodeObjGrp}} --><!-- /ko -->
+						<i class='ace-icon fa fa-folder'></i>
+						<!-- ko template:{name:'catalogue',data:{model:'grp',id:$data.CodeObjGrp}} -->
+						<!-- /ko -->
 						<!-- /ko -->
 						<!-- ko if:$data.CodeDoc -->
-							<!-- ko template:{name:'catalogue',data:{model:'doc',id:$data.CodeDoc}} --><!-- /ko -->
+						<!-- ko template:{name:'catalogue',data:{model:'doc',id:$data.CodeDoc}} -->
+						<!-- /ko -->
 						<!-- /ko -->
 						<!-- ko if:$data.CodeRole -->
-							<i class='ace-icon fa fa-folder'></i>
-							<!-- ko template:{name:'catalogue',data:{model:'role',id:$data.CodeRole}} --><!-- /ko -->
+						<i class='ace-icon fa fa-folder'></i>
+						<!-- ko template:{name:'catalogue',data:{model:'role',id:$data.CodeRole}} -->
+						<!-- /ko -->
 						<!-- /ko -->
 					</td>
 					<td class='tdnowrap' data-bind='click:MUsers.EditUserTask'>
-						<!-- ko template:{name:'catalogue',data:{model:'task',id:$data.CodeTask}} --><!-- /ko -->
+						<!-- ko template:{name:'catalogue',data:{model:'task',id:$data.CodeTask}} -->
+						<!-- /ko -->
 					</td>
 					<td style='width:100px;'>
 						<button class="btn btn-white btn-warning btn-in-table" data-bind='click:MUsers.DeleteUserTask'><i class="ace-icon fa fa-trash-o orange"></i>Удалить</button>
 					</td>
 				</tr>
-			</tbody>				
-		</table>	
-	</div>	
+			</tbody>
+		</table>
+	</div>
 	<!-- /ko -->
 	<!-- ko if:MUsers.Mode()=='NewUsers' -->
-		<div class='m10_p5'>
-			<button class="btn btn-sm btn-white btn-success" data-bind="click: MUsers.AcceptNewUser">
+	<div class='m10_p5'>
+		<button class="btn btn-sm btn-white btn-success" data-bind="click: MUsers.AcceptNewUser">
 				<i class="ace-icon fa fa-check fa-2" aria-hidden="true"></i>Подтвердить
 			</button>
-            <button style="float:right" class="btn btn-sm btn-white btn-danger" data-bind="click: MUsers.RejectNewUser">
+		<button style="float:right" class="btn btn-sm btn-white btn-danger" data-bind="click: MUsers.RejectNewUser">
 				<i class="ace-icon fa fa-lock fa-2" aria-hidden="true"></i>Отказать
 			</button>
-		</div>
+	</div>
 	<!-- /ko -->
 </script>
 
 
 <script id="extend_model_edit_request" type="text/html">
-<!-- ko with: MUsers -->
-   <!-- ko with:ModelTableEdit.LoadedModel -->
-   		<!-- ko template:{
+	<!-- ko with: MUsers -->
+	<!-- ko with:ModelTableEdit.LoadedModel -->
+	<!-- ko template:{
 					name:'small_form_with_header',
 					data:{Name:'Установите объект учета',Fields:['CodeObj'],Model:ModelTableEdit.LoadedModel}
-		} --><!-- /ko -->
-		<div class='m10_p5'>
-			<button class="btn btn-sm btn-white btn-success" data-bind="click: MUsers.AcceptRequest">
+		} -->
+	<!-- /ko -->
+	<div class='m10_p5'>
+		<button class="btn btn-sm btn-white btn-success" data-bind="click: MUsers.AcceptRequest">
 				<i class="ace-icon fa fa-check fa-2" aria-hidden="true"></i>Подтвердить
 			</button>
-            <button style="float:right" class="btn btn-sm btn-white btn-danger" data-bind="click: MUsers.RejectRequest">
+		<button style="float:right" class="btn btn-sm btn-white btn-danger" data-bind="click: MUsers.RejectRequest">
 				<i class="ace-icon fa fa-lock fa-2" aria-hidden="true"></i>Отказать
 			</button>
-		</div>
+	</div>
 	<!-- /ko -->
-<!-- /ko -->
+	<!-- /ko -->
 </script>
 
 
@@ -131,34 +152,38 @@
 	<div data-bind='with:MUsers.Priveleges'>
 		<table class="table table-striped table-bordered table-hover dataTable no-footer small-paddings">
 			<tbody data-bind='foreach:_.keys($data)'>
-				<tr><th colspan=2 data-bind='lang:$data'></th></tr>
+				<tr>
+					<th colspan=2 data-bind='lang:$data'></th>
+				</tr>
 				<!-- ko foreach:$parent[$data] -->
-					<tr>
-						<td width=1px>
-                            <input class="ace ace-checkbox" type="checkbox" data-bind="value:$data.CodePrivelege,checked: MUsers.TaskPriveleges">
-                            <span class="lbl"></span>
-                        </td>
-						<td data-bind='text:$data.NamePrivelege'></td>
-					</tr>
+				<tr>
+					<td width=1px>
+						<input class="ace ace-checkbox" type="checkbox" data-bind="value:$data.CodePrivelege,checked: MUsers.TaskPriveleges">
+						<span class="lbl"></span>
+					</td>
+					<td data-bind='text:$data.NamePrivelege'></td>
+				</tr>
 				<!-- /ko -->
-			</tbody>				
+			</tbody>
 		</table>
-	</div>	
+	</div>
 </script>
 
 <script id="extend_model_edit_permit" type="text/html">
 	<!-- ko with:MUsers.Permit -->
-		<!-- ko template:'document_permissions' --><!-- /ko -->
+	<!-- ko template:'document_permissions' -->
+	<!-- /ko -->
 	<!-- /ko -->
 </script>
 
 
 <script id="document_permissions_header" type="text/html">
-	<tr><th class="center"></th>
+	<tr>
+		<th class="center"></th>
 		<!-- ko foreach: MUsers.PeriodGrps -->
-			<th class="center" data-bind="text: $data.NamePeriodGrp"></th>
+		<th class="center" data-bind="text: $data.NamePeriodGrp"></th>
 		<!-- /ko -->
-		<th class="center" >X</th>
+		<th class="center">X</th>
 </script>
 
 <script id="document_permissions_row" type="text/html">
@@ -169,11 +194,13 @@
 		</td>
 		<!-- ko foreach: MUsers.PeriodGrps -->
 		<td class="center" data-bind='with: $parents[1][$parent["CodeRole"]][$data.CodePeriodGrp]'>
-			<!-- ko template: 'permission_update_button' --><!-- /ko -->
+			<!-- ko template: 'permission_update_button' -->
+			<!-- /ko -->
 		</td>
 		<!-- /ko -->
 		<td class="center" data-bind='with: $parent[$data["CodeRole"]]["ALL"]'>
-			<!-- ko template: 'permission_update_button' --><!-- /ko -->
+			<!-- ko template: 'permission_update_button' -->
+			<!-- /ko -->
 		</td>
 	</tr>
 </script>
@@ -195,17 +222,21 @@
 	<h3 class="row header smaller lighter blue" data-bind='Permit:{Id:"IsExtendedDocPermissionEditor",Type:"Task"}'>Основные роли</h3>
 	<!-- /ko -->
 	<table class="permission-table table-striped table-bordered table-hover dataTable no-footer" style="width: 100%">
-		<!-- ko template:'document_permissions_header' --><!-- /ko -->
+		<!-- ko template:'document_permissions_header' -->
+		<!-- /ko -->
 		<tbody data-bind='foreach: MUsers.Roles'>
-			<!-- ko template:'document_permissions_row' --><!-- /ko -->		
+			<!-- ko template:'document_permissions_row' -->
+			<!-- /ko -->
 		</tbody>
 	</table>
 	<!-- ko if:MUsers.AddRoles().length -->
 	<h3 class="row header smaller lighter blue" data-bind='Permit:{Id:"IsExtendedDocPermissionEditor",Type:"Task"}'>Дополнительные роли</h3>
 	<table class="permission-table table-striped table-bordered table-hover dataTable no-footer" data-bind='Permit:{Id:"IsExtendedDocPermissionEditor",Type:"Task"}' style="width: 100%">
-		<!-- ko template:'document_permissions_header' --><!-- /ko -->
+		<!-- ko template:'document_permissions_header' -->
+		<!-- /ko -->
 		<tbody data-bind='foreach: MUsers.AddRoles'>
-			<!-- ko template:'document_permissions_row' --><!-- /ko -->		
+			<!-- ko template:'document_permissions_row' -->
+			<!-- /ko -->
 		</tbody>
 	</table>
 	<!-- /ko -->
