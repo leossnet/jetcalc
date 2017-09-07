@@ -1,41 +1,43 @@
 <script id="folders_left_menu" type="text/html">
-<!-- ko ifnot:MBreadCrumbs.CheckPath('adminpage') -->
-<!-- ko with:MFolders -->
-		<!-- ko with:DocTree -->
-				<li  data-bind='resize:MFolders.AllOpened'></li>
-			<!-- ko foreach:_.keys($data) -->
-				 <li class='submenu-level-0' data-bind='attr:{"data-folder":$data},click:MFolders.Remember,css:{"open":MFolders.IsOpen($data)}'>
-					<a class="dropdown" >
+	<!-- ko ifnot:MBreadCrumbs.CheckPath('adminpage') -->
+	<!-- ko with:MFolders -->
+	<!-- ko with:DocTree -->
+	<li data-bind='resize:MFolders.AllOpened'></li>
+	<!-- ko foreach:_.keys($data) -->
+	<li class='submenu-level-0' data-bind='attr:{"data-folder":$data},click:MFolders.Remember,css:{"open":MFolders.IsOpen($data)}'>
+		<a class="dropdown">
 						<i class="menu-icon fa" data-bind='css:MFolders.FolderIcon($data)'></i>
 						<span class="menu-text" data-bind='text:$data'></span>
 						<span class="badge badge-gray" data-bind='text:MFolders.DocTreeCounts()[$data]'></span>
 					</a>
-					<ul class="submenu">
-						<!-- ko foreach:_.keys($parent[$data]) -->
-						<li class='submenu-level-0' data-bind='attr:{"data-folder":$data},click:MFolders.Remember,clickBubble: false,css:{"open":MFolders.IsOpen($data)}'>
-							<a class="dropdown" style='line-height: 19px;' >
+		<ul class="submenu">
+			<!-- ko foreach:_.keys($parent[$data]) -->
+			<li class='submenu-level-0' data-bind='attr:{"data-folder":$data},click:MFolders.Remember,clickBubble: false,css:{"open":MFolders.IsOpen($data)}'>
+				<a class="dropdown" style='line-height: 19px;'>
 								<i class='fa fa-icon'  data-bind='css:MFolders.FolderIcon($data)'></i>&nbsp;<span class="menu-text" data-bind='text:$data'></span>
 								<span class="badge badge-gray badge-small" data-bind='text:$parents[1][$parent][$data].length+""'></span>
 							</a>
-							<ul class="submenu" data-bind='attr:{style:MFolders.IsOpen($data) ? "display:block":""}'>
-								<!-- ko foreach: $parents[1][$parent][$data] -->
-									<li data-bind="attr:{'data-doc':$data.CodeDoc},click: CxCtrl.AfterPageShow.bind(null,$data.CodeDoc),css:{active:MFolders.IsCurrent($data.CodeDoc),'IsTester':$data.IsTester,'IsDesigner':$data.IsDesigner},clickBubble: false">
-										<a style='line-height:15px;'>
-											<i class='fa fa-icon fa-circle fa-dot left-block-icon'></i>
-											<span data-bind="html:$data.NameDoc" class='right-block-text'></span>
-										</a>
-										<b class="arrow"></b>
-									</li>
-								<!-- /ko -->
-							</ul>
-						</li>
-						<!-- /ko -->
-					 </ul>
-				</li>
+				<ul class="submenu" data-bind='attr:{style:MFolders.IsOpen($data) ? "display:block":""}'>
+					<!-- ko foreach: $parents[1][$parent][$data] -->
+					<li data-bind="attr:{'data-doc':$data.CodeDoc},click: CxCtrl.AfterPageShow.bind(null,$data.CodeDoc),css:{active:MFolders.IsCurrent($data.CodeDoc),'IsTester':$data.IsTester,'IsDesigner':$data.IsDesigner},clickBubble: false">
+						<a style='line-height:15px;'>
+							<!-- ko if: $data.IsInput -->
+							<i style="font-size:9px!important;top:7px" class='fa fa-icon fa-circle fa-dot left-block-icon' data-bind="css:MFolders.GetBlockStateClass($data.CodeDoc)"></i>
+							<!-- /ko -->
+							<span data-bind="html:$data.NameDoc" class='right-block-text'></span>
+						</a>
+						<b class="arrow"></b>
+					</li>
+					<!-- /ko -->
+				</ul>
+			</li>
 			<!-- /ko -->
-		<!-- /ko -->
+		</ul>
+	</li>
 	<!-- /ko -->
-<!-- /ko -->
+	<!-- /ko -->
+	<!-- /ko -->
+	<!-- /ko -->
 
 
 </script>
