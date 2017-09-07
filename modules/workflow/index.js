@@ -1,6 +1,6 @@
 var Workflow = (new function(){
 
-    var self = new Module("workflow"); 
+    var self = new Module("workflow");
 
 
     self.History = ko.observableArray();
@@ -42,7 +42,7 @@ var Workflow = (new function(){
 
     self.Init = function(done){
         CxCtrl.Events.addListener("documentchanged",self.UpdateInfo);
-        CxCtrl.Events.addListener("contextchanged",self.UpdateInfo);        
+        CxCtrl.Events.addListener("contextchanged",self.UpdateInfo);
         CxCtrl.Events.addListener("pagechanged",self.UpdateInfo);
         self.LoadStates(done);
     }
@@ -135,7 +135,7 @@ var Workflow = (new function(){
                 $('#workflowInfo').modal('hide');
             } else {
                 self.NeedConfirm(true);
-                $('#workflowInfo').modal('show');                    
+                $('#workflowInfo').modal('show');
             }
         })
     }

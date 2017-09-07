@@ -7,7 +7,7 @@ var lib        = require(__base+'lib/helpers/lib.js');
 var Loader = require(__base+"classes/calculator/helpers/Workflow.js");
 var Calculator = require(__base+'classes/calculator/Calculator.js');
 var Structure  = require(__base+'classes/calculator/helpers/Structure.js');
-var HP = require(__base+'lib/helpers/lib.js').Permits; 
+var HP = require(__base+'lib/helpers/lib.js').Permits;
 
 var DataHistory = mongoose.model('datahistory', mongoose.Schema({
 	CodeStateFrom  : {type: String, default:''},
@@ -16,7 +16,7 @@ var DataHistory = mongoose.model('datahistory', mongoose.Schema({
 	YearData       : {type: Number, default:0, index:true},
 	CodeDoc        : {type: String, default:'', index:true},
 	CodeObj        : {type: String, default:'', index:true},
-	UserEdit       : {type: String, default:''},	
+	UserEdit       : {type: String, default:''},
 	DateEdit       : {type: Date, default:Date.now,  index:true}
 }));
 
@@ -40,7 +40,7 @@ var Helper = (new function(){
 			CodeObj:Context.CodeObj,
 			YearData:Number(Context.Year),
 			CodeDoc:Context.CodeDoc
-		} 
+		}
 		var CodeUser = Context.CodeUser;
 		if (_.compact(_.values(Q)).length!=4){
 			return done("Нужен полный контекст");
@@ -51,7 +51,7 @@ var Helper = (new function(){
 				if (!Data.CodeState){
 					self.SetDefaultState(Data,function(err,Updated){
 						Updated.save(CodeUser,function(err){
-							if (err) console.log(err);	
+							if (err) console.log(err);
 							return done (null,Updated);
 						})
 					});
@@ -94,7 +94,7 @@ var Helper = (new function(){
 					if (Link.CodePeriod==Context.CodePeriod){
 						if (Link.CodeDocType && Loaded.Doc[Link.CodeDocType] && Loaded.Doc[Link.CodeDocType].indexOf(Context.CodeDoc)!=-1){
 							Enabled = true;
-						} 
+						}
 						if (Link.CodeGrp && (
 							Loaded.ObjGrps[Link.CodeGrp].indexOf(Context.CodeObj)==-1 && Link.NoGrp
 						||  Loaded.ObjGrps[Link.CodeGrp].indexOf(Context.CodeObj)!=-1 && !Link.NoGrp
@@ -168,14 +168,14 @@ var Helper = (new function(){
 						Periods2Check.push({CodePeriod:Link.CodeCheckPeriod,CodeState:Link.CodeCheckState});
 						Test.push(K);
 					}
-				} 
+				}
 				if (Link.CodeGrp && (
 					Loaded.ObjGrps[Link.CodeGrp].indexOf(Context.CodeObj)==-1 && Link.NoGrp
 				||  Loaded.ObjGrps[Link.CodeGrp].indexOf(Context.CodeObj)!=-1 && !Link.NoGrp
 				)){
 					if (Test.indexOf(K)==-1){
 						Periods2Check.push({CodePeriod:Link.CodeCheckPeriod,CodeState:Link.CodeCheckState});
-						Test.push(K);						
+						Test.push(K);
 					}
 				}
 			})
@@ -210,8 +210,8 @@ var Helper = (new function(){
 			}
 			var Failed = []; ;
 			if (Route.CodeFinalState!=Helper.StatesTranslate["Closed"]){
-				return done(null,{Status:"skipped",Info:"Не проверяем зависимые документы"});	
-			} 
+				return done(null,{Status:"skipped",Info:"Не проверяем зависимые документы"});
+			}
 			async.each(Docs2Check,function(CodeDoc,cb){
 				self.GetData(_.merge(_.clone(Context),{CodeDoc:CodeDoc}),function(err,Data){
 					if (Data.CodeState==Helper.StatesTranslate["Opened"]){
@@ -234,7 +234,7 @@ var Helper = (new function(){
 			Info.Cells.forEach(function(Row){
 				CPS = _.uniq(CPS.concat(_.map(_.filter(Row,{IsControlPoint:true}),"Cell")));
 			})
-			if (!CPS.length) return done(null,{Status:"skipped",Info:"Нет контрольных точек"});	
+			if (!CPS.length) return done(null,{Status:"skipped",Info:"Нет контрольных точек"});
 			Calculator.CalculateCells(Context,CPS,function(err,Result){
 		      	var BadPoints = [];
 		      	for (var Key in Result.Values){
@@ -243,7 +243,7 @@ var Helper = (new function(){
 		      		}
 		      	}
 		      	if (!BadPoints.length) return done(null,{Status:"passed",Info:"Контрольные точки сошлись"});
-		      	return done(null,{Status:"failed",Info:"Контрольные точки не сошлись: "+BadPoints.length+" шт."});	
+		      	return done(null,{Status:"failed",Info:"Контрольные точки не сошлись: "+BadPoints.length+" шт."});
   			})
 		})
 	}
@@ -308,7 +308,7 @@ var Helper = (new function(){
 						self.ChangeStatus(CodeAction,Context,function(err,Explain){
 							return done(err,Explain);
 						})
-					} 
+					}
 				})
 			})
 		})
@@ -318,7 +318,7 @@ var Helper = (new function(){
 })
 
 
-router.get('/status', function(req,res,next){ 
+router.get('/status', function(req,res,next){
 	var Context = lib.ReqContext(req);
 	Context.CodeUser = req.user.CodeUser;
 	Helper.Status(Context,function(err,Current){
@@ -331,7 +331,7 @@ router.get('/status', function(req,res,next){
 })
 
 
-router.put('/execute', HP.DocAccess("DoBlock"), function(req,res,next){ 
+router.put('/execute', HP.DocAccess("DoBlock"), function(req,res,next){
 	var Context = lib.ReqContext(req);
 	Context.CodeUser = req.user.CodeUser;
 	Helper.Execute(req.body.Action, Context, function(err,Info){
@@ -351,17 +351,17 @@ router.put('/execute', HP.DocAccess("DoBlock"), function(req,res,next){
 
 
 
-router.get('/statestr',function(req,res,next){ 
+router.get('/statestr',function(req,res,next){
 	Helper.Info(function(){
 		return res.json({
 			states:Helper.StatesTranslate,
-			lang:Helper.StatesLang				
+			lang:Helper.StatesLang
 		});
 	})
 })
 
 
-router.get('/history', HP.DocAccess("DoBlock"), function(req,res,next){ 
+router.get('/history', HP.DocAccess("DoBlock"), function(req,res,next){
 	var Context = lib.ReqContext(req);
 	mongoose.model("datahistory").find({CodeDoc:Context.CodeDoc,CodeObj:Context.CodeObj,CodePeriod:Context.CodePeriod,YearData:Context.Year},"UserEdit CodeStateFrom CodeStateTo CodePeriod YearData DateEdit").sort({DateEdit:-1}).lean().exec(function(err,Data){
 		return res.json(Data);
@@ -369,7 +369,7 @@ router.get('/history', HP.DocAccess("DoBlock"), function(req,res,next){
 })
 
 
-router.put('/forceexecute', HP.DocAccess("DoBlock"), function(req,res,next){ 
+router.put('/forceexecute', HP.DocAccess("DoBlock"), function(req,res,next){
 	var Context = lib.ReqContext(req);
 	Context.CodeUser = req.user.CodeUser;
 	var PermissionMap =  {
