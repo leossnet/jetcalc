@@ -16,5 +16,6 @@
   "permissionsComments" : {
   		"IsCustomReportPublicTuner":"Сохранение доступных для всех отчетов",
       "IsCustomReportAdmin":"Удаление и просмотр чужих отчетов"
-  }
+  },
+  "initial_load":true
 }

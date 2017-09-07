@@ -10,8 +10,6 @@ var Div = (new function(){
 
 	var self = new Base("DIV");
 
-	Bus.On("DIVCHANGE",self.ClearCache);
-
 	self.Info = {};
 
 	self.FieldsByModel = {
@@ -27,19 +25,15 @@ var Div = (new function(){
 		'objtypetag':"-_id CodeObjType CodeTag Value"
 	};
 
+	self.SubscribeChanges(_.keys(self.FieldsByModel));
+
 	self.get = function(done){
-		console.time(">> div get");
 		self.FromCache(function(err,Result){
 			if (Result) {
-				console.log(">> div info from cache");
-				console.timeEnd(">> div get");
 				return done (err,Result);	
 			}
 			self.load(function(err,Data){
-				console.log(">> div info loaded");
 				self.ToCache(Data,function(err){
-					if (err) console.log(">> div info set cache error");
-					console.timeEnd(">> div get");
 					return done(err,Data);
 				})
 			})

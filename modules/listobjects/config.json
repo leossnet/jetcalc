@@ -1,0 +1,18 @@
+{
+  "id": "listobjects",
+  "title": "Справочники",
+  "icon": "fa-list-ul",
+  "class_name": "Listobjects",
+  "is_enabled": true,
+  "type":"adminpage",
+  "places":{
+      "adminpage"  : true
+  },
+  "permissions" : [
+  		"IsListobjectsEditor"
+  ],
+   "permissionsModels":{
+      "IsListobjectsEditor":["measure","format","tag","style","sumgrp","model"]
+  },
+  "sort_index":50
+}

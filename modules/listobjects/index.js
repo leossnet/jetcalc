@@ -1,9 +1,9 @@
-var MRows = (new function() {
+var MListobjects = (new function() {
     
-    var self = new Module("rows");
+    var self = new Module("listobjects");
 
     self.IsAvailable = function(){
-        return PermChecker.CheckPrivelege("IsRowEditor");
+        return PermChecker.CheckPrivelege("IsListobjectsEditor");
     }
 
     self.BeforeShow = function(){
@@ -45,4 +45,4 @@ var MRows = (new function() {
     return self;
 })
 
-ModuleManager.Modules.Rows = MRows;
+ModuleManager.Modules.Listobjects = MListobjects;

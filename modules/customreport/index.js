@@ -1,22 +1,111 @@
-var CustomReport = (new function() {
-	var self = new Module("customreport");
+var ParamManager = (new function(){
+	var self = this;
 
-	self.EditConfig = ko.observable();
-	self.EditResult = ko.observable();
-	self.EditChanges = ko.observable();
-	self.EditChangesCount = ko.observable();
-
-    self.IsOlap = function(){
-    	var Doc = null;
-    	if (CxCtrl.CodeDoc()) {
-			Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
-    	}
-    	return Doc && Doc.IsOlap; 
+	self.rawData =  {tabs:[], grps:[], params:[], List:[]};
+    self.choosedTab = ko.observable(null);
+    self.choosedGrp = ko.observable(null);
+ 	
+	self.Load = function(done){
+		console.log("Loading Params For ",CxCtrl.CodeDoc());
+         var Params = {};
+         CustomReport.rGet("params",CxCtrl.CxPermDoc(),function(data){
+         	console.log(data);
+         })
+/*
+    	 $.ajax({
+            url:"/api/form/set",
+            data:_.merge(CxCtrl.Context(),Params),
+            success:function(defaultData){
+            	for (var Key in self.rawData){
+            		self.rawData[Key] = defaultData[Key] || []
+            	}
+                self.IsInited(false);
+                done && done();
+            }
+		})
+*/
     }
+
+
+	return self;
+})
+
+
+var TreeHelper = function(CustomReport){
+	var self = this;
+
+	self.R = CustomReport;
+	self.Rows = _.clone(CustomReport.Rows);
+
+	self.ResultTreeCodes = [];
+	self.ResultTreeObjs = [];
+
+
+	self._children = function(CodeRow,Rows){
+	  var Row = _.find(Rows,{CodeRow:CodeRow});
+	  return _.map (_.filter (Rows,function(R){
+	    return Row.lft<R.lft && Row.rgt > R.rgt;
+	  }),"CodeRow");
+	}
+
+	self._parents = function(CodeRow,Rows){
+	  var Row = _.find(Rows,{CodeRow:CodeRow});
+	  return _.map (_.filter (Rows, function(R){
+	    return Row.lft>R.lft && Row.rgt < R.rgt;
+	  }),"CodeRow");
+	}   
+
+	self.Tree = function(){
+      var AllHidden = [], NewTreeCodes = [], Filtered = [], Return = [];
+      if (self.R.Mode() == 'ModifyView'){
+        	var CodesToHide = [];
+        	self.R.IsHidden.forEach(function(HC){
+          		CodesToHide = CodesToHide.concat([HC]).concat(self._children(HC,self.Rows));
+        	})
+        	self.R.IsToggled.forEach(function(CC){
+          		CodesToHide = CodesToHide.concat(self._children(CC,self.Rows));
+        	})
+        	AllHidden = _.uniq(CodesToHide);
+        	Filtered = _.filter(self.Rows,function(R){
+          		return AllHidden.indexOf(R.CodeRow)==-1;
+        	})
+      } else {
+        var Codes = [];
+        self.R.IsShowOlap.forEach(function(RS){Codes.push(RS);})
+        self.R.IsShowWithParent.forEach(function(RP){Codes.push(RP);Codes = Codes.concat(self._parents(RP,self.Rows));})
+        self.R.IsShowWithChildren.forEach(function(RC){Codes.push(RC);Codes = Codes.concat(self._children(RC,self.Rows));})
+        NewTreeCodes = _.uniq(Codes);
+        Filtered = _.filter(self.Rows,function(R){
+          return NewTreeCodes.indexOf(R.CodeRow)!=-1;
+        })
+      }
+      if (_.isEmpty(Filtered)) {
+      	Return = self.Rows;
+      } else {
+        var T = new TypeTree("ROOT",{});
+        Filtered.forEach(function(R){
+            var Parents  = self._parents(R.CodeRow,Filtered);
+
+            T.add (R.CodeRow, R, _.last(Parents) || "ROOT", T.traverseBF);
+        })
+       	Return = T.getFlat();
+        delete T;
+      }
+      return Return;      
+    }
+
+	return self;
+}
+
+
+var ReportManager = (new function(){
+	var self = this;
+
 	self.NewReport = function(){
 		self.CurrentReport('default');
 		self.DoLoadReport();
 	}
+
 	self.CurrentReport = ko.observable(null);
 	self.LoadReport = function(){
 		self.PrepareTree();
@@ -24,8 +113,16 @@ var CustomReport = (new function() {
 		$("#loadreport_modal").modal("show");
 		$("#loadreport_modal").on("hide.bs.modal", function(e) {
 			self.IsLoadReportsShow(false);
-        })	
+	    })	
 	}
+
+	self.EditFields = function(){
+    	var Base = ['CodeReport','IndexReport','NameReport','PrintNameReport','PrintDocReport'];
+    	if (PermChecker.CheckPrivelege("IsCustomReportPublicTuner",CxCtrl.CxPermDoc())){
+    		Base = Base.concat(['IsPublic','IsDefault','IsPrivate','CodeGrp','CodePeriodGrp']);
+    	}
+    	return Base;
+    }
 
 	self.DoLoadReport = function(){
 		var Report = _.find(SettingController.Reports(),{CodeReport:self.CurrentReport()});
@@ -85,7 +182,6 @@ var CustomReport = (new function() {
 		$("#savereport_modal").modal("show");
 	}
 
-
 	self.SaveReport = function(){
 		self.SaveError(null);
 		var RowsModifiers = {};
@@ -110,15 +206,89 @@ var CustomReport = (new function() {
 				self.Init();
 			}
 		})
-
 	}
+	self.ReportLoadTree = {};
+	self.ReportTreeDataSource = function(options, callback){
+		var Answ  = {};
+		if(!("text" in options) && !("type" in options)){
+			return callback({ data: self.ReportLoadTree });
+		} else if("type" in options && options.type == "folder") {
+			var Answ = options.additionalParameters.children;
+		}
+		callback({ data: Answ });
+	}
+
+	self.PrepareTree = function(){
+		var all = SettingController.Reports(), CodeUser = MSite.Me().CodeUser();
+		var _reparse = function(i){ return {code:i.CodeReport,text:i.NameReport, type: 'item'};}
+		var Filter = {
+			personal :_.map(_.filter(all,{CodeUser:CodeUser}),_reparse),
+			public   :_.map(_.filter(all,{IsPublic:true}),_reparse),
+			private  :_.map(_.filter(all,{IsPrivate:true}),_reparse),
+		};
+		var tree_data = {};
+		for (var Code in Filter){
+			if (Filter[Code].length){
+				tree_data[Code] = {code:Code, text: Tr('customreport',Code), type: 'folder', additionalParameters:{children:Filter[Code]}};
+			}
+		}
+		var additional = {};
+		var grps = _.compact(_.map(all,"CodeGrp"));
+		if (grps.length){
+			additional.forgroups = {code:'forgroups', text: 'Для предприятий', type: 'folder', additionalParameters:{children:[]}};
+			var ByGroups = {};
+			grps.forEach(function(CodeGroup){
+				ByGroups[CodeGroup] = _.map(_.filter(all,{CodeGrp:CodeGroup}),_reparse);
+			})
+			grps.forEach(function(CodeGroup){
+				tree_data['forgroups'].additionalParameters["children"].push({code:CodeGroup, text: CodeGroup, type: 'folder', additionalParameters:{children:ByGroups[CodeGroup]}});
+			})
+		}
+	    additional.default = {code:'default', text: 'По умолчанию', type: 'item'};
+		tree_data = _.merge(tree_data,additional);
+		self.ReportLoadTree = tree_data;
+	}
+
+	
+
+
+
+	return self;
+})
+
+
+
+
+
+
+var CustomReport = (new function() {
+
+	var self = new Module("customreport");
+
+	self.EditConfig = ko.observable();
+	self.EditResult = ko.observable();
+	self.EditChanges = ko.observable();
+	self.EditChangesCount = ko.observable();
+
+    self.IsOlap = function(){
+    	var Doc = null;
+    	if (CxCtrl.CodeDoc()) {
+			Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
+    	}
+    	return Doc && Doc.IsOlap; 
+    }
+
 
 	self.RollBack = function(){
 		self.Init();
 	}
 
-
-
+	self.Init = function(done){
+		CxCtrl.Events.addListener("documentchanged",function(){
+			ParamManager.Load();
+		})
+		return done();
+	}
 
   	self.BeforeHide = function(){
         self.UnSubscribe({
@@ -151,23 +321,26 @@ var CustomReport = (new function() {
 		return "ModifyView";
 	}
 
-
 	self.Show = function(done){
         if (!self.Mode()) return self.InitSetMode("SingleView");
         switch(self.Mode()){
         	case "SingleView":
+        		["IsShowOlap","IsShowWithParent","IsShowWithChildren"].forEach(function(F){
+        			self[F] = [];
+        		})
         		self.RenderShow();
         	break;
         	case "ModifyView":
+        		["IsHidden","IsToggled"].forEach(function(F){
+        			self[F] = [];
+        		})
         		self.RenderShow();
         	break;
         	case "ColumnsView":
-        		self.RenderShow();
+        		self.ColumnPreview();
         	break;
         }
 	}
-
-
 
 	self.EditChangesSubscription = null;
 	self.UnSubscribeChanges = function(){
@@ -185,7 +358,6 @@ var CustomReport = (new function() {
 		self.RenderPreview();
 	}
 	
-
 	self.RenderShow = function(){
 		self.LoadStructure(function(){				
  			var ColWidths = [];
@@ -248,10 +420,72 @@ var CustomReport = (new function() {
 		})
 	}
 
-	self.RenderPreview = function(){
+	self.PreviewConfig = ko.observable();
+	self.PreviewResult = ko.observable();
+	self.PreviewChanges = ko.observable();
+	self.PreviewChangesCount = ko.observable();	
 
+	self.RenderPreview = function(){
+		var T = new TreeHelper(self);
+		var Rows = T.Tree(), ColWidths = [], ToTranslate = {}, Columns = [];
+        Columns.push({type:"text",data:"NumRow",title:Tr("NumRow"),readOnly:true}); ColWidths.push(70);
+        Columns.push({type:"text",data:"NameRow",title:Tr("NameRow"),readOnly:true,renderer:HandsonTableRenders.TreeRender}); ColWidths.push(400);
+		var TreeArr = {};
+    	Rows.forEach(function(R,I){
+        	TreeArr[I] = _.pick(R,['lft','rgt','level']);
+    	})            
+        var Config = {
+            Columns:Columns,
+            Rows:Rows,
+            CFG:{
+                colWidths: ColWidths,
+                colHeaders: true,
+                stretchH:'last',
+                Plugins:["Tree"],
+                tree:{
+	        		data:TreeArr,
+	       			icon:function(){},
+	        		colapsed:CxCtrl.Context().CodeDoc+'customreport_preview'
+	        	}
+            }
+		}
+        self.PreviewConfig(Config);
 	}
 
+	self.ColumnConfig = ko.observable();
+	self.ColumnResult = ko.observable();
+	self.ColumnChanges = ko.observable();
+	self.ColumnChangesCount = ko.observable();	
+
+	self.ColumnPreview = function(){
+		var T = new TreeHelper(self);
+		var Rows = T.Tree(), ColWidths = [], ToTranslate = {}, Columns = [];
+        Columns.push({type:"text",data:"NumRow",title:Tr("NumRow"),readOnly:true}); ColWidths.push(70);
+        Columns.push({type:"text",data:"NameRow",title:Tr("NameRow"),readOnly:true,renderer:HandsonTableRenders.TreeRender}); ColWidths.push(400);
+		self.Cols.forEach(function(H){
+			Columns.push({type:'text',title:H.NameColsetCol,readOnly:true}); ColWidths.push(100);
+		})
+		var TreeArr = {};
+    	Rows.forEach(function(R,I){
+        	TreeArr[I] = _.pick(R,['lft','rgt','level']);
+    	})            
+        var Config = {
+            Columns:Columns,
+            Rows:Rows,
+            CFG:{
+                colWidths: ColWidths,
+                colHeaders: true,
+                fixedColumnsLeft:2,
+                Plugins:["Tree"],
+                tree:{
+	        		data:TreeArr,
+	       			icon:function(){},
+	        		colapsed:CxCtrl.Context().CodeDoc+'customreport_preview_column'
+	        	}
+            }
+		}
+        self.ColumnConfig(Config);
+	}
 
 
 	return self;
@@ -260,7 +494,7 @@ var CustomReport = (new function() {
 
 
 
-
+/*
 
 
 
@@ -269,208 +503,13 @@ var MCustomReport = (new function() {
 	var self = new Module("customreport");
 
 
-	self.EditTable = null;
-
-
-	self.EditTableCFG = function(){
-    	var Header  = Tr('customreport',['CodeRow','NameRow']), columns = [] , 
-    	addCols = [], FixedColsWidths = [100];
-    	if (self.Mode()=='SingleView'){
-    		addCols = ['IsShowOlap','IsShowWithParent','IsShowWithChildren'];
-    	} else {
-    		addCols = ['IsHidden','IsToggled'];
-    	}
-    	if (self.IsOlap()){
-    		if (self.Mode()!="SingleView"){
-    			self.Mode("SingleView");
-    		}
-    		addCols = ['IsShowOlap'];
-    	}
-    	Header = Tr('customreport',addCols).concat(Header);
-    	var HandsonRenders = new HandsonTableRenders.RenderController();	
-    	addCols.forEach(function(AC,Index){
-    		FixedColsWidths.shift(20);
-    		columns.push({data:AC,type:'checkbox'});
-    		HandsonRenders.RegisterRender(AC,[new RegExp("[0-9]*?,"+Index+"$")], self.CheckedRender);
-    	})
-    	columns = columns.concat([{data:'NumRow',type:'text'},{data:'NameRow',type:'text'}]);
-        HandsonRenders.RegisterRender("Code",[new RegExp("[0-9]*?,"+addCols.length+"$")], HandsonTableRenders.ReadOnlyText);
-        HandsonRenders.RegisterRender("Tree",[new RegExp("[0-9]*?,"+(addCols.length+1)+"$")], HandsonTableRenders.TreeRender);
-		HandsonRenders.RegisterRender("Filter",[/[0-9]*?,[0-9]*?/],self.FilterRender);            
-        var TreeArr = {}, TableCells = [];
-        self.Rows.forEach(function(R,I){
-            TreeArr[I] = _.pick(R,['lft','rgt','level']);
-        })
-        self.Rows.forEach(function(Row){
-        	var EmptRow = _.pick(Row,['CodeRow','lft','rgt','level','IsHidden','IsToggled','NumRow','NameRow','IsShowOlap','IsShowWithParent','IsShowWithChildren']);
-            TableCells.push(EmptRow)
-        })
-        var HandsonConfig = {
-        	data:TableCells,cells:HandsonRenders.UniversalRender,
-			fixedColumnsLeft:0,manualRowMove: true,autoRowSize:true,
-			afterChange:self.RegisterChange,columns:columns,
-			colWidths:FixedColsWidths,
-			colHeaders:Header, stretchH: 'last',								
-			tree:{
-		        data:TreeArr,
-		       	icon:function(){},
-		        colapsed:CxCtrl.Context().CodeDoc+'customreport'
-		    }
-        }
-        return HandsonConfig;
-	}
-
-	self.RenderEditTable = function(){
-    	var CFG = self.EditTableCFG();
-    	self.CreateHTable("EditTable",'.handsontable.single:visible',CFG,function(err,Table){
-    		new HandsonTableHelper.DiscretScroll(Table);
-    		new HandsonTableHelper.TreeView(Table);
-			self.Rows.forEach(function(Row,IndexRow){
-	    		var Meta = _.pick(Row,["CodeRow"]);
-	    		CFG.colHeaders.forEach(function(Col,IndexCol){
-					Table.setCellMetaObject(IndexRow,IndexCol,Meta);
-	    		})				
-	    	})
-	    	self.RenderHTable("EditTable");
-	    	self.EditTable = Table;	    	
-    	})
-    }
-
-    self.PreviewTableCFG = function(){
-		var Emulate = {}
-		self.ModFields.forEach(function(Field){
-			Emulate[Field] = self[Field];
-		})
-		TreeReparser.ResultTree(self.Rows,Emulate);
-		var Header  = Tr('customreport',['CodeRow','NameRow']);
-    	var HandsonRenders = new HandsonTableRenders.RenderController();	
-    	columns = [{data:'NumRow',type:'text'},{data:'NameRow',type:'text'}];
-        HandsonRenders.RegisterRender("Code",[new RegExp("[0-9]*?,0$")], HandsonTableRenders.ReadOnlyText);
-        HandsonRenders.RegisterRender("Tree",[new RegExp("[0-9]*?,1$")], HandsonTableRenders.TreeRender);
-        var TreeArr = {}, TableCells = [];
-        var Rows = TreeReparser.ResultTreeObjs;            
-        Rows.forEach(function(R,I){
-            TreeArr[I] = _.pick(R,['lft','rgt','level']);
-        })
-        Rows.forEach(function(Row){
-        	var EmptRow = _.pick(Row,['CodeRow','NumRow','NameRow','lft','rgt','level']);
-            TableCells.push(EmptRow)
-        })
-        var HandsonConfig = {
-        	data:TableCells,cells:HandsonRenders.UniversalRender,
-			fixedColumnsLeft:0,manualRowMove: false,autoRowSize:true,
-			afterChange:self.RegisterChange,columns:columns,
-			colWidths:[70],
-			colHeaders:Header, stretchH: 'last',				
-			tree:{
-		        data:TreeArr,
-		       	icon:function(){},
-		        colapsed:CxCtrl.Context().CodeDoc+'customreport_preview'
-		    }
-        }    
-        return 	HandsonConfig;
-    }
-
-    self.PreviewTable = null;
-
-	self.RenderPreviewTable = function(){
-    	if (self.Mode()=='ColumnsView') return;
-    	var CFG = self.PreviewTableCFG();
-    	self.CreateHTable("PreviewTable",'.handsontable.preview:visible',CFG,function(err,Table){
-    		new HandsonTableHelper.DiscretScroll(Table);
-    		new HandsonTableHelper.TreeView(Table);
-	    	self.RenderHTable("PreviewTable");
-	    	self.PreviewTable = Table;	    	
-    	})
-    }
-
-
-  	self.BeforeHide = function(){
-        self.UnSubscribe();
-        self.EditTable = null;
-        self.DestroyHTable("EditTable");
-    }
-
-    self.BeforeShow = function(){
-        self.Subscribe();
-        self.Show();
-    }        
-
-	self.table        = null;
-	self.previewTable = null;
-	self.Rows = [];
-	self.Cols = [];	
-
-	self.IsAvailable = function(CodeDoc){
-		return true;
-	}
-
-    self.IsOlap = function(){
-    	var Doc = null;
-    	if (CxCtrl.CodeDoc()) {
-			Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
-    	}
-    	return Doc && Doc.IsOlap; 
-    }
-
-    self.EditFields = function(){
-    	var Base = ['CodeReport','IndexReport','NameReport','PrintNameReport','PrintDocReport'];
-    	if (PermChecker.CheckPrivelege("IsCustomReportPublicTuner",CxCtrl.CxPermDoc())){
-    		Base = Base.concat(['IsPublic','IsDefault','IsPrivate','CodeGrp','CodePeriodGrp']);
-    	}
-    	return Base;
-    }
+    
 
 
 
 
 
 
-
-	self.ReportLoadTree = {};
-
-	self.ReportTreeDataSource = function(options, callback){
-		var Answ  = {};
-		if(!("text" in options) && !("type" in options)){
-			return callback({ data: self.ReportLoadTree });
-		} else if("type" in options && options.type == "folder") {
-			var Answ = options.additionalParameters.children;
-		}
-		callback({ data: Answ });
-	}
-
-	self.PrepareTree = function(){
-		var all = SettingController.Reports(), CodeUser = MSite.Me().CodeUser();
-		var _reparse = function(i){ return {code:i.CodeReport,text:i.NameReport, type: 'item'};}
-		var Filter = {
-			personal :_.map(_.filter(all,{CodeUser:CodeUser}),_reparse),
-			public   :_.map(_.filter(all,{IsPublic:true}),_reparse),
-			private  :_.map(_.filter(all,{IsPrivate:true}),_reparse),
-		};
-		var tree_data = {};
-		for (var Code in Filter){
-			if (Filter[Code].length){
-				tree_data[Code] = {code:Code, text: Tr('customreport',Code), type: 'folder', additionalParameters:{children:Filter[Code]}};
-			}
-		}
-		var additional = {};
-		var grps = _.compact(_.map(all,"CodeGrp"));
-		if (grps.length){
-			additional.forgroups = {code:'forgroups', text: 'Для предприятий', type: 'folder', additionalParameters:{children:[]}};
-			var ByGroups = {};
-			grps.forEach(function(CodeGroup){
-				ByGroups[CodeGroup] = _.map(_.filter(all,{CodeGrp:CodeGroup}),_reparse);
-			})
-			grps.forEach(function(CodeGroup){
-				tree_data['forgroups'].additionalParameters["children"].push({code:CodeGroup, text: CodeGroup, type: 'folder', additionalParameters:{children:ByGroups[CodeGroup]}});
-			})
-		}
-	    additional.default = {code:'default', text: 'По умолчанию', type: 'item'};
-		tree_data = _.merge(tree_data,additional);
-		self.ReportLoadTree = tree_data;
-	}
-
-	
 
 
 	self.LoadStructure  = function(done){
@@ -486,36 +525,6 @@ var MCustomReport = (new function() {
 	}
 
 
-
-	self.IsLoading = ko.observable(false);
-
-	self.CollapseAllRows = function(){
-        var Info = self.EditTable.getSettings().tree;
-        var RowCodes = [];
-        for (var Index in Info.data){
-            var R = Info.data[Index];
-            if ((R.rgt-R.lft)>1){
-                RowCodes.push(parseInt(Index));
-            }
-            self.EditTable.collapsedRows(RowCodes);
-        }
-        if (self.Mode()=='SingleView'){
-	        var Info2 = self.PreviewTable.getSettings().tree;
-	        var RowCodes2 = [];
-	        for (var Index in Info2.data){
-	            var R = Info2.data[Index];
-	            if ((R.rgt-R.lft)>1){
-	                RowCodes2.push(parseInt(Index));
-	            }
-	        }
-	        self.PreviewTable.collapsedRows(RowCodes2);
-    	}
-    }
-
-    self.ExpandAllRows = function(){
-        self.EditTable && self.EditTable.collapsedRows([]);
-        self.PreviewTable && self.PreviewTable.collapsedRows([]);
-    }
 
 	self.Render = function(){
 		var Emulate = {}
@@ -648,6 +657,33 @@ var MCustomReport = (new function() {
 
 	return self;
 })
-
+*/
 
 ModuleManager.Modules.CustomReport = CustomReport;
+
+
+
+
+
+ko.bindingHandlers.checkBox = {
+  init: function(element, valueAccessor, allBindingsAccessor) {
+    var value     = valueAccessor();
+    var unwrValue = ko.unwrap(valueAccessor());
+    $(element).click(function(){
+      if (_.startsWith(value(),'NOT_')) {
+        value((value()+'').substring(4,value().length));
+      } else {
+        value('NOT_' + value());
+      }
+    });
+  },
+  update: function(element, valueAccessor, allBindingsAccessor) {
+    var value = ko.unwrap(valueAccessor());
+    if (_.startsWith(value,'NOT_')){
+      $(element).prop('checked',false);
+    } else {
+      $(element).prop('checked',true);
+    }
+  }
+}
+

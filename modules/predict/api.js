@@ -52,9 +52,13 @@ router.get('/ask', LIB.Require(["Year","Period","Object"]),function(req,res){
 				
 			}
 		}
+		var SimpleData = [];
+		Data2Answer.Before.forEach(function(DB){
+			SimpleData.push(_.values(DB).splice(2));
+		})
 
 
-		return res.json(Data2Answer);
+		return res.json(SimpleData);
 	})
 })
 
