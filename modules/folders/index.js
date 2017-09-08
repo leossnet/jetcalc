@@ -81,6 +81,7 @@ var MFolders = (new function() {
 
   self.Init = function(done) {
     self.LoadTree(function() {
+      CxCtrl.Events.on("contextchanged", self.LoadStates);
       Workflow.Events.on("statuschange", self.LoadStates);
       return done && done();
     })
