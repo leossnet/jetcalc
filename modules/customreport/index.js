@@ -5,20 +5,22 @@ var ParamManager = (new function(){
     //self.choosedTab = ko.observable(null);
     //self.choosedGrp = ko.observable(null);
 
-    self.Params = ko.observable();
+    self.Params = ko.observableArray();
     self.Groups = ko.observableArray();
     self.ParamsByGroup = function(CodeGroup){
-    	return _.filter(self.Params,{CodeParamGrp:CodeGroup});
+    	return _.filter(self.Params(),{CodeParamGrp:CodeGroup});
     }
 
  	
 	self.Load = function(done){
-		console.log("Loading Params For ",CxCtrl.CodeDoc());
          var Params = {};
          CustomReport.rGet("params",CxCtrl.CxPermDoc(),function(data){
-         	self.Params(data.Params);
-         	var Groups = {}, GInd;
-         	_.values(data.Params).forEach(function(P){
+         	var Params = _.values(data.Params);
+         	self.Params(_.map(Params,function(P){
+         		return _.merge(P,{NewCodeParamSet:P.CodeParamSet});
+         	}));
+         	var Groups = [], GInd = {};
+         	Params.forEach(function(P){
          		if (!GInd[P.CodeParamGrp]) {
          			GInd[P.CodeParamGrp] = 1;
          			Groups.push(_.pick(P,["CodeParamGrp","NameParamGrp"]));
@@ -26,19 +28,6 @@ var ParamManager = (new function(){
          	})
          	self.Groups(Groups);
          })
-/*
-    	 $.ajax({
-            url:"/api/form/set",
-            data:_.merge(CxCtrl.Context(),Params),
-            success:function(defaultData){
-            	for (var Key in self.rawData){
-            		self.rawData[Key] = defaultData[Key] || []
-            	}
-                self.IsInited(false);
-                done && done();
-            }
-		})
-*/
     }
 
 
@@ -337,7 +326,7 @@ var CustomReport = (new function() {
 	}
 
 	self.Show = function(done){
-        if (!self.Mode()) return self.InitSetMode("SingleView");
+        if (!self.Mode()) return self.InitSetMode("ColumnsView");
         switch(self.Mode()){
         	case "SingleView":
         		["IsShowOlap","IsShowWithParent","IsShowWithChildren"].forEach(function(F){
@@ -473,33 +462,35 @@ var CustomReport = (new function() {
 	self.ColumnChangesCount = ko.observable();	
 
 	self.ColumnPreview = function(){
-		var T = new TreeHelper(self);
-		var Rows = T.Tree(), ColWidths = [], ToTranslate = {}, Columns = [];
-        Columns.push({type:"text",data:"NumRow",title:Tr("NumRow"),readOnly:true}); ColWidths.push(70);
-        Columns.push({type:"text",data:"NameRow",title:Tr("NameRow"),readOnly:true,renderer:HandsonTableRenders.TreeRender}); ColWidths.push(400);
-		self.Cols.forEach(function(H){
-			Columns.push({type:'text',title:H.NameColsetCol,readOnly:true}); ColWidths.push(100);
+		self.LoadStructure(function(){
+			var T = new TreeHelper(self);
+			var Rows = T.Tree(), ColWidths = [], ToTranslate = {}, Columns = [];
+	        Columns.push({type:"text",data:"NumRow",title:Tr("NumRow"),readOnly:true}); ColWidths.push(70);
+	        Columns.push({type:"text",data:"NameRow",title:Tr("NameRow"),readOnly:true,renderer:HandsonTableRenders.TreeRender}); ColWidths.push(400);
+			self.Cols.forEach(function(H){
+				Columns.push({type:'text',title:H.NameColsetCol,readOnly:true}); ColWidths.push(100);
+			})
+			var TreeArr = {};
+	    	Rows.forEach(function(R,I){
+	        	TreeArr[I] = _.pick(R,['lft','rgt','level']);
+	    	})            
+	        var Config = {
+	            Columns:Columns,
+	            Rows:Rows,
+	            CFG:{
+	                colWidths: ColWidths,
+	                colHeaders: true,
+	                fixedColumnsLeft:2,
+	                Plugins:["Tree"],
+	                tree:{
+		        		data:TreeArr,
+		       			icon:function(){},
+		        		colapsed:CxCtrl.Context().CodeDoc+'customreport_preview_column'
+		        	}
+	            }
+			}
+	        self.ColumnConfig(Config);
 		})
-		var TreeArr = {};
-    	Rows.forEach(function(R,I){
-        	TreeArr[I] = _.pick(R,['lft','rgt','level']);
-    	})            
-        var Config = {
-            Columns:Columns,
-            Rows:Rows,
-            CFG:{
-                colWidths: ColWidths,
-                colHeaders: true,
-                fixedColumnsLeft:2,
-                Plugins:["Tree"],
-                tree:{
-	        		data:TreeArr,
-	       			icon:function(){},
-	        		colapsed:CxCtrl.Context().CodeDoc+'customreport_preview_column'
-	        	}
-            }
-		}
-        self.ColumnConfig(Config);
 	}
 
 
