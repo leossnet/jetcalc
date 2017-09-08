@@ -987,10 +987,21 @@ var ModelTableEdit = (new function() {
   self.Choosed.subscribe(function(v) {
     if (v) {
       self.LoadModel();
+      self.ChangeChoosedPath()
     } else {
       self.LoadedModel(null);
     }
   })
+
+  self.ChangeChoosedPath = function() {
+    var Query = {};
+    if (!_.isEmpty(window.location.search)) {
+      Query = window.location.search.queryObj()
+    }
+    Query.Choosed = self.Choosed();
+    var state = window.location.origin + window.location.pathname + toQueryString(Query);
+    history.replaceState({}, '', state);
+  }
 
   self.Add = function() {
     self.Choosed(null);
@@ -1220,6 +1231,11 @@ var ModelTableEdit = (new function() {
     self.limit = 50;
     self.NoAccess(!PermChecker.ModelAccess(ModelName));
     ModelTreeEdit.inited(false);
+    var Q = window.location.search.queryObj();
+    var InitChoosed = Q.Choosed;
+    if (InitChoosed) {
+      self.Choosed(InitChoosed);
+    }
   }
 
   self.Clear = function() {
