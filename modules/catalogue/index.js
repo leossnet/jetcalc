@@ -985,9 +985,9 @@ var ModelTableEdit = (new function() {
   self.IsLoading = ko.observable(false);
 
   self.Choosed.subscribe(function(v) {
+    self.ChangeChoosedPath()
     if (v) {
       self.LoadModel();
-      self.ChangeChoosedPath()
     } else {
       self.LoadedModel(null);
     }
@@ -998,7 +998,11 @@ var ModelTableEdit = (new function() {
     if (!_.isEmpty(window.location.search)) {
       Query = window.location.search.queryObj()
     }
-    Query.Choosed = self.Choosed();
+    if (self.Choosed()) {
+      Query.Choosed = self.Choosed();
+    } else {
+      delete Query.Choosed
+    }
     var state = window.location.origin + window.location.pathname + toQueryString(Query);
     history.replaceState({}, '', state);
   }
