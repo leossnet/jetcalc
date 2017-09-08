@@ -559,7 +559,37 @@ var ModelClientConfig = (new function() {
     })
   }
 
+  self._sortConfig = function(data) {
+    var tEditFields = [];
+    var tTableFields = [];
+    var tLinks = [];
+    var field_order = _.keys(MModels.Config[data.ModelName].fields);
+    var link_order = MModels.Config[data.ModelName].Links;
+    if (link_order) {
+      link_order.forEach(function(ln) {
+        if (data.Links.indexOf(ln) != -1 && tLinks.indexOf(ln) == -1) {
+          tLinks.push(ln);
+        }
+      })
+    }
+    field_order.forEach(function(f) {
+      if (data.EditFields.indexOf(f) != -1 && tEditFields.indexOf(f) == -1) {
+        tEditFields.push(f);
+      }
+      if (data.TableFields.indexOf(f) != -1 && tTableFields.indexOf(f) == -1) {
+        tTableFields.push(f);
+      }
+    })
+    return {
+      ModelName: data.ModelName,
+      EditFields: tEditFields,
+      TableFields: tTableFields,
+      Links: tLinks,
+    }
+  }
+
   self.Save = function(data, done) {
+    data = self._sortConfig(data);
     $.ajax({
       url: self.base + "clientsettings",
       method: 'post',
