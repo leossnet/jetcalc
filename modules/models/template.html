@@ -62,8 +62,12 @@
 	<input class="col-xs-12" type="number" data-bind="value: $parent[$data]">
 </script>
 
+<script id="form_html" type="text/html">
+  <textarea data-bind='value:$parent[$data],simplemde:$parent[$data]'></textarea>
+</script>
+
 <script id="form_date" type="text/html">
-	<input class="col-xs-12" type="text" data-bind="datepicker: $parent[$data], attr:{'placeholder':Lang.Tr($data)}, mask: '99-99-9999', 
+	<input class="col-xs-12" type="text" data-bind="datepicker: $parent[$data], attr:{'placeholder':Lang.Tr($data)}, mask: '99-99-9999',
 		config: {
 			format:'DD-MM-YYYY',
 			formatDate:'DD-MM-YYYY',
@@ -139,7 +143,7 @@
 
 <script id="footer" type="text/html">
     <div class="footer"><div class="footer-inner"><div class="footer-content"></div></div></div>
-    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"><i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i></a> 
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"><i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i></a>
 </script>
 
 <script id="rightmenu" type="text/html">
@@ -150,7 +154,7 @@
                 <!-- ko template:$data.id+'_right_menu' --><!-- /ko -->
             <!-- /ko -->
         <!-- /ko -->
-        </ul>       
+        </ul>
         <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
             <i class="ace-icon fa" data-bind="click: RightMenu.ToggleMenu,css: {
                 'fa-angle-double-down'   : RightMenu.IsMenuToggled(),
@@ -185,10 +189,10 @@
             <!-- ko foreach: ModuleManager.LeftMenu() -->
                 <!-- ko template:$data.id+'_left_menu' --><!-- /ko -->
             <!-- /ko -->
-            <!-- ko template:'admin_leftmenu' --><!-- /ko -->       
+            <!-- ko template:'admin_leftmenu' --><!-- /ko -->
         <!-- /ko -->
         </ul>
-        
+
         <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
             <i class="ace-icon fa" data-bind="click: LeftMenu.ToggleMenu,css: {
                 'fa-angle-double-down'   : LeftMenu.IsMenuToggled(),
@@ -246,7 +250,7 @@
         <div class="profile-info-value">
             <!-- ko template: $parent.Template($data) --><!-- /ko -->
         </div>
-    </div>  
+    </div>
     <!-- /ko -->
 </script>
 
@@ -260,12 +264,12 @@
             <!-- /ko -->
             <!-- ko ifnot:$parent.Types[$data].Type=='Boolean' || $parent.Types[$data].Type=="Select" -->
                 <span data-bind='text:$parent[$data]'></span>
-            <!-- /ko -->                                    
+            <!-- /ko -->
             <!-- ko if:$parent.Types[$data].Type=="Select"  -->
                 <!-- ko template:{name:'catalogue_withcode',data:{model:$parent.Types[$data].Model,id:$parent[$data]()}} --><!-- /ko -->
-            <!-- /ko -->                                    
+            <!-- /ko -->
         </div>
-    </div>  
+    </div>
     <!-- /ko -->
 </script>
 
@@ -287,7 +291,7 @@
             <a class="white" data-bind="title:'Удалить',click:$parent.Remove">
                 <span><i class="fa fa-icon fa-times bigger-130"></i></span>
             </a>
-        </div>    
+        </div>
         <!-- /ko -->
         <!-- ko ifnot:$parent.TurnEdit -->
             <!-- ko template:'small_form_with_header_edit' --><!-- /ko -->
@@ -341,21 +345,21 @@
                                     <!-- /ko -->
                                     <!-- ko ifnot:$parent.Types[$data].Type=='Boolean' || $parent.Types[$data].Type=="Select" -->
                                         <span data-bind='text:$parent[$data]'></span>
-                                    <!-- /ko -->                                    
+                                    <!-- /ko -->
 
                                     <!-- ko if:$parent.Types[$data].Type=="Select"  -->
                                         <!-- ko template:{name:'catalogue_withcode',data:{model:$parent.Types[$data].Model,id:$parent[$data]()}} --><!-- /ko -->
-                                    <!-- /ko -->                                    
+                                    <!-- /ko -->
                                 <!-- /ko -->
-                            </div> 
-                        </div>  
+                            </div>
+                        </div>
                     <!-- /ko -->
                 </div>
             </li>
         </ol>
         <a class='addLinkModel' data-bind="click:ModelEdit.AddLink.bind($parent.Model,$parent.LinkModel,$parent.MainField)">Добавить ссылку</a>
     <!-- /ko -->
-    </div>  
+    </div>
 </script>
 
 
@@ -406,7 +410,7 @@
         <span data-bind='lang:$data.mode'></span>
     <!-- /ko -->
     <!-- ko if:$data.text -->
-        <span data-bind='lang:$data.mode'></span>    
+        <span data-bind='lang:$data.mode'></span>
     <!-- /ko -->
     </a>
 </script>
@@ -463,7 +467,7 @@
 
 
 <script id="menu_li_mode" type="text/html">
-    <ul class="nav nav-tabs" style='display: inline-block;vertical-align: bottom;'>  
+    <ul class="nav nav-tabs" style='display: inline-block;vertical-align: bottom;'>
       <!-- ko foreach:$data -->
         <li data-bind='css:{active:$data==$parents[1].Mode()}'>
           <a data-toggle="tab" class='toolbar-tab' data-bind='click:$parents[1].Mode.bind(null,$data)'>
@@ -471,7 +475,7 @@
           </a>
         </li>
       <!-- /ko -->
-    </ul>     
+    </ul>
 </script>
 
 
@@ -489,25 +493,3 @@
         <!-- /ko -->
     </a>
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

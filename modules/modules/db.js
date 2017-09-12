@@ -43,23 +43,23 @@ module.exports = {
   			, SubName           : {type: String, default:''}
   			, SystemName        : {type: String, default:'JetCalc v1.4'}
   			, TechPhone         : {type: String, default:'',mask:"+7 (999) 999-9999"}
-  			, Logo              : {type: String, default:'',template:"form_image"} 
-  			, Icon 				: {type: String, default:'',template:"form_image"} 
-  			, Servers           : {type: Array, default:[]} 
-  			, UseRealMail       : {type: Boolean, default:false}   			
-  			, Mails             : {type: Array, default:[]} 
+  			, Logo              : {type: String, default:'',template:"form_image"}
+  			, Icon 				: {type: String, default:'',template:"form_image"}
+  			, Servers           : {type: Array, default:[]}
+  			, UseRealMail       : {type: Boolean, default:false}
+  			, Mails             : {type: Array, default:[]}
   			, MailService       : {type: String, default:'Yandex'}
   			, MailHost          : {type: String, default:'smtp.yandex.ru'}
-			, MailPort          : {type: Number, default:465}
-  			, MailSecureConnection : {type: Boolean, default:true}   			
-  			, RequiresAuth 		: {type: Boolean, default:true}   			
+			  , MailPort          : {type: Number, default:465}
+  			, MailSecureConnection : {type: Boolean, default:true}
+  			, RequiresAuth 		: {type: Boolean, default:true}
   			, MailFromName      : {type: String, default:"Оповещения JetCalc"}
   			, MailAuthUser      : {type: String, default:'jetcalc@yandex.ru'}
   			, MailAuthPass      : {type: String, default:'derparole12j', template:'form_password'}
-		}		
+				, WelcomeMessage    : {type: String, default: '', template: 'form_html'}
+		}
 	},
 	schema: {
-		
+
 	}
 }
-

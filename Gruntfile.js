@@ -84,19 +84,19 @@ module.exports = function(grunt) {
         },
         dist: {
           files: [{
-            src:['static/lib/handsontable.full.min.js'], 
+            src:['static/lib/handsontable.full.min.js'],
             dest: 'static/lib/',
             ext: "-compiled.js"
           }]
         }
-    },      
+    },
     uglify: {
       jetcalc_lib_js: {
         files: {
           'static/build/lib.min.js': ['static/build/lib.js'],
         }
       }
-    },     
+    },
     // Clean stuff up
     clean: {
       // Clean any pre-commit hooks in .git/hooks directory
@@ -116,7 +116,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-shell');
-  grunt.loadNpmTasks('grunt-babel'); 
+  grunt.loadNpmTasks('grunt-babel');
   grunt.registerTask('default', ['concat','cssmin','uglify']);
   grunt.registerTask('hookmeup', ['clean:hooks', 'shell:hooks']);
 };

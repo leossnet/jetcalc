@@ -1,6 +1,7 @@
 <script id="login_requisites" type="text/html">
 	<div class=row style='margin-top:50px;color:gray;line-height: 20px;' data-bind='with:MModules.Requizites'>
 		<div style='position: absolute;left:40%'>
+			<div><span style="color:black" data-bind="html:MModules.WelcomeHtml()"></span></div>
 			<div >Служба технической поддержки <span data-bind='text:$data.SystemName'></span></div>
 			<div >тел.: <span data-bind='text:$data.TechPhone'></span></div>
 			<div >e-mail: <a data-bind='text:$data.TechMail,attr:{href:"mailto:"+$data.TechMail()}'></a></div>
