@@ -596,6 +596,7 @@ var CxCtrl = (new function() {
 
 
   self.FixPeriodRedirects = function() {
+    self.RedirectPeriod(null);
     var DocType = null,
       PeriodRedirects = MPeriods.Redirects(),
       DocTypeInc = {},
