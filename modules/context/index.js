@@ -465,7 +465,7 @@ var CxCtrl = (new function() {
 
   self.DocTitle = ko.computed(function() {
     var p = self.CodePeriod();
-    var sp = self.Override.CodePeriod();
+    var sp = self.CodePeriod();
     var y = self.Year();
     var sy = self.Override.Year();
     var n = self.PrintNameDoc();

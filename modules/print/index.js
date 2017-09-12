@@ -29,7 +29,7 @@ var MPrint = (new function(){
     }
 
     self.PrintInterface = ko.observable();
-    
+
     self.Init = function (done){
         return done();
     }
@@ -51,7 +51,7 @@ var MPrint = (new function(){
             self.ChartHtml = $("#graphPreviewContainer").parent().html();
         } else {
             self.ChartHtml = "";
-        }            
+        }
         BlankDocument.table.render();
         var P = new PrintInterface();
         self.PrintInterface(P);
@@ -84,8 +84,8 @@ var PrintInterface = function() {
         self.FormName (CxCtrl.PrintNumDoc());
         orig_table = self.table.clone()
         is_column_popup_inited = false;
-    }    
-	
+    }
+
     self.table  = null;
 
     var renderAggregate = function() {
@@ -126,9 +126,9 @@ var PrintInterface = function() {
 
     self.ContextText = ko.pureComputed(function(){
         var CX = {};
-        ["CodePeriod","Year"].forEach(function(F){
-            CX[F] = CxCtrl.Override[F]() || CxCtrl[F]();
-        })
+        console.log('here')
+        CX["CodePeriod"] = CxCtrl.CodePeriod();
+        CX["Year"] = CxCtrl.Override.Year() || CxCtrl.Year();
         CX["CodeObj"] = CxCtrl.ChildObj()||CxCtrl.CodeObj();
         var period = {
             planperiods       : {
@@ -293,7 +293,7 @@ var PrintInterface = function() {
         if(CxCtrl.IsAgregate()) {
             //renderAggregate()
         }
-        
+
         // self.is_progress_bar_visible(false)
     }
 
@@ -483,7 +483,7 @@ var PrintInterface = function() {
             var label = _.find(CxCtrl.Doc().toJS().Labels, function(label) {
                 return label.IsApproval
             })
-			
+
             if(label) {
                 post = label.NameLabel
                 var users = label.Users[org_id]
