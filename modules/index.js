@@ -83,80 +83,6 @@ var HTIController = (new function() {
 
 
 
-<<<<<<< HEAD
-var ModuleManager = (new function(){
-
-    var self = this;
-
-    self.IsLoaded = ko.observable(false);
-    self.Events = new EventEmitter();
-    self.Modules = {};
-    self.ModulesConfigs = [];
-
-    self.Choosed = ko.observable();
-
-    self.IsChoosed = function(name) {
-        return (name==self.Choosed());
-    }
-
-    self.IsInstalled = function(ModuleName){
-        return !_.isEmpty(ModuleManager.Modules[ModuleName]);
-    }
-
-    self.Opened = ko.observable();
-    self.Open = function(ModuleName){
-        if (self.Opened() && self.Opened()!=ModuleName){
-            self.Modules[self.Opened()].ToggleBox();
-        }
-        self.Opened(ModuleName);
-    }
-    self.Close = function(ModuleName){
-        self.Opened(null);
-    }
-    self.ForceClose = function(){
-        var M = self.Opened();
-        if (M) self.Modules[M].ToggleBox();
-    }
-
-    self.Start = [];
-    self.Initer = [];
-    self.GuestIniter = [];
-
-    self.Subscriptions = [];
-
-    self._isLoading = null;
-    self.IsLoading = ko.observable(false);
-
-
-    self.SetModule = function(){
-        var Route = MBreadCrumbs.CurrentRoute(), old = self.Choosed(); 
-        var TestId = "", F = null;
-        if (Route.indexOf("adminpage")!=-1){
-            F = _.find(self.AdminPage(),{id:Route[Route.indexOf("adminpage")+1]});
-            if (F) self.Choosed(F.id); else self.Choosed("adminpage");
-        } else if (Route.indexOf("docview")!=-1){
-            F = _.find(self.DocTabs(),{id:Route[Route.indexOf("docview")+2]});
-            if (F) self.Choosed(F.id);
-        } else {
-            var pageInfo = {};
-            try{
-                pageInfo = pager.getActivePage().valueAccessor();
-            }catch(e){
-                ;
-            }
-            var needed = _.first(_.filter(ModuleManager.ModulesConfigs,function(M){
-                 return !_.isEmpty(M.config.pages) && _.find(M.config.pages,{id:pageInfo.id});
-            }))
-            if (needed){
-                F = needed.config;
-                self.Choosed(F.id);    
-            } else {
-                self.Choosed(null);    
-            }
-        }
-        if (self.Choosed() && F && self.Modules[F.class_name].ChangeModPath){
-            self.Modules[F.class_name].ChangeModPath();
-=======
 var ModuleManager = (new function() {
 
   var self = this;
@@ -202,7 +128,7 @@ var ModuleManager = (new function() {
 
 
   self.SetModule = function() {
-    var Route = MBreadCrumbs.CurrentRoute();
+    var Route = MBreadCrumbs.CurrentRoute(), old = self.Choosed();
     var TestId = "",
       F = null;
     if (Route.indexOf("adminpage") != -1) {
@@ -241,6 +167,7 @@ var ModuleManager = (new function() {
       if (self._isLoading) self._isLoading.dispose();
       self._isLoading = self.Modules[F.class_name].IsLoading.subscribe(self.IsLoading);
     }
+    if (old!= self.Choosed()) Bus.Emit("current_module_changed",self.Choosed());
   }
 
   self.Load = function(done) {
@@ -269,7 +196,6 @@ var ModuleManager = (new function() {
             Debug.auth.push(M.config.id);
             Initer.push(self.Modules[M.config.class_name].Init);
           }
->>>>>>> 16c832edd7944bd976f156725951c915b5889a6a
         }
       })
       self.Start = SIniter;
@@ -286,22 +212,11 @@ var ModuleManager = (new function() {
         if (typeof MBreadCrumbs != 'undefined') {
           MBreadCrumbs.Events.on("pagechanged", self.SetModule);
         }
-<<<<<<< HEAD
-        if (old!= self.Choosed()) Bus.Emit("current_module_changed",self.Choosed());
-    }
-
-    self.Load = function(done) {
-        var Debug = {
-            start : [],
-            guest : [],
-            auth  : []
-=======
         if (MSite.Me()) {
           self.AuthInit(done);
         } else {
           self.Events.emit("modulesinited");
           return done();
->>>>>>> 16c832edd7944bd976f156725951c915b5889a6a
         }
       })
     })
@@ -557,25 +472,12 @@ var Module = function(id) {
 
   }
 
-<<<<<<< HEAD
-    self.UnSubscribe = function(options){
-        ModelTableEdit.Events.off("modelloaded",self.ModelIsLoaded);
-        ModelTableEdit.Events.off("modelsaved",self.ModelIsSaved);
-        ModelTableEdit.Events.off("modelcreated",self.ModelIsCreated);
-        ModelTableEdit.Events.off("modeldeleted",self.ModelIsDeleted);
-        if (self._error) self._error.dispose();
-        if (self._isLoading) self._isLoading.dispose();
-        if (!_.isEmpty(options)){
-            MSite.UnSubscribe(options);
-        }
-=======
   self.ChangeModPath = function() {
     var Current = self.Mode();
     if (_.isEmpty(Current) || ModuleManager.Choosed() != id) return;
     var Query = {};
     if (!_.isEmpty(window.location.search)) {
       Query = window.location.search.queryObj()
->>>>>>> 16c832edd7944bd976f156725951c915b5889a6a
     }
     Query.Mode = Current;
     if (Query.Choosed) {
