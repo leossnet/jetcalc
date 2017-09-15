@@ -7,7 +7,9 @@
   "is_enabled": true,
   "sort_index": 30,
   "places":{
-      "documentpage"  : true
+      "documentpage"  : true,
+      "toolbutton"  : true,
+      "rightmenu"  : true
   },  
   "permissions" : [
       "IsCustomReportPublicTuner",
@@ -16,6 +18,6 @@
   "permissionsComments" : {
   		"IsCustomReportPublicTuner":"Сохранение доступных для всех отчетов",
       "IsCustomReportAdmin":"Удаление и просмотр чужих отчетов"
-  },
+  },  
   "initial_load":true
 }

@@ -54,25 +54,19 @@ var CxCtrl = (new function () {
         };
     }
 
-    self.ParamsChanged = function () {
-        var NewParams = SettingController.diffParams();
-        if (NewParams.length) {
-            var Override = SettingController.ActualParams();
-            self.Override.Params(Override);
-        } else {
-            self.Override.Params(null);
-        }
+    self.UpdateParams = function(){
+        var Params = ParamManager.ActualParams();
+        self.Override.Params(Params);
         self.Update('params');
     }
 
-    self.ReportChanged = function () {
-        var R = SettingController.ChoosedReport();
-        var CodeReport = "default";
-        if (R) CodeReport = R.CodeReport;
-        self.CodeReport(CodeReport);
+    self.UpdateReport = function(){
+        var Params = ParamManager.ActualParams();
+        self.Override.Params(null);
+        self.Override.RowFields(null);
+        self.CodeReport(ReportManager.CurrentReport());
         self.Update('report');
     }
-
 
     self.Agregate = ko.observable(null);
     self.AgregateType = ko.observable(null);
@@ -257,6 +251,7 @@ var CxCtrl = (new function () {
                 self.ChildObj(null);
                 self.CodeObj(value);
                 Updater = ['Row', "Doc"];
+                Bus.Emit("context_obj_change");
                 break;
             case "childobj":
                 self.ChildObj(value);
@@ -285,6 +280,7 @@ var CxCtrl = (new function () {
                     self.Override.Year(null);
                 }
                 self.UpdateSubPeriods();
+                Bus.Emit("context_period_change");
                 break;
             case "year":
                 self.Year(value);
@@ -390,8 +386,6 @@ var CxCtrl = (new function () {
         persist: 'cxGroupType'
     });
 
-
-
     self.Override = {
         CodePeriod: ko.observable(null, {
             persist: 'cxOvCodePeriod'
@@ -403,7 +397,7 @@ var CxCtrl = (new function () {
             persist: 'cxDivObj'
         }),
         Params: ko.observable(null),
-        ReportRows:ko.observable(null)
+        RowFields:ko.observable(null)
     }
 
     self.RedirectRules = {};
@@ -466,10 +460,10 @@ var CxCtrl = (new function () {
             if (!_.isEmpty(ke)) {
                 k = ", "+(ke+'');
             }
-            var R = SettingController.ChoosedReport();
-            if (R && R.CodeReport != 'default') {
-                r = '<span class="info"> / ' + SettingController.ChoosedReport().NameReport + "</span>";
-            }
+            //var R = SettingController.ChoosedReport();
+            //if (R && R.CodeReport != 'default') {
+                //r = '<span class="info"> / ' + SettingController.ChoosedReport().NameReport + "</span>";
+            //}
             if (self.PrintNameDoc() && self.PrintNameDoc().length) {
                 return self.PrintNameDoc() + ' за ' + Catalogue.GetHtml('period', p) + ' ' + y + s + r + k;
             }
@@ -517,6 +511,9 @@ var CxCtrl = (new function () {
     }
 
     self.Init = function (done) {
+        MSite.Events.on("initialnavigate", CxCtrl.ChangeInitDocPath);
+        Bus.On("params_changed",self.UpdateParams);
+        Bus.On("report_loaded",self.UpdateReport);
         return done();
     }
 
@@ -679,12 +676,12 @@ var CxCtrl = (new function () {
     return self;
 })
 
-ModuleManager.Events.addListener("modulesinited", function () {
-    SettingController.Events.on("paramschanged", CxCtrl.ParamsChanged);
-    SettingController.Events.on("reportchanged", CxCtrl.ReportChanged);
-    MSite.Events.on("initialnavigate", CxCtrl.ChangeInitDocPath);
-    CxCtrl.init();    
-})
+//ModuleManager.Events.addListener("modulesinited", function () {
+//    SettingController.Events.on("paramschanged", CxCtrl.ParamsChanged);
+//    SettingController.Events.on("reportchanged", CxCtrl.ReportChanged);
+//    
+//    CxCtrl.init();    
+//})
 
 
 

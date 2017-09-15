@@ -11,7 +11,7 @@ var   config = require('../../config.js')
 	, InfoCacher = Helper.InfoCacher
 	, Form = require('./Form.js')
 	, CellHelper = require('./helpers/Cell.js')
-	, StructureHelper = require('./helpers/Structure.js')
+	, StructureHelper = require(__base+"classes/jetcalc/Helpers/Structure.js");
 ;
 
 const EventEmitter = require('events').EventEmitter;
@@ -111,8 +111,7 @@ module.exports = {
 		})
 	},
 	CalculateDocument:function(Context,done,final){
-		var Structure = new StructureHelper(_.clone(Context));
-		Structure.getCells(function(err,Cells,Formats){
+		StructureHelper.getCells(Context,function(err,Cells,Formats){
 			var AC = new Calculator(Context,Cells,Formats);	
 			AC.Do(function(err,Answer){
 				if (!Answer) return done("Критическая ошибка в калькуляторе");

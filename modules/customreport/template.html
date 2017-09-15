@@ -1,9 +1,30 @@
+<script id="tb_customreport" type="text/html">
+    <!-- ko if:ModuleManager.IsChoosed("report") || ModuleManager.IsChoosed("olap") -->
+        <div class="btn-group" data-bind='with:CustomReport'>
+          <a class='btn btn-sm  btn-white btn-yellow' data-bind="title:Tr('open'),click:ReportManager.LoadReport,css:{disabled:!ReportManager.IsLoadAvailable()}">
+            <i class="ace-icon fa fa-folder-open-o"></i>
+          </a>
+          <a class="btn btn-sm btn-primary btn-white" data-bind="
+            title:Tr('showparamssettings'),
+            css:{'active':IsShow()},
+            click:Toggle" >
+            <i class="fa fa-wrench" ></i>
+          </a>
+        </div>
+    <!-- /ko -->
+</script>
+
+<script id="customreport_right_menu" type="text/html">
+    <!-- ko template:'param_form' --><!-- /ko -->
+</script>
+
+
 <div class="modal fade" id="savereport_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind='with:ReportManager'>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Добавление отчета</h4>
+        <h4 class="modal-title" data-bind='lang:"savereport"'></h4>
       </div>
      <div style='padding:10px;'  class="modal-body" data-bind='with:EditReport'>
           <!-- ko with:$parent.SaveError -->
@@ -25,18 +46,13 @@
 <div class="modal fade" id="loadreport_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind='with:ReportManager'>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
+     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Открыть отчет</h4>
-      </div>
-     <div style='padding:10px;'  class="modal-body">
-          <!-- ko with:Error -->
-            <div class="alert alert-danger" style='margin-top: 10px;' data-bind='text:$data'></div>
-          <!-- /ko -->
-          <!-- ko if:IsLoadReportsShow() -->
-          <ul class='noselect' data-bind='treeSelector:{dataSource:ReportTreeDataSource,selected:CurrentReport}'>            
+        <h4 class="modal-title" data-bind='lang:"openreport"'></h4>
+     </div>
+     <div style='padding:10px;'  class="modal-body" data-bind='with:ReportLoadTree'>
+          <ul class='noselect' data-bind='treeSelector:{dataSource:ReportManager.ReportTreeDataSource,selected:ReportManager.CurrentReport}'>            
           </ul>
-          <!-- /ko -->
       </div>   
       <div class="modal-footer">
         <button type="button" class="btn btn-sm btn-danger btn-white" data-bind="lang: 'delete',click:DeleteReport" ></button>
@@ -47,32 +63,6 @@
 </div>
 
 
-<script id="param_edit_form" type="text/html">
-    <!-- ko if:$data.Type=='Select' -->
-      <div class="select" > <!-- data-bind="css:{'changed': $data.IsChanged}" -->
-        <label data-bind="text:$data.NameParam" class=""></label>
-        <div>
-        <select class="form-control" 
-           data-bind="value: $data.NewCodeParamSet, 
-                      options: _.values($data.ParamSets), 
-                      optionsText: 'NameParamSet',
-                      optionsValue: 'CodeParamSet'">
-        </select>
-        </div>
-      </div>        
-    <!-- /ko -->
-    <!-- ko if:$data.Type=='Boolean' -->
-        <div class="checkbox">
-            <label>
-              <input class="ace ace-checkbox-1" type="checkbox" data-bind="checkBox: $parent.resParams()[CodeParam],even1t: {'change': CxCtrl.Update.bind(null,'settings')}">
-                  <span class="lbl small" data-bind="text:$data.NameParam"></span>
-            </label>
-        </div>
-    <!-- /ko -->
-    
-</script>
-
-
 <script id="param_form" type="text/html">
   <div class="tabbable" >
     <div class="tab-content extended" data-bind='aceScroll:{height:"auto"}'>
@@ -80,21 +70,26 @@
           <div class="accordion-style1 panel-group">
             <div class="panel panel-default" data-bind='with:ParamManager.Groups'>
                 <!-- ko foreach:$data -->
-                      <div class="panel-heading">
-                        <h4 class="panel-title">
-                          <a class="accordion-toggle" data-toggle="collapse" >
-                            <i class="ace-icon fa fa-angle-down bigger-110" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
-                            <span data-bind='text:$data.NameParamGrp'></span>
-                          </a>
-                        </h4>
-                      </div>
-                      <div class="panel-collapse collapse in">
-                        <div class="panel-body" style='padding:0px;'>
-                            <!-- ko foreach: ParamManager.ParamsByGroup($data.CodeParamGrp) -->
-                                <!-- ko template:'param_edit_form' --><!-- /ko -->
-                            <!-- /ko -->
-                        </div>
-                      </div>
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" >
+                      <i class="ace-icon fa fa-angle-down bigger-110" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
+                      <span data-bind='text:$data.NameParamGrp'></span>
+                    </a>
+                  </h4>
+                </div>
+                <div class="panel-collapse collapse in">
+                  <div class="panel-body" style='padding:0px;'>
+                      <!-- ko foreach: ParamManager.ParamsByGroup($data.CodeParamGrp) -->
+                           <!-- ko if:$data.Type=='Select' -->
+                            <select-param params="data:$data"></select-param>
+                          <!-- /ko -->
+                          <!-- ko if:$data.Type=='Boolean'  -->
+                            <bool-param params="data:$data"></bool-param>
+                          <!-- /ko --> 
+                      <!-- /ko -->
+                  </div>
+                </div>
                 <!-- /ko -->
             </div>
           </div>

@@ -3,7 +3,6 @@ var _          = require('lodash');
 var async      = require('async');
 var Col = require(__base+"classes/calculator/helpers/Col.js");
 var Doc = require(__base+"classes/calculator/helpers/Doc.js");
-var Structure = require(__base+"classes/calculator/helpers/Structure.js");
 var Calc = require(__base+"classes/calculator/Calculator.js");
 var RabbitManager = require(__base+'/src/rabbitmq.js');
 var db = require(__base+'/sql/db.js');
@@ -124,8 +123,8 @@ module.exports =  function(){
 	}
 
 	self.GetAF = function(Context,done){
+		var StrWorker = require(__base+"classes/jetcalc/Helpers/Structure.js");
 
-		var StrWorker = new Structure(Context);
 		var ColWorker = new Col(Context);
 		var DocWorker = new Doc(Context);
 		DocWorker.get(function(err,Doc){	
@@ -142,7 +141,7 @@ module.exports =  function(){
 					}
 				})
 
-				StrWorker.get(function(err,Struct){
+				StrWorker.get(Context,function(err,Struct){
 					var Answer = [], ByIndex = {}, ToCalculate = {};
 					Struct.Cells.forEach(function(Row,RowInd){
 						var NR = [];

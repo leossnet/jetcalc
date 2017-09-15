@@ -143,20 +143,19 @@
 </script>
 
 <script id="rightmenu" type="text/html">
-    <div id="sidebar-right"  class="sidebar responsive sidebar-fixed sidebar-scroll" data-sidebar="true" data-sidebar-scroll="true"     data-sidebar-hover="false"  data-bind="css: {'min': RightMenu.IsMenuToggled()},resize:RightMenu.IsMenuToggled">
+    <!-- ko if:RightMenu.IsShown() -->
+    <div id="sidebar-right"  class="sidebar responsive sidebar-fixed sidebar-scroll" data-sidebar="true" data-sidebar-scroll="true"     data-sidebar-hover="false"  data-bind="resize:RightMenu.IsMenuShow">
         <ul class="nav nav-list right-list noselect">
         <!-- ko if:ModuleManager.IsLoaded() -->
             <!-- ko foreach: ModuleManager.RightMenu() -->
-                <!-- ko template:$data.id+'_right_menu' --><!-- /ko -->
+                <!-- ko if:_.includes(RightMenu.ModelsShown,id) -->
+                    <!-- ko template:$data.id+'_right_menu' --><!-- /ko -->
+                <!-- /ko -->
             <!-- /ko -->
         <!-- /ko -->
         </ul>       
-        <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
-            <i class="ace-icon fa" data-bind="click: RightMenu.ToggleMenu,css: {
-                'fa-angle-double-down'   : RightMenu.IsMenuToggled(),
-                'fa-angle-double-up' :!RightMenu.IsMenuToggled()}"></i>
-        </div>
     </div>
+    <!-- /ko -->
 </script>
 
 
@@ -463,7 +462,7 @@
 
 
 <script id="menu_li_mode" type="text/html">
-    <ul class="nav nav-tabs" style='display: inline-block;vertical-align: bottom;'>  
+    <ul class="nav nav-tabs">  
       <!-- ko foreach:$data -->
         <li data-bind='css:{active:$data==$parents[1].Mode()}'>
           <a data-toggle="tab" class='toolbar-tab' data-bind='click:$parents[1].Mode.bind(null,$data)'>

@@ -2,13 +2,12 @@ var async = require('async');
 var mongoose = require('mongoose');
 var _ = require('lodash');
 var Base = require(__base + 'classes/jetcalc/Helpers/Base.js');
-var Bus = require(__base + 'src/bus.js');
 
 
 
 var Div = (new function(){
 
-	var self = new Base("DIV");
+	var self = new Base("JDIV");
 
 	self.Info = {};
 
@@ -28,12 +27,12 @@ var Div = (new function(){
 	self.SubscribeChanges(_.keys(self.FieldsByModel));
 
 	self.get = function(done){
-		self.FromCache(function(err,Result){
+		self.FromCache(null,function(err,Result){
 			if (Result) {
 				return done (err,Result);	
 			}
 			self.load(function(err,Data){
-				self.ToCache(Data,function(err){
+				self.ToCache(null,Data,function(err){
 					return done(err,Data);
 				})
 			})

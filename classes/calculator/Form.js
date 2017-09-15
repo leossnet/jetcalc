@@ -11,6 +11,5 @@ module.exports = {
 	Prod:require('./helpers/Prod.js'),
 	DocRow:require('./helpers/DocRow.js'),
 	DocFolder:require('./helpers/DocFolder.js'),
-	Header:require('./helpers/Header.js'),
-	Structure:require('./helpers/Structure.js'),
+	Header:require('./helpers/Header.js')
 };

@@ -2,14 +2,16 @@ var async = require('async');
 var mongoose = require('mongoose');
 var _ = require('lodash');
 var Base = require(__base + 'classes/jetcalc/Helpers/Base.js');
+var PeriodHelper = require(__base + 'classes/jetcalc/Helpers/Period.js');
+var DivHelper = require(__base + 'classes/jetcalc/Helpers/Div.js');
 
 var SetHelper = (new function(){
 
-	var self = new Base("SET"); 
+	var self = new Base("JSET"); 
 
 	self.Fields = {
 		//Отчет
-		report:["-_id","CodeReport","IndexReport","NameReport","IsDefault","PrintNameReport","PrintDocReport","CodeUser","IsPublic","IsPrivate","CodeGrp","CodePeriodGrp"],
+		report:["-_id","CodeReport","IndexReport","NameReport","IsDefault","PrintNameReport","PrintDocReport","CodeUser","IsPublic","IsPrivate","CodeGrp","CodePeriodGrp","CodeDoc"],
 		//Переопределение ключей в отчете
 		reportparamkey:["-_id","CodeParam","CodeParamSet","CodeReport"],
 		//Переопределение рядов
@@ -28,89 +30,117 @@ var SetHelper = (new function(){
 		paramgrp:["-_id","NameParamGrp","CodeParamGrp"],
 		//Группировки
 		paramtab:["-_id","NameParamTab","CodeParamTab"],
-		//Фильтр по группам
-		objgrp:["-_id","CodeGrp","CodeObj"],
-		//Фильтр по периодам
-		periodgrpref:["-_id","CodePeriod","CodePeriodGrp"]
 	}
 
 	self.SubscribeChanges(_.keys(self.Fields));
 
 	self.LoadInfo = function(done){
-		self.FromCache(function(err,Result){
-			if (Result) {
-				return done (err,Result);	
-			}
-			var INFO = {};
-			async.each(_.keys(self.Fields),function(modelName,cb){
-				mongoose.model(modelName).find({},self.Fields[modelName].join(" ")).isactive().lean().exec(function(err,List){
-					INFO[modelName] = List;
-					return cb(err);
-				})
-			},function(err){
-				var guesType = function(ParamSets){
-					if (ParamSets.length!=2){
-						return "Select";
+		var INFO_H = {PeriodMap:{},ObjMap:{}};
+		PeriodHelper.get(function(err,PeriodsInfo){
+			var PData = _.forEach(_.filter(_.values(PeriodsInfo),function(P){
+				return !_.isEmpty(P.Grps)
+			}),function(P){
+				INFO_H.PeriodMap[P.CodePeriod] = P.Grps;
+			});
+			DivHelper.get(function(err,DivInfo){
+				_.forEach(_.values(DivInfo),function(D){
+					INFO_H.ObjMap[D.CodeObj] = D.Groups;
+				});
+				self.FromCache(null,function(err,Result){
+					if (Result && false) {
+						return done (err,_.merge(Result,INFO_H));	
 					}
-					var F = ParamSets[0].ParamKeys, S = ParamSets[1].ParamKeys;
-					if (F.length==1 && S.length==1){
-						var FK = _.first(F), SK = _.first(S);
-						if (FK.CodeParamKey==SK.CodeParamKey && FK.KeyValue==!SK.KeyValue){
-							return "Boolean";
+					var INFO = {};
+					async.each(_.keys(self.Fields),function(modelName,cb){
+						mongoose.model(modelName).find({},self.Fields[modelName].join(" ")).isactive().lean().exec(function(err,List){
+							INFO[modelName] = List;
+							return cb(err);
+						})
+					},function(err){
+						var ModFields = ["IsShowWithChildren","IsShowWithParent","IsShowOlap","IsToggled","IsHidden"];
+						var guesType = function(ParamSets){
+							if (ParamSets.length!=2){
+								return "Select";
+							}
+							var F = ParamSets[0].ParamKeys, S = ParamSets[1].ParamKeys;
+							if (F.length==1 && S.length==1){
+								var FK = _.first(F), SK = _.first(S);
+								if (FK.CodeParamKey==SK.CodeParamKey && FK.KeyValue==!SK.KeyValue){
+									return "Boolean";
+								}
+							} 
+							return "Select";
 						}
-					} 
-					return "Select";
-				}
-				INFO.Groupped = {};
-				var ParamGroups = {};
-				INFO.paramgrp.forEach(function(PG){
-					ParamGroups[PG.CodeParamGrp] = PG.NameParamGrp;
-				})
-				INFO.listdefinition.forEach(function(LD){
-					var Param = _.first(_.sortBy(_.map(_.filter(INFO.param,{CodeListDefinition:LD.CodeListDefinition}),function(M){
-						return _.pick(M,["CodeParam","NameParam","IndexParam","CodeParamGrp","CodeParamSet"]);
-					}),"IndexParam"));
-					var ParamSets = _.sortBy(_.map(_.filter(INFO.paramset,{CodeListDefinition:LD.CodeListDefinition}),function(M){
-						return _.merge(_.pick(M,["CodeParamSet","NameParamSet","Idx"]),{ParamKeys:
-							_.map(_.filter(INFO.paramsetkey,{CodeParamSet:M.CodeParamSet}),function(MM){
-								return _.pick(MM,["CodeParamSet","CodeParamKey","KeyValue"]);
+						INFO.Groupped = {};
+						var ParamGroups = {};
+						INFO.paramgrp.forEach(function(PG){
+							ParamGroups[PG.CodeParamGrp] = PG.NameParamGrp;
+						})
+						INFO.listdefinition.forEach(function(LD){
+							var Param = _.first(_.sortBy(_.map(_.filter(INFO.param,{CodeListDefinition:LD.CodeListDefinition}),function(M){
+								return _.pick(M,["CodeParam","NameParam","IndexParam","CodeParamGrp","CodeParamSet"]);
+							}),"IndexParam"));
+							var ParamSets = _.sortBy(_.map(_.filter(INFO.paramset,{CodeListDefinition:LD.CodeListDefinition}),function(M){
+								return _.merge(_.pick(M,["CodeParamSet","NameParamSet","Idx"]),{ParamKeys:
+									_.map(_.filter(INFO.paramsetkey,{CodeParamSet:M.CodeParamSet}),function(MM){
+										return _.pick(MM,["CodeParamSet","CodeParamKey","KeyValue"]);
+									})
+								});
+							}),"Idx");
+							INFO.Groupped[Param.CodeParam] = _.merge(Param,{ParamSets:ParamSets});
+							INFO.Groupped[Param.CodeParam].Type = guesType(ParamSets);
+							INFO.Groupped[Param.CodeParam].NameParamGrp = ParamGroups[INFO.Groupped[Param.CodeParam].CodeParamGrp];
+						})				
+						INFO.Reports = _.map(INFO.report,function(R){
+							var RInfo = _.merge(R,{
+								reportparamkey:_.filter(INFO.reportparamkey,{CodeReport:R.CodeReport}),
+								reportrow:_.filter(INFO.reportrow,{CodeReport:R.CodeReport})
+							});
+							ModFields.forEach(function(MF){
+								var Search = {}; Search[MF] = true;
+								RInfo[MF] = _.map(_.filter(RInfo.reportrow,Search),"CodeRow");
+							});
+							var AllKeys = [];
+							RInfo.reportparamkey.forEach(function(RK){
+								try{
+									AllKeys = AllKeys.concat(_.map(_.filter(_.find(INFO.Groupped[RK.CodeParam].ParamSets,{CodeParamSet:RK.CodeParamSet}).ParamKeys,{KeyValue:true}),"CodeParamKey"));
+								} catch(e){
+									console.log("Err",e);
+								}
 							})
-						});
-					}),"Idx");
-					var IndexedParamSets = {};
-					ParamSets.forEach(function(PS){
-						IndexedParamSets[PS.CodeParamSet] = PS;
+							RInfo.Keys = _.uniq(AllKeys);
+							return RInfo;
+						}); 
+						["report","reportrow","reportparamkey"].forEach(function(F){
+							delete INFO[F];
+						})
+						self.ToCache(null,INFO,function(err){
+							return done(err,_.merge(INFO,INFO_H));
+						})
 					})
-					INFO.Groupped[Param.CodeParam] = _.merge(Param,{ParamSets:IndexedParamSets});
-					INFO.Groupped[Param.CodeParam].Type = guesType(ParamSets);
-					INFO.Groupped[Param.CodeParam].NameParamGrp = ParamGroups[INFO.Groupped[Param.CodeParam].CodeParamGrp];
-				})
-				var MapPeriods = {}, MapObjGrps = {};
-				INFO.periodgrpref.forEach(function(PG){
-					if (!MapPeriods[PG.CodePeriod]) MapPeriods[PG.CodePeriod] = [];
-					MapPeriods[PG.CodePeriod].push(PG.CodePeriodGrp);
-				})
-				INFO.PeriodMap = MapPeriods;
-				INFO.objgrp.forEach(function(OG){
-					if (!MapObjGrps[OG.CodeObj]) MapObjGrps[OG.CodeObj] = [];
-					MapObjGrps[OG.CodeObj].push(OG.CodeGrp);
-				})
-				INFO.ObjMap = MapObjGrps;
-				self.ToCache(INFO,function(err){
-					return done(err,INFO);
 				})
 			})
 		})
 	}
 
-	self.FilterList = function(INFO,CodeDoc,CodeObj,CodeUser,done){
-		var AllReports = [];
-		if (!_.isEmpty(INFO.report)){
-			console.log(">>> TODO");	
-			console.log(INFO.report,CodeDoc,CodeObj,CodeUser);	
-			console.log("TODO <<<");	
-		}		
-		return done(null,AllReports);
+	self.FilterList = function(INFO,CodeDoc,CodePeriod,CodeObj,CodeUser,done){
+		var Reports = _.filter(_.filter(INFO.Reports,{CodeDoc:CodeDoc}),function(R){
+			var Result = true;
+			if (!_.isEmpty(R.CodePeriodGrp) && !_.includes(INFO.PeriodMap[CodePeriod],R.CodePeriodGrp)){
+				console.log("CodePeriodGrp");
+				Result = false;
+			}
+			if (!_.isEmpty(R.CodeGrp)  && !_.includes(INFO.ObjMap[CodeObj],R.CodeGrp)){
+				console.log("CodeGrp");
+				Result = false;	
+			}
+			if (R.IsPrivate && R.CodeUser!=CodeUser){
+				console.log("IsPrivate");
+				Result = false;		
+			}
+			return Result;
+		})
+		return done(null,Reports);
 	}
 
 	self.FilterParams = function(INFO,CodeDoc,CodePeriod,done){
@@ -141,7 +171,7 @@ var SetHelper = (new function(){
 
 	self.ListFiltered = function(Cx,INFO){
 		return function(done){
-			self.FilterList(INFO,Cx.CodeDoc,Cx.CodeObj,Cx.CodeUser,done);
+			self.FilterList(INFO,Cx.CodeDoc,Cx.CodePeriod,Cx.CodeObj,Cx.CodeUser,done);
 		}
 	}
 
@@ -156,21 +186,23 @@ var SetHelper = (new function(){
 			async.parallel({
 				List:self.ListFiltered(Cx,INFO),
 				Params:self.ParamsFiltered(Cx,INFO)
-			},done)
+			},function(err,Res){
+				if (err) return done(err);
+				var Keys = [];
+				for (var CodeParam in Res.Params){
+					var KeysObj = _.find(Res.Params[CodeParam].ParamSets,{CodeParamSet:Res.Params[CodeParam].CodeParamSet});
+					if (KeysObj){
+						Keys = _.uniq(Keys.concat(_.map(_.filter(KeysObj.ParamKeys,{KeyValue: true}),"CodeParamKey")));
+					}
+				}
+				Res.Keys = Keys;
+				return done(err,Res);
+			})
 		})
 	}
 
 	return self;
 })
 
-/*
-setTimeout(function(){
-	SetHelper.get({CodeDoc:'balans',CodePeriod:'12',CodeObj:'101',CodeUser:'admin'},function(err,Result){
-		console.log(Result);
-
-	})	
-
-},1000)
-*/
 
 module.exports = SetHelper;

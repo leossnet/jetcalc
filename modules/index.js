@@ -122,7 +122,7 @@ var ModuleManager = (new function(){
 
 
     self.SetModule = function(){
-        var Route = MBreadCrumbs.CurrentRoute();
+        var Route = MBreadCrumbs.CurrentRoute(), old = self.Choosed(); 
         var TestId = "", F = null;
         if (Route.indexOf("adminpage")!=-1){
             F = _.find(self.AdminPage(),{id:Route[Route.indexOf("adminpage")+1]});
@@ -154,6 +154,7 @@ var ModuleManager = (new function(){
             if (self._isLoading) self._isLoading.dispose();
             self._isLoading = self.Modules[F.class_name].IsLoading.subscribe(self.IsLoading);
         }
+        if (old!= self.Choosed()) Bus.Emit("current_module_changed",self.Choosed());
     }
 
     self.Load = function(done) {
@@ -475,7 +476,7 @@ var Module = function(id){
         if (self._error) self._error.dispose();
         if (self._isLoading) self._isLoading.dispose();
         if (!_.isEmpty(options)){
-            MSite.Subscribe(options);
+            MSite.UnSubscribe(options);
         }
     }
 

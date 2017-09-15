@@ -1,9 +1,124 @@
-var ParamManager = (new function(){
+var ReportManager = (new function(){
 	var self = this;
 
-	//self.rawData =  {tabs:[], grps:[], params:[], List:[]};
-    //self.choosedTab = ko.observable(null);
-    //self.choosedGrp = ko.observable(null);
+	self.NewReport = function(){
+		self.CurrentReport(null);
+		CustomReport.RollBack();
+	}
+
+	self.IsLoadAvailable = function(){
+		return !_.isEmpty(ParamManager.List());
+	}
+
+	self.CurrentReport = ko.observable(null);
+
+	self.LoadReport = function(){
+		self.PrepareTree();
+		$("#loadreport_modal").modal("show");
+	}
+
+	self.EditFields = function(){
+    	var Base = ['IndexReport','NameReport','PrintNameReport','PrintDocReport'];
+    	if (PermChecker.CheckPrivelege("IsCustomReportPublicTuner",CxCtrl.CxPermDoc())){
+    		Base = Base.concat(['IsPublic','IsDefault','IsPrivate','CodeGrp','CodePeriodGrp']);
+    	}
+    	return Base;
+    }
+
+	self.ReportLoadTree = ko.observable(null);
+	self.ReportTreeDataSource = function(options, callback){
+		var Answ  = {};
+		if(!("text" in options) && !("type" in options)){
+			return callback({ data: self.ReportLoadTree() });
+		} else if("type" in options && options.type == "folder") {
+			var Answ = options.additionalParameters.children;
+		}
+		callback({ data: Answ });
+	}
+	self.PrepareTree = function(){
+		self.ReportLoadTree(null);
+		var Reports = ParamManager.List(), CodeUser = MSite.Me().CodeUser();
+		var _reparse = function(i){ return {code:i.CodeReport,text:i.NameReport, type: 'item'};}
+		var Filter = {
+			personal :_.map(_.filter(Reports,{CodeUser:CodeUser}),_reparse),
+			public   :_.map(_.filter(Reports,{IsPublic:true}),_reparse),
+			private  :_.map(_.filter(Reports,{IsPrivate:true}),_reparse),
+		};
+		var tree_data = {};
+		for (var Code in Filter){
+			if (!_.isEmpty(Filter[Code])){
+				tree_data[Code] = {code:Code, text: Tr('customreport',Code), type: 'folder', additionalParameters:{children:Filter[Code]}};
+			}
+		}
+		var additional = {};
+	    additional.default = {code:'default', text: 'По умолчанию', type: 'item'};
+		tree_data = _.merge(tree_data,additional);
+		self.ReportLoadTree(tree_data);
+	}
+
+	self.UpdateRowModifiers = function(){
+		var Report = _.find(ParamManager.List(),{CodeReport:self.CurrentReport()});
+		CustomReport.ModFields.forEach(function(Field){
+			var F = {}; F[Field] = true;
+			CustomReport[Field] = (Report) ? _.map(_.filter(Report.reportrow,F),"CodeRow"):[];
+		})
+	}
+
+	self.DoLoadReport = function(){
+		self.UpdateRowModifiers();
+		ParamManager.SetParams();
+		$("#loadreport_modal").modal("hide");
+		Bus.Emit("report_loaded");
+		CustomReport.Show();
+	}
+
+	self.DeleteReport = function(){
+		CustomReport.rDelete ("report",{CodeReport:self.CurrentReport()},function(){
+			CustomReport.RollBack();	
+			$("#loadreport_modal").modal("hide");
+		})
+	}
+
+	self.EditReport = ko.observable(null);
+
+	self.SaveChanges = function(){
+		var Current = self.CurrentReport();
+		var Initer = {};
+		if (!_.isEmpty(Current) && Current!='default'){
+			var Search = {CodeReport:self.CurrentReport()};
+			var Report = _.find(ParamManager.List(),Search);
+			Initer = _.merge(Search,_.pick(Report,self.EditFields()));
+			Initer.CodeDoc = CxCtrl.CodeDoc();
+		} else {
+			Initer = {IsPrivate:true,CodeDoc:CxCtrl.CodeDoc()};
+		}
+		var n = MModels.Create("report",Initer);
+		self.EditReport(n);
+		$("#savereport_modal").modal("show");
+	}
+
+	self.SaveReport = function(){
+		var RowsModifiers = {};
+		CustomReport.ModFieldsByType().forEach(function(F){
+			RowsModifiers[F] = CustomReport[F];
+		})
+		CustomReport.rPost("createreport",{Data:JSON.stringify({
+			Report:self.EditReport().toJS(),
+			Rows:RowsModifiers,
+			Params:ParamManager.ActualParams(),
+			ParamSets:ParamManager.ParamSets()
+		})},function(){
+			CustomReport.RollBack();
+			$("#savereport_modal").modal("hide");			
+		})
+	}
+
+	return self;
+})
+
+
+var ParamManager = (new function(){
+	var self = this;
 
     self.Params = ko.observableArray();
     self.Groups = ko.observableArray();
@@ -11,14 +126,88 @@ var ParamManager = (new function(){
     	return _.filter(self.Params(),{CodeParamGrp:CodeGroup});
     }
 
- 	
-	self.Load = function(done){
-         var Params = {};
+    self.Changes = ko.observable(0);
+    self.UpdateChanges = function(V){
+    	self.Changes(_.filter(V,function(P){
+    		return P.NewCodeParamSet!=P.CodeParamSet;
+    	}).length);
+    	Bus.Emit("params_changed");
+    }
+
+    self.ActualParams = function(){
+    	var Result = [];
+    	self.Params().forEach(function(P){
+    		var PS = _.find(P.ParamSets,{CodeParamSet:P.NewCodeParamSet});
+    		if (PS){
+    			Result = _.uniq(Result.concat(_.map(_.filter(PS.ParamKeys,{KeyValue:true}),"CodeParamKey")));
+    		}
+    	})
+    	return Result;
+    }   
+
+    self.ParamSets = function(){
+    	var Result = {};
+    	self.Params().forEach(function(P){
+    		Result[P.CodeParam] = P.NewCodeParamSet;
+    	})
+    	return Result;
+    }
+
+    self.PossibleParams = function(){
+    	var Result = [];
+    	self.Params().forEach(function(P){
+    		P.ParamSets.forEach(function(PS){
+    			Result = Result.concat(_.map(PS.ParamKeys,"CodeParamKey"));
+    		})
+    	})
+    	return _.uniq(Result);
+    }
+
+    self.SetParams = function(Params){
+    	Params = Params || ParamManager.Params();
+    	var CodeReport = ReportManager.CurrentReport();
+    	var Override = {};
+    	if (CodeReport && CodeReport!='default'){
+    		var Report = _.find(self.List(),{CodeReport:CodeReport});
+    		if (Report){
+    			Report.reportparamkey.forEach(function(RK){
+    				Override[RK.CodeParam] = RK.CodeParamSet;
+    			})
+    		}
+    	}
+     	if (self.ParamsSubscribe) self.ParamsSubscribe.dispose();    
+     	self.Params(_.sortBy(_.map(_.filter(Params,{IsShow:true}),function(P){
+     		if (!CodeReport) P.InitParamSet = P.CodeParamSet;
+     		if (Override[P.CodeParam]){
+     			P.NewCodeParamSet = Override[P.CodeParam];
+     			P.CodeParamSet = Override[P.CodeParam];
+     		} else {
+     			P.CodeParamSet = P.InitParamSet;
+     			P.NewCodeParamSet = P.InitParamSet;
+     		}
+     		return _.merge(P,{IsChanged:ko.observable(false)});
+     	}),"IndexParam"));
+        self.Changes(0);
+		self.Groups.valueHasMutated();
+     	self.ParamsSubscribe =  ko.computed(function() {
+            return ko.toJS(self.Params);
+        }).subscribe(self.UpdateChanges);  		
+    }
+
+    self.ParamsSubscribe = null;
+
+    self.List = ko.observableArray();
+
+ 	self.Load = function(done){
          CustomReport.rGet("params",CxCtrl.CxPermDoc(),function(data){
+         	self.List(data.List);
+         	if (ReportManager.CurrentReport() && ReportManager.CurrentReport()!='default'){
+         		var R = _.find(data.List,{CodeReport:ReportManager.CurrentReport()});
+         		if (_.isEmpty(R)){
+         			ReportManager.CurrentReport(null);
+         		}
+         	}
          	var Params = _.values(data.Params);
-         	self.Params(_.map(Params,function(P){
-         		return _.merge(P,{NewCodeParamSet:P.CodeParamSet});
-         	}));
          	var Groups = [], GInd = {};
          	Params.forEach(function(P){
          		if (!GInd[P.CodeParamGrp]) {
@@ -27,9 +216,11 @@ var ParamManager = (new function(){
          		}
          	})
          	self.Groups(Groups);
+         	self.SetParams(Params);
+         	Bus.Emit("params_loaded");
+         	return done && done();
          })
     }
-
 
 	return self;
 })
@@ -61,18 +252,20 @@ var TreeHelper = function(CustomReport){
 
 	self.Tree = function(){
       var AllHidden = [], NewTreeCodes = [], Filtered = [], Return = [];
-      if (self.R.Mode() == 'ModifyView'){
-        	var CodesToHide = [];
-        	self.R.IsHidden.forEach(function(HC){
-          		CodesToHide = CodesToHide.concat([HC]).concat(self._children(HC,self.Rows));
-        	})
-        	self.R.IsToggled.forEach(function(CC){
-          		CodesToHide = CodesToHide.concat(self._children(CC,self.Rows));
-        	})
-        	AllHidden = _.uniq(CodesToHide);
-        	Filtered = _.filter(self.Rows,function(R){
-          		return AllHidden.indexOf(R.CodeRow)==-1;
-        	})
+      var Type = self.R.Mode();
+      if (Type=="ColumnsView") Type = self.R.ReportType();
+      if (Type == 'ModifyView'){
+    	var CodesToHide = [];
+    	self.R.IsHidden.forEach(function(HC){
+      		CodesToHide = CodesToHide.concat([HC]).concat(self._children(HC,self.Rows));
+    	})
+    	self.R.IsToggled.forEach(function(CC){
+      		CodesToHide = CodesToHide.concat(self._children(CC,self.Rows));
+    	})
+    	AllHidden = _.uniq(CodesToHide);
+    	Filtered = _.filter(self.Rows,function(R){
+      		return AllHidden.indexOf(R.CodeRow)==-1;
+    	})
       } else {
         var Codes = [];
         self.R.IsShowOlap.forEach(function(RS){Codes.push(RS);})
@@ -89,7 +282,6 @@ var TreeHelper = function(CustomReport){
         var T = new TypeTree("ROOT",{});
         Filtered.forEach(function(R){
             var Parents  = self._parents(R.CodeRow,Filtered);
-
             T.add (R.CodeRow, R, _.last(Parents) || "ROOT", T.traverseBF);
         })
        	Return = T.getFlat();
@@ -101,170 +293,6 @@ var TreeHelper = function(CustomReport){
 	return self;
 }
 
-
-var ReportManager = (new function(){
-	var self = this;
-
-	self.NewReport = function(){
-		self.CurrentReport('default');
-		self.DoLoadReport();
-	}
-
-	self.CurrentReport = ko.observable(null);
-	self.LoadReport = function(){
-		self.PrepareTree();
-		self.IsLoadReportsShow(true);
-		$("#loadreport_modal").modal("show");
-		$("#loadreport_modal").on("hide.bs.modal", function(e) {
-			self.IsLoadReportsShow(false);
-	    })	
-	}
-
-	self.EditFields = function(){
-    	var Base = ['CodeReport','IndexReport','NameReport','PrintNameReport','PrintDocReport'];
-    	if (PermChecker.CheckPrivelege("IsCustomReportPublicTuner",CxCtrl.CxPermDoc())){
-    		Base = Base.concat(['IsPublic','IsDefault','IsPrivate','CodeGrp','CodePeriodGrp']);
-    	}
-    	return Base;
-    }
-
-	self.DoLoadReport = function(){
-		var Report = _.find(SettingController.Reports(),{CodeReport:self.CurrentReport()});
-		self.ModFields.forEach(function(Field){
-			if (Report.code=='default'){
-				self[Field] = [];
-			} else {
-				var F = {}; F[Field] = true;
-				self[Field] = _.map(_.filter(Report.Link_reportrow,F),"CodeRow");
-			}
-		})
-		var ReMerge = {}; var Null = {};
-		self.ModFields.forEach(function(Set){ Null[Set] = false;})
-		self.ModFields.forEach(function(Field){
-			self[Field].forEach(function(CodeRow){
-				if (!ReMerge[CodeRow]){
-					ReMerge[CodeRow] = _.clone(Null);
-				}
-				ReMerge[CodeRow][Field] = true;
-			})
-		})
-		self.Rows.forEach(function(R,I){
-			if (ReMerge[R.CodeRow]){
-				self.Rows[I] = _.merge(self.Rows[I],ReMerge[R.CodeRow]);
-			} else {
-				self.Rows[I] = _.merge(self.Rows[I],_.clone(Null));
-			}
-		})
-		self.Render();
-		if (self.Mode()!=self.ReportType() && self.Mode()!='ColumnsView'){
-			self.Mode(self.ReportType());
-		}
-		SettingController.SelectReport(Report);
-		$("#loadreport_modal").modal("hide");
-	}
-
-	self.DeleteReport = function(){
-		self.rDelete ("report",{CodeReport:MCustomReport.CurrentReport()},function(){
-			SettingController.LoadDefault(true,function(){
-				SettingController.Init();
-				$("#loadreport_modal").modal("hide");	
-			});				
-		})
-	}
-
-	self.EditReport = ko.observable(null);
-	self.IsLoadReportsShow = ko.observable(false);
-	self.SaveError = ko.observable(null);
-
-	self.SaveChanges = function(){
-		var u = MSite.Me().CodeUser();
-		var _defaults = {
-			IsPrivate:true
-		};
-		var n = MModels.Create("report",_.merge({CodeDoc:CxCtrl.CodeDoc()},_defaults));
-		self.EditReport(n);
-		$("#savereport_modal").modal("show");
-	}
-
-	self.SaveReport = function(){
-		self.SaveError(null);
-		var RowsModifiers = {};
-		self.ModFields.forEach(function(F){
-			RowsModifiers[F] = self[F];
-		})
-		var Data = {
-			Report:self.EditReport().toJS(),
-			Rows:RowsModifiers,
-			Params:ko.toJS(SettingController.resParams)
-		}
-		$.ajax({
-			url:self.base+'/createreport',
-			method:"post",
-			data:Data,
-			success:function(answer){
-				if (answer.err) return self.Error(answer.err);
-				SettingController.LoadDefault(true);
-				SettingController.Init(true);
-				SettingController.IsShowList(true);				
-				$("#savereport_modal").modal("hide");
-				self.Init();
-			}
-		})
-	}
-	self.ReportLoadTree = {};
-	self.ReportTreeDataSource = function(options, callback){
-		var Answ  = {};
-		if(!("text" in options) && !("type" in options)){
-			return callback({ data: self.ReportLoadTree });
-		} else if("type" in options && options.type == "folder") {
-			var Answ = options.additionalParameters.children;
-		}
-		callback({ data: Answ });
-	}
-
-	self.PrepareTree = function(){
-		var all = SettingController.Reports(), CodeUser = MSite.Me().CodeUser();
-		var _reparse = function(i){ return {code:i.CodeReport,text:i.NameReport, type: 'item'};}
-		var Filter = {
-			personal :_.map(_.filter(all,{CodeUser:CodeUser}),_reparse),
-			public   :_.map(_.filter(all,{IsPublic:true}),_reparse),
-			private  :_.map(_.filter(all,{IsPrivate:true}),_reparse),
-		};
-		var tree_data = {};
-		for (var Code in Filter){
-			if (Filter[Code].length){
-				tree_data[Code] = {code:Code, text: Tr('customreport',Code), type: 'folder', additionalParameters:{children:Filter[Code]}};
-			}
-		}
-		var additional = {};
-		var grps = _.compact(_.map(all,"CodeGrp"));
-		if (grps.length){
-			additional.forgroups = {code:'forgroups', text: 'Для предприятий', type: 'folder', additionalParameters:{children:[]}};
-			var ByGroups = {};
-			grps.forEach(function(CodeGroup){
-				ByGroups[CodeGroup] = _.map(_.filter(all,{CodeGrp:CodeGroup}),_reparse);
-			})
-			grps.forEach(function(CodeGroup){
-				tree_data['forgroups'].additionalParameters["children"].push({code:CodeGroup, text: CodeGroup, type: 'folder', additionalParameters:{children:ByGroups[CodeGroup]}});
-			})
-		}
-	    additional.default = {code:'default', text: 'По умолчанию', type: 'item'};
-		tree_data = _.merge(tree_data,additional);
-		self.ReportLoadTree = tree_data;
-	}
-
-	
-
-
-
-	return self;
-})
-
-
-
-
-
-
 var CustomReport = (new function() {
 
 	var self = new Module("customreport");
@@ -272,7 +300,26 @@ var CustomReport = (new function() {
 	self.EditConfig = ko.observable();
 	self.EditResult = ko.observable();
 	self.EditChanges = ko.observable();
-	self.EditChangesCount = ko.observable();
+	self.EditChangesCount = ko.observable(0);
+
+	self.ShowOnModules = ["report","olap","chart"];
+
+	self.ForceHide = function(modelName){
+		if (!_.includes(self.ShowOnModules,modelName)) {
+			RightMenu.Hide("customreport");
+			self.IsShow(false);
+		}
+	}
+
+	self.IsShow = ko.observable(false);
+	self.Toggle = function(){
+		self.IsShow(!self.IsShow());
+		if (self.IsShow()){
+			RightMenu.Show("customreport");
+		} else {
+			RightMenu.Hide("customreport");
+		}
+	}
 
     self.IsOlap = function(){
     	var Doc = null;
@@ -281,29 +328,51 @@ var CustomReport = (new function() {
     	}
     	return Doc && Doc.IsOlap; 
     }
-
+	
+	self.ModFields = ["IsHidden","IsToggled","IsShowOlap","IsShowWithParent","IsShowWithChildren"];
 
 	self.RollBack = function(){
-		self.Init();
+		ReportManager.UpdateRowModifiers();
+		self.EditChangesCount(0);
+		ParamManager.Load(function(){
+			self.Show();
+		});
 	}
 
 	self.Init = function(done){
 		CxCtrl.Events.addListener("documentchanged",function(){
-			ParamManager.Load();
+			ParamManager.Load(function(){
+				;
+			});
 		})
-		return done();
+		Bus.On("current_module_changed",self.ForceHide);
+		Bus.On("context_obj_change",ParamManager.Load);
+		Bus.On("context_period_change",ParamManager.Load);
+
+		self.ShowOnModules
+		return done && done();
+	}
+
+	self.SaveChanges = function(){
+		ReportManager.SaveChanges();
 	}
 
   	self.BeforeHide = function(){
         self.UnSubscribe({
-        	save:self.SaveChanges
+        	save:self.SaveChanges,
+        	open:ReportManager.LoadReport,
+        	refresh:self.RollBack,
+        	addrecord:ReportManager.NewReport
         });
         self.UnSubscribeChanges();
     }
 
     self.BeforeShow = function(){
         self.Subscribe({
-        	save:self.SaveChanges
+        	save:self.SaveChanges,
+        	open:ReportManager.LoadReport,
+        	refresh:self.RollBack,
+        	addrecord:ReportManager.NewReport
         });
         self.SubscribeChanges();
         self.Show();
@@ -316,8 +385,6 @@ var CustomReport = (new function() {
 	self.IsShowWithParent = [];
 	self.IsShowWithChildren = [];
 
-  	self.ModFields = ["IsHidden","IsToggled","IsShowOlap","IsShowWithParent","IsShowWithChildren"];
-
 	self.ReportType = function(){
 		if (_.sum([self.IsShowOlap.length,self.IsShowWithParent.length,self.IsShowWithChildren.length]) || self.IsOlap()){
 			return "SingleView";
@@ -325,19 +392,18 @@ var CustomReport = (new function() {
 		return "ModifyView";
 	}
 
+	self.ModFieldsByType = function(){
+		if (self.IsOlap()) return ["IsShowOlap"];
+		return (self.ReportType()=="SingleView") ? ["IsShowOlap","IsShowWithParent","IsShowWithChildren"]:["IsHidden","IsToggled"];
+	}
+
 	self.Show = function(done){
         if (!self.Mode()) return self.InitSetMode("ColumnsView");
         switch(self.Mode()){
         	case "SingleView":
-        		["IsShowOlap","IsShowWithParent","IsShowWithChildren"].forEach(function(F){
-        			self[F] = [];
-        		})
         		self.RenderShow();
         	break;
         	case "ModifyView":
-        		["IsHidden","IsToggled"].forEach(function(F){
-        			self[F] = [];
-        		})
         		self.RenderShow();
         	break;
         	case "ColumnsView":
@@ -349,10 +415,12 @@ var CustomReport = (new function() {
 	self.EditChangesSubscription = null;
 	self.UnSubscribeChanges = function(){
 		if (self.EditChangesSubscription) self.EditChangesSubscription.dispose();
+		Bus.Off("params_changed",self.ReloadCols);
 	}
 	self.SubscribeChanges = function(){
 		self.UnSubscribeChanges();
 		self.EditChangesSubscription = self.EditChanges.subscribe(self.OnChanges);
+		Bus.On("params_changed",self.ReloadCols);
 	}
 	self.OnChanges = function(V){
 		self.ModFields.forEach(function(ModField){
@@ -361,6 +429,12 @@ var CustomReport = (new function() {
 		})
 		self.RenderPreview();
 	}
+
+	self.ChangesCount = ko.computed(function(){
+		var ParamsChanges = ParamManager.Changes();
+		var RowChanges = self.EditChangesCount();
+		return ParamsChanges+RowChanges;
+	})
 	
 	self.RenderShow = function(){
 		self.LoadStructure(function(){				
@@ -404,11 +478,8 @@ var CustomReport = (new function() {
 	self.Cols = [];
 
 	self.LoadStructure  = function(done){
-		self.rGet('structure',CxCtrl.CxPermDoc(),function(data){
+		self.rGet('structure',_.merge(CxCtrl.CxPermDoc(),{Params:ParamManager.ActualParams()}),function(data){
 			self.Rows = data.Rows;
-			self.Rows.forEach(function(R,index){
-				self.Rows[index] = self.Rows[index];
-			})
 			self.UpdateRowsParams();
 			self.Cols = data.Cols;
 			return done();
@@ -456,6 +527,12 @@ var CustomReport = (new function() {
         self.PreviewConfig(Config);
 	}
 
+	self.ReloadCols = function(){
+		if (self.Mode()=='ColumnsView'){
+			self.ColumnPreview();
+		}
+	}
+
 	self.ColumnConfig = ko.observable();
 	self.ColumnResult = ko.observable();
 	self.ColumnChanges = ko.observable();
@@ -499,197 +576,55 @@ var CustomReport = (new function() {
 
 
 
-
-/*
-
-
-
-var MCustomReport = (new function() {
-	
-	var self = new Module("customreport");
-
-
-    
-
-
-
-
-
-
-
-
-	self.LoadStructure  = function(done){
-		self.rGet('structure',CxCtrl.CxPermDoc(),function(data){
-			self.Rows = data.Rows;
-			self.Rows.forEach(function(R,index){
-				self.Rows[index] = self.Rows[index];//_.merge(,m);
-			})
-			self.UpdateRowsParams();
-			self.Cols = data.Cols;
-			return done();
-		})
-	}
-
-
-
-	self.Render = function(){
-		var Emulate = {}
-		self.ModFields.forEach(function(Field){
-			Emulate[Field] = self[Field];
-		})
-		TreeReparser.ResultTree(self.Rows,Emulate);
-		if (self.Mode()=='ColumnsView'){
-			self.RenderWithCols();
-			SettingController.ResetTabGrp();
-			SettingController.IsShow(true);				
-		} else {
-			self.RenderWithPreview();
-			SettingController.IsShow(false);
-		}
-	}
-
-    self.CheckedRender = function(instance, td, row, col, prop, value, CellInfo){
-		$(td).addClass("checkboxed");			
-		Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
-	}
-	
-    self.RegisterChange = function(changes, source){
-        switch(source){
-            case 'autofill':
-            case 'paste':
-            case 'radio':
-            case 'edit':
-            	changes.forEach(function(change){
-            		var rI = change[0], prop = change[1], oldV = change[2], newV = change[3], meta = self.EditTable.getCellMeta(rI,0);
-            		var R = _.find(self.Rows,{CodeRow:meta.CodeRow});
-            		var C = meta.CodeRow;
-            		R[prop] = newV;
-					if (self.Mode()=='ModifyView'){                			                		
-                		if (prop=='IsToggled') {
-                			if (newV){
-                				self.IsToggled.push(C);
-                				if (R.IsHidden){
-                					self.EditTable.setDataAtCell(rI,0,false,'radio');
-                				}
-                			} else {
-                				self.IsToggled.remove(C);
-                			}
-                		} else {
-							if (newV){
-                				self.IsHidden.push(C);
-                				if (R.IsToggled){
-                					self.EditTable.setDataAtCell(rI,1,false,'radio');
-                				}
-                			} else {
-                				self.IsHidden.remove(C);
-                			}
-                		}
-                	} else if(self.Mode()=='SingleView'){
-                		if (newV){
-                			self[prop].push(R.CodeRow);
-                		} else {
-                			self[prop].remove(R.CodeRow);
-                		}
-                	}
-                	self.RenderPreviewTable();
-            	})                	
-           break;
-        }
-    } 
-
-
-    self.RenderWithCols = function(){
-        var Header = Tr('customreport',['CodeRow','NameRow']);
-		var HandsonRenders = new HandsonTableRenders.RenderController();
-        var TreeArr = {}, Rows = TreeReparser.ResultTreeObjs; 
-        Rows.forEach(function(R,I){
-            TreeArr[I] = _.pick(R,['lft','rgt','level']);
-        })
-        var DomPlace = $('.handsontable.single:visible')[0], TableCells = [];
-        Rows.forEach(function(Row){
-	    	var EmptRow = _.pick(Row,['NumRow','NameRow']);
-	        TableCells.push(EmptRow)
-	    })
-	    HandsonRenders.RegisterRender("Code",[/[0-9]*?,0$/], HandsonTableRenders.ReadOnlyText);
-	    HandsonRenders.RegisterRender("Tree",[/[0-9]*?,1$/], HandsonTableRenders.TreeRender);
-		Header = Header.concat(_.map(self.Cols,"NameColsetCol"));
-		var columns = [{data:'NumRow',type:'text'},{data:'NameRow',type:'text'}];
-		self.Cols.forEach(function(H){
-			columns.push({type:'text'});
-		})
-        var HandsonConfig = {
-        	data:TableCells,columns:columns,
-        	cells:HandsonRenders.UniversalRender,
-            colHeaders: Header, fixedColumnsLeft: 2,
-            rowHeaders:true,autoRowSize:true,manualRowMove:true,
-			tree:{
-		        data:TreeArr,
-		        icon:function(){},
-		        colapsed:CxCtrl.Context().CodeDoc+'_customreport'
-		    }
-        };
-        try{
-            //self.table.destroy();
-            //self.table = null;
-        } catch(e){
-            ;
-        }
-        if (!self.table)
-        self.table = new Handsontable(DomPlace, HandsonConfig);
-        new HandsonTableHelper.WidthFix(self.table,100,200,[50,400]);
-        new HandsonTableHelper.DiscretScroll(self.table);
-        new HandsonTableHelper.TreeView(self.table);
-        self.table.render();
-    }
-
-    self.RenderWithPreview = function(){
-    	self.RenderEditTable();
-		self.RenderPreviewTable();        	
-    }
-
-	self.FilterRender = function(instance, td, row, col, prop, value, CellInfo){
-		if (CellInfo.CodeRow){
-			if (TreeReparser.ResultTreeCodes.length && TreeReparser.ResultTreeCodes.indexOf(CellInfo.CodeRow)==-1){
-				$(td).addClass('removed_by_filter customreport');
-			}
-		} 
-	}
-
-
-
-
-
-
-
-	return self;
-})
-*/
-
 ModuleManager.Modules.CustomReport = CustomReport;
 
 
+ko.components.register('bool-param', {
+    viewModel: function (params) {
+    	var self = this;
+    	self.data = params.data; 
+    	self.IsPositiveSelected = ko.observable(false);
+    	self.Text = ko.observable('');
+    	var PositiveCode = "", NegativeCode = "";
+    	try{
+    		if (self.data.ParamSets[0].ParamKeys[0].KeyValue){
+    			PositiveCode = 	self.data.ParamSets[0].CodeParamSet;
+    			NegativeCode = 	self.data.ParamSets[1].CodeParamSet;
+    		} else {
+    			PositiveCode = 	self.data.ParamSets[1].CodeParamSet;
+    			NegativeCode = 	self.data.ParamSets[0].CodeParamSet;
+    		}
+    	} catch(e){
+    		console.warn("Неверная канструкция параметра:",self.data);
+    	}
+    	var Current = _.find(self.data.ParamSets,{CodeParamSet:self.data.NewCodeParamSet});
+    	self.Text(Current.NameParamSet);
+    	var Is = Current.CodeParamSet==PositiveCode;
+    	self.IsPositiveSelected(Is);
+    	self.IsPositiveSelected.subscribe(function(V){
+    		if (V){
+    			self.data.NewCodeParamSet = PositiveCode;
+    		} else {
+    			self.data.NewCodeParamSet = NegativeCode;
+    		}
+    		self.Text(_.find(self.data.ParamSets,{CodeParamSet:self.data.NewCodeParamSet}).NameParamSet);
+    		self.data.IsChanged(self.data.NewCodeParamSet!=self.data.CodeParamSet);
+    	})
+	},
+    template: "<div class='select' ><label  data-bind='css:{changed:data.IsChanged}'><input class='ace ace-checkbox-1' type='checkbox' data-bind='checked:IsPositiveSelected'><span class='lbl'></span><span  data-bind='text:Text'></span></label></div>",
+})
 
 
-
-ko.bindingHandlers.checkBox = {
-  init: function(element, valueAccessor, allBindingsAccessor) {
-    var value     = valueAccessor();
-    var unwrValue = ko.unwrap(valueAccessor());
-    $(element).click(function(){
-      if (_.startsWith(value(),'NOT_')) {
-        value((value()+'').substring(4,value().length));
-      } else {
-        value('NOT_' + value());
-      }
-    });
-  },
-  update: function(element, valueAccessor, allBindingsAccessor) {
-    var value = ko.unwrap(valueAccessor());
-    if (_.startsWith(value,'NOT_')){
-      $(element).prop('checked',false);
-    } else {
-      $(element).prop('checked',true);
-    }
-  }
-}
-
+ko.components.register('select-param', {
+    viewModel: function (params) {
+    	var self = this;
+    	self.data = params.data; 
+    	self.Options = _.values(self.data.ParamSets);
+    	self.OptionsText = 'NameParamSet';
+    	self.OptionsValue = 'CodeParamSet'
+    	self.OnChange = function(){
+    		self.data.IsChanged(self.data.NewCodeParamSet!=self.data.CodeParamSet);
+    	}
+	},
+    template: "<div class='select'><label data-bind='css:{changed:data.IsChanged},text:data.NameParam'></label><select class='form-control' data-bind='value: data.NewCodeParamSet, options: Options, optionsText: OptionsText, optionsValue: OptionsValue, event:{change:OnChange}'></select></div>",
+})

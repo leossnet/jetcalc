@@ -1,9 +1,37 @@
+var Bus = (new function(){
+    var self = this;
+
+    self.Events = new EventEmitter();
+
+    self.On = function(){
+        //self.Trace("On",arguments);
+        self.Events.on.apply(self.Events, arguments);
+    }
+
+    self.Off = function(){
+        //self.Trace("Off",arguments);
+        self.Events.off.apply(self.Events, arguments);
+    }
+    
+    self.Emit = function(){
+        self.Trace("Emit",arguments);
+        self.Events.emit.apply(self.Events, arguments);
+    }
+
+    self.Trace = function(Type,arguments){
+        console.log(">> Bus ",Type,_.first(arguments));
+    }
+
+    return self;
+}) 
+
 var LeftMenu = (new function () {
     var self = this;
 
     self.IsMenuToggled = ko.observable(false, {
         persist: "IsLeftMenuToggled"
     });
+
     self.ToggleMenu = function () {
         self.IsMenuToggled(!self.IsMenuToggled());
     }
@@ -14,14 +42,26 @@ var LeftMenu = (new function () {
 var RightMenu = (new function () {
     var self = this;
 
-    self.IsShow = ko.observable(false);
+    self.IsShown = ko.observable(false);
 
-    self.IsMenuToggled = ko.observable(true, {
-        persist: "IsRightMenuToggled"
-    });
+    self.ModelsShown = [];
 
-    self.ToggleMenu = function () {
-        self.IsMenuToggled(!self.IsMenuToggled());
+    self.Show = function(ModelName){
+        if (!_.includes(self.ModelsShown,ModelName)){
+            self.ModelsShown.push(ModelName);
+        }
+        self.Toggle();
+    }
+
+    self.Hide = function(ModelName){
+        if (_.includes(self.ModelsShown,ModelName)){
+            self.ModelsShown.remove(ModelName);
+        }
+        self.Toggle()
+    }
+
+    self.Toggle = function(){
+        self.IsShown(!_.isEmpty(self.ModelsShown));
     }
 
     return self;
@@ -75,6 +115,7 @@ var MSite = (new function () {
 
     self.AnnounceTimeout = {
         ctrls: null,
+        ctrlo:null,
         scroll: null,
         addrecord: null,
         addrecordtemplate: null,
@@ -117,6 +158,15 @@ var MSite = (new function () {
         }, 500);
     }
 
+    self.AnnounceCtrO = function () {
+        self.FlashButton("fa-folder-open-o");
+        if (self.AnnounceTimeout.ctrlo) clearTimeout(self.AnnounceTimeout.ctrlo);
+        self.AnnounceTimeout.ctrlo = setTimeout(function () {
+            self.Events.emit("open");
+            self.AnnounceTimeout.ctrlo = null;
+        }, 500);
+    }
+
     self.AnnounceScrollBottom = function () {
         if (ModuleManager.IsLoading()) return;
         self.FlashButton("fa-angle-double-up");
@@ -144,6 +194,10 @@ var MSite = (new function () {
             self.Events.emit("initialnavigate", window.location.search ? window.location.search.queryObj() : {});
             $("body").removeClass("loading");
             document.addEventListener("keydown", function (e) {
+                if (e.keyCode == 79 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                    e.preventDefault();
+                    self.AnnounceCtrO();                    
+                }
                 if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
                     e.preventDefault();
                     self.AnnounceCtrS();

@@ -107,6 +107,7 @@ var ObjToRowStructure = function(Context,Data){
 	    	})
 	    	Answer.Cells.push(EmptRow);
         })
+        console.log(Answer);
         return done(null,Answer);
 	}
 

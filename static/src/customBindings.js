@@ -54,6 +54,7 @@ var HEditor = function(dom,params,ResultObservable,ChangesCount,DiscretChangesLi
         minSpareCols: 0,
         currentColClassName: 'currentCol',
         currentRowClassName: 'currentRow',
+        autoRowSize: true,
         fixedRowsTop: 0,
         fixedColumnsLeft: 1,
         manualColumnResize: true,

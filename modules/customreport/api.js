@@ -17,9 +17,8 @@ var CustomReportHelper = (new function(){
 	}
 
 	self.Cols = function(done){
-		var Col = require(__base+'classes/calculator/helpers/Col.js');
-		var ColHelper = new Col(self.Context);
-		ColHelper.get(done); 
+		var ColHelper = require(__base+'classes/jetcalc/Helpers/Col.js');
+	    ColHelper.GetClean(self.Context,done);
 	}
 
 	self.Structure = function(Context,SandBox,done){
@@ -29,6 +28,51 @@ var CustomReportHelper = (new function(){
 			Rows:self.Rows,
 			Cols:self.Cols,
 		},done)
+	}
+
+	self.LoadReport = function(CodeReport,done){
+		var Result = null;
+		if (_.isEmpty(CodeReport)) return done(null,Result);
+		var R = mongoose.model('report');
+		R.findOne({CodeReport:CodeReport}).isactive().exec(done);
+	}
+
+	self.SaveReport = function(Report,Rows,Params,CodeUser,done){
+		var R = mongoose.model('report');
+		var MS = require(__base+'src/modeledit.js');
+		var ModelEdit = new MS(CodeUser);
+		self.LoadReport(Report.CodeReport,function(err,ExReport){
+			var UpdateReport = _.pick(Report,['CodeDoc','IsDefault','IndexReport','NameReport','PrintNameReport','PrintDocReport','IsPublic','IsPrivate','CodeGrp','CodePeriodGrp']);
+			if (_.isEmpty(ExReport)){
+				ExReport = new R(UpdateReport);
+				ExReport.CodeUser = CodeUser;
+			} else {
+				for (var K in UpdateReport) ExReport[K] = UpdateReport[K];
+			}
+			ExReport.save(CodeUser,function(err){
+				if (err) return done(err);
+				var ParamsUpdate = [];
+				for (var CodeParam in Params){
+					var CodeParamSet = Params[CodeParam];
+					ParamsUpdate.push({
+						CodeReport:ExReport.CodeReport,
+						CodeParam:CodeParam,
+						CodeParamSet:CodeParamSet,
+					})
+				}		
+				var RowsUpdate = [];
+				for (var KeyToSet in Rows){
+					Rows[KeyToSet].forEach(function(CodeRow){
+						var Row2Add =  {CodeRow:CodeRow,CodeReport:ExReport.CodeReport};
+						Row2Add[KeyToSet] = true;
+						RowsUpdate.push(Row2Add);
+					})
+				}
+				ModelEdit.SyncLinks ("reportparamkey", {CodeReport:ExReport.CodeReport}, ParamsUpdate, function(err){
+					ModelEdit.SyncLinks ("reportrow", {CodeReport:ExReport.CodeReport}, RowsUpdate, done);
+				})
+			})
+		})
 	}
 
 	return self;
@@ -45,23 +89,28 @@ router.get('/params', function(req,res,next){
 
 
 router.get('/structure', function(req,res,next){
-	var ContextFields = ['Year', 'CodePeriod','IsInput','CodeDoc','CodeObj','ChildObj','UseCache','Params',"CodeReport"];
+	var ContextFields = ['Year', 'CodePeriod','IsInput','CodeDoc','CodeObj','ChildObj','Params',"CodeReport"];
 	var Context = {IsDebug:false};
 	ContextFields.forEach(function(F){
 		Context[F] = req.query[F];
 	})
 	Context.IsInput  = api.parseBoolean(Context.IsInput);
-	Context.UseCache = api.parseBoolean(Context.UseCache);
 	Context.Year = parseInt(Context.Year);
+	Context.CodeObj = _.isEmpty(Context.ChildObj)?Context.CodeObj:Context.ChildObj;
 	CustomReportHelper.Structure(Context,req.session.sandbox,function(err, Res){
 		if (err) return next (err);
 		return res.json(Res);
 	}) 
 })
+
+router.post('/createreport', function(req,res,next){	
+	var Data = JSON.parse(req.body.Data);
+	CustomReportHelper.SaveReport(Data.Report,Data.Rows,Data.ParamSets,req.user.CodeUser,function(err){
+		if (err) return next(err);
+		return res.json({});
+	})
+})
   
-
-
-
 router.delete('/report', function(req,res,next){	
 	var CodeReport = req.body.CodeReport || "";
 	if (!req.body.CodeReport.length) return next("Не указан код отчета");
@@ -88,52 +137,27 @@ router.delete('/report', function(req,res,next){
 
 
 
-router.post('/createreport', function(req,res,next){	
-	var Data = req.body, CodeUser = req.user.CodeUser;
-	var RK = mongoose.model('reportparamkey'), R = mongoose.model('report'), RR =  mongoose.model('reportrow');
-	var NewReport = new R(_.pick(Data.Report,['CodeDoc','IsDefault','IndexReport','NameReport','PrintNameReport','PrintDocReport','IsPublic','IsPrivate','CodeGrp','CodePeriodGrp']));
-	NewReport.CodeUser = CodeUser;
-	NewReport.SetCode(function(){
-		NewReport.save(CodeUser,function(err){
-			if (err) return next(err);
-			var Keys = [], Counter = 0;
-			for (var CodeParam in Data.Params){
-				var CodeParamSet = Data.Params[CodeParam];
-				Keys.push( new RK({
-					CodeReport:NewReport.CodeReport,
-					CodeParam:CodeParam,
-					CodeParamSet:CodeParamSet,
-				}))
-			}			
-			async.each(Keys,function(key,cb){
-				key.save(CodeUser,cb);
-			},function(err){
-				if (err) return next(err);
-				var Rows = {}, Rows2Save = [];
-				if (Data.Rows && _.keys(Data.Rows).length){
-					for (var Field in Data.Rows){
-						Data.Rows[Field].forEach(function(cR){
-							if (!Rows[cR]) Rows[cR] = {CodeRow:cR,CodeReport:NewReport.CodeReport};
-							Rows[cR][Field] = true;
-						})
-					}
-					for (var CodeRow in Rows){
-						Rows2Save.push(new RR(Rows[CodeRow]));
-					}
-				}
-				if (!Rows2Save.length) return res.json({});
-				async.each(Rows2Save,function(reprow,cb){
-					reprow.save(CodeUser,cb);
-				},function(err){
-					if (err) return next(err);
-					return res.json({});
-				})
-			})
-		})
-	
-	});
 
-})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 module.exports = router

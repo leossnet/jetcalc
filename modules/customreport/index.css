@@ -6,3 +6,17 @@ div.params_form{
 	border:1px solid #CFCFCF;
 	padding: 10px;
 }
+.switch-with-text{
+	position: relative;
+}
+.switch-with-text>.switch-text{
+	position: absolute;	
+    white-space: nowrap;
+    top: 5px;	
+}
+.switch-with-text.changed, div.select label.changed{
+	color:orange!important;
+}
+input[type=checkbox].ace.ace-switch.ace-switch-6:checked+.lbl::before{
+	background-color: #00486B;
+}

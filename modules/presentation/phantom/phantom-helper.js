@@ -9,7 +9,7 @@ var fs = require('fs');
 var RabbitManager = require(__base + 'src/rabbitmq.js');
 var Calculator = require(__base + 'classes/calculator/Calculator.js');
 var lib = require(__base + 'lib/helpers/lib.js');
-var Structure = require(__base + 'classes/calculator/helpers/Structure.js');
+var Structure = require(__base + 'classes/jetcalc/Helpers/Structure.js');
 var gfs = require(__base + 'src/gfs.js');
 var http = require('http');
 
@@ -22,8 +22,7 @@ var PhantomJSHelper = (new function () {
     self.PHANTOM_PORT = 16162;
 
     self.getStructure = function (arg, done) {
-        var Worker = new Structure(arg);
-        Worker.get(function (err, Ans) {
+        Structure.get(arg,function (err, Ans) {
             if (err) {
                 return done(null, {})
             }

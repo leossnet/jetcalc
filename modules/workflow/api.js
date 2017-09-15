@@ -6,7 +6,7 @@ var RabbitManager = require('../../src/rabbitmq.js');
 var lib        = require(__base+'lib/helpers/lib.js');
 var Loader = require(__base+"classes/calculator/helpers/Workflow.js");
 var Calculator = require(__base+'classes/calculator/Calculator.js');
-var Structure  = require(__base+'classes/calculator/helpers/Structure.js');
+var Structure  = require(__base+'classes/jetcalc/Helpers/Structure.js');
 var HP = require(__base+'lib/helpers/lib.js').Permits;
 
 var DataHistory = mongoose.model('datahistory', mongoose.Schema({
@@ -46,7 +46,10 @@ var Helper = (new function(){
 			return done("Нужен полный контекст");
 		}
 		var DataModel = mongoose.model("data");
-		DataModel.findOne(Q).isactive().exec(function(err,Data){
+		console.log("GET DATA ",Q);
+		DataModel.find(Q).isactive().exec(function(err,DataArr){
+			console.log(Data);
+			var Data = _.first(DataArr);
 			if (Data) {
 				if (!Data.CodeState){
 					self.SetDefaultState(Data,function(err,Updated){
@@ -228,9 +231,8 @@ var Helper = (new function(){
 
 	self.CheckControlPoints = function(Route,Context,done){
 		Context = _.merge(_.clone(Context),{UseCache:true,IsInput:true,CodeReport:"default",Codevaluta:'RUB'});
-		var S = new Structure(Context);
 		var CPS = [];
-		S.get(function(err,Info){
+		Structure.get(Context,function(err,Info){
 			Info.Cells.forEach(function(Row){
 				CPS = _.uniq(CPS.concat(_.map(_.filter(Row,{IsControlPoint:true}),"Cell")));
 			})

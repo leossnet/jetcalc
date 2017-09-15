@@ -8,8 +8,9 @@ module.exports = function(Name){
 	var self = this;
 	self.Name = Name;
 
-	self.FromCache = function(done){
-		redis.mget([self.Name], function (err, res) {
+	self.FromCache = function(CodeDoc, done){
+		var CK = _.compact([self.Name,CodeDoc]).join("_")
+		redis.mget([CK], function (err, res) {
 			if (err) return done(err);
 			if (res && res[0]){
 				var Answer = null;
@@ -24,17 +25,46 @@ module.exports = function(Name){
 			}
 		})
 	}
+
+	self.GetList = function(done){
+		var CacheKey = [self.Name,"LIST"].join("_");
+		redis.mget([CacheKey], function (err, res) {
+			var List = {};
+			if (res && res[0]){
+				List = JSON.parse(res[0]);
+			}
+			return done(err,List);
+		})
+	}
+
+	self.UpdateList = function(CodeDoc,done){
+		if (_.isEmpty(CodeDoc)) return done();
+		self.GetList(function(err,List){
+			List[CodeDoc] = 1;
+			redis.mset([[self.Name,"LIST"].join("_"),JSON.stringify(List)], function (err) {
+				return done(err);
+		 	})
+		})	
+	}
 	
-	self.ToCache = function(Result,done){
-		redis.mset([self.Name,JSON.stringify(Result)], function (err) {
-			return done(err);
-	 	})
+	self.ToCache = function(CodeDoc,Result,done){
+		var CK = _.compact([self.Name,CodeDoc]).join("_")
+		self.UpdateList(CodeDoc,function(){
+			redis.mset([CK,JSON.stringify(Result)], function (err) {
+				return done(err);
+		 	})
+		});
 	}
 
 	self.ClearCache = function(done){
-		redis.del([self.Name], done);
+		self.GetList(function(err,List){
+			var ToRemove = [self.Name];
+			_.keys(List).forEach(function(L){
+				ToRemove.push([self.Name,L].join("_"));
+			})
+			redis.del(ToRemove, done);
+		})
 	}
-
 
 	self.FlushTimeout = null;
 	self.Flush = function(){

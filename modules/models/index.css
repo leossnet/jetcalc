@@ -31,14 +31,36 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.nav-tabs>li{
+    padding: 0px;
+    margin:0px;
+}
+.wysiwyg-toolbar ul.nav-tabs{
+    display: inline-block;
+    vertical-align: bottom;
+}
 .nav-tabs>li>a.toolbar-tab,.nav-tabs>li>a.toolbar-tab:hover{
-    border-color: transparent; 
+    border-top-color: transparent;
+    border-bottom-color: transparent;
     background-color: #eee!important;
-    color: #999;
+    padding: 7px 7px 5px;   
+}
+.nav-tabs>li>a.toolbar-tab:hover{
+    border-bottom-color: transparent;
+    background-color: #F5F5F5!important;
+    padding: 7px 7px 5px;   
+}
+.nav-tabs>li.active>a.toolbar-tab{
+    border-bottom-color: transparent;
+    background-color: #FFF!important;
     padding: 7px 7px 5px;   
 }
 .nav-tabs>li.active>a.toolbar-tab, .nav-tabs>li.active>a.toolbar-tab:focus, .nav-tabs>li.active>a.toolbar-tab:hover{
     border-top-color:#4c8fbd;
     color:#4c8fbd;
 }
-    
+.wysiwyg-toolbar.btn-toolbar.toolH{
+    -webkit-box-shadow: 0px 1px 0px 0px rgba(207,207,207,1);
+    -moz-box-shadow: 0px 1px 0px 0px rgba(207,207,207,1);
+    box-shadow: 0px 1px 0px 0px rgba(207,207,207,1);
+}

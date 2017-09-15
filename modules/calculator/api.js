@@ -3,7 +3,7 @@ var router   = require('express').Router();
 var _        = require('lodash');
 var RabbitManager = require('../../src/rabbitmq.js');
 var lib        = require(__base+'lib/helpers/lib.js');
-var Structure = require(__base+"classes/calculator/helpers/Structure.js");
+var Structure = require(__base+"classes/jetcalc/Helpers/Structure.js");
 
 var config = require(__base+"config.js");
 var rabbitPrefix = config.rabbitPrefix;
@@ -12,8 +12,7 @@ var rabbitPrefix = config.rabbitPrefix;
 
 router.get('/structure', function(req,res,next){
 	var Context = lib.ReqContext(req);
-	var Worker = new Structure(Context);
-	Worker.get(function(err,Ans){
+	Worker.get(Context,function(err,Ans){
 		if (err) return next(err);
 		return res.json(Ans);
 	})

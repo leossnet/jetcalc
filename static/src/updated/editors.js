@@ -36,14 +36,7 @@ var ConditionEditor = (new function(){
 	self.PossibleParams = function(){
 		var params = [];
 		try{
-			var ps = _.map(SettingController.rawData.params,"ParamSets"), pks = [];
-			ps.forEach(function(p){
-				pks = pks.concat(_.map(_.values(p),"ParamKeys"));
-			})
-			pks.forEach(function(pk){
-				params = params.concat(_.keys(pk));
-			})
-			params = _.sortBy(_.uniq(params)).reverse();
+			var params = ParamManager.PossibleParams();
 			if (_.isEmpty(params)) params = ["FACT"];
 			self.Params(params);
 			var regex = new RegExp("[^\\s]*(?:"+params.join("|")+")+(?=^|$|[^\\p{L}])");

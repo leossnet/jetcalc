@@ -45,7 +45,7 @@
 	<!-- ko if:MSite.Me() && !MSite.Me().DoResetPass()-->
 	<div class="screen"></div>
 		<!-- ko template:'header' --><!-- /ko -->
-		<div class="main-container" data-bind="css: {'right-margin': !RightMenu.IsMenuToggled()}">
+		<div class="main-container" data-bind="css: {'right-margin': RightMenu.IsShown()}">
 			<!-- ko template: 'leftmenu' --><!-- /ko -->
 			<div class="main-content">
 				<div class="page-content">

@@ -4,26 +4,26 @@
           <a class='btn btn-sm  btn-white ' data-bind="title:'Новый отчет',click:NewReport">
             <i class="ace-icon fa fa-file-o"></i>
           </a>
-          <a class='btn btn-sm  btn-white ' data-bind="title:'Загрузить',click:LoadReport">
+          <a class='btn btn-sm  btn-white btn-yellow' data-bind="title:'Загрузить',click:LoadReport,css:{disabled:!IsLoadAvailable()}">
             <i class="ace-icon fa fa-folder-open-o"></i>
           </a>
       </div>
       <div class="btn-group">
-
-      <!-- ko template:{name:'save_with_count',data:{save:MPeriods.SaveChanges,count:CustomReport.EditChangesCount}} --><!-- /ko -->
-
-
+      <!-- ko template:{name:'save_with_count',data:{save:CustomReport.SaveChanges,count:CustomReport.ChangesCount}} --><!-- /ko -->
       <a class='btn btn-sm  btn-white ' data-bind="title:'Отменить все изменения',click:RollBack">
         <i class="ace-icon fa fa-refresh"></i>
       </a>
       <!-- ko template:'tb_simple_loader' --><!-- /ko -->
       </div>
-
+      <div class="btn-group">
+        <!-- ko template:'tb_period' --><!-- /ko -->
+        <!-- ko template:'tb_aggregate_simple' --><!-- /ko -->
+      </div>
       <!-- ko ifnot:IsOlap() -->
         <!-- ko template:{name:'menu_li_mode',data:['ModifyView','SingleView','ColumnsView']} --><!-- /ko -->
       <!-- /ko -->
       <!-- ko if:IsOlap() -->
-        <!-- ko template:{name:'menu_li_mode',data:['ModifyView','SingleView','ColumnsView']} --><!-- /ko -->
+        <!-- ko template:{name:'menu_li_mode',data:['SingleView','ColumnsView']} --><!-- /ko -->
       <!-- /ko -->
     </div>
 
@@ -68,13 +68,11 @@
                     "></div>  
              </div>
        </div>             
-      <div class='col-xs-3' style='padding: 0px;'>
+      <div class='col-xs-3' style='padding: 0px;border-left: 2px solid #CFCFCF;'>
           <!-- ko template:'param_form' --><!-- /ko -->
       </div>
     </div>
-
-   <!-- /ko -->
-    
+   <!-- /ko -->    
 </div>    
 
 

@@ -11,18 +11,20 @@ var numeral  = require('numeral');
 var db = require(__base+'/sql/db.js');
 var RabbitManager = require('../../src/rabbitmq.js');
 var lib        = require(__base+'lib/helpers/lib.js');
-var Structure = require(__base+"classes/calculator/helpers/Structure.js");
 
 
 
 router.get('/api/calculator/structure', function(req,res,next){
 	var Context = lib.ReqContext(req);
-	var Worker = new Structure(Context);
-	Worker.get(function(err,Ans){
+	var Structure = require(__base+"classes/jetcalc/Helpers/Structure.js")
+	Structure.get(Context,function(err,Ans){
 		if (err) return next(err);
 		return res.json(Ans);
 	})
 })
+
+
+
 
 router.get('/api/calculator/cells', function(req,res,next){
 	RabbitManager.CountConsumers(function(ConsumersCount){

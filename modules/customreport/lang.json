@@ -19,8 +19,11 @@
 	"IsDefault": "По умолчанию",
 	"IsCustomReportPublicTuner":"Настройка публичных отчетов",
 	"IsCustomReportAdmin":"Управление всеми отчетами",
+	"openreport":"Загрузить отчет",
+	"savereport":"Добавление отчета",
 	"delete":"Удалить",
 	"open":"Загрузить",
+	"showparamssettings":"Отображать настройки",
 	"ModifyView":"Спрятать/Свернуть",
 	"SingleView":"Собрать заново",
 	"ColumnsView":"Настройка колонок"
