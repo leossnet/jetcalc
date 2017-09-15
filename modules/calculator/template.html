@@ -89,8 +89,8 @@
 
 <script id="tb_period" type="text/html">
     <a class="btn btn-sm btn-white dropdown-toggle" data-toggle="dropdown">
-        <span data-bind="text:CxCtrl.CodePeriod()+'. '"></span>
-        <!-- ko template:{name:'catalogue',data:{model:'period',id:CxCtrl.CodePeriod()}} --><!-- /ko -->
+        <span data-bind="text:CxCtrl.SelectedPeriod()+'. '"></span>
+        <!-- ko template:{name:'catalogue',data:{model:'period',id:CxCtrl.SelectedPeriod()}} --><!-- /ko -->
         <i class="fa fa-angle-down icon-on-right fa-light"></i>
     </a>
     <ul class="dropdown-menu dropdown-light dropdown-caret">
@@ -101,9 +101,9 @@
       <!-- /ko -->
       <!-- ko foreach:_.keys(MPeriods.DefaultPeriods()) -->
         <li class="dropdown-hover">
-          <a tabindex="-1" class="clearfix">            
+          <a tabindex="-1" class="clearfix">
             <span class="pull-left">
-              <!-- ko template:{name:'catalogue',data:{model:'periodgrp',id:$data}} --><!-- /ko -->  
+              <!-- ko template:{name:'catalogue',data:{model:'periodgrp',id:$data}} --><!-- /ko -->
             </span>
             <i class="fa fa-caret-right pull-right"></i>
           </a>
@@ -142,12 +142,12 @@
           <i class="fa " data-bind="css:{'fa-calendar-plus-o':CxCtrl.IsShowMonthPlan(),'fa-calendar-minus-o':!CxCtrl.IsShowMonthPlan()}"></i>
         </a>
   <!-- /ko -->
-      <a class="btn btn-sm btn-white " data-bind="click: CxCtrl.Update.bind(null,'subperiod',null),css:{'half-inactive':CxCtrl.Override.CodePeriod() && CxCtrl.Override.CodePeriod()!=CxCtrl.CodePeriod()}">
-        <span data-bind='text:CxCtrl.CodePeriod()+". "'></span>
-        <!-- ko template:{name:'catalogue',data:{model:'period',id:CxCtrl.CodePeriod()}} --><!-- /ko -->
+      <a class="btn btn-sm btn-white " data-bind="click: CxCtrl.Update.bind(null,'subperiod',null),css:{'half-inactive':CxCtrl.ReportPeriod() && CxCtrl.ReportPeriod()!=CxCtrl.SelectedPeriod()}">
+        <span data-bind='text:CxCtrl.SelectedPeriod()+". "'></span>
+        <!-- ko template:{name:'catalogue',data:{model:'period',id:CxCtrl.SelectedPeriod()}} --><!-- /ko -->
       </a>
   <!-- ko foreach:CxCtrl.SubPeriods() -->
-        <a class="btn btn-sm btn-white" data-bind="click: CxCtrl.Update.bind(null,'subperiod',$data),css:{'btn-yellow':$data.anotherYear,'btn-grey':!$data.anotherYear,'half-inactive':CxCtrl.Override.CodePeriod()!=$data.code}"  >
+        <a class="btn btn-sm btn-white" data-bind="click: CxCtrl.Update.bind(null,'subperiod',$data),css:{'btn-yellow':$data.anotherYear,'btn-grey':!$data.anotherYear,'half-inactive':CxCtrl.ReportPeriod()!=$data.code}"  >
           <span data-bind='text:$data.code+". "'></span>
           <!-- ko template:{name:'catalogue',data:{model:'period',id:$data.code}} --><!-- /ko -->
           <!-- ko if: $data.year != 0 -->

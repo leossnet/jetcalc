@@ -6,11 +6,15 @@ var MModules = (new function () {
 
     self.Init = function(done){
         self.rGet("requisites",{},function(data){
+            console.log(data)
             self.Requizites(MModels.Create("settings",data));
             return done && done();
         })
     }
 
+    self.WelcomeHtml = function(){
+      return SimpleMDE.prototype.markdown(self.Requizites().WelcomeMessage());
+    }
 
     self.Selected = ko.observable(null);
 
@@ -23,7 +27,7 @@ var MModules = (new function () {
             $('#modelChoosePopup').unbind('hide.bs.modal');
             $('#modelChoosePopup').on('hide.bs.modal', function (e) {
                 self.ModelsContent(null);
-            })            
+            })
         });
     }
 
@@ -61,7 +65,7 @@ var MModules = (new function () {
     }
 
     self.Loader = function(){
-        
+
     }
 
     self.InstallGitModule = function(){
@@ -78,7 +82,7 @@ var MModules = (new function () {
 
 
     self.IsAvailable = function () {
-        return PermChecker.CheckPrivelege("IsModulesAdmin"); 
+        return PermChecker.CheckPrivelege("IsModulesAdmin");
     }
 
     self.Settings = ko.observable(null);
@@ -91,16 +95,16 @@ var MModules = (new function () {
 
     self.BeforeShow = function(){
         MSite.Events.off("save",self.SaveChanges);
-        MSite.Events.on("save",self.SaveChanges);        
+        MSite.Events.on("save",self.SaveChanges);
         self.Show();
     }
 
     self.BeforeHide = function(){
         MSite.Events.off("save",self.SaveChanges);
-    } 
+    }
 
     self.GitModules = ko.observableArray();
-    
+
     self.LoadGitModules = function(){
         self.Selected(null);
         var T = (self.Mode()=='ChooseModels') ? "model":"module";
@@ -111,7 +115,7 @@ var MModules = (new function () {
         })
     }
 
-    
+
 
     self.SelectModule = function(data){
         self.Selected(data);
@@ -157,15 +161,15 @@ var MModules = (new function () {
         switch (self.Mode()){
             case "Settings":
                 self.LoadSettings();
-            break;            
+            break;
             case "Issues":
                 self.LoadIssues();
-            break;            
+            break;
             case "ChooseModules":
             case "ChooseModels":
 
                 self.LoadGitModules();
-            break;            
+            break;
         }
     }
 
@@ -183,13 +187,13 @@ var MModules = (new function () {
                 if (id) self.Requizites().Icon(id);
                 self.rPut("settings",{
                     settings:self.Settings().toJS(),
-                    requisites:self.Requizites().toJS()   
+                    requisites:self.Requizites().toJS()
                 },function(){
                     self.LoadSettings();
                     self.Init();
                 })
               })
-            }) 
+            })
         }
     }
 
@@ -206,8 +210,7 @@ ko.bindingHandlers.svgencoded = {
         if (!_.isEmpty(value)){
             Setter = base64.decode((value+'').trim());
         }
-        
-        $(element).html(Setter)
-    }, 
-};
 
+        $(element).html(Setter)
+    },
+};

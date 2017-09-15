@@ -30,7 +30,7 @@
         <div class="btn-group" data-bind='foreach:["all","open","closed"]'>
             <a class='btn btn-sm btn-info btn-white' data-bind="click:$parent.SetIssueState,model:'modules',lang:$data,css:{active:_.isEqual($data,$parent.IssueState())}" >
             </a>
-        </div>        
+        </div>
     <!-- /ko -->
 </div>
 
@@ -38,7 +38,7 @@
 <div class="row adminbody" data-bind="with:MModules" style='margin-top:50px;padding-bottom: 100px;'>
     <div>
         <div class='row'><!-- ko template: 'inline_error' --><!-- /ko --></div>
-        
+
         <!-- ko if:$data.Mode()=='ChooseModules' || $data.Mode()=='ChooseModels' -->
         <div class="col-sm-6 infobox-container" data-bind='foreach:$data.GitModules'>
             <div class="infobox unselectable" data-bind='click:MModules.SelectModule,css:{"infobox-green isselected":MModules.IsSelected($data),"infobox-blue":!MModules.IsSelected($data),"notinstalled":!$data.IsInstalled()}'>
@@ -50,7 +50,7 @@
                 <!-- ko if:$data.IsInstalled() && !_.isEqual($data.InstalledVersion(),$data.Version()) -->
                     <div class="stat stat-success"></div>
                 <!-- /ko -->
-            </div>            
+            </div>
         </div>
         <div class="col-sm-6 scrollable_col" data-bind='with:MModules.Selected'>
             <div class='module-fullview'>
@@ -66,7 +66,7 @@
                     <!-- /ko -->
                 </div>
                 <div class='mgicon' data-bind='svgencoded:$data.Icon'></div>
-                
+
                     <div class='mgversion' >
                         <!-- ko if:$data.IsInstalled() -->
                             <span data-bind='text:$data.InstalledVersion'></span>
@@ -88,7 +88,7 @@
             <div class='row'>
                 <div class="col-xs-12 col-sm-10 scrollable_col" >
                     <!-- ko if:MModules.Issues().length -->
-                        <!-- ko foreach:MModules.Issues() -->                
+                        <!-- ko foreach:MModules.Issues() -->
                             <!-- ko template:'msissue' --><!-- /ko -->
                         <!-- /ko -->
                     <!-- /ko -->
@@ -96,13 +96,13 @@
                         <!-- ko ifnot:MModules.IsLoading() -->
                             <div class="well">
                                 Ошибок не найдено
-                            </div>                    
+                            </div>
                         <!-- /ko -->
                     <!-- /ko -->
                 </div>
             </div>
 
-        <!-- /ko --> 
+        <!-- /ko -->
 
         <!-- ko if:$data.Mode()=='Settings' -->
         	<div class='row'>
@@ -115,17 +115,21 @@
                         name:'small_form_with_header',
                         data:{Name:'Почтовый сервер',Fields:['MailService','MailHost','MailPort','MailSecureConnection','RequiresAuth','MailFromName','MailAuthUser','MailAuthPass'],Model:MModules.Requizites}
                     } --><!-- /ko -->
+                    <!-- ko template:{
+                        name:'small_form_with_header',
+                        data:{Name:'Приветственное сообщение',Fields:['WelcomeMessage'],Model:MModules.Requizites}
+                    } --><!-- /ko -->
                 </div>
-                
+
                 <div class="col-sm-6 " data-bind='with:MModules.Settings'>
                     <!-- ko template:{
                         name:'small_form_with_header',
                         data:{Name:'Настройки GitHub',Fields:["usecron","MainRepoOwner","RepoOwner","GitLogin","Password"],Model:$data}
-                    } --><!-- /ko -->                
+                    } --><!-- /ko -->
                     <!-- ko template:{
                         name:'small_form_with_header',
                         data:{Name:'Настройки Модулей',Fields:["DoBundle"],Model:$data}
-                    } --><!-- /ko -->                
+                    } --><!-- /ko -->
                     <!-- ko template:{
                         name:'small_form_with_header',
                         data:{Name:'Картинки',Fields:['Logo','Icon'],Model:MModules.Requizites}
@@ -140,10 +144,10 @@
 
 <div class="bottomPannel" data-bind="with:MModules">
 	<ul class="toolPanel nav nav-tabs background-blue">
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-database',title:'Выбор моделей',mode:'ChooseModels'}} --><!-- /ko -->        
-    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-th-large',title:'Выбор модулей',mode:'ChooseModules'}} --><!-- /ko -->    	
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-database',title:'Выбор моделей',mode:'ChooseModels'}} --><!-- /ko -->
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-th-large',title:'Выбор модулей',mode:'ChooseModules'}} --><!-- /ko -->
 <!--ko if:false --><!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-bug',title:'Трэкер ошибок',mode:'Issues'}} --><!-- /ko --><!-- /ko -->
-    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-wrench',title:'Настройки',mode:'Settings'}} --><!-- /ko -->    	
+    	<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-wrench',title:'Настройки',mode:'Settings'}} --><!-- /ko -->
 	</ul>
 </div>
 
@@ -161,7 +165,7 @@
           <!-- /ko -->
       </h3>
       <span class='msissue-date' >
-          <span data-bind='text:$data.UserName'></span> 
+          <span data-bind='text:$data.UserName'></span>
           <span data-bind='moment:{date:$data.DateAdded,format:"DD.MM.YYYY"}'></span>
       </span>
       <a class='msissue-outer-link f-right' target='bugview' data-bind="attr:{href:$data.Url}">
@@ -231,15 +235,3 @@
   </div>
  <!-- /ko -->
 </div>
-
-
-
-
-
-
-
-
-
-
-
-

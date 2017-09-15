@@ -119,7 +119,7 @@ var MFolders = (new function() {
       })
       self.states(t);
       self.default_state(data.default.CodeState);
-      return done && typeof done=='function' && done();
+      return done && typeof done == "function" && done();
     })
   }
 

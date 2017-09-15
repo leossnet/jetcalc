@@ -985,12 +985,27 @@ var ModelTableEdit = (new function() {
   self.IsLoading = ko.observable(false);
 
   self.Choosed.subscribe(function(v) {
+    self.ChangeChoosedPath()
     if (v) {
       self.LoadModel();
     } else {
       self.LoadedModel(null);
     }
   })
+
+  self.ChangeChoosedPath = function() {
+    var Query = {};
+    if (!_.isEmpty(window.location.search)) {
+      Query = window.location.search.queryObj()
+    }
+    if (self.Choosed()) {
+      Query.Choosed = self.Choosed();
+    } else {
+      delete Query.Choosed
+    }
+    var state = window.location.origin + window.location.pathname + toQueryString(Query);
+    history.replaceState({}, '', state);
+  }
 
   self.Add = function() {
     self.Choosed(null);
@@ -1220,6 +1235,11 @@ var ModelTableEdit = (new function() {
     self.limit = 50;
     self.NoAccess(!PermChecker.ModelAccess(ModelName));
     ModelTreeEdit.inited(false);
+    var Q = window.location.search.queryObj();
+    var InitChoosed = Q.Choosed;
+    if (InitChoosed) {
+      self.Choosed(InitChoosed);
+    }
   }
 
   self.Clear = function() {
