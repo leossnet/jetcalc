@@ -58,11 +58,11 @@ var FunctionsManager = (new function(){
                     Current.forEach(function(C){
                         Indexed[C.CodePrivelege] = C;
                     })
-                    var doRemove = function(ToRemove,cb){
-                        if (!ToRemove.length) return cb();
+                    var doRemove = function(ToRemove,final){
+                        if (_.isEmpty(ToRemove)) return final();
                         async.each(ToRemove,function(Code,cb){
                             Indexed[Code].remove("",cb);
-                        })
+                        },final)
                     }
                     var ToRemove = _.difference(_.keys(Indexed),_.keys(self.CheckPriveleges));
                     doRemove(ToRemove,function(err){

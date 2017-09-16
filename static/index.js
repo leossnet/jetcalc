@@ -81,6 +81,8 @@ var MSite = (new function () {
         }, 500)
     }
 
+    self.NoReload = ko.observable(true);
+
     self.Init = function (done) {
         ModuleManager.Load(function () {
             ModuleManager.Init(function () {

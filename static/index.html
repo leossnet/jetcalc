@@ -11,7 +11,7 @@
 
 	<link rel="stylesheet" href="/build/lib.min.css">
 	<link href='/api/modules/modules/favicon.ico' rel="shortcut icon">
-	
+
 	<script src='/build/lib.min.js'></script>
 	<script src="/src/parser.js"></script>
 	<script src="/src/customBindings.js"></script>
@@ -36,7 +36,6 @@
 <body class="loading">
 	<div class="throbberblock" data-bind='css:{active:ModuleManager.IsLoading()}'></div>
 	<span src="./build/index.html"></span>
-
 	<!-- ko if:!MSite.Me() || MSite.Me().DoResetPass() -->
 		<!-- ko foreach:ModuleManager.GuestPages() -->
 			<div class="screen" data-bind="page: $data" ></div>

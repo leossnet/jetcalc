@@ -68,16 +68,20 @@ var MModules = (new function () {
 
     }
 
+    self.BrutalReload = function(){
+        window.location.reload();
+    }
+
     self.InstallGitModule = function(){
-        self.rGet("installgit",{module:self.Selected().ModuleName()},self.RefreshModules);
+        self.rGet("installgit",{module:self.Selected().ModuleName()},self.BrutalReload);
     }
 
     self.UnInstallGitModule = function(){
-        self.rDelete("uninstallgit",{module:self.Selected().ModuleName()},self.RefreshModules);
+        self.rDelete("uninstallgit",{module:self.Selected().ModuleName()},self.BrutalReload);
     }
 
     self.UpdateGitModule = function(){
-        self.rGet("updategit",{module:self.Selected().ModuleName()},self.RefreshModules);
+        self.rGet("updategit",{module:self.Selected().ModuleName()},self.BrutalReload);
     }
 
 

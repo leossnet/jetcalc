@@ -76,6 +76,7 @@ var Compiller = (new function(){
                     '<span src="/build/template.html" ></span> '
                 ].join("\n\n"));
                 grunt.log.ok('Done running tasks.');
+                console.log("Rebuild bundle is done !");
                 final();
             });
         })
@@ -91,13 +92,14 @@ var Compiller = (new function(){
             })
         },function(err){
             fs.writeFileSync(__base+"static/build/index.html",[Content.Css,Content.Js,Content.Templates].join("\n\n"));
+            console.log("BUILD is done");
             done && done();
         })
 
     }
 
     self.EnabledMods = function(done){
-        if (self.Cache["Modules"]) return done(null,self.Cache["Modules"]);
+        //if (self.Cache["Modules"]) return done(null,self.Cache["Modules"]);
         lib.enabledExtensions(function(err,modules){
             self.Cache["Modules"] = modules;
             return done(null,self.Cache["Modules"])

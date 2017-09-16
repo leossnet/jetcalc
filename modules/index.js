@@ -128,6 +128,7 @@ var ModuleManager = (new function() {
 
 
   self.SetModule = function() {
+    console.log("SetModule");
     var Route = MBreadCrumbs.CurrentRoute(), old = self.Choosed();
     var TestId = "",
       F = null;

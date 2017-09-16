@@ -27,10 +27,11 @@ var ModulesHelper = (new function(){
         })
     }
 
-    self.Build = function(){
+    self.Build = function(done){
         self.MSSettings(function(err,Set){
             self.ReCompile(Set.DoBundle,function(){
                 console.log("Build is done",Set.DoBundle)
+                return done && done();
             })
         })
     }
@@ -500,8 +501,11 @@ router.delete('/uninstallgit', LIB.Require(['module']), HP.TaskAccess("IsModules
                 if (err) return next(info);
                 Mod.IsInstalled = false;
                 Mod.save(function(){
+                	console.log("BUILD START");
                     ModulesHelper.Build(function(){
+                    	console.log("BUILD END");
                         LIB.SyncPriveleges(function(err){
+                        	console.log("SyncPriveleges END");
                             return res.json({});    
                         })
                     })
@@ -609,7 +613,7 @@ router.get ('/requisites',   function(req,res){
 router.get ('/favicon.ico',   function(req,res,next){
   var Settings = mongoose.model("settings");
   Settings.findOne().lean().exec(function(err,S){
-      if (S && !_.isEmpty(S.Icon) && false){
+      if (S && !_.isEmpty(S.Icon)){
         var gfs = require(__base+'src/gfs.js');
         return gfs.PipeFileStreamToRes(S.Icon, res, next);
       } else {
@@ -621,7 +625,7 @@ router.get ('/favicon.ico',   function(req,res,next){
 router.get ('/logo.png',   function(req,res,next){
   var Settings = mongoose.model("settings");
   Settings.findOne().lean().exec(function(err,S){
-      if (S && !_.isEmpty(S.Logo) && false){
+      if (S && !_.isEmpty(S.Logo)){
         var gfs = require(__base+'src/gfs.js');
         return gfs.PipeFileStreamToRes(S.Logo, res, next);
       } else {
