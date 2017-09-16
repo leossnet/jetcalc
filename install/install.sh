@@ -39,7 +39,7 @@ sudo apt-get update
 sudo apt-get install -y nginx
 sudo cp /htdocs/jetcalc/install/nginx.conf /etc/nginx/sites-available/jetcalc.conf
 ln -s /etc/nginx/sites-available/jetcalc.conf /etc/nginx/sites-enabled/jetcalc.conf
-#rm -rf /etc/nginx/sites-enabled/default
+rm -rf /etc/nginx/sites-enabled/default
 sudo service nginx restart
 
 #postgres install
