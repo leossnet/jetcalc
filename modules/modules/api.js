@@ -480,7 +480,11 @@ router.get('/updategit', LIB.Require(['module']), HP.TaskAccess("IsModulesAdmin"
                 if (err) return next(info);
                 Mod.InstalledVersion = Mod.Version;
                 Mod.save(function(){
-                    return res.json({});
+                    ModulesHelper.Build(function(){
+                        LIB.SyncPriveleges(function(err){
+                            return res.json({});    
+                        })
+                    })
                 })
             })
         } else {
@@ -496,7 +500,11 @@ router.delete('/uninstallgit', LIB.Require(['module']), HP.TaskAccess("IsModules
                 if (err) return next(info);
                 Mod.IsInstalled = false;
                 Mod.save(function(){
-                    return res.json({});
+                    ModulesHelper.Build(function(){
+                        LIB.SyncPriveleges(function(err){
+                            return res.json({});    
+                        })
+                    })
                 })
             })
         } else {
