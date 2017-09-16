@@ -5,8 +5,6 @@
             "script": "app.js",
             "args": [],
             "cwd": ".",
-            "watch": ["modules"],
-            "ignore_watch" : ["/^(?!.*?api.js)/"],
             "watch_options": {
     			"followSymlinks": false
   			},
