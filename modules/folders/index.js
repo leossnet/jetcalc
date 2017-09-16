@@ -118,7 +118,9 @@ var MFolders = (new function() {
         t[s.CodeDoc] = s.CodeState;
       })
       self.states(t);
-      self.default_state(data.default.CodeState);
+      if (!_.isEmpty(data.default)){
+        self.default_state(data.default.CodeState);
+      }
       return done && typeof done == "function" && done();
     })
   }
