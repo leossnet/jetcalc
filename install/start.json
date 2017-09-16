@@ -5,6 +5,11 @@
             "script": "app.js",
             "args": [],
             "cwd": ".",
+            "watch": ["modules"],
+            "ignore_watch" : ["/^(?!.*?api.js)/"],
+            "watch_options": {
+    			"followSymlinks": false
+  			},
             "env": {
                 "NODE_ENV": "development"
             },
@@ -16,7 +21,7 @@
             "cwd": ".",
             "script": "calculator.js",
             "node_args": "--expose-gc",
-            "instances": 2,
+            "instances": 1,
             "env": {
                 "NODE_ENV": "development"
             },            
