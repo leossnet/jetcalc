@@ -460,7 +460,11 @@ router.get('/installgit', LIB.Require(['module']), HP.TaskAccess("IsModulesAdmin
                 Mod.InstalledVersion = Mod.Version;
                 Mod.IsInstalled = true;
                 Mod.save(function(){
-                    return res.json({});
+                    ModulesHelper.Build(function(){
+                        LIB.SyncPriveleges(function(err){
+                            return res.json({});    
+                        })
+                    })                    
                 })
             })
         } else {
