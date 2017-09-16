@@ -583,7 +583,7 @@ router.get ('/requisites',   function(req,res){
   var Settings = mongoose.model("settings");
   Settings.findOne().lean().exec(function(err,S){
       if (!S){
-          S = new Settings({TechMail:config.adminmail,TechPhone:config.adminphone,Logo:""});
+          S = new Settings();
           S.save(function(err){
               return res.json(S);
           })
