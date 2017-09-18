@@ -61,6 +61,7 @@ var Workflow = (new function(){
     }
 
     self.DoUpdateInfo = function(done){
+        if (!MBreadCrumbs.CheckPath("docview")) return done && done();
         done = typeof done =='function' ? done : null;
     	var Context = CxCtrl.CxPermDoc();
     	self.Error(null); self.CurrentState(null);self.Actions([]);
