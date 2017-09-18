@@ -128,7 +128,7 @@ var MFolders = (new function() {
   self.block_circle_classes = {
     'opened': 'red',
     'agreed': 'green',
-    'closed': 'orange',
+    'closed': 'yellow',
   }
 
   self.GetBlockStateClass = function(CodeDoc) {
