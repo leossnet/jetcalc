@@ -63,7 +63,6 @@ var CxCtrl = (new function() {
   self.UpdateReport = function(){
       var Params = ParamManager.ActualParams();
       self.Override.Params(null);
-      self.Override.RowFields(null);
       self.CodeReport(ReportManager.CurrentReport());
       self.Update('report');
   }
@@ -365,6 +364,10 @@ var CxCtrl = (new function() {
       }
     }
     Result.CodePeriod = self.CodePeriod();
+    var RowsMod = CustomReport.RowsOverride();
+    if (!_.isEmpty(RowsMod)){
+        Result.RowFields = RowsMod; 
+    }
     return Result;
   }
 
@@ -417,8 +420,7 @@ var CxCtrl = (new function() {
     SetDivObj: ko.observable(false, {
       persist: 'cxDivObj'
     }),
-    Params: ko.observable(null),
-    RowFields:ko.observable(null)
+    Params: ko.observable(null)
   }
 
   self.ReportPeriod = self.Override.CodePeriod;

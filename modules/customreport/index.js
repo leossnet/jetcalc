@@ -116,6 +116,7 @@ var ReportManager = (new function(){
 	return self;
 })
 
+	
 
 var ParamManager = (new function(){
 	var self = this;
@@ -171,13 +172,15 @@ var ParamManager = (new function(){
     		var Report = _.find(self.List(),{CodeReport:CodeReport});
     		if (Report){
     			Report.reportparamkey.forEach(function(RK){
-    				Override[RK.CodeParam] = RK.CodeParamSet;
+    				if (!_.isEmpty(RK.CodeParamSet)){
+    					Override[RK.CodeParam] = RK.CodeParamSet;
+    				}
     			})
     		}
     	}
      	if (self.ParamsSubscribe) self.ParamsSubscribe.dispose();    
      	self.Params(_.sortBy(_.map(_.filter(Params,{IsShow:true}),function(P){
-     		if (!CodeReport) P.InitParamSet = P.CodeParamSet;
+     		if (!CodeReport || CodeReport=="default") P.InitParamSet = P.CodeParamSet;
      		if (Override[P.CodeParam]){
      			P.NewCodeParamSet = Override[P.CodeParam];
      			P.CodeParamSet = Override[P.CodeParam];
@@ -348,10 +351,20 @@ var CustomReport = (new function() {
 		Bus.On("current_module_changed",self.ForceHide);
 		Bus.On("context_obj_change",ParamManager.Load);
 		Bus.On("context_period_change",ParamManager.Load);
-
 		self.ShowOnModules
 		return done && done();
 	}
+
+	self.RowsOverride = function(){
+		var RowsModifiers = {};
+		if (!_.isEmpty(self.EditChanges())){
+			self.ModFieldsByType().forEach(function(F){
+				RowsModifiers[F] = self[F];
+			})
+		}
+		return RowsModifiers;
+	}
+
 
 	self.SaveChanges = function(){
 		ReportManager.SaveChanges();
