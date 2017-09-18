@@ -554,6 +554,11 @@ var CxCtrl = (new function() {
       MSite.Events.on("initialnavigate", CxCtrl.ChangeInitDocPath);
       Bus.On("params_changed",self.UpdateParams);
       Bus.On("report_loaded",self.UpdateReport);
+      MSite.Events.on("initialnavigate", function(){
+          self.UpdateDocInfo ();
+          self.UpdateSubPeriods();
+          self.Update ();
+      });
       return done();
   }
 
