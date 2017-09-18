@@ -9,22 +9,47 @@ var DocHelper = (new function(){
 	var self = new Base("JDOC"); 
 	
 	self.Fields = {
-		doc:["-_id","CodeDoc","IsBiztranDoc","NameDoc","PrintNameDoc","PrintNumDoc","IsShowMeasure","IsShowRoots","IsPrimary","IsAnalytic","IsOlap","IsInput","IsChart","IsPresent","IsDivObj","IsObjToRow","IsShowParentObj","CodeModel","CodeGrp","CodeRole","CodeDocType","HasChildObjs","CodeStyleTotal","CodeStyleSubtotal"],
+		doc:["-_id","CodeDoc","IsBiztranDoc","NameDoc","PrintNameDoc","PrintNumDoc","IsShowMeasure","IsShowRoots","IsPrimary","IsAnalytic","IsOlap","IsInput","IsChart","IsPresent","IsDivObj","IsObjToRow","IsShowParentObj","CodeModel","CodeGrp","CodeRole","CodeDocType","HasChildObjs","CodeStyleTotal","CodeStyleSubtotal","CodeMeasure"],
 		docobjtype:["-_id","CodeObjClass","CodeObjType","CodeDoc"],
 		docbill:["-_id","CodeDoc","CodeBill"],
 		doclabel:["-_id","CodeLabel","IsSignature","IsApproval","CodePeriodGrp","CodeDoc"],
 		label:["-_id","CodeLabel","NameLabel","Idx"],
 		labeluser:["-_id","CodeLabel","CodeUser","CodeObj"],
-		user:["-_id","CodeUser","NameUser","CodeObj","JobTitle"]
+		user:["-_id","CodeUser","NameUser","CodeObj","JobTitle"],
+		measure:["-_id","CodeMeasure","NameMeasure","SNameMeasure"]
 	}
 	
 	self.SubscribeChanges(_.keys(self.Fields));
 
 	self.get = function(CodeDoc,done){
 		self.LoadInfo(function(err,INFO){
-			return done(err,self.Choose(INFO,CodeDoc));
+			return done(err,INFO[CodeDoc]);
 		})
 	};
+
+	self.UpdateObjFilter = function(INFO){
+		for (var CodeDoc in INFO){
+			var Doc = INFO[CodeDoc];
+			if (!_.isEmpty(Doc.ObjFilter)){
+				var Objs = [];
+				Doc.ObjFilter.forEach(function(OF){
+					Objs = Objs.concat(_.map(_.filter(INFO.Div,OF),"CodeObj"));
+				})
+				var ReGroupped = {};
+				Objs.forEach(function(CodeObj){
+					var I = INFO.Div[CodeObj];
+					if (!ReGroupped[I.CodeOrg]) ReGroupped[I.CodeOrg] = [];
+					ReGroupped[I.CodeOrg].push(CodeObj);
+				})
+				INFO[CodeDoc].SubObjs = ReGroupped;
+			} else {
+				INFO[CodeDoc].SubObjs = {};
+			}
+		}
+		return INFO;
+
+	}
+
 
 	self.Choose = function(INFO,CodeDoc){
 		var Doc =  INFO[CodeDoc];
@@ -48,11 +73,11 @@ var DocHelper = (new function(){
 		Div.get(function(err,DivInfo){
 			self.FromCache(null,function(err,Result){
 				if (Result) {
-					return done (err,_.merge(Result,{Div:DivInfo}));	
+					return done (err,self.UpdateObjFilter(_.merge(Result,{Div:DivInfo})));	
 				}
 				self.CreateInfo(function(err,Data){
 					self.ToCache(null, Data, function(err){					
-						return done(err,_.merge(Data,{Div:DivInfo}));
+						return done(err,self.UpdateObjFilter(_.merge(Data,{Div:DivInfo})));
 					})
 				})
 			})
@@ -69,8 +94,13 @@ var DocHelper = (new function(){
 		},function(err){
 			if (err) return done(err);
 			var Result = {};
+			var IndexedMeasure = {};
+			INFO.measure.forEach(function(Measure){
+				IndexedMeasure[Measure.CodeMeasure] = _.isEmpty(Measure.SNameMeasure) ? Measure.NameMeasure : Measure.SNameMeasure;
+			})
 			INFO.doc.forEach(function(Doc){
 				Doc.Bills = _.map(_.filter(INFO.docbill,{CodeDoc:Doc.CodeDoc}),"CodeBill");
+				if (!_.isEmpty(Doc.CodeMeasure)) Doc.Measure = IndexedMeasure[Doc.CodeMeasure];
 				Doc.ObjFilter = _.map(_.filter(INFO.docobjtype,{CodeDoc:Doc.CodeDoc}),function(OF){
 					var P = {};
 					["CodeObjClass","CodeObjType"].forEach(function(F){

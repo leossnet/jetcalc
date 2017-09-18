@@ -637,6 +637,7 @@ ko.components.register('select-param', {
     	self.OptionsValue = 'CodeParamSet'
     	self.OnChange = function(){
     		self.data.IsChanged(self.data.NewCodeParamSet!=self.data.CodeParamSet);
+    		self.data.IsChanged.valueHasMutated();
     	}
 	},
     template: "<div class='select'><label data-bind='css:{changed:data.IsChanged},text:data.NameParam'></label><select class='form-control' data-bind='value: data.NewCodeParamSet, options: Options, optionsText: OptionsText, optionsValue: OptionsValue, event:{change:OnChange}'></select></div>",

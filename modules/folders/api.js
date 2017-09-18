@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var _ = require('lodash');
-var DocFolder = require(__base + '/classes/calculator/helpers/DocFolder.js');
+var DocFolder = require(__base + 'classes/jetcalc/Helpers/DocFolder.js');
 var router = require('express').Router();
 var api = require(__base + '/lib/helper.js');
 var lib = require(__base + 'lib/helpers/lib.js');
@@ -36,7 +36,6 @@ var FilterHelper = (new function() {
 
   self.FilterDesignTest = function(req, Tree, done) {
     return done(null, Tree);
-
     var FilteredTree = self.TreeEachFilter(Tree, function(AllDocs) {
       return _.filter(AllDocs, function(O) {
         return !(O.IsTester || O.IsDesigner) ||
@@ -57,10 +56,7 @@ var FilterHelper = (new function() {
 
 
 router.get('/tree', api.requireAuth, function(req, res, next) {
-  var Helper = new DocFolder({
-    UseCache: true
-  });
-  Helper.get(function(err, Data) {
+  DocFolder.get(function(err, Data) {
     FilterHelper.Filter(req, Data, function(err, Filtered) {
       if (err) return next(err);
       return res.json(Filtered);
