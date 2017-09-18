@@ -16,6 +16,31 @@
 
 <script id="customreport_right_menu" type="text/html">
     <!-- ko template:'param_form' --><!-- /ko -->
+    <!-- ko with:ReportManager.ReportLoadTree -->
+      <!-- ko foreach:_.keys($data) -->  
+      <!-- ko if: !_.isEmpty($parent[$data].additionalParameters) && !_.isEmpty($parent[$data].additionalParameters.children) -->
+      <div class="accordion-style1 panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="accordion-toggle" data-toggle="collapse" >
+                <i class="ace-icon fa fa-angle-down bigger-110" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
+                <span data-bind='lang:$data'></span>
+              </a>
+            </h4>
+          </div>            
+        </div>
+        <div class="panel-collapse collapse in">
+          <div class="panel-body" style='padding:0px;'>
+              <!-- ko foreach: $parent[$data].additionalParameters.children -->
+                  <a class='accordion-link' data-bind='click:ReportManager.ClickLoad,css:{selected:ReportManager.CurrentReport()==$data.code},text:$data.text'></a>
+              <!-- /ko -->
+          </div>
+        </div>
+      </div>
+      <!-- /ko -->
+      <!-- /ko -->
+    <!-- /ko -->
 </script>
 
 

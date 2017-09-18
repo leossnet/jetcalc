@@ -26,5 +26,6 @@
 	"showparamssettings":"Отображать настройки",
 	"ModifyView":"Спрятать/Свернуть",
 	"SingleView":"Собрать заново",
-	"ColumnsView":"Настройка колонок"
+	"ColumnsView":"Настройка колонок",
+	"default":"По умолчанию"
 }

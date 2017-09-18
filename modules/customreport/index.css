@@ -20,3 +20,20 @@ div.params_form{
 input[type=checkbox].ace.ace-switch.ace-switch-6:checked+.lbl::before{
 	background-color: #00486B;
 }
+.accordion-link{
+	line-height: 30px;
+    text-decoration: none;
+    color: #555555;
+    background: white;
+    width: 100%;
+    display: block;
+    padding-left: 15px;
+}
+.accordion-link:hover{
+	background: #F0F4F8;
+    text-decoration: none;
+    color: #555555;
+}
+.accordion-link.selected{
+	color: #F68429;
+}

@@ -13,7 +13,6 @@ var ReportManager = (new function(){
 	self.CurrentReport = ko.observable(null);
 
 	self.LoadReport = function(){
-		self.PrepareTree();
 		$("#loadreport_modal").modal("show");
 	}
 
@@ -41,7 +40,9 @@ var ReportManager = (new function(){
 		var _reparse = function(i){ return {code:i.CodeReport,text:i.NameReport, type: 'item'};}
 		var Filter = {
 			personal :_.map(_.filter(Reports,{CodeUser:CodeUser}),_reparse),
-			public   :_.map(_.filter(Reports,{IsPublic:true}),_reparse),
+			public   :_.map(_.filter(_.filter(Reports,{IsPublic:true}),function(F){
+				return F.CodeUser != CodeUser;
+			}),_reparse),
 			private  :_.map(_.filter(Reports,{IsPrivate:true}),_reparse),
 		};
 		var tree_data = {};
@@ -51,7 +52,8 @@ var ReportManager = (new function(){
 			}
 		}
 		var additional = {};
-	    additional.default = {code:'default', text: 'По умолчанию', type: 'item'};
+	    additional.default = {code:'default', text: 'По умолчанию', type: 'item', additionalParameters:{children:[
+{code: "default", text: Tr("default"), type: "item"}]}};
 		tree_data = _.merge(tree_data,additional);
 		self.ReportLoadTree(tree_data);
 	}
@@ -62,6 +64,11 @@ var ReportManager = (new function(){
 			var F = {}; F[Field] = true;
 			CustomReport[Field] = (Report) ? _.map(_.filter(Report.reportrow,F),"CodeRow"):[];
 		})
+	}
+
+	self.ClickLoad = function(data){
+		self.CurrentReport(data.code);
+		self.DoLoadReport();		
 	}
 
 	self.DoLoadReport = function(){
@@ -204,6 +211,7 @@ var ParamManager = (new function(){
  	self.Load = function(done){
          CustomReport.rGet("params",CxCtrl.CxPermDoc(),function(data){
          	self.List(data.List);
+         	ReportManager.PrepareTree();
          	if (ReportManager.CurrentReport() && ReportManager.CurrentReport()!='default'){
          		var R = _.find(data.List,{CodeReport:ReportManager.CurrentReport()});
          		if (_.isEmpty(R)){
@@ -319,6 +327,7 @@ var CustomReport = (new function() {
 		self.IsShow(!self.IsShow());
 		if (self.IsShow()){
 			RightMenu.Show("customreport");
+			ReportManager.PrepareTree();
 		} else {
 			RightMenu.Hide("customreport");
 		}
