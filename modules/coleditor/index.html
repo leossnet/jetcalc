@@ -15,31 +15,16 @@
         <div class="btn-group">
             <!-- ko template:'tb_colapse_expand' --><!-- /ko -->      
             <!-- ko template:'tb_input_report_switch' --><!-- /ko -->   
+            <!-- ko template:'tb_year' --><!-- /ko -->   
+            <!-- ko template:'tb_period' --><!-- /ko -->   
+            <!-- ko template:'tb_aggregate_simple' --><!-- /ko -->   
         </div>
-        <div class="btn-group">
-            <!-- ko template:{name:'tb_mode_switch',data:{mode:'MainFields'}} --><!-- /ko -->      
-            <!-- ko template:{name:'tb_mode_switch',data:{mode:'Filter'}} --><!-- /ko -->      
-            <!-- ko template:{name:'tb_mode_switch',data:{mode:'Formula'}} --><!-- /ko -->   
-        </div>
-<!--
-<div class="widget-toolbar no-border">
-    <ul class="nav nav-tabs" id="recent-tab">
-        <li class="active">
-            <a data-toggle="tab" href="#task-tab" aria-expanded="true">Tasks</a>
-        </li>
-
-        <li class="">
-            <a data-toggle="tab" href="#member-tab" aria-expanded="false">Members</a>
-        </li>
-
-        <li class="">
-            <a data-toggle="tab" href="#comment-tab" aria-expanded="false">Comments</a>
-        </li>
-    </ul>
-</div>        
--->
     </div>
-    <!-- ko template:'contextBar' --><!-- /ko -->
+    <div class="wysiwyg-toolbar btn-toolbar toolH Context" data-bind='with:MColEditor'>
+        <!-- ko template:{name:'menu_li_mode',data:['MainFields','Filter','Formula']} --><!-- /ko -->   
+    </div>
+
+
     <!-- ko with: MColEditor.Error -->
      <div class="alert alert-danger"><span data-bind="text:$data"></span></div>
     <!-- /ko --> 

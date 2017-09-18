@@ -17,18 +17,16 @@
         </div>
         <div class="btn-group">    
             <!-- ko template:'tb_input_report_switch' --><!-- /ko -->   
-        </div>
-        <div class="btn-group">
-            <!-- ko template:{name:'tb_mode_switch',data:{mode:'Structure'}} --><!-- /ko -->      
-            <!-- ko template:{name:'tb_mode_switch',data:{mode:'MainFields'}} --><!-- /ko -->      
-            <!-- ko template:{name:'tb_mode_switch',data:{mode:'Filter'}} --><!-- /ko -->      
-            <!-- ko template:{name:'tb_mode_switch',data:{mode:'Formula'}} --><!-- /ko -->   
-            <!-- ko template:{name:'tb_mode_switch',data:{mode:'Summ'}} --><!-- /ko -->   
-            <!-- ko template:{name:'tb_mode_switch',data:{mode:'Bistran'}} --><!-- /ko -->     
+            <!-- ko template:'tb_year' --><!-- /ko -->   
+            <!-- ko template:'tb_period' --><!-- /ko -->   
+            <!-- ko template:'tb_aggregate_simple' --><!-- /ko -->   
         </div>
     </div>
+    <div class="wysiwyg-toolbar btn-toolbar toolH Context" data-bind='with:MRowEditor'>
+        <!-- ko template:{name:'menu_li_mode',data:['Structure','MainFields','Filter','Formula','Summ','Bistran']} --><!-- /ko -->   
+    </div>
 
-    <!-- ko template:'contextBar' --><!-- /ko -->
+    
 
     <!-- ko with: MRowEditor.Error -->
     <div class="alert alert-danger"><span data-bind="html:$data"></span></div>
