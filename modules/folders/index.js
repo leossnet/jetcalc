@@ -113,11 +113,13 @@ var MFolders = (new function() {
 
   self.LoadStates = function(done) {
     self.rGet('blocks', CxCtrl.Context(), function(data) {
-      var t = {};
-      data.states.forEach(function(s) {
-        t[s.CodeDoc] = s.CodeState;
-      })
-      self.states(t);
+      if (!_.isEmpty(data) && !_.isEmpty(data.states)){
+        var t = {};
+        data.states.forEach(function(s) {
+          t[s.CodeDoc] = s.CodeState;
+        })
+        self.states(t);
+      }
       if (!_.isEmpty(data.default)){
         self.default_state(data.default.CodeState);
       }
