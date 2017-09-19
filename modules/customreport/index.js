@@ -209,6 +209,7 @@ var ParamManager = (new function(){
     self.List = ko.observableArray();
 
  	self.Load = function(done){
+ 		 console.log("load params");
          CustomReport.rGet("params",CxCtrl.CxPermDoc(),function(data){
          	self.List(data.List);
          	ReportManager.PrepareTree();

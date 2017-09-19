@@ -288,6 +288,7 @@ var CxCtrl = (new function() {
             Updater.push('Row');
           }
         }
+        Bus.Emit("context_period_change");
         break;
       case "period":
         Updater = ['Col', 'Set'];
@@ -297,12 +298,14 @@ var CxCtrl = (new function() {
           Updater.push('Row');
           self.Override.Year(null);
         }
+        Bus.Emit("context_period_change");
         self.UpdateSubPeriods();
         break;
       case "year":
         self.Year(value);
         self.Override.Year(null);
         Updater = ['Row', 'Col'];
+        Bus.Emit("context_year_change");
         break;
       case "valuta":
         self.CodeValuta(value);
