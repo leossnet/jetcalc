@@ -33,11 +33,11 @@ api.connection = mongoose.connect(config.mongoUrl,{safe:false});
 
 
 setTimeout(function(){
-	var MC = require(__base+'modules/modules/modelcreator.js');
-	MC.Dump("grp_fin",function(err,Data){
-		console.log(Data);
+	//var MC = require(__base+'modules/modules/modelcreator.js');
+	//MC.Dump("grp_fin",function(err,Data){
+	//	console.log(Data);
 
-	})
+	//})
 
 
 /*    console.time("Folder");
