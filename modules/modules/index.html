@@ -113,7 +113,7 @@
                     } --><!-- /ko -->
                     <!-- ko template:{
                         name:'small_form_with_header',
-                        data:{Name:'Почтовый сервер',Fields:['MailService','MailHost','MailPort','MailSecureConnection','RequiresAuth','MailFromName','MailAuthUser','MailAuthPass'],Model:MModules.Requizites}
+                        data:{Name:'Почтовый сервер',Fields:['MailHost','MailPort','MailSecureConnection','RequiresAuth','MailFromName','MailAuthUser','NewMailAuthPass'],Model:MModules.Requizites}
                     } --><!-- /ko -->
                     <!-- ko template:{
                         name:'small_form_with_header',
@@ -124,7 +124,7 @@
                 <div class="col-sm-6 " data-bind='with:MModules.Settings'>
                     <!-- ko template:{
                         name:'small_form_with_header',
-                        data:{Name:'Настройки GitHub',Fields:["usecron","MainRepoOwner","RepoOwner","GitLogin","Password"],Model:$data}
+                        data:{Name:'Настройки GitHub',Fields:["usecron","MainRepoOwner","RepoOwner","GitLogin","NewPassword"],Model:$data}
                     } --><!-- /ko -->
                     <!-- ko template:{
                         name:'small_form_with_header',

@@ -4,7 +4,10 @@ module.exports = {
 			usecron:{type:Boolean, default:false},
 			RepoOwner:{type:String, default:'dkoviazin'},
 			GitLogin :{type:String, default:''},
-			Password :{type:String, default:'', template:'form_password'},
+			Password :{type:String, select:false},
+			NewPassword :{type:String, default:'', template:'form_password',set:function(v){
+				if (v && (v+'').length)  this.Password = v;
+			}},
 			MainRepoOwner:{type:String, default:'leossnet'},
 			LastSync:{type:Date, default:null},
 			DoBundle : {type : Boolean, default:true}
@@ -50,13 +53,16 @@ module.exports = {
   			, Mails             : {type: Array, default:[]}
   			, MailService       : {type: String, default:'Yandex'}
   			, MailHost          : {type: String, default:'smtp.yandex.ru'}
-			  , MailPort          : {type: Number, default:465}
+			, MailPort          : {type: Number, default:465}
   			, MailSecureConnection : {type: Boolean, default:true}
   			, RequiresAuth 		: {type: Boolean, default:true}
   			, MailFromName      : {type: String, default:"Оповещения JetCalc"}
   			, MailAuthUser      : {type: String, default:'jetcalc@yandex.ru'}
-  			, MailAuthPass      : {type: String, default:'derparole12j', template:'form_password'}
-				, WelcomeMessage    : {type: String, default: '', template: 'form_html'}
+  			, MailAuthPass      : {type: String, select:false}
+  			, NewMailAuthPass   : {type: String, template:'form_password', set:function(v){
+  				if (v && (v+'').length) this.MailAuthPass = v;
+  			}}
+			, WelcomeMessage    : {type: String, default: '', template: 'form_html'}
 		}
 	},
 	schema: {

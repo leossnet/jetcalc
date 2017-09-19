@@ -6,7 +6,6 @@ var MModules = (new function () {
 
     self.Init = function(done){
         self.rGet("requisites",{},function(data){
-            console.log(data)
             self.Requizites(MModels.Create("settings",data));
             return done && done();
         })

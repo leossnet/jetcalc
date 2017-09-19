@@ -32,7 +32,7 @@ mongoose.connection.on('connected', function(){
         queue_id: rabbitPrefix+"send_mail",
         worker: function(msg, done) {
             var Model = mongoose.model("mail");
-            mongoose.model("settings").findOne({}).lean().exec(function(err,Settings){
+            mongoose.model("settings").findOne({},"+MailAuthPass").lean().exec(function(err,Settings){
                 Model.findOne({_id:msg.MailId, IsError:false, IsSent:false}).exec(function(err,M){
                     if (!M) return done();
                     if (!(M.ToMail+'').length) M.Error = "Некому посылать";
@@ -61,7 +61,7 @@ mongoose.connection.on('connected', function(){
                         };
                         var Transport = mailer.createTransport(TransportCFG);
                         var MailCFG = {
-                            from: M.FromName+'<'+M.FromMail+'>',
+                            from: M.FromName+'<'+Settings.MailAuthUser+'>',
                             to: M.ToMail,
                             subject:M.Title,
                             html: M.Body

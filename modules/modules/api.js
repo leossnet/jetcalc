@@ -25,7 +25,11 @@ var ModulesHelper = (new function(){
                 return done(null,Settings);
             }        
         })
-    }
+    }   
+
+    self.MSSettingsComplete = function(done){
+        mongoose.model("mssettings").findOne({},"+Password").exec(done);
+    }  
 
     self.Build = function(done){
         self.MSSettings(function(err,Set){
@@ -49,7 +53,7 @@ var ModulesHelper = (new function(){
         var exec = require("child_process").exec;
         mongoose.model("msmodule").findOne({ModuleName:moduleName}).exec(function(err,Mod){ 
             if (!Mod) return done("Модуль не найден");
-            ModulesHelper.MSSettings(function(err,Set){
+            ModulesHelper.MSSettingsComplete(function(err,Set){
                 console.log("./gitmanager.sh "+[command,cleared,Set.RepoOwner,Set.GitLogin,Set.Password].join(" "));
                 exec("./gitmanager.sh "+[command, cleared,Set.RepoOwner,Set.GitLogin,Set.Password].join(" "),{cwd: __base+'modules/modules'},function(err,result,info){
                     console.log(err,result,info);
@@ -80,7 +84,7 @@ var GitHub  = (new function(){
 
     self.init = function(done){
         if (_isInited) return done();
-        ModulesHelper.MSSettings(function(err,Settings){
+        ModulesHelper.MSSettingsComplete(function(err,Settings){
             self.user = Settings.GitLogin;
             self.repo = Settings.RepoOwner;
             self.pass = Settings.Password;
@@ -561,7 +565,9 @@ router.put('/settings', HP.TaskAccess("IsModulesAdmin"), function (req, res, nex
     var UpdateSettings = function(Update){
         return function(done){
             ModulesHelper.MSSettings(function(err,Settings){
-                for (var K in Update) Settings[K] = Update[K];
+                for (var K in Update) {
+                    Settings[K] = Update[K];   
+                }
                 Settings.save(function(err){
                     if (Settings.usecron){
                         Cron.AddTask('git_sync',function(job, done){
@@ -578,7 +584,7 @@ router.put('/settings', HP.TaskAccess("IsModulesAdmin"), function (req, res, nex
     var UpdateRequiztes = function(Update){
         return function(done){
             var Settings = mongoose.model("settings");
-            Settings.findOne().exec(function(err,S){
+            Settings.findOne({},"+MailAuthPass").exec(function(err,S){
                   if (!S) S = new Settings();
                   var Fields = S.cfg().EditFields;
                   Fields.forEach(function(F){
