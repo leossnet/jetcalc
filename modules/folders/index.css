@@ -1,7 +1,7 @@
 .no-skin .nav-list>li .submenu>li.active:not(.open)>a{
-	background-color: #ccd5da;
+	background-color: #E2E7E9;
 }
-li.active i.fa.fa-icon.fa-circle.fa-dot.left-block-icon{
+li i.fa.fa-icon.fa-circle.fa-dot.left-block-icon{
 	color:orange;
 }
 .fa.fa-icon.fa-circle.fa-dot.left-block-icon.red{
