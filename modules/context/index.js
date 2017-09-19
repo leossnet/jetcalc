@@ -368,6 +368,11 @@ var CxCtrl = (new function() {
     if (!_.isEmpty(RowsMod)){
         Result.RowFields = RowsMod; 
     }
+    if (self.PageName()=='input'){
+        ["RowFields","CodeReport","Params"].forEach(function(P){
+          delete Result[P];
+        })
+    }
     return Result;
   }
 

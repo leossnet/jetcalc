@@ -164,10 +164,11 @@ var MFolders = (new function() {
     var Tree = self.DocTree(),
       Result = null;
     var Index = self.DocumentLocation(CodeDoc);
-    if (!_.isEmpty(_.max(Index)));
-    Result = _.find(Tree[Index[0]][Index[1]], {
-      CodeDoc: CodeDoc
-    });
+    if (!_.isEmpty(_.compact(Index))){
+      Result = _.find(Tree[Index[0]][Index[1]], {
+        CodeDoc: CodeDoc
+      });
+    }
     return Result;
   }
 

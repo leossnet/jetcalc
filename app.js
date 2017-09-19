@@ -31,17 +31,24 @@ mongoose.Promise = global.Promise;
 api.connection = mongoose.connect(config.mongoUrl,{safe:false});
 
 
-/*
+
 setTimeout(function(){
-    console.time("Folder");
+	var MC = require(__base+'modules/modules/modelcreator.js');
+	MC.Dump("grp_fin",function(err,Data){
+		console.log(Data);
+
+	})
+
+
+/*    console.time("Folder");
     var DocFolder = require(__base + 'classes/jetcalc/Helpers/DocFolder.js');
     DocFolder.get(function(err,Result){
         console.log(Result);
         console.timeEnd("Folder");
     })
-
-},1000)
 */
+},1000)
+
 
 mongoose.connection.on('connected', function(){
     var ModelInit = require('./classes/InitModels.js');

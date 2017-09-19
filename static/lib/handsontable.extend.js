@@ -389,6 +389,7 @@ window.HandsonTableHelper = {
                 if (colspan > 1) {
                   var cs = isInTopLeftCornerOverlay || isInLeftOverlay ? Math.min(colspan, fixedColumnsLeft - index) : colspan;
                   TH.setAttribute('colspan', cs);
+                  Handsontable.Dom.addClass(TH,'olapheader');
                 }
                 if (isInTopLeftCornerOverlay || isInLeftOverlay && index === fixedColumnsLeft - 1) {
                   Handsontable.Dom.addClass(TH, 'overlayEdge');

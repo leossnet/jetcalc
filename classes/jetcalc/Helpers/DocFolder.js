@@ -18,7 +18,7 @@ var DocFolderHelper = (new function(){
 
 	self.get = function(done){
 		self.LoadInfo(function(err,INFO){
-			var Answ = {Tree:INFO.Tree,Icons:INFO.Icons};
+			var Answ = {Tree:INFO.Tree,Icons:INFO.Icons,Codes:INFO.Codes};
 			for (var K1 in Answ.Tree){
 				for (var K2 in Answ.Tree[K1]){
 					Answ.Tree[K1][K2] = _.map(Answ.Tree[K1][K2],function(CodeDoc){
@@ -60,9 +60,10 @@ var DocFolderHelper = (new function(){
 			var _children = function(CodeFolder,Folders){
 				return _.map(_.filter(Folders,{CodeParentDocFolder:CodeFolder}),"CodeDocFolder");
 			}
-			var Docs = {}, Children = {}, DocsInFolder = {}, DocFolders = {}, Icons = {}, RootFolder = "ROOT";
+			var Docs = {}, Children = {}, DocsInFolder = {}, DocFolders = {}, Icons = {}, RootFolder = "ROOT", Codes = {};
 			R.docfolder.forEach(function(F){
 				DocFolders[F.CodeDocFolder] = F;
+				Codes[F.CodeDocFolder] = F.NameDocFolder;
 				Icons[F.NameDocFolder] = F.Icon;
 				Children[F.CodeDocFolder] = _children(F.CodeDocFolder,R.docfolder);
 			})
@@ -79,7 +80,7 @@ var DocFolderHelper = (new function(){
 				DocsInFolder[Link.CodeDocFolder].push(Link.CodeDoc);
 			})
 			var UsedDocFolders = _.keys(DocsInFolder);
-			var Structure = {};
+			var Structure = {}; 
 			Children[RootFolder].forEach(function(Folder){
 				if (Folder!=RootFolder) {
 					Structure[Folder] = {};
@@ -107,7 +108,7 @@ var DocFolderHelper = (new function(){
 					}
 				}
 			}
-			return done(null,{Tree:UnemptyStructure,Icons:Icons});			
+			return done(null,{Tree:UnemptyStructure,Icons:Icons,Codes:Codes});			
 		})
 	}
 
