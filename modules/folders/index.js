@@ -162,7 +162,7 @@ var MFolders = (new function() {
 
   self.FindDocument = function(CodeDoc) {
     var Tree = self.DocTree(),
-      Result = null;
+      Result = {};
     var Index = self.DocumentLocation(CodeDoc);
     if (!_.isEmpty(_.compact(Index))){
       Result = _.find(Tree[Index[0]][Index[1]], {
