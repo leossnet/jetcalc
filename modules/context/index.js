@@ -624,6 +624,9 @@ var CxCtrl = (new function() {
           }
         }
       });
+      if (!_.isEmpty(self.CodeReport())){
+          ReportManager.CurrentReport(self.CodeReport());
+      }
     }
   }
 
