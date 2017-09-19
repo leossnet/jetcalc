@@ -172,7 +172,12 @@ var ParamManager = (new function(){
     }
 
     self.SetParams = function(Params){
-    	Params = Params || ParamManager.Params();
+    	var Initial = false;
+    	if (_.isEmpty(Params)){
+    		Params = ParamManager.Params();
+    	} else {
+    		Initial = true;
+    	}    	
     	var CodeReport = ReportManager.CurrentReport();
     	var Override = {};
     	if (CodeReport && CodeReport!='default'){
@@ -187,7 +192,7 @@ var ParamManager = (new function(){
     	}
      	if (self.ParamsSubscribe) self.ParamsSubscribe.dispose();    
      	self.Params(_.sortBy(_.map(_.filter(Params,{IsShow:true}),function(P){
-     		if (!CodeReport || CodeReport=="default") P.InitParamSet = P.CodeParamSet;
+     		if (!CodeReport || Initial) P.InitParamSet = P.CodeParamSet;
      		if (Override[P.CodeParam]){
      			P.NewCodeParamSet = Override[P.CodeParam];
      			P.CodeParamSet = Override[P.CodeParam];
