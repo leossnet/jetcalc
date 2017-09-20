@@ -4,7 +4,7 @@ var MRowEditor = (new function() {
 
 	self.IsAvailable = function(CodeDoc){
 		var Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
-		return (!_.isEmpty(Doc.Link_docrow) || Doc.IsObjToRow) && PermChecker.CheckPrivelege("IsRowTuner",CxCtrl.CxPermDoc());
+		return PermChecker.CheckPrivelege("IsRowTuner",CxCtrl.CxPermDoc());
 	}
 
 	self.CutRow = ko.observable(null);
