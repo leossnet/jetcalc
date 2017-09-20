@@ -7,9 +7,9 @@ var Div = require(__base + 'classes/jetcalc/Helpers/Div.js');
 var DocHelper = (new function(){
 
 	var self = new Base("JDOC"); 
-	
+
 	self.Fields = {
-		doc:["-_id","CodeDoc","IsBiztranDoc","NameDoc","PrintNameDoc","PrintNumDoc","IsShowMeasure","IsShowRoots","IsPrimary","IsAnalytic","IsOlap","IsInput","IsChart","IsPresent","IsDivObj","IsObjToRow","IsShowParentObj","CodeModel","CodeGrp","CodeRole","CodeDocType","HasChildObjs","CodeStyleTotal","CodeStyleSubtotal","CodeMeasure"],
+		doc:["-_id","CodeDoc","IsBiztranDoc","NameDoc","PrintNameDoc","PrintNumDoc","IsShowMeasure","IsShowRoots","IsPrimary","IsAnalytic","IsOlap","IsInput","IsChart","IsPresent","IsDivObj","IsObjToRow","IsShowParentObj","CodeModel","CodeGrp","CodeRole","CodeDocType","HasChildObjs","CodeStyleTotal","CodeStyleSubtotal","CodeMeasure","UseProd","UseOrg","UseDogovor","UseDogovorArt"],
 		docobjtype:["-_id","CodeObjClass","CodeObjType","CodeDoc"],
 		docbill:["-_id","CodeDoc","CodeBill"],
 		doclabel:["-_id","CodeLabel","IsSignature","IsApproval","CodePeriodGrp","CodeDoc"],

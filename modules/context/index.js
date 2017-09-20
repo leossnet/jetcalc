@@ -141,11 +141,13 @@ var CxCtrl = (new function() {
     if (Doc.IsPresent && ["input", "report"].indexOf(PageName) != -1) PageName = "presentation";
     if (ToUpdate == 'document') {
       if (Doc) {
+        var possible = _.map(ModuleManager.DocTabs(),"id");
         if (
           PageName == 'olap' && !Doc.IsOlap ||
           PageName == 'input' && !Doc.IsInput ||
           PageName == 'chart' && !Doc.IsChart ||
-          PageName == 'presentation' && !Doc.IsPresent
+          PageName == 'presentation' && !Doc.IsPresent ||
+          !_.includes(possible,PageName)
         ) PageName = 'report';
         var C = MAggregate.GetCorrectCodeObj(Doc.CodeDoc, self.CodeObj());
         if (C != self.CodeObj()) {
@@ -661,7 +663,6 @@ var CxCtrl = (new function() {
 
   self.FixChildObjs = function() {
     var Doc = MFolders.FindDocument(self.CodeDoc());
-    console.log(Doc);
     if (Doc && Doc.HasChildObjs) {
       if (!Doc.SubObjs[self.CodeObj()]) {
         var NewSub = _.first(_.keys(Doc.SubObjs));
@@ -684,8 +685,6 @@ var CxCtrl = (new function() {
       self.ChildObj(null);
       self.ChildObjs([]);
     }
-    console.log("Changing", self.ChildObjs(), self.ChildObj());
-
   }
 
   self.CorrectParams = function() {
