@@ -33,7 +33,14 @@ var DocHelper = (new function(){
 			if (!_.isEmpty(Doc.ObjFilter)){
 				var Objs = [];
 				Doc.ObjFilter.forEach(function(OF){
-					Objs = Objs.concat(_.map(_.filter(INFO.Div,OF),"CodeObj"));
+					var FoundObjs = _.map(_.filter(INFO.Div,OF),"CodeObj");
+					FoundObjs.forEach(function(FO){
+						if (!_.isEmpty(INFO.Div[FO].Children)){
+							Objs = Objs.concat(INFO.Div[FO].Children);
+						} else {
+							Objs.push(FO);
+						}
+					})
 				})
 				var ReGroupped = {};
 				Objs.forEach(function(CodeObj){

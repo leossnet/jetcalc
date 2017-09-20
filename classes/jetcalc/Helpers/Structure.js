@@ -82,6 +82,9 @@ var Simple = (new function(){
 		var CodeObj = Cx.CodeObj, Rows = INFO.Row, Cols = INFO.Col, Doc = INFO.Doc,
 	    	Valuta = _.find(INFO.Valuta,{CodeValuta:Cx.CodeValuta}),
 	    	ValutaSign = (Valuta)?Valuta.SignValuta:"";
+	    if (INFO.Doc.HasChildObjs && !_.isEmpty(Cx.ChildObj)){
+	    	CodeObj = Cx.ChildObj;
+	    }
         var FL = 2;
 		var Answer = {Header:['Код','Название'],Tree:{},Cells:[]}
         if (Doc.IsShowMeasure){

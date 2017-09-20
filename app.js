@@ -32,7 +32,13 @@ api.connection = mongoose.connect(config.mongoUrl,{safe:false});
 
 
 
-setTimeout(function(){
+setTimeout(function(){  
+
+    var Doc = require(__base + 'classes/jetcalc/Helpers/Doc.js');
+    Doc.get("opr",function(err,Result){
+        console.log(Result);
+    })
+    return;
 	var MC = require(__base+'modules/modules/modelcreator.js');
 	MC.DumpBasic(function(err,Data){
 		console.log(Data);
