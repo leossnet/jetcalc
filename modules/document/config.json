@@ -11,8 +11,8 @@
   "permissions" : [
   		"IsDocumentCreator"
   ],
-   "permissionsModels":{
-      "IsDocumentCreator":["role","docfolder","label","doctype","doc"]
+  "permissionsModels":{
+      "IsDocumentCreator":["role","docfolder","label","doctype","doc","row"]
   },
   "sort_index":60
 }

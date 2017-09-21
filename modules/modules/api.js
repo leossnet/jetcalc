@@ -54,7 +54,7 @@ var ModulesHelper = (new function(){
         mongoose.model("msmodule").findOne({ModuleName:moduleName}).exec(function(err,Mod){ 
             if (!Mod) return done("Модуль не найден");
             ModulesHelper.MSSettingsComplete(function(err,Set){
-                console.log("./gitmanager.sh "+[command,cleared,Set.RepoOwner,Set.GitLogin,Set.Password].join(" "));
+                console.log("./gitmanager.sh "+[command,cleared,Set.RepoOwner,Set.GitLogin,encodeURIComponent(Set.Password)].join(" "));
                 exec("./gitmanager.sh "+[command, cleared,Set.RepoOwner,Set.GitLogin,Set.Password].join(" "),{cwd: __base+'modules/modules'},function(err,result,info){
                     console.log(err,result,info);
                     if (err) return done(err);
@@ -163,9 +163,19 @@ var GitHub  = (new function(){
     self._syncContent = function(module){
         return function(done){
             if (module.Model.Type=="module") return done();
-            self.ask("/repos/"+self.repo+"/"+module.name+"/contents/Model.json","get",{},function(err,data){
-                var Model = data.content;
-                self._update(module,{Model:Model},done);
+            self.ask("/repos/"+self.repo+"/"+module.name+"/contents/Models.json","get",{},function(err,data){
+                var Models = data.content;
+                self._update(module,{Models:Models,ModelsSHA:data.sha},done);
+            })
+        }
+    }
+
+    self._syncData = function(module){
+        return function(done){
+            if (module.Model.Type=="module") return done();
+            self.ask("/repos/"+self.repo+"/"+module.name+"/contents/Data.json","get",{},function(err,data){
+                var Update = (_.isEmpty(data.content)) ? {HasData:false,Data:''}:{HasData:true,Data:data.content,DataSHA:data.sha};
+                self._update(module,Update,done);
             })
         }
     }
@@ -316,6 +326,7 @@ var GitHub  = (new function(){
                     self._syncVersions(module),
                     self._syncLabels(module),
                     self._syncContent(module),
+                    self._syncData(module),
                     self._syncIssues(module)
                 ],function(){
                     ModulesHelper.MSSettings(function(err,Set){
@@ -434,7 +445,7 @@ router.put('/modelcontent', HP.TaskAccess("IsModelsAdmin"), function (req, res, 
 router.get('/modelcontent', HP.TaskAccess("IsModelsAdmin"), function (req, res, next) {
     var Module = req.query.Model;
     mongoose.model("msmodule").findOne({ModuleName:Module}).lean().exec(function(err,Model){
-        var CurrentContent = new Buffer(Model.Model.trim(), 'base64')+'';
+        var CurrentContent = new Buffer(Model.Models.trim(), 'base64')+'';
         var Js = {};
         try{
             Js = JSON.parse(CurrentContent);

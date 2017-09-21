@@ -1,16 +1,6 @@
 <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MModules'>
     <!-- ko template:'tb_simple_loader' --><!-- /ko -->
 
-    <!-- ko if:$data.Mode()=='ChooseModels' -->
-    <div class="btn-group">
-        <!-- ko if:MModules.Selected() -->
-        <a class='btn btn-sm btn-info btn-white' data-bind="click:$data.BuildModel" >
-            <i class="ace-icon fa fa-stack-overflow"></i>
-            Комплектация модели
-        </a>
-        <!-- /ko -->
-    </div>
-    <!-- /ko -->
     <!-- ko if:$data.Mode()=='Settings' -->
         <!-- ko template:'save_changes' --><!-- /ko -->
         <div class="btn-group">

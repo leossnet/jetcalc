@@ -33,18 +33,15 @@ api.connection = mongoose.connect(config.mongoUrl,{safe:false});
 
 
 setTimeout(function(){  
-
-    var Doc = require(__base + 'classes/jetcalc/Helpers/Doc.js');
-    Doc.get("opr",function(err,Result){
-        console.log(Result);
-    })
-    return;
+    //var BM = require(__base+"modules/modules/basic.js");
+/*
 	var MC = require(__base+'modules/modules/modelcreator.js');
 	MC.DumpBasic(function(err,Data){
-		console.log(Data);
+		var fs = require("fs");
+		fs.writeFileSync(__base+"Models.json", JSON.stringify(Data, null, "\t"));
 
 	})
-
+*/
 
 /*    console.time("Folder");
     var DocFolder = require(__base + 'classes/jetcalc/Helpers/DocFolder.js');

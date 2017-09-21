@@ -14,12 +14,17 @@ module.exports = {
 		},
 		msmodule:{
 			gitid:{type:Number, default:0, index:true},
-			ModuleName:{type:String, default:''},
-			ShortName:{type:String, default:''},
+			ModuleName:{type:String, default:'',role:'code'},
+			ShortName:{type:String, default:'',role:'name'},
 			Type:{type:String, default:'module'},
 			Description:{type:String, default:''},
 			ReadMe:{type:String, default:''},
-			Model:{type:String, default:''},
+			Models:{type:String, default:''},
+			ModelsSHA:{type:String, default:''},
+			Data:{type:String, default:''},
+			DataSHA:{type:String, default:''},
+			HasData: {type : Boolean, default:false},
+			IsDataInstalled: {type : Boolean, default:false},
 			Icon:{type:String, default:''},
 			Version:{type:String, default:'1.0'},
 			InstalledVersion:{type:String, default:'1.0'},
@@ -63,7 +68,10 @@ module.exports = {
   				if (v && (v+'').length) this.MailAuthPass = v;
   			}}
 			, WelcomeMessage    : {type: String, default: '', template: 'form_html'}
-		}
+		},
+		docfolder:{
+			  GitModule       :{"type": String,"default": "","refmodel": "msmodule","index": true,"extended": true}
+		}		
 	},
 	schema: {
 
