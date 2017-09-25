@@ -102,16 +102,16 @@ var MColumns = (new function() {
         ModelTableEdit.InitModel("col");
         break;
       case "Header":
-        self.LoadHeadersTree(function() {
+        //self.LoadHeadersTree(function() {
           ModelTreeEdit.Init({
             model: "header",
             parent_code_field: 'CodeParentHeader',
-            Tree: self.Tree(),
+           // Tree: self.Tree(),
             wrapper: function(el) {
               return el.NameHeader + '(' + el.CodeHeader + ')';
             }
           });
-        })
+        //})
         break;
       case "ColSet":
         ModelTableEdit.InitModel("colset");

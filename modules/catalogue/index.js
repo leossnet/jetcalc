@@ -109,7 +109,8 @@ var ModelTreeEdit = (new function() {
       return el[self.name_field()] + '.' + el[self.code_field()]
     };
     $.getJSON('/api/modules/catalogue/tree-data', {
-      model: self.model()
+      model: self.model(),
+      fields:[self.name_field(),self.code_field(),self.parent_code_field()]
     }, function(data) {
       self.row_data(data);
       self.current_data(data);
@@ -147,8 +148,8 @@ var ModelTreeEdit = (new function() {
       self.name_field(cn[1]);
       self.wrapper(data.wrapper);
       self.LoadTree(data.Tree, function() {
-        ModelTableEdit.InitModel(self.model());
-        ModelTableEdit.IsOverrideList(true);
+        ModelTableEdit.InitModel(self.model(),null,null,1000);        
+        ModelTableEdit.IsOverrideList(true);        
         ModelTableEdit.custom_overriding(false);
         self.inited(true);
       });
@@ -329,6 +330,7 @@ var ModelConnectorEdit = (new function() {
       self.get_fields(data.get_fields || self._get_get_fields());
       self.use_sync_links(data.use_sync_links || false);
       self.model_edit_fields(self._get_model_edit_fields(data.model_edit_fields));
+      console.log("Init LoadModels");
       self.LoadModels();
     }
     done && done();
@@ -740,6 +742,7 @@ var Catalogue = (new function() {
   }
 
   self.LoadModels = function(modelName, Fields, Sort, Search, limit, skip, filter, done) {
+    console.log("LOAD MODELS",arguments);
     self.Error(null);
     $.ajax({
       url: self.base + '/searchmodel',
@@ -1204,7 +1207,7 @@ var ModelTableEdit = (new function() {
     })
   }
 
-  self.InitModel = function(ModelName, Sort, Filter) {
+  self.InitModel = function(ModelName, Sort, Filter, Limit) {
     Filter = Filter || {};
     self.Clear();
     self.ModelName(ModelName);
@@ -1230,9 +1233,10 @@ var ModelTableEdit = (new function() {
     self.AllLinks(_.uniq(MModels.Config[ModelName].Links));
     self.Filter(Filter);
     self.IsInited(true);
+    self.limit = Limit || 50;
     self.LoadList();
-    self.skip = 0;
-    self.limit = 50;
+    self.skip = 0;    
+    console.log("self.limit",self.limit);
     self.NoAccess(!PermChecker.ModelAccess(ModelName));
     ModelTreeEdit.inited(false);
     var Q = window.location.search.queryObj();
@@ -1280,6 +1284,7 @@ var ModelTableEdit = (new function() {
   self.LoadList = function() {
     if (!self.ModelName()) return;
     self.IsLoading(true);
+    console.log("LoadList LoadModels");
     Catalogue.LoadModels(self.ModelName(), self.TableFields(), self.Sort(), self.Search(), self.limit, self.skip, self.Filter(), function(data) {
       self.IsLoading(false);
       self.List(_.map(data.models, function(M) {
@@ -1303,6 +1308,7 @@ var ModelTableEdit = (new function() {
       self.skip += self.limit;
     self.limit = 50;
     self.IsLoading(true);
+    console.log("LoadMore LoadModels");
     Catalogue.LoadModels(self.ModelName(), self.TableFields(), self.Sort(), self.Search(), self.limit, self.skip, self.Filter(), function(data) {
       self.IsLoading(false);
       self.List(_.union(self.List(), _.map(data.models, function(M) {

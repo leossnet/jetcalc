@@ -436,10 +436,10 @@ router.put('/connector', function (req, res, next) {
 })
 
 router.get('/tree-data', function (req, res, next) {
-    mongoose.model(req.query.model).find({}).isactive().exec(function (err, Data) {
-        if (!err) {
-            return res.json(Data);
-        }
+    var Fields = req.query.fields||[];
+    mongoose.model(req.query.model).find({},Fields.join(" ")).isactive().lean().exec(function (err, Data) {
+        if (err) return next(err);
+        return res.json(Data);
     })
 })
 

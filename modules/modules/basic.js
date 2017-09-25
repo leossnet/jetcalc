@@ -122,9 +122,32 @@ var Base = function(name){
 				_add("ToSave",IsLink,_.compact(_.map(Update,function(U){
 					for (var K in ReallyModified[U[Code]]) U[K] = ReallyModified[U[Code]][K];
 					if (!U.isModified()) return null;
-					console.log(ReallyModified[U[Code]])
 					return U;
 				})));
+				return ugu();
+			})
+		}
+		var _toAdd = function(AddedCodes,IndexedNew,ModelName,Code,IsLink,ugu){
+			if (_.isEmpty(AddedCodes)) return ugu();
+			var Q = {}; Q[Code] = {$in:AddedCodes}, M = mongoose.model(ModelName);
+			mongoose.model(ModelName).find(Q).isactive().exec(function(err,PossibleAdded){
+				var ExistedIndexed = {}; PossibleAdded.forEach(function(PA){
+					ExistedIndexed[PA[Code]] = PA;
+				})
+				var ToSave = [];
+				AddedCodes.forEach(function(AC){
+					if (_.isEmpty(ExistedIndexed[AC])){
+						ToSave.push((new M(IndexedNew[AC])));
+					} else {
+						for (var K in IndexedNew[AC]){
+							ExistedIndexed[AC][K] = IndexedNew[AC][K];
+						}
+						if (ExistedIndexed[AC].isModified()){
+							ToSave.push(ExistedIndexed[AC]);
+						}
+					}
+				})
+				_add("ToSave",IsLink,ToSave);				
 				return ugu();
 			})
 		}
@@ -138,7 +161,6 @@ var Base = function(name){
 					DataOld[ModelName].forEach(function(DO){ IndexedOld[DO[Code]] = DO;})
 					DataNew[ModelName].forEach(function(DN){ IndexedNew[DN[Code]] = DN;})
 					var AddedCodes = _.difference(_.keys(IndexedOld),_.keys(IndexedNew));
-					console.log("AddedCodes",AddedCodes);
 					var RemovedCodes = _.difference(_.keys(IndexedNew),_.keys(IndexedOld));
 					var PossibleModified = _.intersection(_.keys(IndexedNew),_.keys(IndexedOld));
 					var ReallyModified = {};
@@ -149,10 +171,7 @@ var Base = function(name){
 					})
 					_toRemove(ModelName,RemovedCodes,Code,IsLink,function(err){
 						_toUpdate(ReallyModified,ModelName,Code,IsLink,function(err){
-							_add("ToSave",IsLink,_.map(AddedCodes,function(AC){
-								return new M(IndexedNew[AC])
-							}));
-							return cb();
+							_toAdd(AddedCodes,IndexedNew,ModelName,Code,IsLink,cb);
 						})
 					})
 				},function(err){
@@ -161,16 +180,6 @@ var Base = function(name){
 			})
 		})
 	}
-
-	
-
-
-
-
-
-
-
-
 
 	return self;
 }
@@ -209,32 +218,220 @@ var BasicModel = (new function(){
 		})
 	}
 
-	self.CalculateDiff = function(done){
-		var Result = {
-			ToRemove:[],
-			ToSave:[]
-		}
-		self.DumpCurrent(function(err,Current){
-			if (err) return done(err);
-			self.Models(function(err,New){
-				if (err) return done(err);
-				console.log(New,Current);
-			})
-		})
-	}
-
-	
-
 
 	return self;
 })
 
+var FolderModel = function(name){
+	
+	var self = new Base(name);
+
+	self.MInfo = {};
+	self.StopModels = ["style","format","measure","tag","label"];
+	self.StopFields = {
+		row:{
+			row:{CodeRowLink:1}
+		},
+		docheader: {
+			doc:{CodeDoc:1}
+		}
+	};
+
+
+	self.DependantModels = function(ModelName){
+		var Result = {Out:{},My:{}};
+		if (_.includes(self.StopModels,ModelName)) return Result;
+		for (var Key in mongoose.modelSchemas){
+			var Shema = mongoose.modelSchemas[Key].paths;
+			for (var FieldName in Shema){
+				var RM = Shema[FieldName].options.refmodel;
+				if (!_.isEmpty(RM) && (RM==ModelName)){
+					if (_.isEmpty(Result.Out[Key])) Result.Out[Key] = {};
+					Result.Out[Key][FieldName] = 1;
+				}
+			}				
+		}
+		var MySchema = mongoose.modelSchemas[ModelName].paths;
+		for (var FieldName in MySchema){
+			var RM = MySchema[FieldName].options.refmodel;
+			if (!_.isEmpty(RM) && (RM!=ModelName) ){
+				if (_.isEmpty(Result.My[RM])) Result.My[RM] = {};
+				Result.My[RM][FieldName] = 1;
+			}
+		}		
+		if (self.StopFields[ModelName]){
+			for (var ModelN in self.StopFields[ModelName]){
+				if (Result.Out[ModelN] && _.isEqual(Result.Out[ModelN],self.StopFields[ModelName][ModelN])){
+					delete Result.Out[ModelN];	
+				}
+				if (Result.My[ModelN] && _.isEqual(Result.My[ModelN],self.StopFields[ModelName][ModelN])) {
+					delete Result.My[ModelN];	
+				}
+			}
+		}
+		return Result;
+	}
+
+
+	var _modelInfo = function(ModelName,cb){
+		var M = mongoose.model(ModelName), CFG = M.cfg();
+		self.MInfo[ModelName] = {
+			Model:M,
+			Code:CFG.Code,
+			IsLink:(CFG.menuplace=='Link'),
+			EditFields:["-_id"].concat(_.filter(CFG.EditFields,function(F){
+				return F.indexOf("Link")!=0;
+			})),
+			Dependant:self.DependantModels(ModelName)
+		};		
+		return cb();
+	}
+
+	async.each(
+		[
+			"docfolder","docfolderdoc","doc","docrow","row","docheader","header","colsetcol","style","colset","col"
+		]//
+	,_modelInfo);
+	//,,"col","format","measure","present","chart","presetslot","docheader","rowchartline","doctag","colsetcol","doclabel","label","docparamkey","rowsumgrp","rowtag","header"
+
+
+	self.ToDump = {};
+	self.ToDo = {};
+
+
+	self.AddToTodo = function(ModelName,Model){
+		var Code = Model[self.MInfo[ModelName].Code];
+		if (!self.ToDo[ModelName]) self.ToDo[ModelName] = {};
+		if (_.isEmpty(self.ToDump[ModelName]) || _.isEmpty(self.ToDump[ModelName][Code])){
+			self.ToDo[ModelName][Code] = Model;	
+		}		
+	}
+
+	self.AddToDump = function(ModelName,Model){
+		var Code = Model[self.MInfo[ModelName].Code];
+		if (!self.ToDump[ModelName]) self.ToDump[ModelName] = {};
+		self.ToDump[ModelName][Code] = Model;	
+	}
+
+	self.FixTodo = function(){
+		var New = _.clone(self.ToDo);
+		for (var ModelName in self.ToDo){
+			for (var Code in self.ToDo[ModelName]){
+				if (self.ToDump[ModelName] && self.ToDump[ModelName][Code]){
+					delete New[ModelName][Code];
+				}
+			}
+		}
+		for (var K in New) if (_.isEmpty(New[K])) delete New[K];
+		self.ToDo = New;
+	}
+
+	self.DumpCurrent = function(done){
+		var DocFolder = self.MInfo["docfolder"];
+		DocFolder.Model.findOne({GitModule:self.GitName},DocFolder.EditFields.join(" ")).lean().isactive().exec(function(err,StartModel){
+			self.AddToTodo("docfolder",StartModel);
+			self.DoWork(function(err){
+				return done(err,self.ToDump);
+			});
+		})
+	}
+
+	self.MaxRecursions = 10000;
+
+	self.Skipped = [];
+
+	self.DoWork = function(done){
+		var Add = [];
+		for (var ModelName in self.ToDo){
+			var I = self.MInfo[ModelName], Out = I.Dependant.Out, My = I.Dependant.My;
+			for (var Code in self.ToDo[ModelName]){
+				var Moda = self.ToDo[ModelName][Code];
+				if (!_.isEmpty(Out)){			
+					for (var DepModel in Out){
+						var Fields = _.keys(Out[DepModel]);
+						if (!_.isEmpty(self.MInfo[DepModel])){
+							var QAr = _.map(Fields,function(F){
+								var P = {}; P[F] = Code;
+								return P;
+							});
+							var Q = QAr.length>1 ? {$or:QAr}:_.first(QAr);
+							Add.push({ModelName:DepModel,Query:Q});
+						} else {
+							if (!_.includes(self.Skipped,DepModel)) self.Skipped.push(DepModel);
+						}
+					}
+				}
+				if (!_.isEmpty(My)){			
+					for (var DepModel in My){
+						var Fields = _.keys(My[DepModel]);
+						if (!_.isEmpty(self.MInfo[DepModel])){
+							var QAr = _.map(Fields,function(F){
+								var P = {}; P[F] = Moda[F];
+								return P;
+							});
+							var Q = QAr.length>1 ? {$or:QAr}:_.first(QAr);
+							Add.push({ModelName:DepModel,Query:Q});
+						}
+					}
+				}
+				self.AddToDump(ModelName,self.ToDo[ModelName][Code])
+			}
+		}
+		if (_.isEmpty(Add)){
+			self.FixTodo();
+			if (_.isEmpty(self.ToDo)){
+				return done();
+			}
+		}
+		async.each(Add,function(Dep,cb){
+			var M = self.MInfo[Dep.ModelName];
+			M.Model.find(Dep.Query,M.EditFields.join(" ")).isactive().lean().exec(function(err,DModels){
+				DModels.forEach(function(Mod){
+					self.AddToTodo(Dep.ModelName,Mod);
+				})			
+				return cb();	
+			})
+		},function(err){
+			self.FixTodo();
+			if (_.isEmpty(self.ToDo) || (--self.MaxRecursions)<0){
+				return done();
+			}
+			setTimeout(function(){
+				self.DoWork(done);
+			},0);
+		})
+	}
+
+
+
+
+
+	return self;
+}
+
 
 
 setTimeout(function(){
-	BasicModel.Install(function(err){
-		console.log("Install complete");
+
+	var Finres = new FolderModel("fin");
+
+
+	//console.log(Finres.MInfo["header"].Dependant)
+	//return;
+	//console.log(Finres.MInfo["docfolder"].Dependant)
+	//console.log(Finres.MInfo["doc"].Dependant)
+
+	Finres.DumpCurrent(function(err,Data){
+		for (var ModelName in Data){
+			console.log(ModelName,":",_.keys(Data[ModelName]).length);
+		}
+		console.log("SKIPPED:",Finres.Skipped,Finres.MaxRecursions)
 	})
+
+
+//	BasicModel.Install(function(err){
+//		console.log("Install complete");
+//	})
 	/*BasicModel.DumpCurrent(function(err,Data){
 		BasicModel.UpdateModels(Data,function(err,Answer){
 			console.log("Basic Model Updates Git",err,Answer);
