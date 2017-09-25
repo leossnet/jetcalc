@@ -36,7 +36,6 @@
 </div>
 
 <div class="row adminbody" data-bind="with:MPeriods">
-	<div  >
 		<div class='row'><!-- ko template: 'inline_error' --><!-- /ko --></div>
 		<!-- ko if:$data.IsModelEdit() -->
 			<!-- ko template:'model_edit' --><!-- /ko -->
@@ -49,55 +48,15 @@
             <!-- ko template:'connect_form' --><!-- /ko -->
         <!-- /ko -->
         <!-- ko if:Mode()=='PeriodEdit' -->
-            <div class='handsonContainer' data-bind='with:MPeriods.PeriodEditConfig'>
-                <div class="handsontable single"  data-bind="
-                    handson-table:MPeriods.PeriodEditConfig,
-                    handson-table-result:MPeriods.PeriodEditResult,
-                    handson-table-changes:MPeriods.PeriodEditChanges,
-                    handson-table-changes-count:MPeriods.PeriodEditChangesCount
-                "></div>  
-            </div>
+        <div class='handsonContainer' data-bind='with:MPeriods.PeriodEditConfig' >
+            <div class="handsontable single"  data-bind="
+                handson-table:MPeriods.PeriodEditConfig,
+                handson-table-result:MPeriods.PeriodEditResult,
+                handson-table-changes:MPeriods.PeriodEditChanges,
+                handson-table-changes-count:MPeriods.PeriodEditChangesCount
+            "></div>  
+        </div>
         <!-- /ko -->
-        <!-- ko if:false -->
-        <div class='row' data-bind='with:$data.Table'>
-            <!-- ko foreach: _.keys($data) -->
-            <div class='widget-box transparent'>
-                <div class="widget-header widget-header-flat"><h4 class="widget-title lighter">
-                    <!-- ko template:{name:'catalogue',data:{model:'periodgrp',id:$data}} --><!-- /ko -->
-                </h4></div>
-                <div class="widget-body" data-bind="with:$parent[$data]">
-                    <table class="table openperiods table-striped table-bordered table-hover dataTable no-footer" style='width: initial;'>
-                        <thead><tr>
-                            <th style='width:400px'>Группа документов</th>
-                            <!-- ko foreach:_.keys($data) -->
-                                <th>
-                                <!-- ko template:{name:'catalogue',data:{model:'period',id:$data}} --><!-- /ko -->
-                                (<span data-bind='text:$data'></span>)  
-                                </th>
-                            <!-- /ko -->
-                        </tr></thead>
-                        <tbody data-bind='foreach:MPeriods.Roles()'>
-                            <tr>
-                                <td >
-                                    <!-- ko template:{name:'catalogue_withcode',data:{model:'role',id:$data}} --><!-- /ko -->
-                                </td>
-                                <!-- ko foreach:_.keys(MPeriods.Table()[$parents[1]]) -->
-                                    <td  data-bind='css:$parents[1][$data][$parent]? "opened":"closed" '>
-                                        <label class="middle">
-                                            <input class="ace" type="checkbox" data-bind='checked:$parents[1][$data][$parent]'/>
-                                            <span class="lbl"></span>
-                                        </label>
-                                    </td>
-                                <!-- /ko -->
-                            </tr>
-                        </tbody>
-                    </table>                    
-                </div>
-            </div>
-            <!-- /ko -->
-        </div>         
-        <!-- /ko -->
-	</div>
 </div>
 
 <div class="bottomPannel" data-bind="with:MPeriods">

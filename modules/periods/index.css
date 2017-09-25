@@ -36,3 +36,6 @@ table.table.table-striped.table-bordered.table-hover.dataTable.no-footer.small-p
 table.table.table-striped.table-bordered.table-hover.dataTable.no-footer.small-paddings.periodsMapTable tr.active td{
 	background-color: #F3F8F1;
 }
+.adminpage .adminbody{
+	height: 90%;
+}
