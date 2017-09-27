@@ -49,6 +49,23 @@ var Tasks = {
     	cd(__base + 'classes/calculator/jison/mocha');
     	exec('mocha start.js');
     	cd(__base);
+	},
+	updategitbase: function(){
+		var mongoose = require('mongoose');
+		var config = require(__base+"config.js");
+		mongoose.connect(config.mongoUrl,{safe:false});
+		mongoose.connection.on('connected', function(){
+			var ModelInit = require('./classes/InitModels.js');
+			ModelInit(function(){
+				var ListModel = require(__base+"modules/modules/list.js");
+			    ListModel.DumpCurrent(function(err,Data){
+			        ListModel.UpdateModels(Data,function(err){
+			            console.log("GIT PUSH DONE");
+			            process.exit();
+			        })
+			    })
+			})
+		})
 	}	
 }
 
@@ -67,6 +84,7 @@ if (StartTask && Tasks[StartTask]){
 	menu.add('Компиляция парсеров');
 	menu.add('Компиляция библиотек');
 	menu.add('Проверка Postgres');
+	menu.add('Базовая настройка -> Git'); 
 	menu.add('Выход');
 	menu.on('select', function (label) {
 	    menu.close();
@@ -80,6 +98,9 @@ if (StartTask && Tasks[StartTask]){
 	    	break;
 		   	case 'Проверка Postgres':
 	    		Tasks.postgress();
+		   	break;		   	
+		   	case 'Базовая настройка -> Git':
+	    		Tasks.updategitbase();
 		   	break;
 
 	    }

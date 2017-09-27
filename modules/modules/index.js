@@ -118,6 +118,15 @@ var MModules = (new function () {
         })
     }
 
+    self.UpdateToGit = function(){
+        self.rPut("modeltogit",{"module":self.Selected().ShortName()},function(){
+            swal({
+                title: "",
+                text: "Модель на Git-е обновлена",
+                timer: 2000
+            })
+        })
+    }
 
 
     self.SelectModule = function(data){

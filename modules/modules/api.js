@@ -244,6 +244,7 @@ var GitHub  = (new function(){
 
     self._syncIssues = function(module){
         return function(done){
+            return done();
             var byTime = self.lastsync ? "&since="+self.lastsync.toISOString() :"";
             self.ask("/repos/"+self.repo+"/"+module.name+"/issues?state=all"+byTime,"get",{},function(err,data){
                 if (_.isEmpty(data)) return done();
@@ -338,12 +339,25 @@ var GitHub  = (new function(){
         })
     }
 
+    self.RemoveUnused = function(FromGit,done){
+        mongoose.model("msmodule").find({},"ModuleName").exec(function(err,Current){
+            var ToRemove = _.filter(Current,function(C){
+                return !_.includes(FromGit,C.ModuleName);
+            })
+            if (_.isEmpty(ToRemove)) return done();
+            async.each(ToRemove,function(M,cb){
+                M.remove("",cb);
+            },done);
+        })
+    }
 
     self.SyncModules = function(flush,done){
         self.init(function(err){
             if (flush) self.lastsync = null;
             self.LoadModulesFromGit(function(err,List){
-                async.each(List,self.SyncModule,done);
+                self.RemoveUnused(_.map(List,"name"),function(err){
+                    async.each(List,self.SyncModule,done);
+                })
             })
         })
     }
@@ -504,6 +518,19 @@ router.get('/installgit', LIB.Require(['module']), HP.TaskAccess("IsModulesAdmin
     })
 })
 
+router.put('/modeltogit', LIB.Require(['module']), HP.TaskAccess("IsModulesAdmin"), function (req, res, next) {
+    var FolderModel = require(__base+"modules/modules/folder.js");
+    var F = new FolderModel(req.body.module);
+    F.DumpCurrent(function(err,Data){
+        if (err) return next(err);
+        F.UpdateModels(Data,function(err){
+            if (err) return next(err);
+            return res.json({});
+        })
+    })
+})
+
+
 router.get('/updategit', LIB.Require(['module']), HP.TaskAccess("IsModulesAdmin"), function (req, res, next) {
     mongoose.model("msmodule").findOne({ModuleName:req.query.module}).exec(function(err,M){
         if (M.Type=='module'){
@@ -551,7 +578,7 @@ router.delete('/uninstallgit', LIB.Require(['module']), HP.TaskAccess("IsModules
 
 router.get('/gitmodule', HP.TaskAccess("IsModulesAdmin"), function (req, res, next) {
     var T = req.query.Type || "module";
-    mongoose.model("msmodule").find({ModuleName:{$ne:'jetcalc'},Type:T}).lean().exec(function(err,List){
+    mongoose.model("msmodule").find({ModuleName:{$ne:'jetcalc'},Type:T},"-Models").lean().exec(function(err,List){
         return res.json(List);
     })
 })

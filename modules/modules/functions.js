@@ -65,6 +65,7 @@ var FunctionsManager = (new function(){
                         },final)
                     }
                     var ToRemove = _.difference(_.keys(Indexed),_.keys(self.CheckPriveleges));
+                    console.log(ToRemove);
                     doRemove(ToRemove,function(err){
                         if (err) console.log(err);
                         var ToAdd = _.difference(_.keys(self.CheckPriveleges),_.keys(Indexed));

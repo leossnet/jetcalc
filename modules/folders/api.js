@@ -91,3 +91,47 @@ Bus.On("FLUSH:JDOC",SocketManager.emitEventAll.bind(SocketManager,"docfolder_ref
 
 
 module.exports = router;
+
+
+
+
+/*
+if (false){
+
+        var FolderModel = require(__base+"modules/modules/folder.js");
+        async.eachSeries(["fin","inv","cost","trade"],function(Packet,cb){
+            var F = new FolderModel(Packet);    
+            F.DumpCurrent(function(err,Data){
+                F.UpdateModels(Data,function(err){
+                    console.log(Packet+": CONTENT UPDATED");
+                    cb();
+                });
+            })
+        },function(err){
+            console.log("ALL MODELS ARE UPLOADED TO GIT");
+        })
+
+    }
+
+
+    if (true){
+        //var ListModel = require(__base+"modules/modules/list.js");
+        //ListModel.Install(function(err){
+        //    console.log("INSTALL DONE");
+        //})
+
+       /* var ListModel = require(__base+"modules/modules/list.js");
+        ListModel.DumpCurrent(function(err,Data){
+            ListModel.UpdateModels(Data,function(err){
+                console.log("GIT PUSH DONE");
+            })
+        })
+
+        ListModel.Models(function(err,Data){
+           console.log("INSTALL DONE",Data);
+        })
+
+
+    }
+
+ */

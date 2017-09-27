@@ -4,15 +4,16 @@
     <!-- ko if:$data.Mode()=='Settings' -->
         <!-- ko template:'save_changes' --><!-- /ko -->
         <div class="btn-group">
-            <a class='btn btn-sm btn-info btn-white' data-bind="click:$data.FindGitModules" >
-                <i class="ace-icon fa fa-refresh"></i>
-                Синхронизация модулей
-            </a>
-        </div>
-        <div class="btn-group">
             <a class='btn btn-sm btn-info btn-white' data-bind="click:$data.SyncPriveleges" >
                 <i class="ace-icon fa fa-refresh"></i>
                 Синхронизация прав
+            </a>
+        </div>
+    <!-- /ko -->
+    <!-- ko if:_.includes(['ChooseModules','ChooseModels'],$data.Mode()) -->
+        <div class="btn-group">
+            <a class='btn btn-sm btn-info btn-white' data-bind="click:$data.FindGitModules" >
+                <i class="ace-icon fa fa-refresh"></i>
             </a>
         </div>
     <!-- /ko -->
@@ -54,6 +55,9 @@
                         <a class='action update'  data-bind='click:MModules.UpdateGitModule'>Обновить</a>
                         <a class='action uninstall' data-bind='click:MModules.UnInstallGitModule'>Удалить</a>
                     <!-- /ko -->
+                    <!-- ko if:MModules.Mode()=="ChooseModels" -->
+                    	<a class='action update'  data-bind='click:MModules.UpdateToGit'>Обновить GIT</a>
+					<!-- /ko -->
                 </div>
                 <div class='mgicon' data-bind='svgencoded:$data.Icon'></div>
 
