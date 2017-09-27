@@ -81,7 +81,7 @@ var ColHelper = function(Context){
 			Result.Header && Result.Header.forEach(function(H){
 				self.Headers[H.code] = _.merge(H,{IsRemoved:false,RemoveComment:[]});
 			})
-			self.PeriodGrps = self.PInfo[self.Context.CodePeriod].Grps;
+			self.PeriodGrps = (!_.isEmpty(self.PInfo[self.Context.CodePeriod])) ? self.PInfo[self.Context.CodePeriod].Grps:[];
 			self.Params = Result.Set.params;
 			if (!self.Context.IsInput){
 				if (self.Context.CodeReport && self.Context.CodeReport!='default'){

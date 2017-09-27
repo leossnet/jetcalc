@@ -100,7 +100,7 @@ var ColHelper = (new function(){
 
 	self.PrimitiveFilter = function(Cx,INFO){
 		return function(cb){
-			var PeriodGrps = INFO.Period[Cx.CodePeriod].Grps;
+			var PeriodGrps = (!_.isEmpty(INFO.Period[Cx.CodePeriod])) ? INFO.Period[Cx.CodePeriod].Grps:[];
 			for (var Code in INFO.Result){
 				var H = INFO.Result[Code];
 				if (H.Type=='header'){
@@ -118,7 +118,7 @@ var ColHelper = (new function(){
 
 	self.InExectFilter = function(Cx,INFO){
 		return function(cb){
-			var PeriodGrps = INFO.Period[Cx.CodePeriod].Grps;
+			var PeriodGrps = (!_.isEmpty(INFO.Period[Cx.CodePeriod])) ? INFO.Period[Cx.CodePeriod].Grps:[];
 			var ObjGrps = !_.isEmpty(INFO.Div[Cx.CodeObj])? INFO.Div[Cx.CodeObj].Groups:[];
 			for (var Code in INFO.Result){
 				var H = INFO.Result[Code];
@@ -272,7 +272,7 @@ var ColHelper = (new function(){
 
 	self.SimplifyFormula = function(Cx,INFO){
 		return function (cb){
-			var PeriodGrps = INFO.Period[Cx.CodePeriod].Grps;
+			var PeriodGrps = (!_.isEmpty(INFO.Period[Cx.CodePeriod])) ? INFO.Period[Cx.CodePeriod].Grps:[];
 			var ObjGrps = !_.isEmpty(INFO.Div[Cx.CodeObj]) ? INFO.Div[Cx.CodeObj].Groups:[];
 			var ObjTags = !_.isEmpty(INFO.Div[Cx.CodeObj]) ? INFO.Div[Cx.CodeObj].Tags:[];
 			for (var Code in INFO.Result){

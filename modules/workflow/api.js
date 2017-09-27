@@ -98,7 +98,7 @@ var Helper = (new function(){
 						if (Link.CodeDocType && Loaded.Doc[Link.CodeDocType] && Loaded.Doc[Link.CodeDocType].indexOf(Context.CodeDoc)!=-1){
 							Enabled = true;
 						}
-						if (Link.CodeGrp && (
+						if (Link.CodeGrp && Loaded.ObjGrps[Link.CodeGrp] && (
 							Loaded.ObjGrps[Link.CodeGrp].indexOf(Context.CodeObj)==-1 && Link.NoGrp
 						||  Loaded.ObjGrps[Link.CodeGrp].indexOf(Context.CodeObj)!=-1 && !Link.NoGrp
 						)){

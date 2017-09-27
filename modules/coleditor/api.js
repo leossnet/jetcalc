@@ -11,10 +11,11 @@ var ColEditorHelper = (new function(){
 	var self = this;
 
 	self.get = function(Context,SandBox,done){
-		var Col = require(__base+'/classes/calculator/helpers/Col.js');
-		if (SandBox.On) Context.SandBox = SandBox.CodeUser;
-		var ColHelper = new Col(Context);
-		ColHelper.get(done);
+		//var Col = require(__base+'/classes/calculator/helpers/Col.js');
+		//if (SandBox.On) Context.SandBox = SandBox.CodeUser;
+		//var ColHelper = new Col(Context);
+		var ColHelper = require(__base+'classes/jetcalc/Helpers/Col.js');
+		ColHelper.GetAll(Context,done);
 	}
 	return self;
 })
