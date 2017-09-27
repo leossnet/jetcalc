@@ -119,7 +119,7 @@ var ColHelper = (new function(){
 	self.InExectFilter = function(Cx,INFO){
 		return function(cb){
 			var PeriodGrps = INFO.Period[Cx.CodePeriod].Grps;
-			var ObjGrps = INFO.Div[Cx.CodeObj].Groups;
+			var ObjGrps = !_.isEmpty(INFO.Div[Cx.CodeObj])? INFO.Div[Cx.CodeObj].Groups:[];
 			for (var Code in INFO.Result){
 				var H = INFO.Result[Code];
 				if (H.Type=='colsetcol'){
@@ -273,8 +273,8 @@ var ColHelper = (new function(){
 	self.SimplifyFormula = function(Cx,INFO){
 		return function (cb){
 			var PeriodGrps = INFO.Period[Cx.CodePeriod].Grps;
-			var ObjGrps = INFO.Div[Cx.CodeObj].Groups;
-			var ObjTags = INFO.Div[Cx.CodeObj].Tags;
+			var ObjGrps = !_.isEmpty(INFO.Div[Cx.CodeObj]) ? INFO.Div[Cx.CodeObj].Groups:[];
+			var ObjTags = !_.isEmpty(INFO.Div[Cx.CodeObj]) ? INFO.Div[Cx.CodeObj].Tags:[];
 			for (var Code in INFO.Result){
 				var H = INFO.Result[Code];
 				if (H.Type=='col' && H.IsFormula && H.Formula.length){  

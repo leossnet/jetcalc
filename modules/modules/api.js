@@ -484,7 +484,22 @@ router.get('/installgit', LIB.Require(['module']), HP.TaskAccess("IsModulesAdmin
                 })
             })
         } else {
-            console.log("Установка модели ",req.query.module);
+            var ListModel = require(__base+"modules/modules/list.js");
+            ListModel.InstallIFNeeded(function(err){
+                var FolderModel = require(__base+"modules/modules/folder.js");
+                var F = new FolderModel(M.ShortName);
+                F.Install(function(err){
+                    if (err) return next(err);
+                    M.InstalledVersion = M.Version;
+                    M.IsInstalled = true;
+                    M.save(function(){
+                        var Redis = require(__base+"src/redis.js");
+                        Redis.flushdb(function(){
+                            return res.json({});    
+                        })                        
+                    })                
+                });
+            })
         }
     })
 })
@@ -504,6 +519,7 @@ router.get('/updategit', LIB.Require(['module']), HP.TaskAccess("IsModulesAdmin"
                 })
             })
         } else {
+            return next ("Обновление модели пока не реализовано");
             console.log("Обновление модели ",req.query.module);
         }
     })
@@ -528,6 +544,7 @@ router.delete('/uninstallgit', LIB.Require(['module']), HP.TaskAccess("IsModules
             })
         } else {
             console.log("Удаление модели ",req.body.module);
+            return next ("Удаление модели пока не реализовано");
         }
     })
 })

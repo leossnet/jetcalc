@@ -160,7 +160,7 @@ var MModules = (new function () {
     }
 
     self.Show = function(){
-		if (!self.Mode())  return self.InitSetMode ("ChooseModules");
+		if (!self.Mode())  return self.InitSetMode ("Settings");
         switch (self.Mode()){
             case "Settings":
                 self.LoadSettings();
@@ -170,7 +170,6 @@ var MModules = (new function () {
             break;
             case "ChooseModules":
             case "ChooseModels":
-
                 self.LoadGitModules();
             break;
         }

@@ -83,6 +83,8 @@ var MFolders = (new function() {
     self.LoadTree(function() {
       CxCtrl.Events.on("contextchanged", self.LoadStates);
       Workflow.Events.on("statuschange", self.LoadStates);
+      MSocket.RegisterEvent('docfolder_refresh',self.LoadTree);
+      MSocket.Start('docfolder_refresh');
       return done && done();
     })
   }

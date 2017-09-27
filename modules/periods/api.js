@@ -126,7 +126,7 @@ var MapPeriods = (new function(){
 				ToGroup.forEach(function(CodePeriod){
 					var Inf = Info[CodePeriod];
 					rArr.forEach(function(G){
-						if (Inf.Grps.indexOf(G)!=-1){
+						if (Inf && Inf.Grps.indexOf(G)!=-1){
 							Groupped[G].push(Inf.CodePeriod);
 						}
 					})			

@@ -5,6 +5,8 @@ var router = require('express').Router();
 var api = require(__base + '/lib/helper.js');
 var lib = require(__base + 'lib/helpers/lib.js');
 var HP = require(__base + 'lib/helpers/lib.js').Permits;
+var Bus = require(__base+"src/bus.js");
+var SocketManager = require(__base + "src/socket.js");
 
 
 var FilterHelper = (new function() {
@@ -81,5 +83,11 @@ router.get('/blocks', api.requireAuth, function(req, res, next) {
     })
   })
 })
+
+
+Bus.On("FLUSH:JDOCFOLDER",SocketManager.emitEventAll.bind(SocketManager,"docfolder_refresh"));
+Bus.On("FLUSH:JDOC",SocketManager.emitEventAll.bind(SocketManager,"docfolder_refresh"));
+
+
 
 module.exports = router;

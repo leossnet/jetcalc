@@ -11,11 +11,26 @@ var numeral  = require('numeral');
 var db = require(__base+'/sql/db.js');
 var RabbitManager = require('../../src/rabbitmq.js');
 var lib        = require(__base+'lib/helpers/lib.js');
+var _ = require("lodash");
+
+
+var CheckConfig = function(CFG){
+	var Err = [];
+	["CodePeriod","Year","CodeDoc","CodeObj"].forEach(function(F){
+		if (_.isEmpty(CFG[F]+"")) {
+			Err.push(F);	
+		}
+	})
+	return (_.isEmpty(Err))? null:Err;
+}
+
 
 
 
 router.get('/api/calculator/structure', function(req,res,next){
 	var Context = lib.ReqContext(req);
+	var Err = CheckConfig(Context);
+	if (Err) return next("Не хватает параметров: "+Err.join(". "));
 	var Structure = require(__base+"classes/jetcalc/Helpers/Structure.js")
 	Structure.get(Context,function(err,Ans){
 		if (err) return next(err);
@@ -27,11 +42,13 @@ router.get('/api/calculator/structure', function(req,res,next){
 
 
 router.get('/api/calculator/cells', function(req,res,next){
+	var Context = lib.ReqContext(req);
+	var Err = CheckConfig(Context);
+	if (Err) return next("Не хватает параметров: "+Err.join(". "));
 	RabbitManager.CountConsumers(function(ConsumersCount){
 		if (!ConsumersCount){
 			return next('Проблема с сервером. Ни одного расчетчика не запущено');		
 		}
-		var Context = lib.ReqContext(req);
 		Context.Priority = 9;
 		RabbitManager.CalculateDocument(Context,function(err,Result){
 			if (err) return next(err);

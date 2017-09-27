@@ -6019,11 +6019,18 @@ module.exports = {
         "tablename": "[link].[ReportPeriods]",
         "menuplace": "Link",
         "fields": {
+            "CodeReportPeriods": {
+                "type": String,
+                "default": null,
+                "view": "all",
+                "role": "code",
+                "index": true,
+                "unique": true
+            },
             "CodeReportPeriod": {
                 "type": String,
                 "default": "",
                 "view": "none",
-
                 "refmodel": "period",
                 "index": true,
                 "extended": true
@@ -6047,7 +6054,6 @@ module.exports = {
                 "type": String,
                 "default": "",
                 "view": "none",
-
                 "refmodel": "period",
                 "index": true,
                 "extended": true
