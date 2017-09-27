@@ -4,19 +4,19 @@
   "icon": "fa-columns",
   "class_name": "Columns",
   "is_enabled": true,
-  "type":"adminpage",
-  "places":{
-      "adminpage"  : true
+  "type": "adminpage",
+  "places": {
+    "adminpage": true
   },
-  "permissions" : [
-  		"IsColumnEditor",
-      "IsColsetEditor",
-      "IsHeaderEditor"
+  "permissions": [
+    "IsColumnEditor",
+    "IsColsetEditor",
+    "IsHeaderEditor"
   ],
-   "permissionsModels":{
-      "IsColumnEditor":["col"],
-      "IsColsetEditor":["colset","colsetcol"],
-      "IsHeaderEditor":["header"]
+  "permissionsModels": {
+    "IsColumnEditor": ["col"],
+    "IsColsetEditor": ["colset", "colsetcol"],
+    "IsHeaderEditor": ["header"]
   },
-  "sort_index":10
+  "sort_index": 10
 }

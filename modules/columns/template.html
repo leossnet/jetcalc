@@ -1,25 +1,27 @@
 <script id="extend_model_edit_colset" type="text/html">
-<!-- ko with: MColumns -->
-   <h3 class="row header smaller lighter blue">Колонки</h3>
-   <!-- ko foreach:MColumns.ColsetCols -->
-         <!-- ko template:{
+  <!-- ko with: MColumns -->
+  <h3 class="row header smaller lighter blue">Колонки</h3>
+  <!-- ko foreach:MColumns.ColsetCols -->
+  <!-- ko template:{
                name:'small_form_with_header',
                data:{Name:'',Fields:['NameColsetCol','IndexColsetCol','CodeCol','CodePeriod','IsFixed','IsHistory','CodeDocSource'],Model:$data,Remove:MColumns.RemoveColset,TurnEdit:true}
-         } --><!-- /ko -->
-   <!-- /ko -->
-   <a class="addLinkModel" data-bind="click:MColumns.AddColsetCol">Добавить колонку</a>
-<!-- /ko -->
+         } -->
+  <!-- /ko -->
+  <!-- /ko -->
+  <a class="addLinkModel" data-bind="click:MColumns.AddColsetCol">Добавить колонку</a>
+  <!-- /ko -->
 </script>
 
 <script id="extend_model_edit_header" type="text/html">
-<!-- ko with: MColumns -->
-   <h3 class="row header smaller lighter blue">Вложенные заголовки</h3>
-   <!-- ko foreach:MColumns.Headers -->
-         <!-- ko template:{
+  <!-- ko with: MColumns -->
+  <h3 class="row header smaller lighter blue">Вложенные заголовки</h3>
+  <!-- ko foreach:MColumns.Headers -->
+  <!-- ko template:{
                name:'small_form_with_header',
-               data:{Name:'',Fields:['CodeHeader','NameHeader','IndexHeader','Condition','Year','IsFixed','CodeColset','CodeParentHeader', 'CodePeriod'],Model:$data,Remove:MColumns.RemoveHeader,TurnEdit:true}
-         } --><!-- /ko -->
-	<!-- /ko -->
-   <a class="addLinkModel" data-bind="click:MColumns.AddHeader">Добавить заголовок</a>
-<!-- /ko -->
+               data:{Name:'',Fields:['CodeHeader','NameHeader','IndexHeader','CodeColset'],Model:$data,Remove:MColumns.RemoveHeader,TurnEdit:true}
+         } -->
+  <!-- /ko -->
+  <!-- /ko -->
+  <a class="addLinkModel" data-bind="click:MColumns.AddHeader">Добавить заголовок</a>
+  <!-- /ko -->
 </script>

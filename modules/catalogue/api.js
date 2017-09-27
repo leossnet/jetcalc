@@ -9,7 +9,7 @@ var LIB = require(__base + 'lib/helpers/lib.js');
 var HP = LIB.Permits;
 
 
-var ModelsLoadHelper = (new function () {
+var ModelsLoadHelper = (new function() {
     var self = this;
 
     self.NameOverrides = {
@@ -23,11 +23,11 @@ var ModelsLoadHelper = (new function () {
 
     }
 
-    self.Query = function (modelname) {
+    self.Query = function(modelname) {
         return self.Queries[modelname] || {};
     }
 
-    self.Sort = function (modelname) {
+    self.Sort = function(modelname) {
         var S = self.Sorts[modelname];
         if (!S) {
             S = {};
@@ -36,7 +36,7 @@ var ModelsLoadHelper = (new function () {
         return S;
     }
 
-    self.LoadModel = function (model, ids, done) {
+    self.LoadModel = function(model, ids, done) {
         var Model = mongoose.model(model),
             CFG = Model.cfg();
         var CodeField = CFG.Code;
@@ -48,9 +48,9 @@ var ModelsLoadHelper = (new function () {
         var Q = _.merge(self.Query(model), SQ);
         var Query = Model.find(Q, ["-_id", CodeField, NameField].join(" ")).lean();
         if (Model.IsSql) Query.isactive();
-        Query.exec(function (err, Rs) {
+        Query.exec(function(err, Rs) {
             var Answ = {};
-            Rs.forEach(function (R) {
+            Rs.forEach(function(R) {
                 Answ[R[CodeField]] = R[NameField];
             })
             return done(err, Answ);
@@ -61,10 +61,10 @@ var ModelsLoadHelper = (new function () {
 })
 
 
-var QueryHelper = (new function () {
+var QueryHelper = (new function() {
     var self = this;
 
-    self.SetActive = function (req, model, query) {
+    self.SetActive = function(req, model, query) {
 
     }
 
@@ -73,12 +73,12 @@ var QueryHelper = (new function () {
 
 
 
-router.post('/translate', function (req, res, next) {
+router.post('/translate', function(req, res, next) {
     var ToLoad = req.body.ToLoad,
         Tasks = {},
         Groupped = {};
     if (!ToLoad || !ToLoad.length) return res.json({});
-    ToLoad.forEach(function (TL) {
+    ToLoad.forEach(function(TL) {
         var In = TL.split("_");
         var M = In.shift();
         MCode = In.join("_");
@@ -87,13 +87,13 @@ router.post('/translate', function (req, res, next) {
     })
     for (var model in Groupped) {
         var ids = Groupped[model];
-        Tasks[model] = (function (model, ids) {
-            return function (done) {
+        Tasks[model] = (function(model, ids) {
+            return function(done) {
                 ModelsLoadHelper.LoadModel(model, ids, done);
             }
         }(model, ids))
     }
-    async.parallel(Tasks, function (err, Result) {
+    async.parallel(Tasks, function(err, Result) {
         if (err) return next(err);
         return res.json(Result);
     })
@@ -101,14 +101,14 @@ router.post('/translate', function (req, res, next) {
 
 
 
-var SearchQuery = function (ModelName) {
+var SearchQuery = function(ModelName) {
     var self = this;
     var M = mongoose.model(ModelName);
     var CFG = M.cfg();
     self.Name = CFG.Name;
     self.Code = CFG.Code;
 
-    var escapeRegExp = function (str) {
+    var escapeRegExp = function(str) {
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     }
 
@@ -122,39 +122,39 @@ var SearchQuery = function (ModelName) {
     self.Filter = {};
     self.Search = {};
 
-    self.AddFields = function (Arr) {
+    self.AddFields = function(Arr) {
         if (!_.isEmpty(Arr)) self.Fields = _.compact(_.uniq(self.Fields.concat(Arr)));
     }
-    self.SetSort = function (Obj) {
+    self.SetSort = function(Obj) {
         if (!_.isEmpty(Obj)) self.Sort = Obj;
         for (var K in Obj) {
-            if (typeof (Obj[K]) == 'string') {
+            if (typeof(Obj[K]) == 'string') {
                 self.Sort[K] = Number(Obj[K]);
             }
         }
     }
-    self.SetSkip = function (Value) {
+    self.SetSkip = function(Value) {
         try {
             var V = Number(Value);
             if (V) self.Skip = V;
         } catch (e) {;
         }
     }
-    self.SetLimit = function (Value) {
+    self.SetLimit = function(Value) {
         try {
             var V = Number(Value);
             if (V) self.Limit = V;
         } catch (e) {;
         }
     }
-    self.SetFilter = function (Str) {
+    self.SetFilter = function(Str) {
         try {
             var filter = JSON.parse(Str);
             if (_.isObject(filter)) self.Filter = filter;
         } catch (e) {;
         }
     }
-    self.SetWord = function (Word) {
+    self.SetWord = function(Word) {
         if (!_.isEmpty(Word) && _.isString(Word)) {
             Word = Word.trim();
             var SearchW = escapeRegExp(Word);
@@ -171,7 +171,7 @@ var SearchQuery = function (ModelName) {
         }
     }
 
-    self.Do = function (done) {
+    self.Do = function(done) {
         var Q = {},
             Parts = [],
             Answer = {
@@ -186,7 +186,7 @@ var SearchQuery = function (ModelName) {
         else if (Parts.length == 1) Q = _.first(Parts);
         var CountQuery = M.count(Q);
         if (M.IsSql) CountQuery.isactive();
-        CountQuery.exec(function (err, Count) {
+        CountQuery.exec(function(err, Count) {
             Answer.count = Count;
             var Sort = _.compact(self.Sort);
             var SearchQuery = M.find(Q, self.Fields.join(" "));
@@ -199,15 +199,15 @@ var SearchQuery = function (ModelName) {
             }
             SearchQuery.skip(self.Skip).limit(self.Limit);
             if (M.IsSql) SearchQuery.isactive();
-            SearchQuery.lean().exec(function (err, Models) {
+            SearchQuery.lean().exec(function(err, Models) {
                 Answer.models = Models;
                 return done(err, Answer);
             })
         })
     }
 
-    self.ToIdAndName = function (Result) {
-        return _.map(Result, function (R) {
+    self.ToIdAndName = function(Result) {
+        return _.map(Result, function(R) {
             return {
                 id: R[self.Code],
                 name: R[self.Name]
@@ -221,11 +221,11 @@ var SearchQuery = function (ModelName) {
 
 var FileName = __base + "static/custom/catalogue.json";
 
-router.get('/clientsettings', function (req, res, next) {
+router.get('/clientsettings', function(req, res, next) {
     res.sendFile(FileName);
 })
 
-router.post('/clientsettings', function (req, res, next) {
+router.post('/clientsettings', function(req, res, next) {
     var Config = require(FileName);
     var Update = req.body,
         M = mongoose.model(Update.ModelName),
@@ -236,14 +236,14 @@ router.post('/clientsettings', function (req, res, next) {
     Config[Update.ModelName].EditFields = (_.isEmpty(Update.EditFields)) ? NameAndCode : Update.EditFields;
     Config[Update.ModelName].Links = (_.isEmpty(Update.Links)) ? [] : Update.Links;
     var fs = require("fs");
-    fs.writeFile(FileName, JSON.stringify(Config, null, "\t"), function (err) {
+    fs.writeFile(FileName, JSON.stringify(Config, null, "\t"), function(err) {
         if (err) return next(err);
         return res.json({});
     });
 })
 
 
-router.get('/searchmodel', function (req, res, next) {
+router.get('/searchmodel', function(req, res, next) {
     var SQ = new SearchQuery(req.query.model);
     SQ.AddFields(req.query.fields);
     SQ.SetSort(req.query.sort);
@@ -251,7 +251,7 @@ router.get('/searchmodel', function (req, res, next) {
     SQ.SetLimit(req.query.limit);
     SQ.SetFilter(req.query.filter);
     SQ.SetWord(req.query.q);
-    SQ.Do(function (err, Result) {
+    SQ.Do(function(err, Result) {
         if (err) return next(err);
         return res.json(Result);
     });
@@ -259,7 +259,7 @@ router.get('/searchmodel', function (req, res, next) {
 
 
 
-router.get('/search', function (req, res) {
+router.get('/search', function(req, res) {
     var SQ = new SearchQuery(req.query.model);
     if (_.isObject(req.query.q)) {
         SQ.SetWord(req.query.q.word);
@@ -272,7 +272,7 @@ router.get('/search', function (req, res) {
         FieldsAsk = true;
         SQ.AddFields(req.query.fields);
     }
-    SQ.Do(function (err, Result) {
+    SQ.Do(function(err, Result) {
         var Res = Result.models;
         if (!FieldsAsk) Res = SQ.ToIdAndName(Res)
         return res.json(Res);
@@ -280,7 +280,7 @@ router.get('/search', function (req, res) {
 })
 
 
-router.get('/validate', LIB.Require(['model', 'code']), function (req, res) {
+router.get('/validate', LIB.Require(['model', 'code']), function(req, res) {
     var model = req.query.model,
         CodeValue = (req.query.code + '').trim(),
         _id = req.query._id;
@@ -293,7 +293,7 @@ router.get('/validate', LIB.Require(['model', 'code']), function (req, res) {
         $ne: _id
     };
     Q[CodeField] = CodeValue;
-    M.count(Q).isactive().exec(function (err, C) {
+    M.count(Q).isactive().exec(function(err, C) {
         return res.json({
             validate: (C) ? false : true
         });
@@ -303,7 +303,7 @@ router.get('/validate', LIB.Require(['model', 'code']), function (req, res) {
 
 
 
-router.get('/model', function (req, res, next) {
+router.get('/model', function(req, res, next) {
     var ModelName = req.query.model;
     var M = mongoose.model(ModelName);
     var CFG = M.cfg();
@@ -311,31 +311,31 @@ router.get('/model', function (req, res, next) {
     var Q = {};
     Q[CFG.Code] = req.query.code;
     var EditFields = M.cfg().EditFields;
-    EditFields = _.filter(EditFields, function (E) {
+    EditFields = _.filter(EditFields, function(E) {
         return M.schema.paths[E].selected !== false;
     })
     var links = req.query.links,
         LinkFields = [];
     if (links) {
-        links.forEach(function (l) {
+        links.forEach(function(l) {
             LinkFields.push("Link_" + l);
         })
     }
     var FindQuery = M.findOne(Q, EditFields.concat(LinkFields).join(" "));
     if (LinkFields.length) {
-        LinkFields.forEach(function (L) {
+        LinkFields.forEach(function(L) {
             FindQuery.populate(L);
         })
     }
     if (M.IsSql) FindQuery.isactive();
-    FindQuery.exec(function (err, C) {
+    FindQuery.exec(function(err, C) {
         if (!C) err = "Объект не найден";
         if (err) return next(err);
         return res.json(C);
     })
 })
 
-router.put('/model', HP.ModelAccessM(), function (req, res, next) {
+router.put('/model', HP.ModelAccessM(), function(req, res, next) {
     var ModelSaver = require(__base + 'src/modeledit.js', req.body.isnew);
     var ModelName = req.body.model,
         M = mongoose.model(ModelName),
@@ -344,14 +344,14 @@ router.put('/model', HP.ModelAccessM(), function (req, res, next) {
         links = req.body.links;
     var Data = req.body.data;
     var M = new ModelSaver(req.user.CodeUser);
-    var ModelData = _.pick(Data, _.filter(CFG.EditFields.concat("_id"), function (F) {
+    var ModelData = _.pick(Data, _.filter(CFG.EditFields.concat("_id"), function(F) {
         return F.indexOf("Link_") == -1;
     }));
-    M.SaveModel(ModelName, ModelData, function (err) {
+    M.SaveModel(ModelName, ModelData, function(err) {
         if (err) return next(err);
-        async.each(links, function (link, cb) {
+        async.each(links, function(link, cb) {
             M.SaveLinks(link, Data["Link_" + link], cb);
-        }, function (err) {
+        }, function(err) {
             if (err) return next(err);
             var Answ = CodeField
             return res.json({
@@ -361,7 +361,7 @@ router.put('/model', HP.ModelAccessM(), function (req, res, next) {
     })
 })
 
-router.delete('/model', HP.ModelAccessM(), function (req, res, next) {
+router.delete('/model', HP.ModelAccessM(), function(req, res, next) {
     var ModelName = req.body.model;
     var IsForce = api.parseBoolean(req.body.force);
     var M = mongoose.model(ModelName);
@@ -369,17 +369,17 @@ router.delete('/model', HP.ModelAccessM(), function (req, res, next) {
     if (!M) return next("Модель не найдена");
     var Q = {};
     Q[CFG.Code] = req.body.code;
-    M.findOne(Q).isactive().exec(function (err, C) {
+    M.findOne(Q).isactive().exec(function(err, C) {
         if (!C) err = "Объект не найден";
         if (err) return next(err);
-        C.Dependent(function (err, Result) {
+        C.Dependent(function(err, Result) {
             if (!_.isEmpty(Result) && !IsForce) {
                 return res.json({
                     Depends: Result
                 });
             }
             var CodeUser = req.user.CodeUser;
-            C.remove(CodeUser, function (err) {
+            C.remove(CodeUser, function(err) {
                 if (err) return next(err);
                 if (M.IsSandBox) socket.emitTo(CodeUser, "sandboxchange", {});
                 return res.json({});
@@ -388,25 +388,25 @@ router.delete('/model', HP.ModelAccessM(), function (req, res, next) {
     })
 })
 
-router.get('/connector', function (req, res, next) {
+router.get('/connector', function(req, res, next) {
     var Answer = {
         MainModels: [],
         LinkModels: []
     };
-    mongoose.model(req.query.source_model).find(req.query.get_query, req.query.get_fields).sort(req.query.get_sort).isactive().exec(function (err, Main) {
+    mongoose.model(req.query.source_model).find(req.query.get_query, req.query.get_fields).sort(req.query.get_sort).isactive().exec(function(err, Main) {
         Answer.MainModels = Main;
         var query = {}
         if (req.query.indexfieldname) {
             query[req.query.indexfieldname] = 1;
         }
-        mongoose.model(req.query.target_model).find({}).sort(query).lean().isactive().exec(function (err, Ps) {
+        mongoose.model(req.query.target_model).find({}).sort(query).lean().isactive().exec(function(err, Ps) {
             Answer.LinkModels = Ps;
             return res.json(Answer);
         })
     })
 })
 
-router.put('/connector', function (req, res, next) {
+router.put('/connector', function(req, res, next) {
     var ModelSaver = require(__base + 'src/modeledit.js'),
         CodeUser = req.user.CodeUser;
     var Data = req.body.JSON;
@@ -414,30 +414,30 @@ router.put('/connector', function (req, res, next) {
     if (_.isEmpty(Data)) return res.json({});
     var Tasks = [];
     for (var Code in Data.data) {
-        Tasks.push(function (Code2, Links) {
-            return function (cb) {
+        Tasks.push(function(Code2, Links) {
+            return function(cb) {
                 var MS = new ModelSaver(CodeUser);
                 var Q = {}
                 Q[Data.code_source_model] = Code2;
                 if (Data.use_sync_links) {
                     MS.SyncLinks(Data.target_model, Q, Links, cb);
                 } else {
-                    MS.SetModel(Data.source_model, Q, function () {
+                    MS.SetModel(Data.source_model, Q, function() {
                         MS.SaveLinks(Data.target_model, Links, cb);
                     })
                 }
             }
         }(Code, Data.data[Code]));
     }
-    async.parallel(Tasks, function (err) {
+    async.parallel(Tasks, function(err) {
         if (err) return next(err);
         return res.json({});
     })
 })
 
-router.get('/tree-data', function (req, res, next) {
-    var Fields = req.query.fields||[];
-    mongoose.model(req.query.model).find({},Fields.join(" ")).isactive().lean().exec(function (err, Data) {
+router.get('/tree-data', function(req, res, next) {
+    var Fields = req.query.fields || [];
+    mongoose.model(req.query.model).find({}, Fields.join(" ")).isactive().lean().exec(function(err, Data) {
         if (err) return next(err);
         return res.json(Data);
     })
