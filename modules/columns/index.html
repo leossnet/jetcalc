@@ -1,20 +1,30 @@
 <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MColumns'>
-    <!-- ko template:'tb_simple_loader' --><!-- /ko -->
-    <!-- ko template:'model_edit_buttons' --><!-- /ko -->
-	<!-- ko template:'model_edit_search' --><!-- /ko -->        
+	<!-- ko template:'tb_simple_loader' -->
+	<!-- /ko -->
+	<!-- ko template:'model_edit_buttons' -->
+	<!-- /ko -->
+	<!-- ko template:'model_edit_search' -->
+	<!-- /ko -->
 </div>
 
 <div class="row adminbody" data-bind="with:MColumns">
-	<div  class='scrollable_page admin_page' >
-		<div class='row'><!-- ko template: 'inline_error' --><!-- /ko --></div>
-		<!-- ko template:'model_edit' --><!-- /ko -->
+	<div class='scrollable_page admin_page'>
+		<div class='row'>
+			<!-- ko template: 'inline_error' -->
+			<!-- /ko -->
+		</div>
+		<!-- ko template:'model_edit' -->
+		<!-- /ko -->
 	</div>
 </div>
 
 <div class="bottomPannel" data-bind="with:MColumns">
 	<ul class="toolPanel nav nav-tabs background-blue">
-		<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-table',title:'Колонки',mode:'Cols'}} --><!-- /ko -->
-		<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-columns',title:'Колсеты',mode:'ColSet'}} --><!-- /ko -->
-		<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-sitemap',title:'Заголовки',mode:'Header'}} --><!-- /ko -->
+		<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-table',title:'Колонки',mode:'Cols'}} -->
+		<!-- /ko -->
+		<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-columns',title:'Колсеты',mode:'ColSet'}} -->
+		<!-- /ko -->
+		<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-sitemap',title:'Заголовки',mode:'Header'}} -->
+		<!-- /ko -->
 	</ul>
 </div>
