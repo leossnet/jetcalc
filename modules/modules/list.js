@@ -12,8 +12,14 @@ var ListModel = (new function(name){
 	
 	self.InstallIFNeeded = function(done){
 		mongoose.model("valuta").count(function(err,Counter){
-			if (Counter) return done();
-			self.Install(done);
+			if (Counter) {
+				console.log("Skipping installing List",err);
+				return done();
+			}
+			self.Install(function(err){
+				console.log("List is installed",err);
+				return done();
+			});
 		})
 	}
 

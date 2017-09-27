@@ -61,6 +61,7 @@ var Base = function(name){
 	}
 
 	self.UpdateGit = function(Type,Content,done){
+		//console.log(Content,"UpdateGit",self.GitName);
 		self.GitSettings(function(err,Set){
 			self.Module(function(err,Mod){
 				var FileName = Type+".json";
@@ -71,7 +72,9 @@ var Base = function(name){
 					sha:Mod[Type+"SHA"],
 					path:FileName,
 					branch:'master'
-				},done)
+				},function(err){
+					return done(err);
+				})
 			})		
 		})		
 	}

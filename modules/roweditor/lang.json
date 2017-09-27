@@ -48,5 +48,7 @@
     "level":"Вложенность",
     "CodeRowLink":"Ссылка.Ряд",
     "CodeParentRow":"Код.Рдт.Ряда",
-    "CodeBill":"Код Счета"
+    "CodeBill":"Код Счета",
+    "ForObj":"Тек.Объект",
+    "ForObjType":"Тек.Тип"
 }

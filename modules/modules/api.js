@@ -502,6 +502,7 @@ router.get('/installgit', LIB.Require(['module']), HP.TaskAccess("IsModulesAdmin
             ListModel.InstallIFNeeded(function(err){
                 var FolderModel = require(__base+"modules/modules/folder.js");
                 var F = new FolderModel(M.ShortName);
+                console.log("Installing ... ",M.ShortName);
                 F.Install(function(err){
                     if (err) return next(err);
                     M.InstalledVersion = M.Version;

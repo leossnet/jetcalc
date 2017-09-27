@@ -141,24 +141,31 @@ var CheckToLinks = (new function(){
 			})
 			for (var CodeRow in ToDo){
 				var V = ToDo[CodeRow];
-				console.log(V);
+				if (!ExistedByRows[CodeRow]) ExistedByRows[CodeRow] = [];
 				if (_.isBoolean(V["ForObjType"])){
-					console.log("Set ForObjType",V);
+					var Ex = _.find(ExistedByRows[CodeRow],{CodeObjType:Context.ObjType});
+					if (V["ForObjType"]){
+						ExistedByRows[CodeRow].push({CodeRow:CodeRow,CodeObjType:Context.ObjType});
+					} else {
+						ExistedByRows[CodeRow] = _.filter(ExistedByRows[CodeRow], function(R){
+							return R.CodeObjType!=Context.ObjType;
+						})
+					}
 				}
 				if (_.isBoolean(V["ForObj"])){
-					console.log("Set ForObj",V);
+					var Ex = _.find(ExistedByRows[CodeRow],{CodeObj:Context.ObjType});
+					if (V["ForObj"]){
+						ExistedByRows[CodeRow].push({CodeRow:CodeRow,CodeObj:Context.Obj});
+					} else {
+						ExistedByRows[CodeRow] = _.filter(ExistedByRows[CodeRow], function(R){
+							return R.CodeObj!=Context.Obj;
+						})
+					}
 				}
+				Update[CodeRow].Link_rowobj = ExistedByRows[CodeRow];
 			}
-
-
-
-			console.log(ToDo,Context,Existed,ExistedByRows);
-
+			return done(null,Update);
 		})
-
-
-
-		
 	}
 
 

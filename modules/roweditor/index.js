@@ -16,6 +16,7 @@ var MRowEditor = (new function() {
 
 	self.UpdateObjInfo = function(){
 		var Cx = CxCtrl.Context(), Base = Cx.CodeObj, Child = Cx.ChildObj, Info = _.find(MAggregate.AllObjs(),{CodeObj:Base});
+		if (!Info) return;
 		var Current = (_.isEmpty(Child) ? Base:Child);
 		self.Obj(Current);
 		var In = Info.Info[Current];
@@ -173,6 +174,23 @@ var MRowEditor = (new function() {
 		}
     }
 
+    self.PopulateRowsFilter = function(data){
+		data.forEach(function(d){
+			if (!_.isEmpty(d.Link_rowobj)){
+				var Links = d.Link_rowobj;
+				Links.forEach(function(L){
+					if (L.CodeObjType==self.ObjType()){
+						d.ForObjType = true;
+					}
+					if (L.CodeObj==self.Obj()){
+						d.ForObj = true;
+					}
+				})
+			}
+		})
+    	return data;
+    }
+
 	self.LoadRows = function(WithoutCache,done){
 		var Context = _.merge(_.pick(CxCtrl.Context(),['CodeObj', 'Year', 'ChildObj','CodeDoc',"IsInput"]),{IsDebug:true,UseCache:WithoutCache ? false:true});
 		self.rGet("/rows",Context,function(data){
@@ -180,6 +198,7 @@ var MRowEditor = (new function() {
 				d.DoRemove = false; d.IsNew = false;
 				d.ForObj = false; d.ForObjType = false;
 			})
+			data = self.PopulateRowsFilter(data);
 			self.Rows = data;
 			self.GetClassInfo();
 			var Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
