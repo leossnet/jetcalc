@@ -78,6 +78,7 @@ var MAggregate = (new function(){
                 })
             })
             self.AllGroups(Gr);
+            Bus.Emit("aggregate_info_loaded");
             return done && done();
         })
     }

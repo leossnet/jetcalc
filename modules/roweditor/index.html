@@ -21,10 +21,17 @@
             <!-- ko template:'tb_period' --><!-- /ko -->   
             <!-- ko template:'tb_aggregate_simple' --><!-- /ko -->
             <!-- ko template:'tb_aggregate_childobjs' --> <!-- /ko -->
+            <!-- ko if:$data.Mode()=="Filter" -->
+                <!-- ko with:$data.ObjType -->
+                <a class="btn btn-sm btn-white btn-primary">
+                    Тип: <!-- ko template:{name:'catalogue',data:{model:'objtype',id:$data}} --><!-- /ko -->
+                </a>
+                <!-- /ko -->
+            <!-- /ko -->
         </div>
     </div>
     <div class="wysiwyg-toolbar btn-toolbar toolH Context" data-bind='with:MRowEditor'>
-        <!-- ko template:{name:'menu_li_mode',data:['Structure','MainFields','Filter','Formula','Summ','Bistran']} --><!-- /ko -->   
+        <!-- ko template:{name:'menu_li_mode',data:['Structure','MainFields','Filter','Formula','Summ','Bistran']} --><!-- /ko -->  
     </div>
 
     

@@ -9,6 +9,7 @@
   "class_name":"RowEditor",
   "is_enabled": true,
   "sort_index": 50,
+  "initial_load":true,
   "permissions" : [
   		"IsRowTuner"
   ]

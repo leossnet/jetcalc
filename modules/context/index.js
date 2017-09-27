@@ -272,10 +272,12 @@ var CxCtrl = (new function() {
         self.ChildObj(null);
         self.CodeObj(value);
         Updater = ['Row', "Doc"];
+        Bus.Emit("context_obj_change");
         break;
       case "childobj":
         self.ChildObj(value);
         Updater = ['Row'];
+        Bus.Emit("context_obj_change");
         break;
       case "subperiod":
         if (!value || self.Override.CodePeriod() == value.code) {

@@ -2,6 +2,40 @@ var MRowEditor = (new function() {
 	
 	var self = new Module("roweditor");
 
+
+	self.Init = function(done){
+		Bus.On("context_obj_change",self.UpdateObjInfo);
+		Bus.On("aggregate_info_loaded",self.UpdateObjInfo);
+		return done();
+	}	
+
+	self.Obj      = ko.observable(null);
+	self.ObjType  = ko.observable(null);
+	self.ObjClass = ko.observable(null);
+	self.ObjGrps  = ko.observableArray();
+
+	self.UpdateObjInfo = function(){
+		var Cx = CxCtrl.Context(), Base = Cx.CodeObj, Child = Cx.ChildObj, Info = _.find(MAggregate.AllObjs(),{CodeObj:Base});
+		var Current = (_.isEmpty(Child) ? Base:Child);
+		self.Obj(Current);
+		var In = Info.Info[Current];
+		self.ObjType(In.CodeObjType);
+		self.ObjClass(In.CodeObjClass);
+		self.ObjGrps(In.Groups);
+	}
+
+
+
+
+
+
+
+
+
+
+	
+
+
 	self.IsAvailable = function(CodeDoc){
 		var Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
 		return PermChecker.CheckPrivelege("IsRowTuner",CxCtrl.CxPermDoc());
@@ -144,6 +178,7 @@ var MRowEditor = (new function() {
 		self.rGet("/rows",Context,function(data){
 			data.forEach(function(d){
 				d.DoRemove = false; d.IsNew = false;
+				d.ForObj = false; d.ForObjType = false;
 			})
 			self.Rows = data;
 			self.GetClassInfo();
@@ -243,7 +278,8 @@ var MRowEditor = (new function() {
 		} else {
 			self.rPut('/rows',{
 				Modify: JSON.stringify(self.DiscretChanges),
-				Context: CxCtrl.CxPermDoc()
+				Context: CxCtrl.CxPermDoc(),
+				AddInfo: {ObjType:self.ObjType(),Obj:self.Obj()}
 			},function(){
 				self.Show();
 			})
@@ -257,26 +293,8 @@ var MRowEditor = (new function() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	self._types = {
-		checkbox      :["IsFormula","IsAfFormula","IsVirtual","IsAgFormula","AsAgFormula","IsAnalytic", "IsControlPoint", "UseProdSumGrps","NoOutput", "NoInput","HasFilteredChild", "NoFiltered","IsRowEditFilter","IsShowMeasure","IsSum", "NoSum", "IsMinus", "IsCalcSum", "NoDoSum","DoRemove"],
+		checkbox      :["IsFormula","IsAfFormula","IsVirtual","IsAgFormula","AsAgFormula","IsAnalytic", "IsControlPoint", "UseProdSumGrps","NoOutput", "NoInput","HasFilteredChild", "NoFiltered","IsRowEditFilter","IsShowMeasure","IsSum", "NoSum", "IsMinus", "IsCalcSum", "NoDoSum","DoRemove","ForObj","ForObjType"],
 		text          :["CodeRow","NameRow","NumRow"],
 		numeric       :["FromObsolete", "FromYear","FormulaFromYear", "FormulaFromObsolete"],
 		formula       :["AgFormula","AfFormula","Formula"],
@@ -472,7 +490,8 @@ var MRowEditor = (new function() {
 				Cols = Cols.concat(["CodeMeasure","CodeFormat", "CodeStyle",  "CodeValuta", "IsAnalytic", "IsControlPoint"]);
 			break;
 			case "Filter":
-				Cols = Cols.concat([ "HasFilteredChild", "NoFiltered", "Link_rowobj", "NoOutput", "NoInput", "FromObsolete", "FromYear", "IsRowEditFilter", "CodeGrpEditFilter"]);
+				//
+				Cols = _.concat(Cols,[ "HasFilteredChild", "NoFiltered"], ["ForObj","ForObjType"] ,["Link_rowobj"], ["NoOutput", "NoInput", "FromObsolete", "FromYear", "IsRowEditFilter", "CodeGrpEditFilter"]);
 			break;
 			case "Summ":
 				Cols = Cols.concat(["IsSum", "Link_rowsumgrp", "NoSum", "IsMinus", "IsCalcSum", "NoDoSum", "UseProdSumGrps"]);
@@ -671,7 +690,7 @@ var MRowEditor = (new function() {
     }	
 
 	self.Show = function (WithoutCache,done){
-		if (!self.Mode()) return self.InitSetMode("Structure");
+		if (!self.Mode()) return self.InitSetMode("Filter");
 		self.LoadRows(WithoutCache,function(){
 			self.AskForRender();
 			self.FlushChanges();

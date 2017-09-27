@@ -117,32 +117,86 @@ router.put('/structure',  HP.TaskAccess("IsRowTuner"), function(req,res,next){
 	})
 })
 
+
+
+var CheckToLinks = (new function(){
+	var self = this;
+
+	self.Fields = ["ForObjType","ForObj"];
+
+	self.Do = function(Context,Update,done){
+		var ToDo = {};
+		for (var CodeRow in Update){
+			var Changes = Update[CodeRow];
+			if (!_.isEmpty(_.intersection(_.keys(Changes),self.Fields))){
+				ToDo[CodeRow] = _.pick(Changes,self.Fields);
+			}
+		}
+		if (_.isEmpty(ToDo)) return done(null,Update);
+		mongoose.model("rowobj").find({CodeRow:{$in:_.keys(ToDo)}}).exec(function(err,Existed){
+			var ExistedByRows = {};
+			Existed.forEach(function(E){
+				if (!ExistedByRows[E.CodeRow]) ExistedByRows[E.CodeRow] = [];
+				ExistedByRows[E.CodeRow].push(E);
+			})
+			for (var CodeRow in ToDo){
+				var V = ToDo[CodeRow];
+				console.log(V);
+				if (_.isBoolean(V["ForObjType"])){
+					console.log("Set ForObjType",V);
+				}
+				if (_.isBoolean(V["ForObj"])){
+					console.log("Set ForObj",V);
+				}
+			}
+
+
+
+			console.log(ToDo,Context,Existed,ExistedByRows);
+
+		})
+
+
+
+		
+	}
+
+
+	return self;
+})
+
+
+
+
+
 router.put('/rows', HP.TaskAccess("IsRowTuner"), function(req, res,next){
 	var Update = JSON.parse(req.body.Modify), CodeUser = req.user.CodeUser;
 	var ModelHelper = require(__base+"src/modeledit.js");
 	if (_.isEmpty(Update)) return res.json({});
-	mongoose.model("row").find({CodeRow:{$in:_.keys(Update)}}).isactive().exec(function(err,Current){
-		async.each(Current,function(C,cb){
-			var Fields = _.pick(C,["_id","CodeRow"]), Links = {};
-			for (var Field in Update[C.CodeRow]){
-				if (Field.indexOf("Link_")!=0) {
-					Fields[Field] = Update[C.CodeRow][Field];	
-				} else {
-					Links[Field] = Update[C.CodeRow][Field];
-					Links[Field].forEach(function(L){
-						L.CodeRow = C.CodeRow;
-					})
-				}				
-			}
-			var M = new ModelHelper(CodeUser);
-			M.SaveModel("row",Fields,function(){
-				async.each(_.keys(Links),function(LinkName,done){
-					var ModelName = _.last(LinkName.split("Link_"));
-					M.SaveLinks(ModelName,Links[LinkName],done);
-				},cb);
+	CheckToLinks.Do(req.body.AddInfo, Update, function(err,Update){
+		mongoose.model("row").find({CodeRow:{$in:_.keys(Update)}}).isactive().exec(function(err,Current){
+			async.each(Current,function(C,cb){
+				var Fields = _.pick(C,["_id","CodeRow"]), Links = {};
+				for (var Field in Update[C.CodeRow]){
+					if (Field.indexOf("Link_")!=0) {
+						Fields[Field] = Update[C.CodeRow][Field];	
+					} else {
+						Links[Field] = Update[C.CodeRow][Field];
+						Links[Field].forEach(function(L){
+							L.CodeRow = C.CodeRow;
+						})
+					}				
+				}
+				var M = new ModelHelper(CodeUser);
+				M.SaveModel("row",Fields,function(){
+					async.each(_.keys(Links),function(LinkName,done){
+						var ModelName = _.last(LinkName.split("Link_"));
+						M.SaveLinks(ModelName,Links[LinkName],done);
+					},cb);
+				})
+			},function(err){
+				return res.json({});
 			})
-		},function(err){
-			return res.json({});
 		})
 	})
 })
