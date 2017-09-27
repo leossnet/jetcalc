@@ -26,6 +26,9 @@ var MColumns = (new function() {
         self.rGet("headers", {
             CodeHeader: CodeHeader
         }, function(data) {
+            data = _.filter(data, function(d){
+              return d.CodeColset;
+            });
             self.Headers(_.map(data, function(d) {
                 return MModels.Create("header", d);
             }));
