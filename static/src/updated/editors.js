@@ -22,7 +22,9 @@ var ConditionEditor = (new function(){
 				eval("var r ="+F);
 				self.isOk(true);
 			}catch(e){
+				console.log(e);
 				self.isOk(false);
+				self.ParserResult(e+":"+(F+"").replace(/(\&\&|\|\||true|false|\!)/g,"").trim());
 			}
 		}
 	})
