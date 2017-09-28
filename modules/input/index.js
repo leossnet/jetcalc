@@ -144,6 +144,8 @@ var MInput = (new function() {
         $('#historyModal').modal('hide');
     }
     self.HistoryData = ko.observableArray();
+    self.HistoryRow = ko.observable();
+    self.HistoryCol = ko.observable();
     self.HistoryCell = ko.observable();
     self.IsHistoryAvailable = function(){
         var Cell = self.CurrentCell();
@@ -155,13 +157,16 @@ var MInput = (new function() {
     }
     self.ShowHistory = function(){
         var Cell = self.CurrentCell();
+        self.HistoryCol(null);self.HistoryRow(null);self.HistoryData([]);
         if (self.IsHistoryAvailable()){
             $.ajax({
                 url:'/api/cell/history',
                 type:'post',
                 data:{Context:CxCtrl.Context(),Cell:Cell.Cell},
                 success:function(data){
-                    self.HistoryData(data);
+                    self.HistoryData(data.History);
+                    self.HistoryRow(data.Row);
+                    self.HistoryCol(data.Col);
                     $('#historyModal').modal('show');
                     $('#historyModal').unbind('hide.bs.modal');
                     $('#historyModal').on('hide.bs.modal', function (e) {
