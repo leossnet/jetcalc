@@ -7,13 +7,13 @@ var Base = require('./Base.js');
 
 
 var PeriodHelper = function(Context){
-	
+
 	Context = _.clone(Context);
 	Context.PluginName = "PERIOD";
 	var self = this;
 	Context.CacheFields = [];
 	Base.apply(self,Context);
-	self.Context = Context;	
+	self.Context = Context;
 
 	self.periodDefine = {
 		ismonth:{
@@ -27,7 +27,7 @@ var PeriodHelper = function(Context){
 		iskorrperiod:{
 			codes:['KORR'],
 			predefined:['31', '32','33','34','311','312','313','314','321','322','323','324','331','332','333','334','341','342','343','344']
-		},		
+		},
 		isplanperiod:{
 			codes:['PLAN'],
 			predefined:['301','303','306','309','251','252','253','254']
@@ -56,7 +56,7 @@ var PeriodHelper = function(Context){
 					if (!Mapper[CT]) Mapper[CT] = [];
 					Codes = Codes.concat(Mapper[CT]);
 				})
-				Result[Type] = _.uniq(Codes);					
+				Result[Type] = _.uniq(Codes);
 			}
 			return done(null,Result);
 		})
@@ -66,11 +66,11 @@ var PeriodHelper = function(Context){
 	self.get = function(done){
 		self.loadFromCache(function(err,Result){
 			if (Result && false) {
-				return done(null,Result);	
-			}			
+				return done(null,Result);
+			}
 			self.loadInfo(function(err,Result){
 				self.saveToCache(Result,function(err){
-					return done(err,Result);	
+					return done(err,Result);
 				});
 			})
 		})
@@ -100,7 +100,7 @@ var PeriodHelper = function(Context){
 								if (!self.DisplayNames[Period.CodePeriod]) self.DisplayNames[Period.CodePeriod] = {};
 								self.DisplayNames[Period.CodePeriod][periodKey] = name;
 							}
-							
+
 							if (raw) {
 								if (raw.indexOf('+')>=0){
 									periodValue = raw.split("+");
@@ -146,13 +146,13 @@ var PeriodHelper = function(Context){
 					})
 					return cb(null,PeriodInfo);
 				})
-			})						
+			})
 		}
 		async.parallel(Tasks,function(err,Result){
 			var Answer = _.merge(Result.Simple,Result.Formula);
 			Answer.DisplayNames = self.DisplayNames;
 			return done && done(err,Answer);
-		})		
+		})
 	}
 	return self;
 }
@@ -160,5 +160,3 @@ var PeriodHelper = function(Context){
 
 
 module.exports = PeriodHelper;
-
-	

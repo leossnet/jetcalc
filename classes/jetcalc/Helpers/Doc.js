@@ -6,7 +6,7 @@ var Div = require(__base + 'classes/jetcalc/Helpers/Div.js');
 
 var DocHelper = (new function(){
 
-	var self = new Base("JDOC"); 
+	var self = new Base("JDOC");
 
 	self.Fields = {
 		doc:["-_id","CodeDoc","IsBiztranDoc","NameDoc","PrintNameDoc","PrintNumDoc","IsShowMeasure","IsShowRoots","IsPrimary","IsAnalytic","IsOlap","IsInput","IsChart","IsPresent","IsDivObj","IsObjToRow","IsShowParentObj","CodeModel","CodeGrp","CodeRole","CodeDocType","HasChildObjs","CodeStyleTotal","CodeStyleSubtotal","CodeMeasure","UseProd","UseOrg","UseDogovor","UseDogovorArt"],
@@ -18,7 +18,7 @@ var DocHelper = (new function(){
 		user:["-_id","CodeUser","NameUser","CodeObj","JobTitle"],
 		measure:["-_id","CodeMeasure","NameMeasure","SNameMeasure"]
 	}
-	
+
 	self.SubscribeChanges(_.keys(self.Fields));
 
 	self.get = function(CodeDoc,done){
@@ -73,10 +73,10 @@ var DocHelper = (new function(){
 		Div.get(function(err,DivInfo){
 			self.FromCache(null,function(err,Result){
 				if (Result) {
-					return done (err,self.UpdateObjFilter(_.merge(Result,{Div:DivInfo})));	
+					return done (err,self.UpdateObjFilter(_.merge(Result,{Div:DivInfo})));
 				}
 				self.CreateInfo(function(err,Data){
-					self.ToCache(null, Data, function(err){					
+					self.ToCache(null, Data, function(err){
 						return done(err,self.UpdateObjFilter(_.merge(Data,{Div:DivInfo})));
 					})
 				})
@@ -120,7 +120,7 @@ var DocHelper = (new function(){
 				Result[Doc.CodeDoc] = Doc;
 			})
 			return done(err,Result);
-		})		
+		})
 	}
 
 	return self;

@@ -1,23 +1,30 @@
-var MPermissions = (new function(){
+var MPermissions = (new function() {
 
     var self = this;
 
     self.base = "/api/modules/permissions/";
-    
-    self.LoadUserPermissions = function(done){
-        $.getJSON(self.base+"current",function(data){
+
+    self.LoadUserPermissions = function(done) {
+        $.getJSON(self.base + "current", function(data) {
             PermChecker.P = data;
             return done && done();
         })
     }
-    
+
+    self.RefreshPermissions = function() {
+        console.log(1);
+    }
+
     self.Events = new EventEmitter();
 
-    self.Init = function(done){ 
-        self.LoadUserPermissions(function(){
+    self.Init = function(done) {
+        self.LoadUserPermissions(function() {
             self.Events.emit("permissionsloaded");
+            console.log(1);
+            MSocket.RegisterEvent('permissions_refresh', self.RefreshPermissions);
+            MSocket.Start('permissions_refresh');
             return done && done();
-        })        
+        });
     }
 
     return self;
@@ -28,32 +35,35 @@ ModuleManager.Modules.Permissions = MPermissions;
 ko.bindingHandlers.Permit = {
     init: function(element, valueAccessor, allBindingsAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
-        var Allow = false, cx = CxCtrl.CxPermDoc();
-        if (value.Type=="Model"){
+        var Allow = false,
+            cx = CxCtrl.CxPermDoc();
+        if (value.Type == "Model") {
             Allow = PermChecker.ModelAccess(value.Id);
-        } else if (value.Type=="Task"){
-            Allow = PermChecker.CheckPrivelege(value.Id,cx);
-        } else if (value.Type=="UserTask"){
+        } else if (value.Type == "Task") {
+            Allow = PermChecker.CheckPrivelege(value.Id, cx);
+        } else if (value.Type == "UserTask") {
             var Check = [];
-            if (value.CodeOrg) Check.push(value.CodeOrg);            
+            if (value.CodeOrg) Check.push(value.CodeOrg);
             if (value.CodeUser) {
                 var Info = PermChecker.P.Tr.UsrOrgs;
-                for (var CodeOrg in Info){
-                    if (Info[CodeOrg].indexOf(value.CodeUser)!=-1){
+                for (var CodeOrg in Info) {
+                    if (Info[CodeOrg].indexOf(value.CodeUser) != -1) {
                         Check.push(CodeOrg);
                     }
                 }
             }
-            if (Check.length){
-                Check.forEach(function(CodeOrg){
-                    Allow = Allow || PermChecker.CheckPrivelege(value.Id,_.merge(_.clone(cx),{CodeOrg:CodeOrg}));        
+            if (Check.length) {
+                Check.forEach(function(CodeOrg) {
+                    Allow = Allow || PermChecker.CheckPrivelege(value.Id, _.merge(_.clone(cx), {
+                        CodeOrg: CodeOrg
+                    }));
                 })
             } else {
-                Allow = PermChecker.CheckPrivelege(value.Id,cx);
-            }           
+                Allow = PermChecker.CheckPrivelege(value.Id, cx);
+            }
         } else {
-            Allow = PermChecker.CheckDocAccess(value.Id,cx);
+            Allow = PermChecker.CheckDocAccess(value.Id, cx);
         }
-        if (!Allow) $(element).css("display","none");
-    } 
+        if (!Allow) $(element).css("display", "none");
+    }
 };
