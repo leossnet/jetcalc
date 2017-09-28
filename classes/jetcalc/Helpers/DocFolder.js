@@ -6,9 +6,9 @@ var Base = require(__base + 'classes/jetcalc/Helpers/Base.js');
 
 
 var DocFolderHelper = (new function(){
-	
-	var self = new Base("JDOCFOLDER"); 
-	
+
+	var self = new Base("JDOCFOLDER");
+
 	self.Fields = {
 		docfolderdoc:["-_id","CodeDocFolder","CodeDoc"],
 		docfolder:["-_id","CodeDocFolder","NameDocFolder","Icon","CodeParentDocFolder","IndexDocFolder"]
@@ -37,7 +37,7 @@ var DocFolderHelper = (new function(){
 		},function(err,INFO){
 			self.FromCache(null,function(err,Data){
 				if (Data) {
-					return done (err,_.merge(INFO,Data));	
+					return done (err,_.merge(INFO,Data));
 				}
 				self.load(function(err,Data){
 					self.ToCache(null,Data,function(err){
@@ -47,7 +47,7 @@ var DocFolderHelper = (new function(){
 			})
 		})
 	}
-	
+
 	self.load = function(done){
 		var R = {};
 		async.each(_.keys(self.Fields),function(ModelName,cb){
@@ -80,7 +80,7 @@ var DocFolderHelper = (new function(){
 				DocsInFolder[Link.CodeDocFolder].push(Link.CodeDoc);
 			})
 			var UsedDocFolders = _.keys(DocsInFolder);
-			var Structure = {}; 
+			var Structure = {};
 			Children[RootFolder].forEach(function(Folder){
 				if (Folder!=RootFolder) {
 					Structure[Folder] = {};
@@ -108,13 +108,13 @@ var DocFolderHelper = (new function(){
 					}
 				}
 			}
-			return done(null,{Tree:UnemptyStructure,Icons:Icons,Codes:Codes});			
+			return done(null,{Tree:UnemptyStructure,Icons:Icons,Codes:Codes});
 		})
 	}
 
 	return self;
 })
 
-
+	
 
 module.exports = DocFolderHelper;
