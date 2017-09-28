@@ -120,19 +120,23 @@ var RowHelper = (new function(){
 		rowobj:['CodeObj','CodeObjType','CodeGrp','CodeRow'],
 		rowsumgrp:['CodeSumGrp', 'CodeRow'],
 		rowtag:['CodeTag','Value','CodeRow'],
-		docrow:['-_id','CodeRow','IsExpandTree']
+		docrow:['-_id','CodeRow','IsExpandTree'],
+		measure:["-_id","CodeMeasure","SNameMeasure"]
 	}
 
 	self.SubscribeChanges(_.keys(self.Fields));
 
 	self.LoadRootsFiltered = function(Cx,done){
 		var Context = _.clone(Cx);
-			self.ObjInfo(Context,function(err,Result){
-				Context.ObjInfo = Result;
-				self.LoadRoots(Context.CodeDoc,function(err,Rows){
-					return done(err,self.Filter(Context,Rows));
-				})
+		self.ObjInfo(Context,function(err,Result){
+			Context.ObjInfo = Result;
+			self.LoadRoots(Context.CodeDoc,function(err,Rows){
+				return done(err,self.Filter(Context,Rows));
 			})
+		})
+	}
+	self.LoadMeasures = function(done){
+		mongoose.model("measure").find({},self.FieldsToLoad.measure.join(" ")).isactive().lean().exec(done);
 	}
 
 	self.get = function(Cx,done){
@@ -217,7 +221,12 @@ var RowHelper = (new function(){
 		})
 		Q.lean().isactive().exec(function(err,Rows){
 			self.UpdateRowLinks(Rows,function(err,Rows){
-				return done(err,self.AddParams(Rows));
+				self.LoadMeasures(function(err,MeasuresArr){
+					var Measures = {}; MeasuresArr.forEach(function(M){
+						Measures[M.CodeMeasure] = M.SNameMeasure;
+					})
+					return done(err,self.AddParams(Rows,Measures));
+				})
 			});
 		});
 	}
@@ -238,10 +247,11 @@ var RowHelper = (new function(){
 		})
 	}
 
-	self.AddParams = function(Rows){
+	self.AddParams = function(Rows,Measures){
 		var Indexed = {};
 		Rows.forEach(function(Row){
 			Row.rowpath = Row.rowpath || "";
+			Row.Measure = (!_.isEmpty(Row.CodeMeasure)) ? Measures[Row.CodeMeasure]:"";
 			Row.level = Math.max((Row.rowpath.split("/").length - 3),0);
 			Row.Sums = _.map(Row.Link_rowsumgrp,'CodeSumGrp');
 			Row.AllFilter = [];

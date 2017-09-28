@@ -64,3 +64,7 @@
     -moz-box-shadow: 0px 1px 0px 0px rgba(207,207,207,1);
     box-shadow: 0px 1px 0px 0px rgba(207,207,207,1);
 }
+a.btn.btn-sm.btn-white.dropdown-toggle,a.btn.btn-sm.btn-white.btn-primary.dropdown-toggle,.wysiwyg-toolbar.toolH .btn-group>.btn.dropdown-toggle, .wysiwyg-toolbar.toolH .btn-group>.inline>.btn.dropdown-toggle{
+	    vertical-align: middle;
+    margin-top: 2px;
+}
