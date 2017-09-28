@@ -890,9 +890,25 @@ router.get('/api/calculator/updateformula', function(req,res,next){
 
 
 
-router.post('/api/cell/history', function(req,res){	
-	db.GetCellsHistory(['CodeCell','Value','CalcValue',"CodeUser","DateEdit","Comment"],[req.body.Cell],function(err,data){
-		return res.json(data);
+router.post('/api/cell/history', function(req,res,next){	
+	var Reg = require(__base+"classes/calculator/RegExp.js");
+	var CodeRow = "",CodeCol="";
+	try{
+		CodeRow = _.first(req.body.Cell.match(Reg.Row)).replace(Reg.Symbols.Row,"");
+		CodeCol = _.first(req.body.Cell.match(Reg.Col)).replace(Reg.Symbols.Col,"");
+	} catch(e){
+		return next(err);	
+	}
+	mongoose.model("row").findOne({CodeRow:CodeRow},"CodeRow NameRow").isactive().lean().exec(function(err,Row){
+		mongoose.model("col").findOne({CodeCol:CodeCol},"CodeCol NameCol").isactive().lean().exec(function(err,Col){
+			db.GetCellsHistory(['CodeCell','Value','CalcValue',"CodeUser","DateEdit","Comment"],[req.body.Cell],function(err,data){
+				return res.json({
+					Row:[Row.CodeRow,Row.NameRow].join(". "),
+					Col:[Col.CodeCol,Col.NameCol].join(". "),
+					History:data
+				});
+			})
+		})
 	})
 })
 
