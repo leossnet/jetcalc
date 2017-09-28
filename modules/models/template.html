@@ -55,11 +55,11 @@
 </script>
 
 <script id="form_password" type="text/html">
-	<input class="col-xs-12" type="password" data-bind="value: $parent[$data]">
+	<input class="col-xs-12" type="password" data-bind="value: $parent[$data],valueUpdate:'afterkeydown'">
 </script>
 
 <script id="form_number" type="text/html">
-	<input class="col-xs-12" type="number" data-bind="value: $parent[$data]">
+	<input class="col-xs-12" type="number" data-bind="value: $parent[$data],valueUpdate:'afterkeydown'">
 </script>
 
 <script id="form_html" type="text/html">
