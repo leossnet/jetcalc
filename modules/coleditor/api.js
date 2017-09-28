@@ -7,18 +7,6 @@ var api        = require(__base+'/lib/helper.js');
 var LIB        = require(__base+'lib/helpers/lib.js');
 var HP = LIB.Permits;
 
-var ColEditorHelper = (new function(){
-	var self = this;
-
-	self.get = function(Context,SandBox,done){
-		//var Col = require(__base+'/classes/calculator/helpers/Col.js');
-		//if (SandBox.On) Context.SandBox = SandBox.CodeUser;
-		//var ColHelper = new Col(Context);
-		var ColHelper = require(__base+'classes/jetcalc/Helpers/Col.js');
-		ColHelper.GetAll(Context,done);
-	}
-	return self;
-})
 
 router.put('/savechanges', HP.TaskAccess("IsColsetTuner"), function(req,res,next){
 	var Data = req.body.data, Update = {}, CodeUser = req.user.CodeUser;
@@ -61,15 +49,13 @@ router.put('/savechanges', HP.TaskAccess("IsColsetTuner"), function(req,res,next
 
 
 router.get('/cols', function(req,res,next){
-	var ContextFields = ['Year', 'CodePeriod','IsInput','CodeDoc','CodeObj','ChildObj'];
-	var Context = {IsDebug:true};
-	ContextFields.forEach(function(F){
-		Context[F] = req.query[F];
-	})
+	//var ContextFields = ['Year', 'CodePeriod','IsInput','CodeDoc','CodeObj','ChildObj'];
+	var Context = _.merge(req.query,{IsDebug:true});
 	Context.IsInput = api.parseBoolean(Context.IsInput);
 	Context.UseCache = false;	
 	Context.Year = parseInt(Context.Year);
-	ColEditorHelper.get(Context,req.session.sandbox,function(err, Cols){
+	var ColHelper = require(__base+'classes/jetcalc/Helpers/Col.js');
+	ColHelper.GetAll(Context,function(err, Cols){
 		if (err) return next (err);
 		return res.json(Cols);
 	})

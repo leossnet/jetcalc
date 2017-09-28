@@ -149,7 +149,7 @@ var MColEditor = (new function() {
 
 	self.LoadRows = function(done){
 		self.Error(null);
-		var Context = _.pick(CxCtrl.Context(),['Year', 'CodePeriod','IsInput','CodeDoc','CodeObj','ChildObj']);
+		var Context = CxCtrl.Context();
 		Context.IsInput = CxCtrl.IsInput();
 		$.getJSON(self.base+"/cols",Context,function(data){
 			if(data.err){

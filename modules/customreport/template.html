@@ -1,5 +1,5 @@
 <script id="tb_customreport" type="text/html">
-    <!-- ko if:ModuleManager.IsChoosed("report") || ModuleManager.IsChoosed("olap") -->
+    <!-- ko if:_.includes(["report","olap","coleditor"],ModuleManager.Choosed()) -->
         <div class="btn-group" data-bind='with:CustomReport'>
           <a class='btn btn-sm  btn-white btn-yellow' data-bind="title:Tr('open'),click:ReportManager.LoadReport,css:{disabled:!ReportManager.IsLoadAvailable()}">
             <i class="ace-icon fa fa-folder-open-o"></i>
