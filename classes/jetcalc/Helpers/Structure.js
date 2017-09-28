@@ -276,8 +276,9 @@ var ObjToRow = (new function(){
 
 	self.BuildTreeArr = function(Cx,INFO){
 		var Doc = INFO.Doc, Objs = {}; 
-		for (var Code in Doc.Objs){
-			Objs[Code] = self.FilterByYear(Cx,INFO,Doc.Objs[Code]);
+		var SubObjs = (!_.isEmpty(Doc.SubObjs[Cx.CodeObj])) ? _.pick(Doc.SubObjs,Cx.CodeObj):Doc.SubObjs;
+		for (var Code in SubObjs){
+			Objs[Code] = self.FilterByYear(Cx,INFO,SubObjs[Code]);
 		}
 		var TreeArr = [], lft = 1;
 		if (!Doc.IsShowParentObj){			

@@ -101,7 +101,7 @@
 
 <script id="tb_aggregate_childobjs" type="text/html">
   <!-- ko with:CxCtrl.ChildObjs -->
-  <!-- ko ifnot:MFolders.FindDocument(CxCtrl.CodeDoc()).IsObjToRow && false -->
+  <!-- ko ifnot:MFolders.FindDocument(CxCtrl.CodeDoc()).IsObjToRow -->
   <div class="btn-group" style='white-space: nowrap'>
     <!-- ko if:$data.length -->
      <a class="btn btn-sm btn-white btn-primary dropdown-toggle" style='width:150px;overflow: hidden;text-overflow: ellipsis;text-align: left;' data-toggle="dropdown">

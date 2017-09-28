@@ -4,8 +4,6 @@ var MRowEditor = (new function() {
 
 
 	self.Init = function(done){
-		Bus.On("context_obj_change",self.UpdateObjInfo);
-		Bus.On("aggregate_info_loaded",self.UpdateObjInfo);
 		return done();
 	}	
 
@@ -20,9 +18,12 @@ var MRowEditor = (new function() {
 		var Current = (_.isEmpty(Child) ? Base:Child);
 		self.Obj(Current);
 		var In = Info.Info[Current];
-		self.ObjType(In.CodeObjType);
-		self.ObjClass(In.CodeObjClass);
-		self.ObjGrps(In.Groups);
+		console.log(Base,Child,Info,In);
+		if (!_.isEmpty(In)){
+			self.ObjType(In.CodeObjType);
+			self.ObjClass(In.CodeObjClass);
+			self.ObjGrps(In.Groups);
+		}
 	}
 
 
@@ -112,7 +113,10 @@ var MRowEditor = (new function() {
     self.BeforeShow = function(){
     	self.SubscribeDoc();
   		MSite.Events.off("refresh",self.RollBack);
-        MSite.Events.on("refresh",self.RollBack);    	
+        MSite.Events.on("refresh",self.RollBack); 
+        Bus.On("context_obj_change",self.UpdateObjInfo);
+		self.UpdateObjInfo();
+
     	self.Show();
     }
 
@@ -124,6 +128,7 @@ var MRowEditor = (new function() {
     		self.table = null;
     	}
     	MSite.Events.off("refresh",self.RollBack);
+    	Bus.Off("context_obj_change",self.UpdateObjInfo);
     }
 
     self.CxChange = function(){
