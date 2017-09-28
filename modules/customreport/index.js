@@ -385,23 +385,20 @@ var CustomReport = (new function() {
 		ReportManager.SaveChanges();
 	}
 
+	self.Subscriptions = {
+    	save:self.SaveChanges,
+    	open:ReportManager.LoadReport,
+    	refresh:self.RollBack,
+    	addrecord:ReportManager.NewReport
+	}
+
   	self.BeforeHide = function(){
-        self.UnSubscribe({
-        	save:self.SaveChanges,
-        	open:ReportManager.LoadReport,
-        	refresh:self.RollBack,
-        	addrecord:ReportManager.NewReport
-        });
+		self.UnSubscribe(self.Subscriptions);
         self.UnSubscribeChanges();
     }
 
     self.BeforeShow = function(){
-        self.Subscribe({
-        	save:self.SaveChanges,
-        	open:ReportManager.LoadReport,
-        	refresh:self.RollBack,
-        	addrecord:ReportManager.NewReport
-        });
+        self.Subscribe(self.Subscriptions);
         self.SubscribeChanges();
         self.Show();
     }        

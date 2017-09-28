@@ -509,8 +509,9 @@ var Module = function(id) {
     if (self._error) self._error.dispose();
     if (self._isLoading) self._isLoading.dispose();
     if (!_.isEmpty(options)) {
-      MSite.Subscribe(options);
+      MSite.UnSubscribe(options);
     }
+    ModelTableEdit.Clear();
   }
 
   self.BeforeShow = function() {

@@ -723,21 +723,6 @@ var Catalogue = (new function() {
     self.Error = ko.observable(null);
 
     self.Init = function(done) {
-        MSite.Events.on("save", function() {
-            if (!ModelTableEdit.NoAccess() && ModelTableEdit.LoadedModel()) {
-                ModelTableEdit.Save();
-            }
-        })
-        MSite.Events.on("addrecord", function() {
-            if (!ModelTableEdit.NoAccess()) {
-                ModelTableEdit.Add();
-            }
-        })
-        MSite.Events.on("addrecordtemplate", function() {
-            if (!ModelTableEdit.NoAccess() && ModelTableEdit.Choosed()) {
-                ModelTableEdit.AddByTemplate();
-            }
-        })
         ModelClientConfig.Load(done);
     }
 
@@ -1011,6 +996,7 @@ var ModelTableEdit = (new function() {
     }
 
     self.Add = function() {
+        if (ModelTableEdit.NoAccess())  return;
         self.Choosed(null);
         var n = MModels.Create(self.ModelName(), {});
         self.LoadedModel(n);
@@ -1018,6 +1004,7 @@ var ModelTableEdit = (new function() {
     }
 
     self.AddByTemplate = function() {
+        if (ModelTableEdit.NoAccess() || !ModelTableEdit.Choosed())  return;
         var template = self.LoadedModel()
         delete template["_id"];
         if (template.Links) {
@@ -1138,6 +1125,7 @@ var ModelTableEdit = (new function() {
     }
 
     self.Save = function() {
+        if (ModelTableEdit.NoAccess() || !ModelTableEdit.LoadedModel()) return;
         self.Error(null);
         self.Validate(function(result) {
             if (!result) {
@@ -1236,14 +1224,26 @@ var ModelTableEdit = (new function() {
         self.limit = Limit || 50;
         self.LoadList();
         self.skip = 0;
-        console.log("self.limit", self.limit);
         self.NoAccess(!PermChecker.ModelAccess(ModelName));
         ModelTreeEdit.inited(false);
         var Q = window.location.search.queryObj();
         var InitChoosed = Q.Choosed;
         if (InitChoosed) {
             self.Choosed(InitChoosed);
-        }
+        }       
+        self.SubscribeButtons();
+    }
+
+    self.SubscribeButtons = function(){
+        MSite.Events.on("save",ModelTableEdit.Save)
+        MSite.Events.on("addrecord",ModelTableEdit.Add)
+        MSite.Events.on("addrecordtemplate",ModelTableEdit.AddByTemplate)
+    }
+
+    self.UnsubscribeButtons = function(){
+        MSite.Events.off("save",ModelTableEdit.Save)
+        MSite.Events.off("addrecord",ModelTableEdit.Add)
+        MSite.Events.off("addrecordtemplate",ModelTableEdit.AddByTemplate)
     }
 
     self.Clear = function() {
@@ -1277,6 +1277,7 @@ var ModelTableEdit = (new function() {
         self.IsOverrideList(false);
         self.custom_overriding(true);
         self.Filter(null);
+        self.UnsubscribeButtons();
     }
 
 
