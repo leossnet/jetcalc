@@ -117,16 +117,22 @@ router.put('/headers', HP.TaskAccess("IsHeaderEditor"), function(req, res, next)
     var ModelSaver = require(__base + "src/modeledit.js");
     var M = new ModelSaver(req.user.CodeUser);
     var Headers = req.body.Headers;
-    M.Modify("header", {
-        CodeParentHeader: req.body.CodeHeader
-    }, Headers, function(err) {
-        return res.json({});
-    });
+    mongoose.model("colset").find({}, "-_id CodeColset NameColset").isactive().lean().exec(function(err, colsets) {
+				Headers.forEach(function(h) {
+            if (!h.CodeHeader) {
+                h.CodeHeader = h.CodeParentHeader + '_' + h.CodeColset;
+                h.NameHeader = _.find(colsets, function(cs) {
+                    return cs.CodeColset == h.CodeColset;
+                } || {NameColset: ""}).NameColset;
+            }
+        })
+        M.Modify("header", {
+            CodeParentHeader: req.body.CodeHeader
+        }, Headers, function(err) {
+						return res.json({});
+        })
+    })
 })
-
-
-
-
 
 
 module.exports = router;

@@ -12,6 +12,13 @@ var ModelTreeEdit = (new function() {
     self.wrapper = ko.observable(null);
     self.row_data = ko.observableArray([]);
     self.current_data = ko.observableArray([]);
+    self.sort = function() {
+        return 0;
+    };
+    self.filter = function() {
+        return true;
+    };
+    self.add_fields = ko.observableArray([]);
 
     self.BuildTree = function(data) {
         var Tree = {};
@@ -110,8 +117,9 @@ var ModelTreeEdit = (new function() {
         };
         $.getJSON('/api/modules/catalogue/tree-data', {
             model: self.model(),
-            fields: [self.name_field(), self.code_field(), self.parent_code_field()]
+            fields: [self.name_field(), self.code_field(), self.parent_code_field()].concat(self.add_fields()),
         }, function(data) {
+            data = _.filter(data, self.filter);
             self.row_data(data);
             self.current_data(data);
             if (tree) {
@@ -146,9 +154,16 @@ var ModelTreeEdit = (new function() {
             cn = ModelClientConfig.CodeAndName(self.model());
             self.code_field(cn[0]);
             self.name_field(cn[1]);
+            self.sort = data.sort || function() {
+                return 0;
+            };
+            self.filter = data.filter || function() {
+                return true;
+            };
+            self.add_fields(data.add_fields || []);
             self.wrapper(data.wrapper);
             self.LoadTree(data.Tree, function() {
-                ModelTableEdit.InitModel(self.model(), null, null, 1000);
+                ModelTableEdit.InitModel(self.model(), data.sort, data.filter, 1000);
                 ModelTableEdit.IsOverrideList(true);
                 ModelTableEdit.custom_overriding(false);
                 done && done();
@@ -996,7 +1011,7 @@ var ModelTableEdit = (new function() {
     }
 
     self.Add = function() {
-        if (ModelTableEdit.NoAccess())  return;
+        if (ModelTableEdit.NoAccess()) return;
         self.Choosed(null);
         var n = MModels.Create(self.ModelName(), {});
         self.LoadedModel(n);
@@ -1004,7 +1019,7 @@ var ModelTableEdit = (new function() {
     }
 
     self.AddByTemplate = function() {
-        if (ModelTableEdit.NoAccess() || !ModelTableEdit.Choosed())  return;
+        if (ModelTableEdit.NoAccess() || !ModelTableEdit.Choosed()) return;
         var template = self.LoadedModel()
         delete template["_id"];
         if (template.Links) {
@@ -1230,20 +1245,20 @@ var ModelTableEdit = (new function() {
         var InitChoosed = Q.Choosed;
         if (InitChoosed) {
             self.Choosed(InitChoosed);
-        }       
+        }
         self.SubscribeButtons();
     }
 
-    self.SubscribeButtons = function(){
-        MSite.Events.on("save",ModelTableEdit.Save)
-        MSite.Events.on("addrecord",ModelTableEdit.Add)
-        MSite.Events.on("addrecordtemplate",ModelTableEdit.AddByTemplate)
+    self.SubscribeButtons = function() {
+        MSite.Events.on("save", ModelTableEdit.Save)
+        MSite.Events.on("addrecord", ModelTableEdit.Add)
+        MSite.Events.on("addrecordtemplate", ModelTableEdit.AddByTemplate)
     }
 
-    self.UnsubscribeButtons = function(){
-        MSite.Events.off("save",ModelTableEdit.Save)
-        MSite.Events.off("addrecord",ModelTableEdit.Add)
-        MSite.Events.off("addrecordtemplate",ModelTableEdit.AddByTemplate)
+    self.UnsubscribeButtons = function() {
+        MSite.Events.off("save", ModelTableEdit.Save)
+        MSite.Events.off("addrecord", ModelTableEdit.Add)
+        MSite.Events.off("addrecordtemplate", ModelTableEdit.AddByTemplate)
     }
 
     self.Clear = function() {

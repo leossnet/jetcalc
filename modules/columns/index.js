@@ -26,8 +26,8 @@ var MColumns = (new function() {
         self.rGet("headers", {
             CodeHeader: CodeHeader
         }, function(data) {
-            data = _.filter(data, function(d){
-              return d.CodeColset;
+            data = _.filter(data, function(d) {
+                return d.CodeColset;
             });
             self.Headers(_.map(data, function(d) {
                 return MModels.Create("header", d);
@@ -165,6 +165,10 @@ var MColumns = (new function() {
                     parent_code_field: 'CodeParentHeader',
                     wrapper: function(el) {
                         return el.NameHeader + '(' + el.CodeHeader + ')';
+                    },
+                    add_fields: ["CodeColset"],
+                    filter: function(el) {
+                        return el.CodeColset == "";
                     }
                 }, function() {
                     ModelTableEdit.IsExtendEditor(true);

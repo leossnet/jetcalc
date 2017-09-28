@@ -12,7 +12,7 @@ var MPermissions = (new function() {
     }
 
     self.RefreshPermissions = function() {
-        console.log(1);
+        console.log("permissions_refresh");
     }
 
     self.Events = new EventEmitter();
@@ -20,7 +20,6 @@ var MPermissions = (new function() {
     self.Init = function(done) {
         self.LoadUserPermissions(function() {
             self.Events.emit("permissionsloaded");
-            console.log(1);
             MSocket.RegisterEvent('permissions_refresh', self.RefreshPermissions);
             MSocket.Start('permissions_refresh');
             return done && done();
