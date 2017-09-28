@@ -6,11 +6,15 @@ var ConditionEditor = (new function(){
 	self.Formula = ko.observable();
 	self.isOk = ko.observable(true);
 
+	self.ErToRead = function(err){
+		return err.replace(/\&\&/g,"and").replace(/\|\|/g,"or").replace(/\!/g,"not");
+	}
+
 	self.TestFormula = ko.computed(function(){
 		var F = self.Formula()+''; var map = {};
-		if (self.Formula() && F.length){
+		if (self.Formula() && !_.isEmpty(F)){
 			var vars = F.match(/[A-ZА-ЯЁ0-9]+/g);
-			vars.forEach(function(v){
+			vars && vars.forEach(function(v){
 				F = F.replace(v,' true ');
 			})
 			F = F.replaceAll(" and ", " && ");
@@ -22,15 +26,15 @@ var ConditionEditor = (new function(){
 				eval("var r ="+F);
 				self.isOk(true);
 			}catch(e){
-				console.log(e);
 				self.isOk(false);
-				self.ParserResult(e+":"+(F+"").replace(/(\&\&|\|\||true|false|\!)/g,"").trim());
+				self.ParserResult(self.ErToRead(e+"")+":"+(F+"").replace(/(\&\&|\|\||true|false|\!)/g,"").trim());
 			}
 		}
 	})
 
 	self.AddParam = function(data){
-		self.editor.replaceRange(" and "+data, CodeMirror.Pos(self.editor.lastLine()));
+		var add = (!_.isEmpty(self.Formula()))?" and ":"";
+		self.editor.replaceRange(add+data, CodeMirror.Pos(self.editor.lastLine()));
 	}
 
 	self.Params = ko.observableArray();
