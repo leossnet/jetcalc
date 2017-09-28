@@ -66,6 +66,7 @@ var MColEditor = (new function() {
 	    	}
 	    }    	
     	self.RowsChanged(_.keys(self.DiscretChanges).length+_.filter(self.Rows,{IsNew:true}).length);
+    	self.AskForRender();
     }
 
     self.RenderTimer = null
