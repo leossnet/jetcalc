@@ -42,6 +42,7 @@ var StructureHelper = (new function(){
 
 	self.get = function(Cx,done){
 		self.LoadInfo(Cx,function(err,INFO){
+			if (err) return done(err);
 			INFO.Row.forEach(function(R){
 				if (!_.isEmpty(R.Link2Use)){
 					R = _.merge(R,R.Link2Use);
@@ -54,6 +55,7 @@ var StructureHelper = (new function(){
 
 	self.getCells = function(Cx,done){
 		self.get(Cx,function(err,Answer){
+			if (err) return done(err);
 			var Result = [];
 			Answer.Cells.forEach(function(Row){
 				Result = Result.concat(Row);

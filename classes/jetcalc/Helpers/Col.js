@@ -35,6 +35,7 @@ var ColHelper = (new function(){
 
 	self.GetAll = function(Cx,done){
 		self.Init(Cx,function(err,INFO){
+			if (err) return done(err);
 			INFO.Result = INFO.Header;			
 			async.series([
 				self.PrimitiveFilter(Cx,INFO),   // CodePeriodGrp и IsInput на уровне docheader Основная фильтрация
@@ -62,6 +63,7 @@ var ColHelper = (new function(){
 			Header:function(Cx){
 				return function(done){					
 					HeaderHelper.get(Cx.CodeDoc,function(err,Res){
+						if (_.isEmpty(Res)) return final("Не настроены заголовки");
 						var Indexed = {};
 						Res.forEach(function(N){
 							Indexed[N.code] = _.merge(N,{IsRemoved:false,RemoveComment:[]});

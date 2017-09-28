@@ -82,6 +82,8 @@ var Unmapper = function(Context, InfoCacher){
 
 	self.Unmap = function(Cells, done){
 		self.LoadExisted(Cells,function(err){
+			if (err) return done(err);
+			if (_.isEmpty(Cells)) return done("Нет ячеек для документа");
 			Cells.forEach(function(Cell){ 
 				self.Matrix[Cell] = {};
 			})
