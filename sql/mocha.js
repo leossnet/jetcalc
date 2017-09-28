@@ -57,12 +57,13 @@ module.exports = function(driver,DataBase){
 	self.GetCellsHistory = function() {
 		it('Проверяем работу истории изменений', function(done) {
 			var Codes = ["$row1@col1.Pperiod1.Y2017#obj1?"];
-			var ExpectedResult = [{CodeCell:"$row1@col1.Pperiod1.Y2017#obj1?",CalcValue:"=2+2",Value:4},{CodeCell:"$row1@col1.Pperiod1.Y2017#obj1?",CalcValue:"=5+5",Value:10}];
+			var ExpectedResult = [{CodeCell:"$row1@col1.Pperiod1.Y2017#obj1?",CalcValue:"=5+5",Value:10},{CodeCell:"$row1@col1.Pperiod1.Y2017#obj1?",CalcValue:"=2+2",Value:4}];
 			self.DataBase.SetCells([
 				{ CodeCell:"$row1@col1.Pperiod1.Y2017#obj1?",CodeUser:'zuch',Comment:"Комментарий 2",CalcValue:"=5+5",Value:"10",CodeValuta:"MOCHA_TEST"},
 			],function(err){
 				if (err) return done(err);
 				self.DataBase.GetCellsHistory(['CodeCell','Value','CalcValue'],Codes,function(err,data){
+					console.log(data,ExpectedResult);
 					assert.equal(_.isEqual(ExpectedResult,data), true);
 					return done();
 				})
