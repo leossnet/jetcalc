@@ -87,9 +87,11 @@ var SetHelper = (new function(){
 									})
 								});
 							}),"Idx");
-							INFO.Groupped[Param.CodeParam] = _.merge(Param,{ParamSets:ParamSets});
-							INFO.Groupped[Param.CodeParam].Type = guesType(ParamSets);
-							INFO.Groupped[Param.CodeParam].NameParamGrp = ParamGroups[INFO.Groupped[Param.CodeParam].CodeParamGrp];
+							if (!_.isEmpty(Param)){
+								INFO.Groupped[Param.CodeParam] = _.merge(Param,{ParamSets:ParamSets});
+								INFO.Groupped[Param.CodeParam].Type = guesType(ParamSets);
+								INFO.Groupped[Param.CodeParam].NameParamGrp = ParamGroups[INFO.Groupped[Param.CodeParam].CodeParamGrp];
+							}
 						})				
 						INFO.Reports = _.map(INFO.report,function(R){
 							var RInfo = _.merge(R,{
