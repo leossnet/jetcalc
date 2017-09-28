@@ -455,8 +455,14 @@ var ModelConnectorEdit = (new function() {
             Links: ModelTableEdit.LinksCheck()
         }, function() {
             $("#connector_settings_modal").modal("hide");
+            var MTE_ol = ModelTableEdit.IsOverrideList();
+            var MTE_co = ModelTableEdit.custom_overriding();
+            var tree_inited = ModelTreeEdit.inited();
             ModelTableEdit.InitModel(ModelTableEdit.ModelName(), ModelTableEdit.Sort(), ModelTableEdit.Filter());
             self.model_edit_fields(self._get_model_edit_fields());
+            ModelTableEdit.IsOverrideList(MTE_ol);
+            ModelTableEdit.custom_overriding(MTE_co);
+            ModelTreeEdit.inited(tree_inited);
         })
     }
 
@@ -1084,7 +1090,13 @@ var ModelTableEdit = (new function() {
             Links: self.LinksCheck()
         }, function() {
             $("#catalogue_settings_modal").modal("hide");
+            var MTE_ol = self.IsOverrideList();
+            var MTE_co = self.custom_overriding();
+            var tree_inited = ModelTreeEdit.inited();
             self.InitModel(self.ModelName(), self.Sort(), self.Filter());
+            self.IsOverrideList(MTE_ol);
+            self.custom_overriding(MTE_co);
+            ModelTreeEdit.inited(tree_inited);
         })
     }
 
