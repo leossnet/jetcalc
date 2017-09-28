@@ -508,10 +508,7 @@ router.get('/installgit', LIB.Require(['module']), HP.TaskAccess("IsModulesAdmin
                     M.InstalledVersion = M.Version;
                     M.IsInstalled = true;
                     M.save(function(){
-                        var Redis = require(__base+"src/redis.js");
-                        Redis.flushdb(function(){
-                            return res.json({});    
-                        })                        
+                        return res.json({});    
                     })                
                 });
             })
