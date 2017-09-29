@@ -623,7 +623,7 @@ ko.components.register('bool-param', {
     		console.warn("Неверная канструкция параметра:",self.data);
     	}
     	var Current = _.find(self.data.ParamSets,{CodeParamSet:self.data.NewCodeParamSet});
-    	self.Text(Current.NameParamSet);
+    	self.Text(_.isEmpty(Current.SNameParamSet)?Current.NameParamSet:Current.SNameParamSet);
     	var Is = Current.CodeParamSet==PositiveCode;
     	self.IsPositiveSelected(Is);
     	self.IsPositiveSelected.subscribe(function(V){
@@ -632,7 +632,8 @@ ko.components.register('bool-param', {
     		} else {
     			self.data.NewCodeParamSet = NegativeCode;
     		}
-    		self.Text(_.find(self.data.ParamSets,{CodeParamSet:self.data.NewCodeParamSet}).NameParamSet);
+    		var F = _.find(self.data.ParamSets,{CodeParamSet:self.data.NewCodeParamSet});
+    		self.Text(_.isEmpty(F.SNameParamSet)?F.NameParamSet:F.SNameParamSet);
     		self.data.IsChanged(self.data.NewCodeParamSet!=self.data.CodeParamSet);
     	})
 	},
@@ -645,6 +646,9 @@ ko.components.register('select-param', {
     	var self = this;
     	self.data = params.data; 
     	self.Options = _.values(self.data.ParamSets);
+    	self.Options.forEach(function(O){
+    		O.NameParamSet = _.isEmpty(O.SNameParamSet) ? O.NameParamSet:O.SNameParamSet;
+    	});
     	self.OptionsText = 'NameParamSet';
     	self.OptionsValue = 'CodeParamSet'
     	self.OnChange = function(){

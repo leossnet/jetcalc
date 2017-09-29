@@ -19,17 +19,17 @@ var SetHelper = (new function(){
 		//Выбор ключей в документе
 		docparamkey:["-_id","CodeParam","CodeParamSet","CodeDoc","CodePeriodGrp","IsShow"],
 		//Параметры с дефолтным значением
-		param:["-_id","CodeParam","NameParam","CodeListDefinition","IndexParam","CodeParamGrp","CodeParamTab","CodeParamSet"],
+		param:["-_id","CodeParam","NameParam","SNameParam","CodeListDefinition","IndexParam","CodeParamGrp","CodeParamTab","CodeParamSet"],
 		//Набор ключей
-		paramset:["-_id","CodeParamSet","NameParamSet","CodeListDefinition","Idx"],
+		paramset:["-_id","CodeParamSet","NameParamSet","SNameParamSet","CodeListDefinition","Idx"],
 		//Ключи в наборе
 		paramsetkey:["-_id","CodeParamSet","CodeParamKey","KeyValue"],
 		//Библиотека -> Объединяет Params и ParamSets
-		listdefinition:["-_id","CodeListDefinition","NameListDefinition"],
+		listdefinition:["-_id","CodeListDefinition","NameListDefinition","SNameListDefinition"],
 		//Группировки
-		paramgrp:["-_id","NameParamGrp","CodeParamGrp"],
+		paramgrp:["-_id","NameParamGrp","SNameParamGrp","CodeParamGrp"],
 		//Группировки
-		paramtab:["-_id","NameParamTab","CodeParamTab"],
+		paramtab:["-_id","NameParamTab","SNameParamTab","CodeParamTab"],
 	}
 
 	self.SubscribeChanges(_.keys(self.Fields));
@@ -74,14 +74,14 @@ var SetHelper = (new function(){
 						INFO.Groupped = {};
 						var ParamGroups = {};
 						INFO.paramgrp.forEach(function(PG){
-							ParamGroups[PG.CodeParamGrp] = PG.NameParamGrp;
+							ParamGroups[PG.CodeParamGrp] = _.isEmpty(PG.SNameParamGrp) ? PG.NameParamGrp:PG.SNameParamGrp;
 						})
 						INFO.listdefinition.forEach(function(LD){
 							var Param = _.first(_.sortBy(_.map(_.filter(INFO.param,{CodeListDefinition:LD.CodeListDefinition}),function(M){
-								return _.pick(M,["CodeParam","NameParam","IndexParam","CodeParamGrp","CodeParamSet"]);
+								return _.pick(M,["CodeParam","NameParam","SNameParam","IndexParam","CodeParamGrp","CodeParamSet"]);
 							}),"IndexParam"));
 							var ParamSets = _.sortBy(_.map(_.filter(INFO.paramset,{CodeListDefinition:LD.CodeListDefinition}),function(M){
-								return _.merge(_.pick(M,["CodeParamSet","NameParamSet","Idx"]),{ParamKeys:
+								return _.merge(_.pick(M,["CodeParamSet","NameParamSet","SNameParamSet","Idx"]),{ParamKeys:
 									_.map(_.filter(INFO.paramsetkey,{CodeParamSet:M.CodeParamSet}),function(MM){
 										return _.pick(MM,["CodeParamSet","CodeParamKey","KeyValue"]);
 									})
