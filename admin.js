@@ -11,13 +11,27 @@ jison.print = function() {} // теперь jison не засирает логи
 
 global.__base = __dirname + "/";
 
-
-
 var Tasks = {
 	postgress:function(){
     	cd(__base + 'sql/mocha/');
     	exec('mocha pgexec.js');
     	cd(__base);
+	},
+	syncsqlstructure:function(){
+		var path2file = __base+"sql/migrate/"+config.db+"/migrate.js";
+		fs.stat(path2file,function(err,stat){
+			if (err) {
+				console.log("Миграция для "+config.db+" пока не написана");
+				process.exit();
+				return;
+			}
+			var Migrate = require(path2file);
+			Migrate.Execute(function(err){
+				if (err) console.log(err);
+				process.exit();
+				return;
+			})
+		})
 	},
 	build:function(){
 		var Compiller = require(__base+"modules/modules/compiller.js");
@@ -84,6 +98,7 @@ if (StartTask && Tasks[StartTask]){
 	menu.add('Компиляция парсеров');
 	menu.add('Компиляция библиотек');
 	menu.add('Проверка Postgres');
+	menu.add('Актуализация структуры SQL-базы');
 	menu.add('Базовая настройка -> Git'); 
 	menu.add('Выход');
 	menu.on('select', function (label) {
@@ -98,7 +113,10 @@ if (StartTask && Tasks[StartTask]){
 	    	break;
 		   	case 'Проверка Postgres':
 	    		Tasks.postgress();
-		   	break;		   	
+		   	break;
+		   	case 'Актуализация структуры SQL-базы':
+		   		Tasks.syncsqlstructure();
+		   	break;
 		   	case 'Базовая настройка -> Git':
 	    		Tasks.updategitbase();
 		   	break;

@@ -63,7 +63,6 @@ module.exports = function(driver,DataBase){
 			],function(err){
 				if (err) return done(err);
 				self.DataBase.GetCellsHistory(['CodeCell','Value','CalcValue'],Codes,function(err,data){
-					console.log(data,ExpectedResult);
 					assert.equal(_.isEqual(ExpectedResult,data), true);
 					return done();
 				})

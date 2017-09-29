@@ -66,7 +66,6 @@ var MColEditor = (new function() {
 	    	}
 	    }    	
     	self.RowsChanged(_.keys(self.DiscretChanges).length+_.filter(self.Rows,{IsNew:true}).length);
-    	self.AskForRender();
     }
 
     self.RenderTimer = null
@@ -352,7 +351,7 @@ var MColEditor = (new function() {
 
 	self.FixedCols = ko.observableArray([80,400], {persist: 'coleditor'});
 
-	self.Retries = 3;
+	self.Retries = 5;
 	self.RenderTable = function(){
 		var selector = '.handsontable.single:visible';
 		var DomPlace = $(selector)[0];
@@ -360,7 +359,7 @@ var MColEditor = (new function() {
 			self.Retries--;
 			return setTimeout(self.RenderTable,100);
 		}		
-		self.Retries = 3;
+		self.Retries = 5;
 		$(selector).empty();
 		if (self.table){
             self.table.destroy();

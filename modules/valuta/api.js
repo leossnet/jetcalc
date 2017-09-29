@@ -276,7 +276,8 @@ var SyncHelper = (new function () {
     self.parserXml = require('xml2js').parseString;
 
     self.round = function (V) {
-        return Math.round(V * 100000) / 100000;
+    	var dig = 10, r = Math.pow(dig,dig);
+        return Math.round(V * r) / r;
     }
 
     self.Calculate = function (Date, Valuta, R, R1, R2) {

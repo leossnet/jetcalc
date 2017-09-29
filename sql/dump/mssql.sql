@@ -85,11 +85,11 @@ BEGIN
 							[Year] int,
 							[CodeUser] nvarchar(900),
 							[CodeValuta] nvarchar(900),
-							[Value] decimal(30,9),
+							[Value] decimal(16,10),
 							[CalcValue] nvarchar(900) collate database_default,
-							[ReportValue] decimal(30,9) null,
-							[ReportValue1] decimal(30,9) null,
-							[ReportValue2] decimal(30,9) null,
+							[ReportValue] decimal(16,10) null,
+							[ReportValue1] decimal(16,10) null,
+							[ReportValue2] decimal(16,10) null,
 							[Comment] nvarchar(500) collate database_default,
 							[DateEdit] datetime
 							);
@@ -100,7 +100,7 @@ BEGIN
 		Tbl.Col.value('./@CodePeriod', 'nvarchar(900)') as CodePeriod,
 		Tbl.Col.value('./@Year', 'int') as Year,		
 		Tbl.Col.value('./@CodeValuta', 'nvarchar(900)') as CodeValuta,
-		Tbl.Col.value('./@Value', 'decimal(30,9)') as Value,
+		Tbl.Col.value('./@Value', 'decimal(16,10)') as Value,
 		Tbl.Col.value('./@CalcValue', 'nvarchar(900)') as CalcValue,
 		Tbl.Col.value('./@Comment', 'nvarchar(900)') as Comment
 	FROM
@@ -183,9 +183,9 @@ BEGIN
 		[CodeReportValuta2] nvarchar(900),
 		[Year] int,
 		[CodePeriod] nvarchar(900),
-		[Value] decimal(19,5),
-		[Value1] decimal(19,5),
-		[Value2] decimal(19,5),
+		[Value] decimal(16,10),
+		[Value1] decimal(16,10),
+		[Value2] decimal(16,10),
 		[CodeUser] nvarchar(900),
 		[DateEdit] datetime
 	);
@@ -200,9 +200,9 @@ BEGIN
 		Tbl.Col.value('./@CodeReportValuta2', 'nvarchar(900)') as CodeReportValuta2,
 		Tbl.Col.value('./@Year', 'int') as Year,	
 		Tbl.Col.value('./@CodePeriod', 'nvarchar(900)') as CodePeriod,
-		Tbl.Col.value('./@Value', 'decimal(19,5)') as Value,
-		Tbl.Col.value('./@Value1', 'decimal(19,5)') as Value1,
-		Tbl.Col.value('./@Value2', 'decimal(19,5)') as Value2,
+		Tbl.Col.value('./@Value', 'decimal(16,10)') as Value,
+		Tbl.Col.value('./@Value1', 'decimal(16,10)') as Value1,
+		Tbl.Col.value('./@Value2', 'decimal(16,10)') as Value2,
 		Tbl.Col.value('./@CodeUser', 'nvarchar(900)') as CodeUser
 	FROM
 		@xml.nodes('/Rates/Rate') Tbl(Col)
@@ -310,11 +310,11 @@ CREATE TABLE [dbo].[cells](
 	[Year] [int] NULL,
 	[CodeUser] [nvarchar](500) NULL,
 	[CodeValuta] [nvarchar](500) NULL,
-	[Value] [decimal](19, 5) NOT NULL,
+	[Value] [decimal](16,10) NOT NULL,
 	[CalcValue] [nvarchar](255) NULL,
-	[ReportValue] [decimal](19, 5) NOT NULL,
-	[ReportValue1] [decimal](19, 5) NULL,
-	[ReportValue2] [decimal](19, 5) NULL,
+	[ReportValue] [decimal](16,10) NOT NULL,
+	[ReportValue1] [decimal](16,10) NULL,
+	[ReportValue2] [decimal](16,10) NULL,
 	[Comment] [nvarchar](500) NULL,
 	[DateEdit] [datetime] NOT NULL,
 PRIMARY KEY CLUSTERED 
@@ -336,11 +336,11 @@ CREATE TABLE [dbo].[cells_h](
 	[Year] [int] NULL,
 	[CodeUser] [nvarchar](500) NULL,
 	[CodeValuta] [nvarchar](500) NULL,
-	[Value] [decimal](19, 5) NOT NULL,
+	[Value] [decimal](16,10) NOT NULL,
 	[CalcValue] [nvarchar](255) NULL,
-	[ReportValue] [decimal](19, 5) NOT NULL,
-	[ReportValue1] [decimal](19, 5) NULL,
-	[ReportValue2] [decimal](19, 5) NULL,
+	[ReportValue] [decimal](16,10) NOT NULL,
+	[ReportValue1] [decimal](16,10) NULL,
+	[ReportValue2] [decimal](16,10) NULL,
 	[Comment] [nvarchar](500) NULL,
 	[DateEdit] [datetime] NOT NULL,
 PRIMARY KEY CLUSTERED 
@@ -365,9 +365,9 @@ CREATE TABLE [dbo].[valuta_rates](
 	[CodeReportValuta2] [nvarchar](255) NULL,
 	[Year] [int] NULL,
 	[CodePeriod] [nvarchar](255) NULL,
-	[Value] [decimal](19, 5) NULL,
-	[Value1] [decimal](19, 5) NULL,
-	[Value2] [decimal](19, 5) NULL,
+	[Value] [decimal](16,10) NULL,
+	[Value1] [decimal](16,10) NULL,
+	[Value2] [decimal](16,10) NULL,
 	[CodeUser] [nvarchar](255) NULL,
 	[DateEdit] [datetime] NULL,
 PRIMARY KEY CLUSTERED 
@@ -395,9 +395,9 @@ CREATE TABLE [dbo].[valuta_rates_h](
 	[CodeReportValuta2] [nvarchar](255) NULL,
 	[Year] [int] NULL,
 	[CodePeriod] [nvarchar](255) NULL,
-	[Value] [decimal](19, 5) NULL,
-	[Value1] [decimal](19, 5) NULL,
-	[Value2] [decimal](19, 5) NULL,
+	[Value] [decimal](16,10) NULL,
+	[Value1] [decimal](16,10) NULL,
+	[Value2] [decimal](16,10) NULL,
 	[CodeUser] [nvarchar](255) NULL,
 	[DateEdit] [datetime] NULL,
 PRIMARY KEY CLUSTERED 

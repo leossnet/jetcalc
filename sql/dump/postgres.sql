@@ -191,11 +191,11 @@ CREATE TEMP table temp_cell (
   "Year" int,
   "CodeUser" varchar(900),
   "CodeValuta" varchar(900),
-  "Value" decimal(19,5),
+  "Value" decimal(16,10),
   "CalcValue" varchar(900),
-  "ReportValue" decimal(19,5),
-  "ReportValue1" decimal(19,5),
-  "ReportValue2" decimal(19,5),
+  "ReportValue" decimal(16,10),
+  "ReportValue1" decimal(16,10),
+  "ReportValue2" decimal(16,10),
   "Comment" varchar(900),
   "DateEdit" timestamp without time zone
 );
@@ -208,7 +208,7 @@ FROM json_to_recordset(data) as x(
   "CodePeriod" varchar(900),
   "Year" int,
   "CodeValuta" varchar(900),
-  "Value" decimal(19,5),
+  "Value" decimal(16,10),
   "CalcValue" varchar(900),
   "Comment" varchar(900)
 );
@@ -308,9 +308,9 @@ CREATE TEMP table temp_vr (
   "CodeReportValuta2" varchar(900),
   "Year" int,
   "CodePeriod" varchar(900),
-  "Value" decimal(19,5),
-  "Value1" decimal(19,5),
-  "Value2" decimal(19,5),
+  "Value" decimal(16,10),
+  "Value1" decimal(16,10),
+  "Value2" decimal(16,10),
   "CodeUser" varchar(900),
   "DateEdit" timestamp without time zone
 );
@@ -327,9 +327,9 @@ x(
     "CodeReportValuta2" varchar(900),
     "Year" int,  
     "CodePeriod" varchar(900),
-    "Value" decimal(19,5),
-    "Value1" decimal(19,5),
-    "Value2" decimal(19,5),
+    "Value" decimal(16,10),
+    "Value1" decimal(16,10),
+    "Value2" decimal(16,10),
     "CodeUser" varchar(900)
 );
 
@@ -399,11 +399,11 @@ CREATE TABLE public.cells
   "Year" integer,
   "CodeUser" character varying(500),
   "CodeValuta" character varying(500),
-  "Value" numeric(19,5) NOT NULL DEFAULT 0.0,
+  "Value" decimal(16,10) NOT NULL DEFAULT 0.0,
   "CalcValue" character varying(255),
-  "ReportValue" numeric(19,5) NOT NULL DEFAULT 0.0,
-  "ReportValue1" numeric(19,5) DEFAULT 0,
-  "ReportValue2" numeric(19,5) DEFAULT 0,
+  "ReportValue" decimal(16,10) NOT NULL DEFAULT 0.0,
+  "ReportValue1" decimal(16,10) DEFAULT 0,
+  "ReportValue2" decimal(16,10) DEFAULT 0,
   "Comment" character varying(500) DEFAULT ''::character varying,
   "DateEdit" timestamp without time zone NOT NULL DEFAULT now(),
   CONSTRAINT "PK__Cells__3A4B12F3AE0F548F" PRIMARY KEY ("IdCell")
@@ -475,11 +475,11 @@ CREATE TABLE public.cells_h
   "Year" integer,
   "CodeUser" character varying(500),
   "CodeValuta" character varying(500),
-  "Value" numeric(19,5) NOT NULL DEFAULT 0.0,
+  "Value" decimal(16,10) NOT NULL DEFAULT 0.0,
   "CalcValue" character varying(255),
-  "ReportValue" numeric(19,5) NOT NULL DEFAULT 0.0,
-  "ReportValue1" numeric(19,5) DEFAULT 0,
-  "ReportValue2" numeric(19,5) DEFAULT 0,
+  "ReportValue" decimal(16,10) NOT NULL DEFAULT 0.0,
+  "ReportValue1" decimal(16,10) DEFAULT 0,
+  "ReportValue2" decimal(16,10) DEFAULT 0,
   "Comment" character varying(500) DEFAULT ''::character varying,
   "DateEdit" timestamp without time zone NOT NULL DEFAULT now(),
   CONSTRAINT "PK__Cells_h__8AC7A1B748CFD2BB" PRIMARY KEY ("IdCellH")
@@ -515,9 +515,9 @@ CREATE TABLE public.valuta_rates
   "CodeReportValuta2" character varying(255),
   "Year" integer,
   "CodePeriod" character varying(255),
-  "Value" numeric(19,5),
-  "Value1" numeric(19,5),
-  "Value2" numeric(19,5),
+  "Value" decimal(16,10),
+  "Value1" decimal(16,10),
+  "Value2" decimal(16,10),
   "CodeUser" character varying(255),
   "DateEdit" timestamp without time zone DEFAULT now(),
   CONSTRAINT "PK__valuta_r__49D7083F1A9A173D" PRIMARY KEY ("IdValutaRate")
@@ -591,9 +591,9 @@ CREATE TABLE public.valuta_rates_h
   "CodeReportValuta2" character varying(255),
   "Year" integer,
   "CodePeriod" character varying(255),
-  "Value" numeric(19,5),
-  "Value1" numeric(19,5),
-  "Value2" numeric(19,5),
+  "Value" decimal(16,10),
+  "Value1" decimal(16,10),
+  "Value2" decimal(16,10),
   "CodeUser" character varying(255),
   "DateEdit" timestamp without time zone DEFAULT now(),
   CONSTRAINT "PK__valuta_r__4C4FB228DD3298F5" PRIMARY KEY ("IdValutaRateH")

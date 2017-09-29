@@ -552,7 +552,7 @@ var Unmapper = function(Context, InfoCacher){
 		}
 		if (Info.Obj=="^"){
 			var ObjInfo = self.Info.Data.Div[self.ContextObj];
-			if (ObjInfo.RootObj) {
+			if (ObjInfo.CodeParentObj) {
 				Info.Obj = ObjInfo.CodeParentObj;
 				Result = {Type:'FRM',FRM:Info.Cell.split("#^").join("#"+Info.Obj)};			
 			}

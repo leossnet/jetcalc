@@ -46,7 +46,10 @@ var Base = function(config){
 				Year:Set.Year,
 				CalcValue:Cell.CalcValue,
 				Value:Cell.Value,
-				CodeValuta:Cell.CodeValuta
+				CodeValuta:Cell.CodeValuta,
+				CodeCol:Set.Col,
+				CodeRow:Set.Row,
+				CodeObj:Set.Obj
 			})
 		})
 		return ReCells;
