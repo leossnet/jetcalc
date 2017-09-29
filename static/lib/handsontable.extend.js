@@ -40,15 +40,15 @@ window.HandsonTableRenders = {
             var Add = _.intersection(CellInfo.Style,TestArr);
             if (!_.isEmpty(Add)){
                 //console.log(">>>",CellInfo.Style,TestArr,Add);
-                $(td).addClass(Add.join(" "));    
-            }            
+                $(td).addClass(Add.join(" "));
+            }
         }
         if (CellInfo.Cell){
             $(td).addClass("IsCell");
             var PropToMap = ["IsControlPoint","IsEditablePrimary","IsPrimary","IsSum","IsLocked","IsChangedBySave","IsChanged","IsChangedBySave"];
             PropToMap.forEach(function(Prop){
                 if (CellInfo[Prop]) {
-                    $(td).addClass(Prop);   
+                    $(td).addClass(Prop);
                 }
             })
         }
@@ -86,8 +86,8 @@ window.HandsonTableRenders = {
             } else {
                 td.innerHTML = CellInfo.Value!=void(0)? CellInfo.Value:'';
             }
-        }        
-    },    
+        }
+    },
 
     ToolTip:function(td,realValue){
         $(td).tooltip({
@@ -128,11 +128,11 @@ window.HandsonTableRenders = {
         cellProperties.readOnly = true;
     }
 
-   
+
 }
 
 
-Handsontable.NumericCell.validator = function(value, callback) {
+Handsontable.cellTypes.numeric.validator = function(value, callback) {
   if (value === null) {
     value = '';
   }
@@ -140,7 +140,7 @@ Handsontable.NumericCell.validator = function(value, callback) {
     value = value.replace(/[\=\s\-\+\*\/\(\)]/g,'')
   }
   var result = /^-?\d*(\.|\,)?\d*$/.test((value));
-  callback(result);  
+  callback(result);
 };
 
 window.numeral.languageData().delimiters.thousands = ' ';
@@ -151,10 +151,10 @@ Handsontable.editors.NumericEditor.prototype.getValue = function(e){
 
 
 window.EditorRegistrator = new function(){
-    var self = this; 
-    
+    var self = this;
+
     self.Table = ko.observable();
-    
+
     self.EditRow = ko.observable();
     self.EditField = ko.observable();
     self.IsActive  = ko.observable(false);
@@ -169,12 +169,12 @@ window.EditorRegistrator = new function(){
 
     self.Cancel = function(){
         $(self.popupId).modal("hide");
-    }   
+    }
 
 
 
     self.Register = function(){
-        
+
         var PopupEditor = Handsontable.editors.BaseEditor.prototype.extend();
 
         PopupEditor.prototype = _.merge(PopupEditor.prototype,{
@@ -188,7 +188,7 @@ window.EditorRegistrator = new function(){
             prepare:function() {
                 Handsontable.editors.BaseEditor.prototype.prepare.apply(this, arguments);
             },
-            open:function() {        
+            open:function() {
                 $(this.popupId).modal('show');
             },
             close:function() {},
@@ -196,9 +196,11 @@ window.EditorRegistrator = new function(){
             getValue:function() {},
             setValue:function() {},
             saveValue:function() {}
-        })    
+        })
 
         Handsontable.editors.registerEditor('popup', PopupEditor);
+
+        Handsontable.editors.PopupEditor = PopupEditor;
 
         var SelectEditor = Handsontable.editors.PopupEditor.prototype.extend();
         SelectEditor.prototype = _.merge(SelectEditor.prototype,{
@@ -215,7 +217,7 @@ window.EditorRegistrator = new function(){
                 var Property = this.prop;
                 var Obj = {}; Obj[Property] = this.originalValue;
                 var Model = ModelEdit.Model(ModelName, Obj);
-                
+
                 EditorRegistrator.Table(ModelName);
                 EditorRegistrator.EditRow(Model);
                 EditorRegistrator.EditField(Property);
@@ -302,10 +304,10 @@ window.EditorRegistrator = new function(){
                 }
                 if(!this._opened){
                     EditorRegistrator.IsActive(false);
-                }                
+                }
             }
         })
-        Handsontable.editors.registerEditor('formula', FormulaHandson);        
+        Handsontable.editors.registerEditor('formula', FormulaHandson);
 
         var ConditionHandson = Handsontable.editors.PopupEditor.prototype.extend();
         ConditionHandson.prototype = _.merge(ConditionHandson.prototype,{
@@ -331,7 +333,7 @@ window.EditorRegistrator = new function(){
                 }
                 if(!this._opened){
                     EditorRegistrator.IsActive(false);
-                }                
+                }
             }
         })
         Handsontable.editors.registerEditor('condition', ConditionHandson);
@@ -342,6 +344,7 @@ window.EditorRegistrator = new function(){
 
 
 window.EditorRegistrator.Register();
+
 
 window.HandsonTableHelper = {
 
@@ -377,8 +380,8 @@ window.HandsonTableHelper = {
         self.headerRendererFactory = function(headerRow) {
             return function(index, TH) {
               TH.removeAttribute('colspan');
-              Handsontable.Dom.removeClass(TH, 'hiddenHeader');
-              Handsontable.Dom.addClass(TH,'headerCell');
+              Handsontable.dom.removeClass(TH, 'hiddenHeader');
+              Handsontable.dom.addClass(TH,'headerCell');
               if (self.colspanArray[headerRow][index] && self.colspanArray[headerRow][index].colspan) {
                 var colspan = self.colspanArray[headerRow][index].colspan;
                 var fixedColumnsLeft = self.table.getSettings().fixedColumnsLeft || 0;
@@ -389,21 +392,21 @@ window.HandsonTableHelper = {
                 if (colspan > 1) {
                   var cs = isInTopLeftCornerOverlay || isInLeftOverlay ? Math.min(colspan, fixedColumnsLeft - index) : colspan;
                   TH.setAttribute('colspan', cs);
-                  Handsontable.Dom.addClass(TH,'olapheader');
+                  Handsontable.dom.addClass(TH,'olapheader');
                 }
                 if (isInTopLeftCornerOverlay || isInLeftOverlay && index === fixedColumnsLeft - 1) {
-                  Handsontable.Dom.addClass(TH, 'overlayEdge');
+                  Handsontable.dom.addClass(TH, 'overlayEdge');
                 }
               }
               if (self.colspanArray[headerRow][index] && self.colspanArray[headerRow][index].hidden) {
-                  Handsontable.Dom.addClass(TH, 'hiddenHeader');
+                  Handsontable.dom.addClass(TH, 'hiddenHeader');
               }
-              Handsontable.Dom.empty(TH);
+              Handsontable.dom.empty(TH);
               var divEl = document.createElement('DIV');
-              Handsontable.Dom.addClass(divEl, 'relative');
+              Handsontable.dom.addClass(divEl, 'relative');
               var spanEl = document.createElement('SPAN');
-              Handsontable.Dom.addClass(spanEl, 'colHeader');
-              Handsontable.Dom.fastInnerHTML(spanEl, self.colspanArray[headerRow][index] ? self.colspanArray[headerRow][index].label || '' : '');
+              Handsontable.dom.addClass(spanEl, 'colHeader');
+              Handsontable.dom.fastInnerHTML(spanEl, self.colspanArray[headerRow][index] ? self.colspanArray[headerRow][index].label || '' : '');
               divEl.appendChild(spanEl);
               TH.appendChild(divEl);
               self.table.runHooks('afterGetColHeader', index, TH);
@@ -497,7 +500,7 @@ window.HandsonTableHelper = {
               if (changeDirection) {
                     var z = from.col;
                     from.col = to.col;
-                    to.col = z; 
+                    to.col = z;
               }
               if (colspan > 1) {
                 blockCalculations.column = true;
@@ -592,7 +595,7 @@ window.HandsonTableHelper = {
             BlankDocument.Events.emit('key',e);
             switch (e.keyCode) {
                 case 46: // Del
-                Handsontable.Dom.stopImmediatePropagation(e);
+                Handsontable.dom.stopImmediatePropagation(e);
                 try{
                   if (table.getDataAtCell(selection[0],selection[1])) {
                       var rowIndex = selection[0]
@@ -689,10 +692,10 @@ window.HandsonTableHelper = {
     },
 
     WidthFix : function(table,defaultWidth,maxWidth,fixed){
-        var defaultWidth = defaultWidth, fixed = fixed ||[]; 
+        var defaultWidth = defaultWidth, fixed = fixed ||[];
         var _wc = function(table,colIndex){
             var texts = table.getDataAtCol(colIndex);
-            var value = defaultWidth; 
+            var value = defaultWidth;
             texts && texts.forEach(function(T,I){
                 if (I){
                     var Text = table.getCopyableText(I,colIndex,I,colIndex).trim();
@@ -705,7 +708,7 @@ window.HandsonTableHelper = {
         var RealCols = table.countCols();
         for (var i = 0; i<RealCols; i++){
             if (fixed[i]) {
-              widths.push(fixed[i]); 
+              widths.push(fixed[i]);
             } else {
               var w2c = _wc(table,i);
               if (maxWidth){
@@ -803,7 +806,7 @@ window.HandsonTableHelper = {
                   Exclude[Ind] = _.map(Exclude[Ind],'Index');
               })
             } catch(e){
-              
+
             }
             var RealExclude = {};
             for (var i in Exclude){
