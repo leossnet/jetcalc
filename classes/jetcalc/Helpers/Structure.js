@@ -83,7 +83,10 @@ var Simple = (new function(){
 	self.get = function(Cx,INFO,done){
 		var CodeObj = Cx.CodeObj, Rows = INFO.Row, Cols = INFO.Col, Doc = INFO.Doc,
 	    	Valuta = _.find(INFO.Valuta,{CodeValuta:Cx.CodeValuta}),
-	    	ValutaSign = (Valuta)?Valuta.SignValuta:"";
+	    	ValutaSign = "";
+	    if (Valuta){
+	    	ValutaSign = _.isEmpty(Valuta.SignValuta) ? Valuta.SNameValuta:Valuta.SignValuta;
+	    }
 	    if (INFO.Doc.HasChildObjs && !_.isEmpty(Cx.ChildObj)){
 	    	CodeObj = Cx.ChildObj;
 	    }
@@ -103,7 +106,7 @@ var Simple = (new function(){
             if (Doc.IsShowMeasure){
                 var M = Row.Measure||"";
                 if (M.indexOf("[")!=-1){
-                    if (Valuta) M = M.replace(/\[.*?\]/g,Valuta);
+                    if (!_.isEmpty(ValutaSign)) M = M.replace(/\[.*?\]/g,ValutaSign);
                     else M = M.replace("[","").replace("]","");                    
                 }
                 EmptRow.push(M);
