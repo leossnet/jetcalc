@@ -19,8 +19,8 @@ module.exports = (new function(){
 	self.Tags = /([_]{2,3}[A-Za-z_]+)/g;
 	self.Tag = /([_]{2,3}[A-Za-z_]+)/;
 	
-	self.Mods = /(<<<|<<|>>|torootobj|toparentobj|consgrp|consobj|tomainobj|toobj)\(.*?\)/g;
-	self.Mod = /(<<<|<<|>>|torootobj|toparentobj|consgrp|consobj|tomainobj|toobj)\((.*?)\)/;
+	self.Mods = /(<<<|>>|<<)\(.*?\)/g;
+	self.Mod = /(<<<|>>|<<)\((.*?)\)/;
 	
 
 

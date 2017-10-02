@@ -34,13 +34,14 @@ mongoose.connection.on('connected', function(){
     ModelInit(function(){
 
         var JetCalc = require(__base+"classes/jetcalc/Calc.js");
-        JetCalc.Calculate(["$m1202100@VAL.P11.Y2017#102?","$m1202120@PLANMES.P11.Y2017#102?"],{
-            CodePeriod:11,
+        JetCalc.Calculate(["$p1305000@CENACALC.P14.Y2017#202_PLPROKAT_01_CEPROKAT_02?"],{
+            CodePeriod:14,
             CodeObj:102,
             Year:2017,
             IsInput:true,
             CodeValuta:"RUB"
         },function(err,Result){
+            //console.log(JetCalc.Formulas);
             console.log(Result);
 
         })

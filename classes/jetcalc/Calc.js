@@ -15,6 +15,7 @@ var Calculator = (new function(){
 	self.Dependable = {};
 	self.PrimariesInfo = {};
 	self.Valuta = {};
+	self.Formulas = {};
 	self.Field  = "Value";
 	self.CRecursion = 0;
 	self.MaxRecursion = 10000;
@@ -31,6 +32,7 @@ var Calculator = (new function(){
 		self.PrepareValuta(function(err){
 			U.Unmap(Cells,Cx,function(err){
 				if (err) return done(err);
+				self.Formulas = _.clone(U.HowToCalculate);
 				self.HowToCalculate = _.clone(U.HowToCalculate);
 				self.Dependable = _.clone(U.Dependable);
 				var Primaries2Load = [];
@@ -52,6 +54,7 @@ var Calculator = (new function(){
 						for (var CellName in self.Result){
 							self.Result[CellName] = self.Calculated[CellName];
 						}
+						console.log(U.Err);
 						return done(err,self.Result);
 					});
 				})
@@ -66,7 +69,7 @@ var Calculator = (new function(){
 		}
 		var keys2omit = [];
 		for (var CellName in self.HowToCalculate){
-			var Formula = self.HowToCalculate.FRM;
+			var Formula = self.HowToCalculate[CellName].FRM;
 			if (self._isCalculateble(self.Dependable[CellName])){
 				if (_.isEmpty(Formula) || Formula=='0' || Formula==0){
 					self.Calculated[CellName] = 0;
@@ -80,7 +83,9 @@ var Calculator = (new function(){
 		if (_.isEmpty(self.HowToCalculate)){
 			return done();
 		}
-		self._calculate(done);
+		setTimeout(function(){
+			self._calculate(done);
+		},0)
 	}
 
 	self.LoadPrimaries = function(Primaries,done){
