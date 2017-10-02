@@ -650,10 +650,14 @@ var MRowEditor = (new function() {
                 plugin.textarea.select();
             },
             beforePaste: function(data, coords) {
+                data = JSON.parse(_.first(data));
                 var startRow = coords[0].startRow;
                 var startCol = coords[0].startCol;
                 for (var i = 0; i < Math.min(self.table.countRows() - startRow, data.length); ++i) {
                     for (var j = 0; j < Math.min(self.table.countCols() - startCol, data[i].length); ++j) {
+                        data[i][j].forEach(function(l) {
+                            delete l._id;
+                        })
                         self.table.setDataAtCell(startRow + i, startCol + j, data[i][j]);
                     }
                 }
