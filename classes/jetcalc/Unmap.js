@@ -4,6 +4,7 @@ var mongoose = require("mongoose");
 var HPath = __base+"classes/jetcalc/Helpers/";
 var Rx = require(__base+"classes/jetcalc/RegExp.js");
 var RowHelper = require(HPath+"Row.js");
+var jison_prepare  = require(__base+'classes/calculator/jison/compile.js'); // Упрощалка
 
 
 var Unmaper = function(){
@@ -39,12 +40,7 @@ var Unmaper = function(){
 		self.ToUnmap = _.clone(self.Matrix);
 		self.Prepare(function(err){
 			self._unmap(function(err){
-				console.log("All Unmapped!");
-				//console.log(self.Err);
-				//console.log(self.LoadedRows);
-				console.log(self.HowToCalculate);
-				//console.log(self.Dependable);
-				return done();
+				return done(err);
 			})
 		})
 	}
@@ -102,7 +98,37 @@ var Unmaper = function(){
 		Formula  = (Formula+"");
 		Formula = self.RemoveTags(Formula,Cell);
 		Formula = self.ExtendVariables(Formula,Cell);
+		Formula = self.SimplifyFormula(Formula,Cell);
 		return Formula;
+	}
+
+	self.SimplifyFormula = function(Formula,Cell){
+		var P = self.Help.Period[Cell.Period];
+		var Rows = self._rows(Cell);
+		var Row = Rows[Cell.Row];
+		var Col = self.Help.AllCols[Cell.Col];
+		var Obj = self.Help.Div[Cell.Obj]; 
+		jison_prepare.setContext({
+			grp: Obj.Groups,
+			year: Cell.Year,
+			obj:  Cell.Obj,
+			row: Cell.Row, 
+			col: Cell.Col, 			
+			period:[Cell.Period].concat(P.Grps),
+			months:P.MonthStart,
+			MCOUNT:P.MCount,
+			DCOUNT:P.DCount,
+			coltags:Col.Tags,
+			rowtags:Row.Tags,
+			treetags:Row.AllTags,
+			objtags:Obj.Tags
+		});
+		try{
+			Formula = jison_prepare.parse(Formula);
+		} catch(e){
+			self.Err.Set(Cell.Cell,'FRM:'+Cell.Type.FRM+' : '+e.message);
+		}
+		return Formula;		
 	}
 
 	self.RemoveTags = function(Formula,Cell){
@@ -176,7 +202,7 @@ var Unmaper = function(){
 		if (ByPeriod.length==1){
 			return _.first(ByPeriod);
 		} else {
-			console.log(ByPeriod);
+			console.log("ByPeriod",ByPeriod);
 			die();
 		}
 		

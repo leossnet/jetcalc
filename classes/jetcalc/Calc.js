@@ -2,6 +2,7 @@ var _ = require("lodash");
 var async = require("async");
 var mongoose = require("mongoose");
 var Unmapper = require(__base+"classes/jetcalc/Unmap.js");
+var jison  = require(__base+'classes/calculator/jison/calculator.js') // Вычислялка
 
 
 
@@ -11,20 +12,27 @@ var Calculator = (new function(){
 	self.Calculated = {};
 	self.Cx = {};
 	self.HowToCalculate = {};
+	self.Dependable = {};
 	self.PrimariesInfo = {};
 	self.Valuta = {};
 	self.Field  = "Value";
 	self.CRecursion = 0;
 	self.MaxRecursion = 10000;
+	self.Result = {};
 
 	self.Calculate = function(Cells,Cx,done){
 		var U = new Unmapper();
 		self.Calculated = {};
 		self.Cx = Cx;
+		self.Result = {};
+		Cells.forEach(function(CellName){
+			self.Result[CellName] = 0;
+		})
 		self.PrepareValuta(function(err){
 			U.Unmap(Cells,Cx,function(err){
 				if (err) return done(err);
 				self.HowToCalculate = _.clone(U.HowToCalculate);
+				self.Dependable = _.clone(U.Dependable);
 				var Primaries2Load = [];
 				var RemainCells = {}
 				for (var CellName in self.HowToCalculate){
@@ -41,7 +49,10 @@ var Calculator = (new function(){
 					if (err) return done(err);
 					self.CRecursion = 0;
 					self._calculate(function(err){
-						return done(err);
+						for (var CellName in self.Result){
+							self.Result[CellName] = self.Calculated[CellName];
+						}
+						return done(err,self.Result);
 					});
 				})
 			})
@@ -49,10 +60,27 @@ var Calculator = (new function(){
 	}
 
 	self._calculate = function(done){
-		console.log("AAAAAAAA _calculate");
-		console.log(self.Calculated);
-
-
+		if ((++self.CRecursion)>=self.MaxRecursion) {
+			console.log("Рекурсия");
+			return done();
+		}
+		var keys2omit = [];
+		for (var CellName in self.HowToCalculate){
+			var Formula = self.HowToCalculate.FRM;
+			if (self._isCalculateble(self.Dependable[CellName])){
+				if (_.isEmpty(Formula) || Formula=='0' || Formula==0){
+					self.Calculated[CellName] = 0;
+				} else {
+					self._calculateFormula(CellName,Formula,self.Dependable[CellName]);
+				}
+				keys2omit.push(CellName);
+			}  
+		}
+		self.HowToCalculate = _.omit(self.HowToCalculate,keys2omit);
+		if (_.isEmpty(self.HowToCalculate)){
+			return done();
+		}
+		self._calculate(done);
 	}
 
 	self.LoadPrimaries = function(Primaries,done){
@@ -64,7 +92,6 @@ var Calculator = (new function(){
 			ResultCellsArray.forEach(function(RC){
 				ResultCells[RC.CodeCell] = RC;
 			})
-
 			if (err) {
 				Unmapper.Err.Critical("GETCELLS","ERR: "+err);
 				return done (err);
@@ -102,6 +129,43 @@ var Calculator = (new function(){
 			})
 			return done();
 		})
+	}
+
+	self._isCalculateble = function(Vars){
+		var result = true;
+		if (!Vars || !Vars.length) {
+			return result;
+		}
+		Vars.forEach(function(V){
+			if (self.Calculated[V] == void(0)){
+				result = false;
+			}
+		})
+		return result;
+	}
+	self._calculateFormula = function(CellName,Formula,Vars){
+		if (!_.isEmpty(self.Calculated[CellName])) return;
+		var InitialFormula = Formula;
+		Vars && Vars.forEach(function(V){
+			Formula = Formula.split(V).join(self.Calculated[V]);
+		})
+		Formula = Formula.replace(/-\s-/g,'+');
+		var EvalResult = 0;
+		try{
+			eval("EvalResult="+Formula);
+			if (isNaN(EvalResult)) throw 'IsNan';
+		} catch (e){
+			try {
+				EvalResult = jison.parse(Formula);
+				if (EvalResult==void(0) || isNaN(EvalResult)) EvalResult = 0;
+			} catch (e2){
+				console.log(e2);
+				EvalResult = 0;
+				Unmapper.Err.Set(CellName,"CALCERROR: "+InitialFormula+" : "+e2.message);
+				return 0;
+			}
+		}
+		self.Calculated[CellName] = EvalResult;
 	}
 
 	self.GetCells = function(What2Ask,Primaries,done){
