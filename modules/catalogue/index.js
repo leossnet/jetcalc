@@ -526,18 +526,18 @@ var ModelRestrict = (new function() {
         docfolderdoc: {
             CodeDocFolder: {
                 CodeParentDocFolder: {
-                    $ne: ""
+                    $nin: ["",null]
                 }
             }
         },
         docrow: {
             CodeRow: {
-                CodeParentRow: ""
+                CodeParentRow: {$in:["",null]}
             }
         },
         docheader: {
             CodeHeader: {
-                CodeParentHeader: ""
+                CodeParentHeader: {$in:["",null]}
             }
         }
     }

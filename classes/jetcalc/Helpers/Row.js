@@ -182,7 +182,7 @@ var RowHelper = (new function(){
 
 	self.LoadRoots = function(CodeDoc,done){
 		self.FromCache(CodeDoc,function(err,Loaded){
-			if (Loaded) {
+			if (Loaded && false) {
 				return done (err,Loaded);	
 			}
 			var Result = {};
@@ -267,6 +267,30 @@ var RowHelper = (new function(){
 			})
 			Indexed[Row.CodeRow] = Row;
 		})
+		var _summ = function(Row){
+			var Summ = {Plus:[],Minus:[],Ignore:[]};
+			var Children = [];
+			if (!_.isEmpty(Row.Sums)){
+				Children = _.filter(Rows,function(R){
+					return !_.isEmpty(_.intersection(R.Sums,Row.Sums)) && !R.IsSum;
+				})
+			} else {
+				Children = _.filter(Rows,{CodeParentRow:Row.CodeRow});
+			}
+			Children.forEach(function(Child){
+				if (Child.NoSum) Summ.Ignore.push(Child.CodeRow);
+				else if (Child.IsMinus) Summ.Minus.push(Child.CodeRow);
+				else Summ.Plus.push(Child.CodeRow);
+			})
+			return Summ;
+		}		
+		for (var CodeRow in Indexed){
+			var Row = Indexed[CodeRow];
+			if (Row.IsSum){
+				Row.SummInfo = _summ(Row,Rows);
+				Indexed[CodeRow] = Row;
+			}
+		}
 		for (var CodeRow in Indexed){
 			var R = Indexed[CodeRow];
 			if (!_.isEmpty(R.Filter)){

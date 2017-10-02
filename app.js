@@ -14,9 +14,7 @@ var  config      = require('./config.js')
 , api            = require('./lib/helper.js')
 , bodyParser     = require('body-parser')
 , cookieParser   = require('cookie-parser')
-, methodOverride = require('method-override')
 , debug          = require('./lib/debug.js')
-//, git            = require('./lib/gitControl.js')
 , socket         = require('./src/socket.js')
 , UserActivity   = require('./src/audit.js')
 , timeToLive     = 24*60*60*1000
@@ -34,6 +32,29 @@ api.connection = mongoose.connect(config.mongoUrl,{safe:false});
 mongoose.connection.on('connected', function(){
     var ModelInit = require('./classes/InitModels.js');
     ModelInit(function(){
+
+
+
+/*        var Unmaper = require(__base+"classes/jetcalc/Unmap.js");
+        var U = new Unmaper();
+        U.Unmap(["$z10010000@KOL.P56.Y2017#102_PL_ESPC_CE_ST230?"],{Year:2017,CodePeriod:56},function(err,Res){
+            //console.log(U.Help);
+        })
+*/
+/*
+
+       var Tag = require(__base+"classes/jetcalc/Helpers/Tag.js");
+        Tag.get(function(err,Res){
+            console.log(Res);
+        })
+     
+         
+        var Unmapper = require(__base+"classes/jetcalc/Unmap.js");
+        Unmapper.Unmap(["$z10010000@KOL.P56.Y2017#102_PL_ESPC_CE_ST230?"],function(err,Answer){
+            console.log("Unmap result:",Answer);
+        })
+   */
+
 
         app.set('port',E_PORT);
         var CookieConfig = config.cookieConfig;
@@ -54,8 +75,6 @@ mongoose.connection.on('connected', function(){
         var RabbitManager = require('./src/rabbitmq.js');
         RabbitManager.init();
          
-        app.use(methodOverride());
-
         app.use(bodyParser.json({limit: '500mb',parameterLimit: 10000}));
 
         app.use(bodyParser.urlencoded({extended: true,limit: '500mb',parameterLimit: 10000}));

@@ -9,7 +9,7 @@ module.exports = {
 	Period:require('./helpers/Period.js'),
 	Div:require('./helpers/Div.js'),
 	Prod:require('./helpers/Prod.js'),
-	DocRow:require('./helpers/DocRow.js'),
+	//DocRow:require('./helpers/DocRow.js'),
 	DocFolder:require('./helpers/DocFolder.js'),
 	Header:require('./helpers/Header.js')
 };

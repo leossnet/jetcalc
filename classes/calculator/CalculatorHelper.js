@@ -11,6 +11,7 @@ var   config = require('../../config.js')
 	, db = require(__base+'/sql/db.js')
 	, Form = require('./Form.js')
 	, numeral = require('numeral')
+	, RowHelper = require(__base+"classes/jetcalc/Helpers/Row.js")
 ;
 
 
@@ -146,9 +147,9 @@ var Unmapper = function(Context, InfoCacher){
 				self.CacheInfo[CellName].Dependable[V] = self.HowToCalculate[V];
 			})
 		}	
-		console.log(self.HowToCalculate["$i1101010@RATE.P710.Y2017#001_INVKOM_01?"]);
-		console.log(self.Dependencies["$i3101100@VAL.P710.Y2017#001_INVKOM_01?"]);
-		console.log(DependanceTree["$i3101100@VAL.P710.Y2017#001_INVKOM_01?"]);
+		console.log(self.HowToCalculate["$z10010000@KOL.P56.Y2017#102_PL_ESPC_CE_ST230?"]);
+		console.log(self.Dependencies["$z10010000@KOL.P56.Y2017#102_PL_ESPC_CE_ST230?"]);
+		console.log(DependanceTree["$z10010000@KOL.P56.Y2017#102_PL_ESPC_CE_ST230?"]);
 	}	
 
 	self.UpdateCache = function(done){
@@ -740,6 +741,7 @@ var Unmapper = function(Context, InfoCacher){
 							return function(d){
 								Context.CodeDoc = CodeDoc;
 								self.LoadedCodeDocs.push(CodeDoc);
+								//RowHelper.LoadRoots(CodeDoc)
 								var R = new Form.Row(Context);
 								R.get(d);
 							}
@@ -1065,7 +1067,7 @@ var GeneralInfo = function(){
 	}
 	self.Load = function(done){
 		var Tasks = {};
-		['Div','DocRow','Period','Prod','Tag'].forEach(function(Key){
+		['Prod','Tag'].forEach(function(Key){
 			Tasks[Key] = function(Key){
 				return function(cb){
 					var Worker = new Form[Key](self.SmallContext);
@@ -1078,7 +1080,13 @@ var GeneralInfo = function(){
 		}
 		async.parallel(Tasks,function(err,Answer){
 			self.Data = Answer;
-			return done(err);
+			async.each(['Div','DocRow','Period'],function(H,cb){
+				var Helprt = require(__base+"classes/jetcalc/Helpers/"+H+".js");
+				Helprt.get(function(err,In){
+					self.Data[H] = In;
+					return cb(err);
+				})
+			},done)
 		})
 	}
 	return self;

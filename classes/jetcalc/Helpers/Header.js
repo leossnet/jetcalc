@@ -5,8 +5,6 @@ var Base = require(__base + 'classes/jetcalc/Helpers/Base.js');
 var TreeHelper = require(__base+'/lib/helpers/tree.js');
 var Tree = TreeHelper.Tree;
 
-
-
 var HeaderHelper = (new function(){
 
 	var self = new Base("JHEADER");
@@ -23,8 +21,6 @@ var HeaderHelper = (new function(){
 	}
 	
 	self.SubscribeChanges(_.keys(self.FieldsByModel));
-
-
 	
 	self.get = function(CodeDoc,done){
 		self.FromCache(CodeDoc,function(err,Result){
