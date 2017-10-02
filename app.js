@@ -33,6 +33,17 @@ mongoose.connection.on('connected', function(){
     var ModelInit = require('./classes/InitModels.js');
     ModelInit(function(){
 
+        var JetCalc = require(__base+"classes/jetcalc/Calc.js");
+        JetCalc.Calculate(["$m1202100@VAL.P11.Y2017#102?","$m1202120@PLANMES.P11.Y2017#102?"],{
+            CodePeriod:11,
+            CodeObj:102,
+            Year:2017,
+            IsInput:true,
+            CodeValuta:"RUB"
+        },function(err,Result){
+            console.log(Result);
+
+        })
 
 
 /*        var Unmaper = require(__base+"classes/jetcalc/Unmap.js");

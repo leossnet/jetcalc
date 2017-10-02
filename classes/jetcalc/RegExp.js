@@ -4,16 +4,24 @@ module.exports = (new function(){
 	var self = this;
 
 	self.Symbols =  {Row:"$",Col:"@",Period:".P",Year:".Y",Obj:"#"};
-	self.Var = /[$@].*?\?/;
+	
 	self.Vars = /[$@].*?\?/g;
+	self.Var = /[$@].*?\?/;
+	
+	
 	self.Row = /\$.*?(?=[@?\.\<\>#])/;
 	self.Col = /\@.*?(?=[?\.\<\>#])/;
 	self.Period = /\.P[-]?\d*(?=[?\.\<\>#])/;
 	self.Year = /\.Y[-]?\d*(?=[?\.\<\>#])/;
 	self.Obj = /\#(?!:).*?(?=[?\.\<\>])/;
 	self.Cell = /\$(.*?)\@(.*?)\.P(.*?)\.Y(.*?)\#(.*?)\?/;
+	
 	self.Tags = /([_]{2,3}[A-Za-z_]+)/g;
 	self.Tag = /([_]{2,3}[A-Za-z_]+)/;
+	
+	self.Mods = /(<<<|<<|>>|torootobj|toparentobj|consgrp|consobj|tomainobj|toobj)\(.*?\)/g;
+	self.Mod = /(<<<|<<|>>|torootobj|toparentobj|consgrp|consobj|tomainobj|toobj)\((.*?)\)/;
+	
 
 
 	self._toObj = function(CellName){
