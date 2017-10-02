@@ -227,6 +227,10 @@ var MRowEditor = (new function() {
     self.RowsChanged = ko.observable(0);
 
     self._change = function(ind, key, value, oldvalue) {
+        if (typeof oldvalue == "object" && value === "") {
+            self.table.setDataAtRowProp(ind, key, []);
+            return;
+        }
         if (!self.Rows[ind]) {
             self.Rows[ind] = {
                 CodeRow: self.NewCode(ind, key, value, oldvalue),
@@ -646,6 +650,18 @@ var MRowEditor = (new function() {
             },
             afterCopy: function(data, coords) {
                 var plugin = this.getPlugin('copyPaste');
+                var _rm_empty = function(data) {
+                    _.keys(data).forEach(function(k) {
+                        if (typeof data[k] == "object") {
+                            data[k] = _rm_empty(data[k])
+                        }
+                        if (data[k] === "") {
+                            data[k] = null;
+                        }
+                    })
+                    return data;
+                };
+                data = _rm_empty(data);
                 plugin.textarea.setValue(JSON.stringify(data));
                 plugin.textarea.select();
             },
