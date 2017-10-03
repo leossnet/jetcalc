@@ -332,6 +332,7 @@ var CxCtrl = (new function() {
   }
 
   self.Context = function() {
+    self.InitValues();
     var Test = _.last(window.location.pathname.split('/'));
     if (self.PageName() != Test) {
       self.PageName(Test);
@@ -564,14 +565,36 @@ var CxCtrl = (new function() {
     };
   }
 
+  self.InitValues = function(){
+  		try{
+	      if(_.isEmpty(self.Year())){
+	      	self.Year(moment().format("YYYY"));
+	      }
+	      if(_.isEmpty(self.CodePeriod())){
+	      	self.SelectedPeriod(_.first(_.keys(MPeriods.Map())));
+	      }
+	      if(_.isEmpty(self.CodeObj())){
+	      	self.CodeObj(_.first(MAggregate.AllObjs()).CodeObj);
+	      	self.CodeValuta(_.first(MAggregate.AllObjs()).CodeValuta);
+	      }
+	    } catch(e){
+	    	console.log("init context failed",e);
+	    }
+  }
+
+
   self.Init = function (done) {
+
       MSite.Events.on("initialnavigate", CxCtrl.ChangeInitDocPath);
       Bus.On("params_changed",self.UpdateParams);
       Bus.On("report_loaded",self.UpdateReport);
+      Bus.On("aggregate_info_loaded",self.InitValues);
       MSite.Events.on("initialnavigate", function(){
+      	  self.InitValues();
           self.UpdateDocInfo ();
           self.UpdateSubPeriods();
           self.Update ();
+
       });
       return done();
   }

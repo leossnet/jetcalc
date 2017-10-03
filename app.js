@@ -33,18 +33,21 @@ mongoose.connection.on('connected', function(){
     var ModelInit = require('./classes/InitModels.js');
     ModelInit(function(){
 
-        var JetCalc = require(__base+"classes/jetcalc/Calc.js");
-        JetCalc.Calculate(["$p1305000@CENACALC.P14.Y2017#202_PLPROKAT_01_CEPROKAT_02?"],{
-            CodePeriod:14,
-            CodeObj:102,
-            Year:2017,
-            IsInput:true,
-            CodeValuta:"RUB"
-        },function(err,Result){
-            //console.log(JetCalc.Formulas);
-            console.log(Result);
-
-        })
+       /* setTimeout(function(){
+            var St = require(__base+"classes/jetcalc/Helpers/Structure.js");
+            var Cx = {"CodePeriod":"301","Year":"2017","CodeValuta":"RUB","IsInput":false,"IsOlap":false,"UseCache":true,"IsDebug":false,"CodeDoc":"teo","CodeObj":"001","CodeReport":"default","CodeGrp":"ALLORG","GroupType":"CodeCity"};
+            St.getCells(Cx,function(err,Cells){
+                console.time("START");
+                var JetCalc = require(__base+"classes/jetcalc/Calc.js");
+               // Cells = ["$p120s43@OP_TPNZ.P56.Y2017#102?"];
+                JetCalc.Calculate(Cells,Cx,function(err,Result,ErrorLog){
+                    console.log(Result);
+                    console.timeEnd("START")
+              })
+            })
+        },1000)
+        */
+        
 
 
 /*        var Unmaper = require(__base+"classes/jetcalc/Unmap.js");

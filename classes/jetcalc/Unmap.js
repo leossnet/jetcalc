@@ -21,6 +21,9 @@ var Unmaper = function(){
 	self.Err = new ErrorCatcher();
 	self.DebugInfo = {};
 
+	self.UseCache = false;
+	self.Override = {};
+
 	self.Prepare = function(done){
 		async.each(["DocRow","Div","Period","Tag","AllCols"],function(HName,cb){
 			var H = require(HPath+HName);
@@ -36,16 +39,45 @@ var Unmaper = function(){
 		if (_.isEmpty(Cells)) return done(err,{});
 		Cells.forEach(function(CellName){
 			self.Matrix[CellName] = Rx._toObj(CellName);
-		})
+		})		
 		self.ToUnmap = _.clone(self.Matrix);
 		self.Prepare(function(err){
 			self._unmap(function(err){
-				return done(err);
+				self.ToCache(function(err){
+					return done(err);
+				})				
 			})
 		})
 	}
 
 	self.LoadedRows = {};
+
+	self.FromCache = function(Cells,done){
+
+	}
+
+	self.ToCache = function(Cells,done){
+		var Cache = {};
+		console.time("S");
+		for (var CellName in self.HowToCalculate){
+			Cache[CellName] = self.HowToCalculate[CellName];
+			Cache[CellName].Dependable = _.isEmpty(self.Dependable[CellName]) ? []:self.Dependable[CellName];
+			Cache[CellName].Vars = self._dependancies(CellName);
+		}
+		console.timeEnd("S");
+		//console.log(Cache);
+	}
+
+	self._dependancies = function(CellName){
+		console.log(CellName,self.Dependable[CellName]);
+		/*var Result = [], Cells = self.Dependable[CellName];
+		if (_.isEmpty(Cells)) return Result;
+		Cells.forEach(function(Ce){
+			Result = Result.concat(self._dependancies(Ce));
+		})
+		return Result;
+		*/
+	}
 
 	self._unmap = function(done){
 		var Remain = _.clone(self.ToUnmap), NewUnmap = {};
@@ -96,11 +128,15 @@ var Unmaper = function(){
 
 
 	self.PrepareFormula = function(Formula,Cell){
+		if (Formula==0 || _.isEmpty(Formula)) return Formula;
 		Formula  = (Formula+"");
-		Formula = self.SimplifyFormula(Formula,Cell);
-		Formula = self.UpdateModifiers(Formula,Cell);
-		Formula = self.RemoveTags(Formula,Cell);
-		Formula = self.ExtendVariables(Formula,Cell);		
+		Formula = Formula.replace(/\s+/g,' ');	
+		Formula  = (Formula+"");
+		Formula = self.RemoveRootObjs((Formula+''),Cell);
+		Formula = self.SimplifyFormula((Formula+''),Cell);
+		Formula = self.UpdateModifiers((Formula+''),Cell);
+		Formula = self.RemoveTags((Formula+''),Cell);
+		Formula = self.ExtendVariables((Formula+''),Cell);		
 		return Formula;
 	}
 	
@@ -117,48 +153,52 @@ var Unmaper = function(){
 	}
 
 	self.UpdateModifiers = function(Formula,Cell){
-		var Mods = Formula.match(Rx.Mods);
-		Mods && Mods.forEach(function(Mod){
-			var Parts = Mod.match(Rx.Mod);
-			var Objs = [];
-			try{
-				var R = Parts[0], T = Parts[1], F = self._parseFilter(Parts[2]); 
-				switch(Parts[1]){
-					case "<<<":
-					Objs = _.map(_.filter(self.Help.Div,function(O){
-						if (F.G && O.Groups.indexOf(F.G)!=-1) return true;
-						if (F.C && O.CodeObjClass==F.C) return true;
-						if (F.T && O.CodeObjType==F.T) return true;
-						if (F.D && O.CodeDiv==F.D) return true;
-						if (F.R && O.CodeRegion==F.R) return true;
-						if (F.S && O.CodeOtrasl==F.S) return true;
-						return false;
-					}),"CodeObj");
-					break;
-					case "<<":
-					console.log("MOD:",T,":MOD");
-					var ObjInfo = self.Help.Div[Cell.Obj];
-					Objs = _.filter(ObjInfo.AllChildren,function(OC){
-						var O = self.Help.Div[OC];
-						if (F.G && O.Groups.indexOf(F.G)!=-1) return true;
-						if (F.C && O.CodeObjClass==F.C) return true;
-						if (F.T && O.CodeObjType==F.T) return true;
-						if (F.D && O.CodeDiv==F.D) return true;
-						if (F.R && O.CodeRegion==F.R) return true;
-						if (F.S && O.CodeOtrasl==F.S) return true;
-						return false;
-					});
-					break;
-					default:
-					throw "Не реализовано: "+Parts[1];
-				}
-				console.log("BEFORE",Formula);
-				Formula = Formula.split(R).join("#["+Objs.join(",")+"]");
-				console.log("AFTER",Formula);
-			} catch(e){
-				console.log("Ошибка в модификаторах ",e);
+		var Vars = Formula.match(Rx.Vars);
+		Vars && Vars.forEach(function(Var){
+			var Mods = Var.match(Rx.Mods);
+			if (!_.isEmpty(Mods)){
+				var Objs = [];				
+				var Incomplete = Rx._fromIncomplete(Var,Cell);	
+				Mods.forEach(function(Mod){
+					var Parts = Mod.match(Rx.Mod);
+					try{
+						var R = Parts[0], T = Parts[1], F = self._parseFilter(Parts[2]); 
+						switch(Parts[1]){
+							case "<<<":
+							Objs = _.map(_.filter(self.Help.Div,function(O){
+								if (F.G && O.Groups.indexOf(F.G)!=-1) return true;
+								if (F.C && O.CodeObjClass==F.C) return true;
+								if (F.T && O.CodeObjType==F.T) return true;
+								if (F.D && O.CodeDiv==F.D) return true;
+								if (F.R && O.CodeRegion==F.R) return true;
+								if (F.S && O.CodeOtrasl==F.S) return true;
+								return false;
+							}),"CodeObj");
+							break;
+							case "<<":
+							var ObjInfo = self.Help.Div[Incomplete.Obj];
+							Objs = _.filter(ObjInfo.AllChildren,function(OC){
+								var O = self.Help.Div[OC];
+								if (F.G && O.Groups.indexOf(F.G)!=-1) return true;
+								if (F.C && O.CodeObjClass==F.C) return true;
+								if (F.T && O.CodeObjType==F.T) return true;
+								if (F.D && O.CodeDiv==F.D) return true;
+								if (F.R && O.CodeRegion==F.R) return true;
+								if (F.S && O.CodeOtrasl==F.S) return true;
+								return false;
+							});
+							break;
+							default:
+							throw "Не реализовано: "+Parts[1];
+						}
+					} catch(e){
+						console.log("Ошибка в модификаторах ",e);
+					}
+					Incomplete.Obj = "["+Objs.join(",")+"]";
+					Formula = Formula.split(Var).join(Rx._toCell(Incomplete));
+				})
 			}
-		})
+		})		
 		return Formula;
 	}
 
@@ -201,12 +241,26 @@ var Unmaper = function(){
 		return Formula;
 	}
 
-	self.ExtendVariables = function(Formula,Cell){
+	self.RemoveRootObjs = function(Formula,Cell){
 		var Vars = Formula.match(Rx.Vars);
 		Vars && Vars.forEach(function(Var){
 			var Incomplete = Rx._fromIncomplete(Var,Cell);
-			if (Incomplete.Obj=="^^") Incomplete.Obj = self._rootObj(Cell.Obj);
-			if (Incomplete.Obj=="^") Incomplete.Obj = self._parentObj(Cell.Obj);
+			if (Incomplete.Obj=="^^") {
+				var NewVar = Var.split("#^^").join("#"+self._rootObj(Cell.Obj));	
+				Formula = Formula.split(Var).join(NewVar);
+			}
+			if (Incomplete.Obj=="^") {
+				var NewVar = Var.split("#^").join("#"+self._parentObj(Cell.Obj));	
+				Formula = Formula.split(Var).join(NewVar);
+			}
+		})
+		return Formula;
+	}
+
+	self.ExtendVariables = function(Formula,Cell){
+		var Vars = _.uniq(Formula.match(Rx.Vars));
+		Vars && Vars.forEach(function(Var){
+			var Incomplete = Rx._fromIncomplete(Var,Cell);
 			var ToVar = Rx._toCell(Incomplete);
 			ToVar = self.Extract(ToVar,Cell);
 			Formula = Formula.split(Var).join(ToVar);			
@@ -216,7 +270,7 @@ var Unmaper = function(){
 
 	self.AddDependable = function(pCell,cCell){
 		if (_.isEmpty(self.Dependable[pCell])) self.Dependable[pCell] = [];
-		if (!_.includes(self.Dependable[pCell],cCell)){
+		if (self.Dependable[pCell].indexOf(cCell)==-1){
 			self.Dependable[pCell].push(cCell);
 		}
 	}
@@ -233,7 +287,11 @@ var Unmaper = function(){
 		var Periods = [], PeriodOp = "SUM";
 		if (_.includes(self.Help.Period.FormulaPeriods,Cx.Period)){
 			var InfoPeriod = self.Help.Period[Cx.Period] || {};
-			var Info = _.isEmpty(InfoPeriod[Cell.Period])? InfoPeriod[self.Cx.CodePeriod]:InfoPeriod[Cell.Period];
+			var Info = InfoPeriod[Cell.Period];
+			if (_.isEmpty(Info)){
+				self.Err.Set(Cell.Cell,"Unknown period formula "+Cell.Period+", "+Cx.Period);
+				return "0";	
+			}
 			if (!Array.isArray(Info)){
 				var Ar = Info.split(":");
 				if (Ar.length>1) {
@@ -249,7 +307,7 @@ var Unmaper = function(){
 		} else {
 			Periods = [Cx.Period];
 		}
-		var Parts = [], Year = Var.Year, Dependable = [];
+		var Parts = [], Year = Var.Year;
 		Rows.forEach(function(R){
 			Cols.forEach(function(C){
 				Objs.forEach(function(O){
@@ -272,14 +330,11 @@ var Unmaper = function(){
 		} else {
 			var Rsx = [];
 			Parts.forEach(function(Part){
-				var J = Part.length>1 ? "("+Part.join("+")+")":Part.join("+");
+				var Sig = (PeriodOp=="MULT")?"*":"+";
+				var J = Part.length>1 ? "("+Part.join(Sig)+")":Part.join("+");
 				Rsx.push(J);
 			})
-			if (PeriodOp=="SUM"){
-				return "("+Rsx.join("+")+")";
-			} else {
-				return "("+Rsx.join("*")+")";
-			}
+			return (Rsx.length==1) ? _.first(Rsx):"("+Rsx.join("+")+")";
 		}		
 	}
 	
@@ -314,6 +369,9 @@ var Unmaper = function(){
 		var Row = Rows[Cell.Row];
 		var Col = self.Help.AllCols[Cell.Col];
 		var Result = null, ResultDescription = null, Choosed = null;
+		if (!_.isEmpty(self.Override[Cell.Cell])){
+			Result = {Type:'FRM',FRM:self.Override[Cell.Cell]};
+		}
 		if (!Result && _.isEmpty(Col)){
 			self.Err.Set(Cell.Cell,"COL:"+Cell.Col+':UNK');			
 			Result = {Type:"ERR"};	

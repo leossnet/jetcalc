@@ -139,3 +139,6 @@ h3 .label-module{
 .adminpage .profile-user-info-striped, .adminpage .profile-info-name{
     white-space: nowrap;
 }
+.wysiwyg-toolbar.btn-toolbar.toolH.Context{
+    max-height:33px;
+}

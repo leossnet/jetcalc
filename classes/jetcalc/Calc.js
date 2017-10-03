@@ -4,8 +4,6 @@ var mongoose = require("mongoose");
 var Unmapper = require(__base+"classes/jetcalc/Unmap.js");
 var jison  = require(__base+'classes/calculator/jison/calculator.js') // Вычислялка
 
-
-
 var Calculator = (new function(){
 	var self = this;
 
@@ -54,8 +52,7 @@ var Calculator = (new function(){
 						for (var CellName in self.Result){
 							self.Result[CellName] = self.Calculated[CellName];
 						}
-						console.log(U.Err);
-						return done(err,self.Result);
+						return done(err,self.Result,U.Err);
 					});
 				})
 			})
@@ -176,7 +173,7 @@ var Calculator = (new function(){
 	self.GetCells = function(What2Ask,Primaries,done){
 		var db = require(__base+'/sql/db.js');
 		db.GetCells(What2Ask,Primaries,function(err,data){
-				return done(err,data || []);
+			return done(err,data || []);
 		});		
 	}
 	
@@ -204,14 +201,7 @@ var Calculator = (new function(){
 			}	
 			return done();
 		})
-
 	}
-
-
-
-
-
-
 
 
 	return self;
