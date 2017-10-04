@@ -16,8 +16,8 @@ module.exports = (new function(){
 	self.Obj = /\#(?!:).*?(?=[?\.\<\>])/;
 	self.Cell = /\$(.*?)\@(.*?)\.P(.*?)\.Y(.*?)\#(.*?)\?/;
 	
-	self.Tags = /([_]{2,3}[A-Za-z_]+)/g;
-	self.Tag = /([_]{2,3}[A-Za-z_]+)/;
+	self.Tags = /([_]{2,3}[A-Za-z]+)/g;
+	self.Tag = /([_]{2,3}[A-Za-z]+)/;
 	
 	self.Mods = /(<<<|>>|<<)\(.*?\)/g;
 	self.Mod = /(<<<|>>|<<)\((.*?)\)/;

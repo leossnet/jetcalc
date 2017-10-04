@@ -13,7 +13,6 @@ d_u_func                                       return 'U_FUNC';
 
 MCOUNT
 |DCOUNT
-|___KMULT
 |year                                          return 'CONSTANTA';
 
 

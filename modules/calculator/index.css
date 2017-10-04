@@ -48,6 +48,9 @@
 .CellType.PRM{
     background-color: green;
 }
+.CellType.HDR{
+    background-color: gray;
+}
 .CellType.SUM{
     background-color: #1BAEE9;
 }

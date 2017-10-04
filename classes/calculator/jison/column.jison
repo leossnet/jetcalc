@@ -14,8 +14,7 @@ MCOUNT
 |DCOUNT
 |year                                          return 'CONSTANTA';
 
-___KMULT
-|___[A-Z]*                                     return 'U_CONSTANTA';
+___[A-Z]*                                     return 'U_CONSTANTA';
 
 
 periodin

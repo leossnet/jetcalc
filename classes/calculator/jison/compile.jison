@@ -12,7 +12,6 @@ monthInKvart								  return 'FUNC';
 
 MCOUNT
 |DCOUNT
-|___KMULT
 |___[A-Z]*
 |year                                          return 'CONSTANTA';
 

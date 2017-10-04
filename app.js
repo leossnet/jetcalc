@@ -33,6 +33,17 @@ mongoose.connection.on('connected', function(){
     var ModelInit = require('./classes/InitModels.js');
     ModelInit(function(){
 
+/*
+        var Cx = {"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":true,"IsDebug":false,"CodeDoc":"pl_spc","CodeObj":"102","ChildObj":"102_PL_ESPC_UN_STAN370","CodeGrp":"ALLORG","GroupType":"CodeDiv"};
+        var CApi = require(__base+"classes/jetcalc/CalcApi.js");
+        CApi.CalculateDocument(Cx,function(err,Res){
+            console.log(Res);
+
+        })
+
+*/
+
+
         app.set('port',E_PORT);
         var CookieConfig = config.cookieConfig;
         CookieConfig.store = sessionStore;

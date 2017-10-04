@@ -151,6 +151,7 @@ var RowHelper = (new function(){
 			self.ApplyReport(Cx,Concated,function(err,AfterReport){
 				var DocHelper = require(__base + 'classes/jetcalc/Helpers/Doc.js');
 				DocHelper.get(Cx.CodeDoc,function(err,Doc){
+					if (_.isEmpty(Doc)) return done(Cx.CodeDoc+" документ не найден");
 					if (!Doc.IsShowRoots){
 						AfterReport = _.filter(AfterReport,function(R){
 							return !_.includes(Roots,R.CodeRow);

@@ -14,7 +14,6 @@ d_u_func                                       return 'FUNC';
 
 MCOUNT
 |DCOUNT
-|___KMULT
 |___[A-Z]*
 |year
 |EDITOR_CONSTANTA                              return 'U_CONSTANTA';

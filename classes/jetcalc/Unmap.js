@@ -136,9 +136,11 @@ var Unmaper = function(){
 			var Cx = {IsInput:self.Cx.IsInput,CodeObj:Arr[0],CodeDoc:Arr[1],Year:self.Cx.Year};
 			RowHelper.get(Cx,function(err,Rows){
 				self.LoadedRows[CxP] = {};
-				Rows.forEach(function(R){
-					self.LoadedRows[CxP][R.CodeRow] = R;
-				})
+				if (!_.isEmpty(Rows)){
+					Rows.forEach(function(R){
+						self.LoadedRows[CxP][R.CodeRow] = R;
+					})
+				}
 				return cb();
 			});
 		}, done);
@@ -147,14 +149,21 @@ var Unmaper = function(){
 
 	self.PrepareFormula = function(Formula,Cell){
 		if (Formula==0 || _.isEmpty(Formula)) return Formula;
+		//console.log("1",Formula);
 		Formula  = (Formula+"");
+		//console.log("2",Formula);
 		Formula = Formula.replace(/\s+/g,' ');	
-		Formula  = (Formula+"");
+		//console.log("3",Formula);
 		Formula = self.RemoveRootObjs((Formula+''),Cell);
-		Formula = self.SimplifyFormula((Formula+''),Cell);
-		Formula = self.UpdateModifiers((Formula+''),Cell);
+		//console.log("4",Formula);
 		Formula = self.RemoveTags((Formula+''),Cell);
+		//console.log("5",Formula);		
+		Formula = self.SimplifyFormula((Formula+''),Cell);
+		//console.log("6",Formula);		
+		Formula = self.UpdateModifiers((Formula+''),Cell);
+		//console.log("7",Formula);
 		Formula = self.ExtendVariables((Formula+''),Cell);		
+		//console.log("8",Formula);
 		return Formula;
 	}
 	
@@ -253,7 +262,7 @@ var Unmaper = function(){
 		var Tags = _.uniq(Formula.match(Rx.Tags)); // Заменяем тэги
 		Tags.forEach(function(Tag){
 			var Value = self.TagValue(Cell,Tag);
-			if (_.isEmpty(Value)) self.Err.Set(Cell.Cell,'TAG:'+Tag+":NO_VALUE");
+			if (Value=="UNKNOWNTAG") self.Err.Set(Cell.Cell,'TAG:'+Tag+":NO_VALUE");
 			Formula = Formula.split(Tag).join(Value);
 		})
 		return Formula;
@@ -363,6 +372,10 @@ var Unmaper = function(){
 	self.TagValue = function(Cell, TagNameRaw){
 		var TagName = _.trimStart(TagNameRaw,'_');
 		var TagInfo = self.Help.Tag[TagName];
+		if (_.isEmpty(TagInfo)) {
+			if (self.DefaultTags[TagName]) return self.DefaultTags[TagName];
+			return "UNKNOWNTAG";
+		};
 		var Obj = self.Help.Div[Cell.Obj];
 		var Rows = self._rows(Cell), Row = Rows[Cell.Row];
 		var ParentRows = _.sortBy(_.filter(_.values(Rows),function(R){
@@ -379,7 +392,7 @@ var Unmaper = function(){
 		}
 		if (!Value && self.DefaultTags[TagName]) Value = self.DefaultTags[TagName];
 		// Цепочка объектов ToDo
-		return Value;
+		return "UNKNOWNTAG";
 	}
 
 	self.RowColFormula = function(Cell){
