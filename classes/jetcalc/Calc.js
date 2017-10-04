@@ -4,7 +4,37 @@ var mongoose = require("mongoose");
 var Unmapper = require(__base+"classes/jetcalc/Unmap.js");
 var jison  = require(__base+'classes/calculator/jison/calculator.js') // Вычислялка
 
-var Calculator = (new function(){
+
+
+var TimerCreate = function(){
+	var self = this;
+	self._times = {};	
+	self.Result = {};	
+
+	self.Get = function(label){
+		return Math.round(self.Result[label]*100)/100
+	}
+
+	self.Init = function(){
+		self._times = {};
+		self.Result = {};
+	}
+	self.Start = function(label){
+		self._times[label] = process.hrtime();
+	};
+	self.End = function(label){
+		try{
+		    var precision = 3;
+		    var elapsed = process.hrtime(self._times[label]);
+		    var result = (elapsed[0]* 1e9 +elapsed[1])/1000000000;
+		    self.Result[label] = result;
+		} catch(e){;}
+	};
+	return self;
+}
+
+
+var Calculator = function(){
 	var self = this;
 
 	self.Calculated = {};
@@ -14,13 +44,16 @@ var Calculator = (new function(){
 	self.PrimariesInfo = {};
 	self.Valuta = {};
 	self.Formulas = {};
+	self.Unmapper = new Unmapper();
 	self.Field  = "Value";
 	self.CRecursion = 0;
 	self.MaxRecursion = 10000;
 	self.Result = {};
 
+	self.Timer = new TimerCreate();
+
 	self.Calculate = function(Cells,Cx,done){
-		var U = new Unmapper();
+		self.Timer.Start('Вычисление документа');		
 		self.Calculated = {};
 		self.Cx = Cx;
 		self.Result = {};
@@ -28,11 +61,13 @@ var Calculator = (new function(){
 			self.Result[CellName] = 0;
 		})
 		self.PrepareValuta(function(err){
-			U.Unmap(Cells,Cx,function(err){
+			self.Timer.Start('Разбор формул');
+			self.Unmapper.Unmap(Cells,Cx,function(err){
+				self.Timer.End('Разбор формул');
 				if (err) return done(err);
-				self.Formulas = _.clone(U.HowToCalculate);
-				self.HowToCalculate = _.clone(U.HowToCalculate);
-				self.Dependable = _.clone(U.Dependable);
+				self.Formulas = _.clone(self.Unmapper.HowToCalculate);
+				self.HowToCalculate = _.clone(self.Unmapper.HowToCalculate);
+				self.Dependable = _.clone(self.Unmapper.Dependable);
 				var Primaries2Load = [];
 				var RemainCells = {}
 				for (var CellName in self.HowToCalculate){
@@ -45,6 +80,7 @@ var Calculator = (new function(){
 					}
 				}
 				self.HowToCalculate = RemainCells;
+				self.Timer.Start('Вычисление формул');
 		 		self.LoadPrimaries(Primaries2Load,function(err){
 					if (err) return done(err);
 					self.CRecursion = 0;
@@ -52,7 +88,9 @@ var Calculator = (new function(){
 						for (var CellName in self.Result){
 							self.Result[CellName] = self.Calculated[CellName];
 						}
-						return done(err,self.Result,U.Err);
+						self.Timer.End('Вычисление формул');
+						self.Timer.End('Вычисление документа');
+						return done(err);
 					});
 				})
 			})
@@ -145,6 +183,7 @@ var Calculator = (new function(){
 		})
 		return result;
 	}
+
 	self._calculateFormula = function(CellName,Formula,Vars){
 		if (!_.isEmpty(self.Calculated[CellName])) return;
 		var InitialFormula = Formula;
@@ -205,7 +244,7 @@ var Calculator = (new function(){
 
 
 	return self;
-})
+}
 
 
 module.exports = Calculator;

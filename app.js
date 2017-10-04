@@ -26,50 +26,12 @@ var  config      = require('./config.js')
 
 mongoose.Promise = global.Promise;
 
-api.connection = mongoose.connect(config.mongoUrl,{safe:false});
+api.connection = mongoose.connect(config.mongoUrl,{useMongoClient:true});
 
 
 mongoose.connection.on('connected', function(){
     var ModelInit = require('./classes/InitModels.js');
     ModelInit(function(){
-
-       /* setTimeout(function(){
-            var St = require(__base+"classes/jetcalc/Helpers/Structure.js");
-            var Cx = {"CodePeriod":"301","Year":"2017","CodeValuta":"RUB","IsInput":false,"IsOlap":false,"UseCache":true,"IsDebug":false,"CodeDoc":"teo","CodeObj":"001","CodeReport":"default","CodeGrp":"ALLORG","GroupType":"CodeCity"};
-            St.getCells(Cx,function(err,Cells){
-                console.time("START");
-                var JetCalc = require(__base+"classes/jetcalc/Calc.js");
-               // Cells = ["$p120s43@OP_TPNZ.P56.Y2017#102?"];
-                JetCalc.Calculate(Cells,Cx,function(err,Result,ErrorLog){
-                    console.log(Result);
-                    console.timeEnd("START")
-              })
-            })
-        },1000)
-        */
-        
-
-
-/*        var Unmaper = require(__base+"classes/jetcalc/Unmap.js");
-        var U = new Unmaper();
-        U.Unmap(["$z10010000@KOL.P56.Y2017#102_PL_ESPC_CE_ST230?"],{Year:2017,CodePeriod:56},function(err,Res){
-            //console.log(U.Help);
-        })
-*/
-/*
-
-       var Tag = require(__base+"classes/jetcalc/Helpers/Tag.js");
-        Tag.get(function(err,Res){
-            console.log(Res);
-        })
-     
-         
-        var Unmapper = require(__base+"classes/jetcalc/Unmap.js");
-        Unmapper.Unmap(["$z10010000@KOL.P56.Y2017#102_PL_ESPC_CE_ST230?"],function(err,Answer){
-            console.log("Unmap result:",Answer);
-        })
-   */
-
 
         app.set('port',E_PORT);
         var CookieConfig = config.cookieConfig;
@@ -86,12 +48,10 @@ mongoose.connection.on('connected', function(){
             console.log("auth_event",data);
         })
         // Связь с расчетчиками
-
         var RabbitManager = require('./src/rabbitmq.js');
         RabbitManager.init();
          
         app.use(bodyParser.json({limit: '500mb',parameterLimit: 10000}));
-
         app.use(bodyParser.urlencoded({extended: true,limit: '500mb',parameterLimit: 10000}));
         
 
@@ -182,8 +142,7 @@ mongoose.connection.on('connected', function(){
         socket.init(CookieConfig, server);
 
         if (server) server.listen(E_PORT);
-
-       
+   
            
 
 

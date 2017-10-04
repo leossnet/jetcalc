@@ -21,7 +21,7 @@ var RabbitMQWorker = function(params) {
                 self.channel.prefetch(1);
                 self.channel.consume(self.queue_id, function (msg) {
                   var MS = JSON.parse(msg.content.toString());
-                  console.log("[+] Делаю задачу "+self.queue_id,MS);
+                  console.log("[+] Делаю задачу "+self.queue_id);
                   self.worker(MS, function(err, result) {
                       var Answer = new Buffer(JSON.stringify({ err: err, result: result }));
                       console.log("[+] Сделал задачу отсылаю в :"+msg.properties.replyTo);

@@ -5,7 +5,14 @@ var HPath = __base+"classes/jetcalc/Helpers/";
 var Rx = require(__base+"classes/jetcalc/RegExp.js");
 var RowHelper = require(HPath+"Row.js");
 var jison_prepare  = require(__base+'classes/calculator/jison/compile.js'); // Упрощалка
+var RabbitMQClient = require(__base + "src/rabbitmq_wc.js").client;
+var config = require(__base+"config.js");
 
+var CacheClient = new RabbitMQClient({queue_id: config.rabbitPrefix+"calc_cache"});
+
+CacheClient.connect(function(err) {
+    if (err) console.log("cache saver error",err);
+})
 
 var Unmaper = function(){
 	var self = this;
@@ -20,8 +27,7 @@ var Unmaper = function(){
 	self.Help = {};
 	self.Err = new ErrorCatcher();
 	self.DebugInfo = {};
-
-	self.UseCache = false;
+	self.NewCache = [];
 	self.Override = {};
 
 	self.Prepare = function(done){
@@ -36,47 +42,57 @@ var Unmaper = function(){
 
 	self.Unmap = function(Cells,Cx,done){
 		self.Cx = Cx;
-		if (_.isEmpty(Cells)) return done(err,{});
+		if (_.isEmpty(Cells)) return done(err);
 		Cells.forEach(function(CellName){
 			self.Matrix[CellName] = Rx._toObj(CellName);
 		})		
-		self.ToUnmap = _.clone(self.Matrix);
-		self.Prepare(function(err){
-			self._unmap(function(err){
-				self.ToCache(function(err){
-					return done(err);
-				})				
+		self.FromCache(Cells,function(err,Remain){
+			if (_.isEmpty(Remain)) return done();
+			self.NewCache = _.clone(Remain);
+			self.ToUnmap = {};
+			for (var CellName in self.Matrix){
+				if (_.includes(Remain,CellName)){
+					self.ToUnmap[CellName] = self.Matrix[CellName];
+				}
+			}
+			self.Prepare(function(err){
+				self._unmap(function(err){
+					self.NewCache.forEach(function(CellName){
+						self.HowToCalculate[CellName].CodeDoc = self._docByRow(self.Matrix[CellName].Row);	
+					})
+					self.ToCache(done);
+				})
 			})
 		})
 	}
 
-	self.LoadedRows = {};
-
 	self.FromCache = function(Cells,done){
-
-	}
-
-	self.ToCache = function(Cells,done){
-		var Cache = {};
-		console.time("S");
-		for (var CellName in self.HowToCalculate){
-			Cache[CellName] = self.HowToCalculate[CellName];
-			Cache[CellName].Dependable = _.isEmpty(self.Dependable[CellName]) ? []:self.Dependable[CellName];
-			Cache[CellName].Vars = self._dependancies(CellName);
-		}
-		console.timeEnd("S");
-		//console.log(Cache);
-	}
-
-	self._dependancies = function(CellName){
-		console.log(CellName,self.Dependable[CellName]);
-		/*var Result = [], Cells = self.Dependable[CellName];
-		if (_.isEmpty(Cells)) return Result;
-		Cells.forEach(function(Ce){
-			Result = Result.concat(self._dependancies(Ce));
+		if (self.Cx.UseCache===false) return done(null,Cells);
+		Redis.Get(Cells,function(err,CellResults){
+			var GoodCells = [];
+			CellResults.forEach(function(Cell){
+				for (var CodeCell in Cell.Vars){
+					var I = Cell.Vars[CodeCell];
+					self.Dependable[CodeCell] = I.Dependable;
+					self.HowToCalculate[CodeCell] = _.pick(I,["Type","FRM","CodeDoc"]);
+					GoodCells.push(CodeCell);
+				}
+			})
+			var RemainCells = _.difference(Cells,GoodCells);
+			return done(err,RemainCells);
 		})
-		return Result;
-		*/
+	}
+
+	self.ToCache = function(done){
+		CacheClient.sendMessage({
+			NewCache:self.NewCache,
+			HowToCalculate:self.HowToCalculate,
+			Dependable:self.Dependable,
+			Errors:self.Err.Errors
+		},function(err){
+			console.log("Cache is set");
+		});
+		return done();		
 	}
 
 	self._unmap = function(done){
@@ -104,6 +120,8 @@ var Unmaper = function(){
 			self._unmap(done);
 		})
 	}
+	
+	self.LoadedRows = {};
 
 	self.LoadDocs = function(Remain,done){
 		var ToLoad = [];
@@ -506,7 +524,7 @@ var Unmaper = function(){
 				Period:Cell.Period,
 				Obj:Cell.Obj,
 				Year:Cell.Year,
-				Doc:self.DocRowInfo[Row.CodeRow],
+				Doc:self._docByRow(Row.CodeRow),
 				RowMarks:_.uniq(RowMarks),
 				ColMarks:_.uniq(ColMarks)
 			};
@@ -567,5 +585,31 @@ var ErrorCatcher = function(){
 	return self;
 }	
 
+
+var Redis = (new function(){
+	var redis = require("redis");
+	var config = require(__base+"config.js");
+	var self = this;
+	self.client = redis.createClient(config.redis);
+
+	self.Get = function(Cells,done){
+		var chunks = _.chunk(Cells, 100); 
+		var Answer = [];
+	 	async.each(chunks, function(chunk, callback) {
+	 		self.client.mget(chunk, function (err, res) {
+				res && res.forEach(function(r){
+					var R = JSON.parse(r);
+					if (R){
+						Answer.push(R);
+					}
+				})
+				return callback();
+	 		})
+	 	},function(err){
+	 		return done(err,Answer);
+	 	})
+	}
+
+})
 
 module.exports = Unmaper;

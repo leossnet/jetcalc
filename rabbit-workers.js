@@ -15,7 +15,7 @@ var rabbitPrefix = config.rabbitPrefix;
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect(config.mongoUrl,{safe:false});
+mongoose.connect(config.mongoUrl,{useMongoClient:true});
 
 
 mongoose.connection.on('connected', function(){
@@ -86,8 +86,14 @@ mongoose.connection.on('connected', function(){
             })
         }
     })
-
-
+    
+    var calc_cache_worker = new RabbitMQWorker({
+        queue_id: rabbitPrefix+"calc_cache", 
+        worker: function(msg, done) {
+            var CacheHelper = require(__base+"classes/jetcalc/Cache.js");
+            CacheHelper(msg,done);
+        }
+    })
 
     var pdf_converter_worker = new RabbitMQWorker({
         queue_id: rabbitPrefix+"pdf_convert", 
@@ -190,6 +196,11 @@ mongoose.connection.on('connected', function(){
     mail_worker.connect(function(err) {
         if(err) return console.error(err);
         return console.log("mailer is running")
+    })
+
+    calc_cache_worker.connect(function(err) {
+        if(err) return console.error(err);
+        return console.log("cache saver is running")
     })
 
 

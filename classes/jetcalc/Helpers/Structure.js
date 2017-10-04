@@ -64,9 +64,22 @@ var StructureHelper = (new function(){
 			var CellNames = _.map(Cells,"Cell");
 			var CellFormats = {};
 			Cells.forEach(function(C){
-				if (C.Format) CellFormats[C.Cell] = C.Format;
+				if (C.Format) CellFormats[C.Cell] = _.first(C.Format);
 			})
-			return done(err,_.uniq(CellNames),CellFormats);			
+			var AllFormats = _.uniq(_.values(CellFormats));
+			if (_.isEmpty(AllFormats)){
+				return done(err,_.uniq(CellNames),CellFormats);	
+			} else {
+				mongoose.model("format").find({CodeFormat:{$in:AllFormats}},"CodeFormat FormatValue").isactive().lean().exec(function(err,Fs){
+					var FInd = {}; Fs.forEach(function(F){FInd[F.CodeFormat] = F.FormatValue;})
+					for (var CellName in CellFormats){
+						CellFormats[CellName] = FInd[CellFormats[CellName]];
+					}
+					return done(err,_.uniq(CellNames),CellFormats);	
+				})
+			}
+
+			
 		})
 	}
 
