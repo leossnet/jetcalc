@@ -765,7 +765,7 @@ var MRowEditor = (new function() {
     }
 
     self.Show = function(WithoutCache, done) {
-        if (!self.Mode()) return self.InitSetMode("Filter");
+        if (!self.Mode()) return self.InitSetMode("Structure");
         self.LoadRows(WithoutCache, function() {
             self.AskForRender();
             self.FlushChanges();

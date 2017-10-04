@@ -149,21 +149,21 @@ var Unmaper = function(){
 
 	self.PrepareFormula = function(Formula,Cell){
 		if (Formula==0 || _.isEmpty(Formula)) return Formula;
-		console.log("1",Formula);
+		//console.log("1",Formula);
 		Formula  = (Formula+"");
-		console.log("2",Formula);
+		//console.log("2",Formula);
 		Formula = Formula.replace(/\s+/g,' ');	
-		console.log("3",Formula);
+		//console.log("3",Formula);
 		Formula = self.RemoveRootObjs((Formula+''),Cell);
-		console.log("4",Formula);
+		//console.log("4",Formula);
 		Formula = self.RemoveTags((Formula+''),Cell);
-		console.log("5",Formula);		
+		//console.log("5",Formula);		
 		Formula = self.SimplifyFormula((Formula+''),Cell);
-		console.log("6",Formula);		
+		//console.log("6",Formula);		
 		Formula = self.UpdateModifiers((Formula+''),Cell);
-		console.log("7",Formula);
+		//console.log("7",Formula);
 		Formula = self.ExtendVariables((Formula+''),Cell);		
-		console.log("8",Formula);
+		//console.log("8",Formula);
 		return Formula;
 	}
 	
