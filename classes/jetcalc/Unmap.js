@@ -391,8 +391,9 @@ var Unmaper = function(){
 			Value = TagInfo.objtypetag[Obj.CodeObjType];
 		}
 		if (!Value && self.DefaultTags[TagName]) Value = self.DefaultTags[TagName];
+		if (!Value) Value = "UNKNOWNTAG";
 		// Цепочка объектов ToDo
-		return "UNKNOWNTAG";
+		return Value;
 	}
 
 	self.RowColFormula = function(Cell){

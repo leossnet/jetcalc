@@ -40,8 +40,17 @@ mongoose.connection.on('connected', function(){
             console.log(Res);
 
         })
-
 */
+        var Cx = {"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":false,"IsDebug":false,"CodeDoc":"calc_steel","CodeObj":"102","ChildObj":"102_PL_ESPC_CE_ST230","CodeGrp":null,"GroupType":null};
+        var Unm = require(__base+"classes/jetcalc/Unmap.js");
+        var Unmap = new Unm();
+        var Cells = ["$z10020000@KOL.P56.Y2017#102_PL_ESPC_CE_ST230?"];
+        Unmap.Unmap(Cells,Cx,function(err){
+            console.log(Unmap.HowToCalculate);
+            console.log(Unmap.Err.Errors);
+
+        })
+
 
 
         app.set('port',E_PORT);
