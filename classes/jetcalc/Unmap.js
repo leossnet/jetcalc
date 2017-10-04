@@ -149,21 +149,21 @@ var Unmaper = function(){
 
 	self.PrepareFormula = function(Formula,Cell){
 		if (Formula==0 || _.isEmpty(Formula)) return Formula;
-		//console.log("1",Formula);
+		console.log("1",Formula);
 		Formula  = (Formula+"");
-		//console.log("2",Formula);
+		console.log("2",Formula);
 		Formula = Formula.replace(/\s+/g,' ');	
-		//console.log("3",Formula);
+		console.log("3",Formula);
 		Formula = self.RemoveRootObjs((Formula+''),Cell);
-		//console.log("4",Formula);
+		console.log("4",Formula);
 		Formula = self.RemoveTags((Formula+''),Cell);
-		//console.log("5",Formula);		
+		console.log("5",Formula);		
 		Formula = self.SimplifyFormula((Formula+''),Cell);
-		//console.log("6",Formula);		
+		console.log("6",Formula);		
 		Formula = self.UpdateModifiers((Formula+''),Cell);
-		//console.log("7",Formula);
+		console.log("7",Formula);
 		Formula = self.ExtendVariables((Formula+''),Cell);		
-		//console.log("8",Formula);
+		console.log("8",Formula);
 		return Formula;
 	}
 	
@@ -181,6 +181,7 @@ var Unmaper = function(){
 
 	self.UpdateModifiers = function(Formula,Cell){
 		var Vars = Formula.match(Rx.Vars);
+		var Replaces = [];
 		Vars && Vars.forEach(function(Var){
 			var Mods = Var.match(Rx.Mods);
 			if (!_.isEmpty(Mods)){
@@ -221,11 +222,14 @@ var Unmaper = function(){
 					} catch(e){
 						console.log("Ошибка в модификаторах ",e);
 					}
-					Incomplete.Obj = "["+Objs.join(",")+"]";
-					Formula = Formula.split(Var).join(Rx._toCell(Incomplete));
-				})
+					Replaces.push({Var:Var,Value:Rx._toCell(Incomplete)});
+				})									
 			}
 		})		
+		Replaces = _.sortBy(Replaces,function(o) { return -1*o.Var.length; })
+		Replaces.forEach(function(Rep){
+			Formula = Formula.split(Rep.Var).join(Rep.Value);
+		})
 		return Formula;
 	}
 
@@ -357,11 +361,11 @@ var Unmaper = function(){
 		} else {
 			var Rsx = [];
 			Parts.forEach(function(Part){
-				var Sig = (PeriodOp=="MULT")?"*":"+";
+				var Sig = (PeriodOp=="MULT")?" * ":" + ";
 				var J = Part.length>1 ? "("+Part.join(Sig)+")":Part.join("+");
 				Rsx.push(J);
 			})
-			return (Rsx.length==1) ? _.first(Rsx):"("+Rsx.join("+")+")";
+			return (Rsx.length==1) ? _.first(Rsx):"("+Rsx.join(" + ")+")";
 		}		
 	}
 	

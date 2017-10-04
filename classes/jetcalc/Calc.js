@@ -196,11 +196,12 @@ var Calculator = function(){
 			eval("EvalResult="+Formula);
 			if (isNaN(EvalResult)) throw 'IsNan';
 		} catch (e){
+			console.log(CellName,"CALCERROR: !!!!!!!!!",InitialFormula,"!!!!!!!! : "+e.message);
 			try {
 				EvalResult = jison.parse(Formula);
 				if (EvalResult==void(0) || isNaN(EvalResult)) EvalResult = 0;
 			} catch (e2){
-				console.log(e2);
+				console.log(CellName,"CALCERROR: "+InitialFormula+" : "+e2.message);
 				EvalResult = 0;
 				Unmapper.Err.Set(CellName,"CALCERROR: "+InitialFormula+" : "+e2.message);
 				return 0;

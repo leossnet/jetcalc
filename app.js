@@ -33,24 +33,24 @@ mongoose.connection.on('connected', function(){
     var ModelInit = require('./classes/InitModels.js');
     ModelInit(function(){
 
-/*
-        var Cx = {"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":true,"IsDebug":false,"CodeDoc":"pl_spc","CodeObj":"102","ChildObj":"102_PL_ESPC_UN_STAN370","CodeGrp":"ALLORG","GroupType":"CodeDiv"};
+        /*
+        var Cx = {"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":true,"IsDebug":false,"CodeDoc":"normsir","CodeObj":"102","ChildObj":"102_ST_G230_S20","CodeGrp":"ALLORG","GroupType":"CodeDiv"};
         var CApi = require(__base+"classes/jetcalc/CalcApi.js");
         CApi.CalculateDocument(Cx,function(err,Res){
             console.log(Res);
 
         })
-*/
-    /*    var Cx = {"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":false,"IsDebug":false,"CodeDoc":"calc_steel","CodeObj":"102","ChildObj":"102_PL_ESPC_CE_ST230","CodeGrp":null,"GroupType":null};
+
+      var Cx = {"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":false,"IsDebug":false,"CodeDoc":"normsir","CodeObj":"102","ChildObj":"102_ST_G230_S20","CodeGrp":"ALLORG","GroupType":"CodeDiv"};
         var Unm = require(__base+"classes/jetcalc/Unmap.js");
         var Unmap = new Unm();
-        var Cells = ["$z10020000@KOL.P56.Y2017#102_PL_ESPC_CE_ST230?"];
+        var Cells = ["$z10020000@KOLED_STEEL.P56.Y2017#102_ST_G230_S20?"];
         Unmap.Unmap(Cells,Cx,function(err){
             console.log(Unmap.HowToCalculate);
             console.log(Unmap.Err.Errors);
 
         })
-
+  
 */
 
         app.set('port',E_PORT);
