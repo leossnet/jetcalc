@@ -42,7 +42,7 @@ var Unmaper = function(){
 
 	self.Unmap = function(Cells,Cx,done){
 		self.Cx = Cx;
-		if (_.isEmpty(Cells)) return done(err);
+		if (_.isEmpty(Cells)) return done();
 		Cells.forEach(function(CellName){
 			self.Matrix[CellName] = Rx._toObj(CellName);
 		})		
