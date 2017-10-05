@@ -279,6 +279,8 @@ var MRowEditor = (new function() {
                 break;
             case 'autofill':
             case 'paste':
+            case 'Autofill.fill':
+            case 'CopyPaste.paste':            
             case 'undo':
                 changes.forEach(function(change) {
                     self._change(change[0], change[1], change[3], change[2]);

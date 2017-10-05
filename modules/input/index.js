@@ -21,10 +21,11 @@ var MInput = (new function() {
 
     self.ValueChange = function(changes, source) {
         switch (source) {
-            case 'autofill':
-            case 'paste':
+            case 'Autofill.fill':
+            case 'CopyPaste.paste':
             case 'edit':
             case 'KeyDel':
+                console.log(changes);
                 changes.forEach(function(change) {
                     var row = change[0],
                         col = change[1];
@@ -36,6 +37,8 @@ var MInput = (new function() {
                 break;
             case "Eradicate":
                 break;
+            default:
+            console.log(source);
         }
     }
 

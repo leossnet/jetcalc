@@ -95,6 +95,17 @@ mongoose.connection.on('connected', function(){
         }
     })
 
+
+    var auto_fill_worker = new RabbitMQWorker({
+        queue_id: rabbitPrefix+"auto_fill_worker", 
+        worker: function(msg, done) {
+            var AF = require(__base+"classes/jetcalc/Helpers/AutoFill.js");
+            AF.UpdateAll(msg,done);
+        }
+    })
+
+
+
     var pdf_converter_worker = new RabbitMQWorker({
         queue_id: rabbitPrefix+"pdf_convert", 
         worker: function(msg, done) {
@@ -203,7 +214,10 @@ mongoose.connection.on('connected', function(){
         return console.log("cache saver is running")
     })
 
-
+    auto_fill_worker.connect(function(err) {
+        if(err) return console.error(err);
+        return console.log("auto fill worker is running")
+    })
 
 })
 

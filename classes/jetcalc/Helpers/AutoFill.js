@@ -5,6 +5,14 @@ var Base = require(__base + 'classes/jetcalc/Helpers/Base.js');
 var Rx = require(__base+"classes/jetcalc/RegExp.js");
 var db = require(__base+'/sql/db.js');
 
+/*
+var config = require(__base+"config.js");
+var RabbitMQClient = require(__base + "src/rabbitmq_wc.js").client;
+var AFClient = new RabbitMQClient({queue_id: config.rabbitPrefix+"auto_fill_worker"});
+AFClient.connect(function(err) {
+	if (err) console.log("AF Error",err);
+})
+*/
 var AutoFill = (new function(){
 	var self = new Base("JAFILL");
 
@@ -32,6 +40,15 @@ var AutoFill = (new function(){
 	}
 
 	self.Update = function(Cx,done){
+		self.SaveAF(Cx,done);
+		//AFClient.sendMessage(Cx,function(err){
+		//	console.log("All Is Done");
+		//});
+		return done();		
+		
+	}
+
+	self.UpdateAll = function(Cx,done){
 		var SP = Cx.CodePeriod;
 		mongoose.model("periodautofill").find({CodeSourcePeriod:SP},"-_id CodeTargetPeriod").isactive().lean().sort({Idx:1}).exec(function(err,Ps){
 			var Periods = [SP].concat(_.map(Ps,"CodeTargetPeriod"));
