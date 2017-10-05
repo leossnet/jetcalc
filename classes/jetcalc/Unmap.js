@@ -153,22 +153,23 @@ var Unmaper = function(){
 
 
 	self.PrepareFormula = function(Formula,Cell){
+		var d = true;
 		if (Formula==0 || _.isEmpty(Formula)) return Formula;
-		//console.log("1",Formula);
+		d && console.log("1",Formula);
 		Formula  = (Formula+"");
-		//console.log("2",Formula);
+		d && console.log("2",Formula);
 		Formula = Formula.replace(/\s+/g,' ');	
-		//console.log("3",Formula);
+		d && console.log("3",Formula);
 		Formula = self.RemoveRootObjs((Formula+''),Cell);
-		//console.log("4",Formula);
+		d && console.log("4",Formula);
 		Formula = self.RemoveTags((Formula+''),Cell);
-		//console.log("5",Formula);		
+		d && console.log("5",Formula);		
 		Formula = self.SimplifyFormula((Formula+''),Cell);
-		//console.log("6",Formula);		
+		d && console.log("6",Formula);		
 		Formula = self.UpdateModifiers((Formula+''),Cell);
-		//console.log("7",Formula);
+		d && console.log("7",Formula);
 		Formula = self.ExtendVariables((Formula+''),Cell);		
-		//console.log("8",Formula);
+		d && console.log("8",Formula);
 		return Formula;
 	}
 	
@@ -207,6 +208,7 @@ var Unmaper = function(){
 								if (F.S && O.CodeOtrasl==F.S) return true;
 								return false;
 							}),"CodeObj");
+							if (!_.isEmpty(Objs)) Incomplete.Obj = "["+Objs.join(",")+"]";
 							break;
 							case "<<":
 							var ObjInfo = self.Help.Div[Incomplete.Obj];
@@ -220,6 +222,7 @@ var Unmaper = function(){
 								if (F.S && O.CodeOtrasl==F.S) return true;
 								return false;
 							});
+							if (!_.isEmpty(Objs)) Incomplete.Obj = "["+Objs.join(",")+"]";
 							break;
 							default:
 							throw "Не реализовано: "+Parts[1];

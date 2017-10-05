@@ -32,6 +32,31 @@ api.connection = mongoose.connect(config.mongoUrl,{useMongoClient:true});
 mongoose.connection.on('connected', function(){
     var ModelInit = require('./classes/InitModels.js');
     ModelInit(function(){
+
+ /*       var Rx = require(__base+"classes/jetcalc/RegExp.js");
+        var A = Rx._fromIncomplete("@KOL<<(C:STEEL)?",{ Cell: '$z10023010@KOLNORM.P56.Y2017#102_PL_ESPC_CE_ST230?',
+  Row: 'z10023010',
+  Col: 'KOLNORM',
+  Period: '56',
+  Year: '2017',
+  Obj: '102_PL_ESPC_CE_ST230' });
+        console.log(A);
+*/
+ 
+
+
+
+        var Cx = {"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":false,"IsDebug":false,"CodeDoc":"calc_steel","CodeObj":"102","ChildObj":"102_PL_ESPC_CE_ST230","CodeGrp":"ALLORG","GroupType":"CodeDiv"};
+        var Unm = require(__base+"classes/jetcalc/Unmap.js");
+        var Unmap = new Unm();
+        var Cells = ["$z10023010@KOLNORM.P56.Y2017#102_PL_ESPC_CE_ST230?"];
+        Unmap.Unmap(Cells,Cx,function(err){
+            console.log(Unmap.HowToCalculate);
+            console.log(Unmap.Err.Errors);
+
+        })
+
+
 /*
         var Cx = {CodeUser:"kda","CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":true,"IsDebug":false,"CodeDoc":"balmet","CodeObj":"102","ChildObj":null,"CodeGrp":"ALLORG","GroupType":"CodeDiv"};
         var AF = require(__base+"classes/jetcalc/Helpers/AutoFill.js");
@@ -48,15 +73,7 @@ mongoose.connection.on('connected', function(){
 
         })
 
-      var Cx = {"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":false,"IsDebug":false,"CodeDoc":"normsir","CodeObj":"102","ChildObj":"102_ST_G230_S20","CodeGrp":"ALLORG","GroupType":"CodeDiv"};
-        var Unm = require(__base+"classes/jetcalc/Unmap.js");
-        var Unmap = new Unm();
-        var Cells = ["$z10020000@KOLED_STEEL.P56.Y2017#102_ST_G230_S20?"];
-        Unmap.Unmap(Cells,Cx,function(err){
-            console.log(Unmap.HowToCalculate);
-            console.log(Unmap.Err.Errors);
-
-        })
+      
   
 */
 
