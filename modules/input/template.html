@@ -67,10 +67,10 @@
                 <!-- /ko -->
                 <td>
                   <!-- ko if:($data.CalcValue+'').length -->
-                  <b data-bind='text:Math.round($data.Value)+$data.CalcValue'></b>
+                  <b data-bind='text:$data.Value+$data.CalcValue'></b>
                   <!-- /ko -->
                   <!-- ko ifnot:($data.CalcValue+'').length -->
-                  <b data-bind='text:Math.round($data.Value)'></b>
+                  <b data-bind='text:$data.Value'></b>
                   <!-- /ko -->
                 </td>
                 <td data-bind='text:moment(_.first($data.DateEdit.split("."))).format("DD.MM.YYYY HH:mm:ss")'></td>

@@ -64,7 +64,7 @@ module.exports = function(Params,done){
 		var client = redis.createClient(config.redis);
 		var commands = [];
 		for (var CellName in Info){
-			commands.push(CellName,JSON.stringify(Info[CellName]));
+			commands.push(CellName,JSON.stringify(_.merge(Info[CellName],{Cell:CellName})));
 		}
 	 	async.each(_.chunk(commands, 100), function(chunk, callback) {
 	 		client.mset(chunk, callback);

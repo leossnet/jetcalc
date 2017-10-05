@@ -1,4 +1,5 @@
 var _ = require("lodash");
+var Rx = require(__base+"classes/jetcalc/RegExp.js");
 
 var Base = function(config){
 	var self = this;
@@ -36,8 +37,7 @@ var Base = function(config){
 	self._reparseCells = function(Cells){
 		var ReCells = [];
 		Cells.forEach(function(Cell){
-			var p = Cell.CodeCell.match(/\$(.*?)\@(.*?)\.P(.*?)\.Y(.*?)\#(.*?)\?/);
-			var Set = {Cell:Cell,Row:p[1],Col:p[2],Period:p[3],Year:p[4],Obj:p[5]};	
+			var Set = Rx._toObj(Cell.CodeCell);
 			ReCells.push({
 				CodeCell:Cell.CodeCell,
 				CodeUser:Cell.CodeUser,

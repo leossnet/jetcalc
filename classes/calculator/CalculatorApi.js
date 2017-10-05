@@ -545,8 +545,9 @@ router.put('/api/cells', function(req,res){
 			//CellSaveHelper.EnsurePresence(CodeUser,Cells2Save,function(){
 				setCells(Cells2Save,function(err){
 					var AFHelper = require(__base+'src/afill.js');
-					var AF = new AFHelper();
-					AF.UpdateAll(Context,function(err){
+					var AF = require(__base+"classes/jetcalc/Helpers/AutoFill.js");
+					Context.CodeUser = req.user.CodeUser;
+					AF.Update(Context,function(err){
 						return res.json({err:err});
 					})					
 				})

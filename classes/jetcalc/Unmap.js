@@ -29,6 +29,7 @@ var Unmaper = function(){
 	self.DebugInfo = {};
 	self.NewCache = [];
 	self.Override = {};
+	self.NoCacheSave = false;
 
 	self.Prepare = function(done){
 		async.each(["DocRow","Div","Period","Tag","AllCols"],function(HName,cb){
@@ -71,12 +72,15 @@ var Unmaper = function(){
 		Redis.Get(Cells,function(err,CellResults){
 			var GoodCells = [];
 			CellResults.forEach(function(Cell){
+				self.Dependable[Cell.Cell] = Cell.Dependable;
+				self.HowToCalculate[Cell.Cell] = _.pick(Cell,["Type","FRM","CodeDoc"]);
 				for (var CodeCell in Cell.Vars){
 					var I = Cell.Vars[CodeCell];
 					self.Dependable[CodeCell] = I.Dependable;
 					self.HowToCalculate[CodeCell] = _.pick(I,["Type","FRM","CodeDoc"]);
 					GoodCells.push(CodeCell);
 				}
+				GoodCells.push(Cell.Cell);			
 			})
 			var RemainCells = _.difference(Cells,GoodCells);
 			return done(err,RemainCells);
@@ -84,6 +88,7 @@ var Unmaper = function(){
 	}
 
 	self.ToCache = function(done){
+		if (self.NoCacheSave) return done();
 		CacheClient.sendMessage({
 			NewCache:self.NewCache,
 			HowToCalculate:self.HowToCalculate,

@@ -39,11 +39,12 @@ var Calculator = function(){
 
 	self.Calculated = {};
 	self.Cx = {};
+	self.Override = {};
+	self.NoCacheSave = false;
 	self.HowToCalculate = {};
 	self.Dependable = {};
 	self.PrimariesInfo = {};
 	self.Valuta = {};
-	self.Formulas = {};
 	self.Unmapper = new Unmapper();
 	self.Field  = "Value";
 	self.CRecursion = 0;
@@ -57,17 +58,19 @@ var Calculator = function(){
 		self.Calculated = {};
 		self.Cx = Cx;
 		self.Result = {};
+		if (_.isEmpty(Cells)) return done();
 		Cells.forEach(function(CellName){
 			self.Result[CellName] = 0;
 		})
+		self.Unmapper.Override = self.Override;
+		self.Unmapper.NoCacheSave = self.NoCacheSave;
 		self.PrepareValuta(function(err){
 			self.Timer.Start('Разбор формул');
 			self.Unmapper.Unmap(Cells,Cx,function(err){
 				self.Timer.End('Разбор формул');
 				if (err) return done(err);
-				self.Formulas = _.clone(self.Unmapper.HowToCalculate);
-				self.HowToCalculate = _.clone(self.Unmapper.HowToCalculate);
-				self.Dependable = _.clone(self.Unmapper.Dependable);
+				self.HowToCalculate = self.Unmapper.HowToCalculate;
+				self.Dependable = self.Unmapper.Dependable;
 				var Primaries2Load = [];
 				var RemainCells = {}
 				for (var CellName in self.HowToCalculate){
@@ -196,7 +199,6 @@ var Calculator = function(){
 			eval("EvalResult="+Formula);
 			if (isNaN(EvalResult)) throw 'IsNan';
 		} catch (e){
-			console.log(CellName,"CALCERROR: !!!!!!!!!",InitialFormula,"!!!!!!!! : "+e.message);
 			try {
 				EvalResult = jison.parse(Formula);
 				if (EvalResult==void(0) || isNaN(EvalResult)) EvalResult = 0;

@@ -8,7 +8,6 @@
   "places":{
       "toolbutton"  : true
   },  
-  "permissions" : [
-	"IsAFSaveAllow"
-  ]
+  "initial_load":true,
+  "permissions" : ["IsAFSaveAllow"]
 }

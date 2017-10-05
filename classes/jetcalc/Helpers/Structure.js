@@ -78,9 +78,11 @@ var StructureHelper = (new function(){
 					return done(err,_.uniq(CellNames),CellFormats);	
 				})
 			}
-
-			
 		})
+	}
+
+	self.getAFCells = function(Cx,done){
+
 	}
 
 
@@ -134,6 +136,8 @@ var Simple = (new function(){
             	].join("");
                 var CellInfo = {
                     Cell:CellName,
+                    IsAFFormula:Col.IsAfFormula,
+                    AfFormula:(Col.IsAfFormula) ? Col.AfFormula:'',
                     IsControlPoint:(Col.IsControlPoint && Row.IsControlPoint),
                     IsPrimary:(!Col.IsFormula && !Row.IsFormula && !Row.IsSum && (Row.rgt-Row.lft)==1),
                     IsSum:Row.IsSum,

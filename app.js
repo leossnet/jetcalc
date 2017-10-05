@@ -32,6 +32,13 @@ api.connection = mongoose.connect(config.mongoUrl,{useMongoClient:true});
 mongoose.connection.on('connected', function(){
     var ModelInit = require('./classes/InitModels.js');
     ModelInit(function(){
+/*
+        var Cx = {CodeUser:"kda","CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":true,"IsDebug":false,"CodeDoc":"balmet","CodeObj":"102","ChildObj":null,"CodeGrp":"ALLORG","GroupType":"CodeDiv"};
+        var AF = require(__base+"classes/jetcalc/Helpers/AutoFill.js");
+        AF.Update(Cx,function(err,Answ){
+            console.log(Answ);
+        })
+
 
         /*
         var Cx = {"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":true,"IsDebug":false,"CodeDoc":"normsir","CodeObj":"102","ChildObj":"102_ST_G230_S20","CodeGrp":"ALLORG","GroupType":"CodeDiv"};
