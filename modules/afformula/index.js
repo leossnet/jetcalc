@@ -26,7 +26,7 @@ var MAFFormula = (new function(){
 			var Meta = MInput.table.getCellsMeta(), RealValues = data||{};
 			var IsSaveAvailable = false;
 			Meta.forEach(function(M){
-				if (!_.isEmpty(M.Cell) && M.IsAFFormula && M.IsPrimary){
+				if (!_.isEmpty(M) && !_.isEmpty(M.Cell) && M.IsAFFormula && M.IsPrimary){
 					if (!RealValues[M.Cell]) RealValues[M.Cell] = 0;
 					if (!M.Value) {
 						M.Value = 0;					
