@@ -268,6 +268,11 @@ var RowHelper = (new function(){
 			})
 			Indexed[Row.CodeRow] = Row;
 		})
+		Rows.forEach(function(Row){
+			Row.AllTags = _.uniq(_.flatten(_.concat(_.map(_.filter(Rows,function(RT){
+				return RT.lft<=Row.lft && RT.rgt>=Row.lft;
+			}),"Tags"))));
+		})
 		var _summ = function(Row){
 			var Summ = {Plus:[],Minus:[],Ignore:[]};
 			var Children = [];

@@ -153,7 +153,7 @@ var Unmaper = function(){
 
 
 	self.PrepareFormula = function(Formula,Cell){
-		var d = false;
+		var d = true;
 		if (Formula==0 || _.isEmpty(Formula)) return Formula;
 		d && console.log("1",Formula);
 		Formula  = (Formula+"");
@@ -247,7 +247,7 @@ var Unmaper = function(){
 		var Row = Rows[Cell.Row];
 		var Col = self.Help.AllCols[Cell.Col];
 		var Obj = self.Help.Div[Cell.Obj]; 
-		jison_prepare.setContext({
+		var CellCx = {
 			grp: Obj.Groups,
 			year: Cell.Year,
 			obj:  Cell.Obj,
@@ -260,8 +260,10 @@ var Unmaper = function(){
 			coltags:Col.Tags,
 			rowtags:Row.Tags,
 			treetags:Row.AllTags,
-			objtags:Obj.Tags
-		});
+			objtags:Obj.Tags,
+			path:Row.rowpath
+		};
+		jison_prepare.setContext(CellCx);
 		try{
 			Formula = jison_prepare.parse(Formula);
 		} catch(e){

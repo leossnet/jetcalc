@@ -7,6 +7,21 @@ var JetCalc =  require(__base+"classes/jetcalc/Calc.js");
 var CalcApi = (new function(){
 	var self = this;
 
+
+      self.ExplainCell = function(CellName,ForceFormula,Context,done){
+            var Cx = _.clone(Context);
+            Cx.IsDebug = true;
+            Cx.UseCache = false;
+            var JC = new JetCalc();
+            if (!_.isEmpty(ForceFormula)){
+                  JC.Override[CellName] = ForceFormula;      
+            }            
+            JC.NoCacheSave = true;
+            JC.Calculate([CellName],Cx,function(err){
+               return done(err,JC.Result);
+            })
+      }
+
       self.CalculateByFormula = function(Cells,Context,done){
             if (_.isEmpty(Cells)) return done();
             var Cx = _.clone(Context);
