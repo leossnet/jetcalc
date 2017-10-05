@@ -146,7 +146,8 @@ Handsontable.cellTypes.numeric.validator = function(value, callback) {
 window.numeral.languageData().delimiters.thousands = ' ';
 
 Handsontable.editors.NumericEditor.prototype.getValue = function(e){
-    return (this.TEXTAREA.value+'').replace(",",".");
+    var V = (this.TEXTAREA.value+'').replace(/\s+/g,'').replace(",",".");
+    return V;
 }
 
 

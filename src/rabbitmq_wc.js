@@ -3,6 +3,7 @@ var async = require("async")
 var config = require(__base + "config")
 var mongoose = require('mongoose')
 var rabbitPrefix = config.rabbitPrefix;
+var _ = require("lodash");
 
 
 var RabbitMQWorker = function(params) {
@@ -41,10 +42,12 @@ var generateUUID = function() {
     return mongoose.Types.ObjectId()+'';
 }
 
+var myId = _.first(_.last((_.last(process.argv)).split("/")).split("."));
+
 var RabbitMQClient = function (params){
     var self = this;
     self.queue_id = params.queue_id;
-    self.result_queue_id = self.queue_id+'_result';
+    self.result_queue_id = self.queue_id+'_result'+"_"+myId;
     self.channel = null;
 
     self.callbacks = {};
@@ -70,6 +73,7 @@ var RabbitMQClient = function (params){
                         }
                   }, {noAck: true});
               })
+              return done(err);
           });
         });
     }

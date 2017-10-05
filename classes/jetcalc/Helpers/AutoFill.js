@@ -5,14 +5,42 @@ var Base = require(__base + 'classes/jetcalc/Helpers/Base.js');
 var Rx = require(__base+"classes/jetcalc/RegExp.js");
 var db = require(__base+'/sql/db.js');
 
-/*
-var config = require(__base+"config.js");
-var RabbitMQClient = require(__base + "src/rabbitmq_wc.js").client;
-var AFClient = new RabbitMQClient({queue_id: config.rabbitPrefix+"auto_fill_worker"});
-AFClient.connect(function(err) {
-	if (err) console.log("AF Error",err);
+
+
+
+var Rabbit = (new function(){
+	var self = this;
+
+	var config = require(__base+"config.js");
+	var RabbitMQClient = require(__base + "src/rabbitmq_wc.js").client;
+	var AFClient = new RabbitMQClient({queue_id: config.rabbitPrefix+"auto_fill_worker"});
+
+	self.IsConnected = false;
+
+
+	self.Connect = function(done){
+		if (self.IsConnected) return done();
+		AFClient.connect(function(err){
+			self.IsConnected = true;
+			return done(err);
+		});
+	}
+
+	self.sendMessage = function(msg,done){
+		console.log("AAAAAAAAAA",msg);
+		self.Connect(function(err){
+			if (err) console.log(err);
+			console.log("Connected");
+			AFClient.sendMessage(msg,done);
+		})
+	}
+
+	return self;
 })
-*/
+
+
+
+
 var AutoFill = (new function(){
 	var self = new Base("JAFILL");
 
@@ -41,24 +69,44 @@ var AutoFill = (new function(){
 
 	self.Update = function(Cx,done){
 		self.SaveAF(Cx,done);
-		//AFClient.sendMessage(Cx,function(err){
-		//	console.log("All Is Done");
-		//});
-		return done();		
-		
+		Rabbit.sendMessage(Cx,function(err){
+			console.log("All Is Done");
+		});
+	}
+
+	self._periods = function(Cx,done){
+		mongoose.model("periodautofill").find({CodeSourcePeriod:Cx.CodePeriod},"-_id CodeTargetPeriod").isactive().lean().sort({Idx:1}).exec(function(err,Ps){
+			var Periods = _.concat([Cx.CodePeriod],_.map(Ps,"CodeTargetPeriod"));
+			return done(err,Periods);
+		})
 	}
 
 	self.UpdateAll = function(Cx,done){
-		var SP = Cx.CodePeriod;
-		mongoose.model("periodautofill").find({CodeSourcePeriod:SP},"-_id CodeTargetPeriod").isactive().lean().sort({Idx:1}).exec(function(err,Ps){
-			var Periods = [SP].concat(_.map(Ps,"CodeTargetPeriod"));
-			async.eachSeries(Periods,function(P,cb){
-				var Context  = _.clone(Cx);
-				Context.CodePeriod = P;
-				self.SaveAF(Context,cb);
-			},function(err){
-				return done(err);
-			})
+		var DocHelper = require(__base+"classes/jetcalc/Helpers/Doc.js");
+		async.parallel({
+			Periods:self._periods.bind(self,Cx),
+			Doc:DocHelper.get.bind(DocHelper,Cx.CodeDoc),
+		},function(err,Result){
+			var Objs = [], IsChildObj = false;
+			if (Result.Doc.HasChildObjs){
+				Objs = Result.Doc.SubObjs[Cx.CodeObj];
+				IsChildObj = true;
+			} else {
+				Objs = [Cx.CodeObj];
+			}
+			async.eachSeries(Result.Periods,function(Period,next){
+				async.eachSeries(Objs,function(Obj,cb){
+					var Context = _.clone(Cx);
+					if (IsChildObj) {
+						Context.ChildObj = Obj
+					}
+					Context.CodePeriod = Period;
+					self.SaveAF(Context,function(err){
+						console.log("...",Obj,Period," AF");
+						return cb(err);
+					});
+				},next)
+			},done)
 		})
 	}
 	

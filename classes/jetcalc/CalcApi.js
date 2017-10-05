@@ -57,7 +57,6 @@ var CalcApi = (new function(){
                   			Value:CellValues[CellName]
                   		},M);
                   	}
-                        console.log(JC.Timer);
                   	var AnswerToUser = {
                   		Cells:AnswerCells,
                   		CacheUsed:_.isEmpty(JC.Unmapper.NewCache),
