@@ -239,7 +239,7 @@ var Calculator = function(){
 			if (!_.isEmpty(self.Valuta[self.Cx.CodeValuta])){
 				self.Field = self.Valuta[self.Cx.CodeValuta];
 			} else {
-				self.Field = (Cx.IsInput) ? "Value":"ReportValue";
+				self.Field = (self.Cx.IsInput) ? "Value":"ReportValue";
 			}	
 			return done();
 		})

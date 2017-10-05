@@ -230,23 +230,18 @@ var Helper = (new function(){
 	}
 
 	self.CheckControlPoints = function(Route,Context,done){
-		Context = _.merge(_.clone(Context),{UseCache:true,IsInput:true,CodeReport:"default",Codevaluta:'RUB'});
-		var CPS = [];
-		Structure.get(Context,function(err,Info){
-			Info.Cells.forEach(function(Row){
-				CPS = _.uniq(CPS.concat(_.map(_.filter(Row,{IsControlPoint:true}),"Cell")));
-			})
-			if (!CPS.length) return done(null,{Status:"skipped",Info:"Нет контрольных точек"});
-			Calculator.CalculateCells(Context,CPS,function(err,Result){
-		      	var BadPoints = [];
-		      	for (var Key in Result.Values){
-		      		if (CPS.indexOf(Key)!=-1 && Result.Values[Key]){
-		      			BadPoints.push(Key);
-		      		}
-		      	}
-		      	if (!BadPoints.length) return done(null,{Status:"passed",Info:"Контрольные точки сошлись"});
-		      	return done(null,{Status:"failed",Info:"Контрольные точки не сошлись: "+BadPoints.length+" шт."});
-  			})
+		Context = _.merge(_.clone(Context),{UseCache:true,IsInput:true,CodeReport:"default"});
+		var Calc = require(__base+"classes/jetcalc/CalcApi.js");
+		Calc.CalculateCtrlPoints(Context,function(err,Result){
+			if (_.isEmpty(Result)) return done(null,{Status:"skipped",Info:"Нет контрольных точек"});
+			var BadPoints = 0;
+			for (var CellName in Result){
+				if (Result[CellName]!=0){
+					BadPoints++;
+				}
+			}
+			if (!BadPoints) return done(null,{Status:"passed",Info:"Контрольные точки сошлись"});
+			return done(null,{Status:"failed",Info:"Контрольные точки не сошлись: "+BadPoints+" шт."});
 		})
 	}
 

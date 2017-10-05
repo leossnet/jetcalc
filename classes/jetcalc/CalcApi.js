@@ -7,6 +7,16 @@ var JetCalc =  require(__base+"classes/jetcalc/Calc.js");
 var CalcApi = (new function(){
 	var self = this;
 
+      self.CalculateCtrlPoints = function(Cx,done){
+            Structure.get(Cx,function(err,R){
+                  var CPS = _.map(_.filter(_.flatten(R.Cells),{IsControlPoint:true}),"Cell");
+                  if (_.isEmpty(CPS)) return done(err,{});
+                  var JC = new JetCalc();
+                  JC.Calculate(CPS,Cx,function(err){
+                      return done(err,JC.Result);
+                  })
+            })
+      }
 
       self.ExplainCell = function(CellName,ForceFormula,Context,done){
             var Cx = _.clone(Context);

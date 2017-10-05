@@ -3,7 +3,7 @@
         {
             "name": "jetcalc",
             "script": "app.js",
-            "args": [],
+            "args": ["app.js"],
             "cwd": ".",
             "watch_options": {
     			"followSymlinks": false
@@ -18,6 +18,7 @@
             "name": "calculator_jetcalc",
             "cwd": ".",
             "script": "calculator.js",
+            "args": ["calculator.js"],
             "node_args": "--expose-gc",
             "instances": 1,
             "env": {
@@ -29,6 +30,7 @@
             "name": "rabbit-workers_jetcalc",
             "cwd": ".",
             "script": "rabbit-workers.js",
+            "args": ["rabbit-workers.js"],
             "node_args": "--expose-gc",
             "instances": 1,
             "env": {
