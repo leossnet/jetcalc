@@ -41,7 +41,7 @@ mongoose.connection.on('connected', function(){
   Year: '2017',
   Obj: '102_PL_ESPC_CE_ST230' });
         console.log(A);
-*/
+
  
 
 
@@ -55,7 +55,7 @@ mongoose.connection.on('connected', function(){
             console.log(Unmap.Err.Errors);
 
         })
-
+*/
 
 /*
         var Cx = {CodeUser:"kda","CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":true,"IsDebug":false,"CodeDoc":"balmet","CodeObj":"102","ChildObj":null,"CodeGrp":"ALLORG","GroupType":"CodeDiv"};
