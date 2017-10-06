@@ -31,19 +31,28 @@ api.connection = mongoose.connect(config.mongoUrl,{useMongoClient:true});
 mongoose.connection.on('connected', function(){
     var ModelInit = require('./classes/InitModels.js');
     ModelInit(function(){
-       /*  var Cx = {"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":false,"IsDebug":false,"CodeDoc":"calc_steel","CodeObj":"102","ChildObj":"102_PL_ESPC_CE_ST230","CodeGrp":"ALLORG","GroupType":"CodeDiv"};
-        var Unm = require(__base+"classes/jetcalc/Unmap.js");
-        var Unmap = new Unm();
-        var Cells = ["$z10023080@KOLNORM.P56.Y2017#102_PL_ESPC_CE_ST230?"];
-        Unmap.Unmap(Cells,Cx,function(err){
-            console.log(Unmap.HowToCalculate);
-            console.log(Unmap.Err.Errors);
+
+
+    /*     var DivHelper = require(__base+"classes/jetcalc/Helpers/Div.js");
+        DivHelper.get(function(err,Info){
+            console.log(Info["102_ST_G230_S20"]);
 
         })
-      
+ */
 
+
+/*        var Cx = {"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":false,"IsDebug":false,"CodeDoc":"opr","CodeObj":"102","ChildObj":"102_FB_ESPC_SC_OCR","CodeGrp":"ALLORG","GroupType":"CodeDiv"};
+        var Unm = require(__base+"classes/jetcalc/Unmap.js");
+        var Unmap = new Unm();
+        var Cells = ["$z11010100@SUMMANORMCALC.P56.Y2017#102_FB_ESPC_SC_OCR?"];
+        Unmap.Unmap(Cells,Cx,function(err){
+            //console.log(Unmap.HowToCalculate);
+            //console.log(Unmap.Err.Errors);
+
+        })
+  */     
         
-*/
+
 
 /*
         var Cx = {CodeUser:"kda","CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":true,"IsDebug":false,"CodeDoc":"balmet","CodeObj":"102","ChildObj":null,"CodeGrp":"ALLORG","GroupType":"CodeDiv"};

@@ -57,6 +57,14 @@ var Div = (new function(){
 			})
 			return AllChildren;
 		}	
+		var _parents = function(Code){
+			var ParentsChain = [Code], Max = 100;
+			while ((--Max)>0 && ParentsInfo[Code]!=Code && ParentsInfo[Code]){
+				Code = ParentsInfo[Code];
+				ParentsChain.push(Code);
+			}
+			return ParentsChain;
+		}
 		async.each(_.keys(self.FieldsByModel),function(modelName,cb){
 			mongoose.model(modelName).find({},self.FieldsByModel[modelName]).isactive().lean().exec(function(err,Objs){
 				Models[modelName] = Objs; 
@@ -94,6 +102,7 @@ var Div = (new function(){
 				Data.RootObj = _rootParent(Data.CodeObj);
 				Data.Children = ChildrenInfo[Data.CodeObj] || [];
 				Data.AllChildren = _children(Data.CodeObj);				
+				Data.Parents = _parents(Data.CodeObj);
 			}
 			return done(err,self.Info);
 		})

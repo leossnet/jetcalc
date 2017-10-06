@@ -289,10 +289,25 @@ var Unmaper = function(){
 			if (Incomplete.Obj=="^^") {
 				var NewVar = Var.split("#^^").join("#"+self._rootObj(Cell.Obj));	
 				Formula = Formula.split(Var).join(NewVar);
-			}
-			if (Incomplete.Obj=="^") {
+			} else if (Incomplete.Obj=="^") {
 				var NewVar = Var.split("#^").join("#"+self._parentObj(Cell.Obj));	
 				Formula = Formula.split(Var).join(NewVar);
+			} else {
+				var LvlRx = (Incomplete.Obj+'').match(/\^\(([0-9]+)\)/);
+				if (LvlRx && !_.isEmpty(LvlRx[1])){
+					try{
+						var Parents = self.Help.Div[Cell.Obj].Parents;
+						var Lvl = parseInt(LvlRx[1]);
+						if (!_.isEmpty(Parents[Lvl]+"")){
+							var NewVar = Var.split(_.first(LvlRx)).join(""+Parents[Lvl]);	
+							//console.log(Var,">>>>>",NewVar);
+							Formula = Formula.split(Var).join(NewVar);
+						}
+
+					} catch(e){
+						console.log("parents level failed ",LvlRx,Cell);
+					}
+				}
 			}
 		})
 		return Formula;
