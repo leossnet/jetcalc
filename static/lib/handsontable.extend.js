@@ -144,9 +144,10 @@ Handsontable.cellTypes.numeric.validator = function(value, callback) {
 };
 
 window.numeral.languageData().delimiters.thousands = ' ';
+window.numbro.cultureData().delimiters.thousands = " ";
 
 Handsontable.editors.NumericEditor.prototype.getValue = function(e){
-    var V = (this.TEXTAREA.value+'').replace(/\s+/g,'').replace(",",".");
+    var V = (this.TEXTAREA.value+'').replace(/\s+/g,'').replace(/\,/g,".");
     return V;
 }
 

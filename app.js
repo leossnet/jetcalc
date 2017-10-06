@@ -33,26 +33,61 @@ mongoose.connection.on('connected', function(){
     ModelInit(function(){
 
 
-    /*     var DivHelper = require(__base+"classes/jetcalc/Helpers/Div.js");
-        DivHelper.get(function(err,Info){
-            console.log(Info["102_ST_G230_S20"]);
-
-        })
- */
 
 
-/*        var Cx = {"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":false,"IsDebug":false,"CodeDoc":"opr","CodeObj":"102","ChildObj":"102_FB_ESPC_SC_OCR","CodeGrp":"ALLORG","GroupType":"CodeDiv"};
+
+
+
+        
+
+/*
+        var Cx = {IsExplain:true,"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":false,"IsDebug":false,"CodeDoc":"balmet","CodeObj":"102","ChildObj":null,"CodeGrp":"ALLORG","GroupType":"CodeDiv"};
         var Unm = require(__base+"classes/jetcalc/Unmap.js");
         var Unmap = new Unm();
-        var Cells = ["$z11010100@SUMMANORMCALC.P56.Y2017#102_FB_ESPC_SC_OCR?"];
+        var Cells = ["$p120@OP_TP.P56.Y2017#102?"];
         Unmap.Unmap(Cells,Cx,function(err){
+            console.log("============");
+            console.log(Unmap.HowToCalculate);
+            console.log("============");
+            console.log(Unmap.DebugInfo["$p120@OP_TP.P56.Y2017#102?"]);
+            console.log("============");
+            console.log(Unmap.Err.Errors)
+        })
+*/
+
+/*        var DocRow = require(__base+"classes/jetcalc/Helpers/DocRow.js"); 
+        DocRow.get(function(err,Info){
+            console.log("p120",">>>",Info.Tree["p120"]);
+
+        })
+*/
+
+
+
+/*
+    var Cx = {IsExplain:true,"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":false,"IsDebug":false,"CodeDoc":"balmet","CodeObj":"102","ChildObj":null,"CodeGrp":"ALLORG","GroupType":"CodeDiv"};
+    var RowHelper = require(__base+"classes/jetcalc/Helpers/Row.js");
+    RowHelper.get(Cx,function(err,Info){
+        console.log(_.find(Info,{CodeRow:'p120'}));
+    })
+*/
+
+ /* 
+        var Cx = {IsExplain:true,"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":false,"IsDebug":false,"CodeDoc":"balmet","CodeObj":"102","ChildObj":null,"CodeGrp":"ALLORG","GroupType":"CodeDiv"};
+        var Unm = require(__base+"classes/jetcalc/Unmap.js");
+        var Unmap = new Unm();
+        var Cells = ["$p120@OP_TP.P56.Y2017#102?"];
+        Unmap.Unmap(Cells,Cx,function(err){
+            console.log("============");
+            console.log(Unmap.HowToCalculate);
+            console.log("============");
+            console.log(Unmap.DebugInfo["$p120@OP_TP.P56.Y2017#102?"]);
+
             //console.log(Unmap.HowToCalculate);
             //console.log(Unmap.Err.Errors);
 
         })
-  */     
-        
-
+ */
 
 /*
         var Cx = {CodeUser:"kda","CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":true,"IsDebug":false,"CodeDoc":"balmet","CodeObj":"102","ChildObj":null,"CodeGrp":"ALLORG","GroupType":"CodeDiv"};

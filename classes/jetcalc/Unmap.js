@@ -300,7 +300,6 @@ var Unmaper = function(){
 						var Lvl = parseInt(LvlRx[1]);
 						if (!_.isEmpty(Parents[Lvl]+"")){
 							var NewVar = Var.split(_.first(LvlRx)).join(""+Parents[Lvl]);	
-							//console.log(Var,">>>>>",NewVar);
 							Formula = Formula.split(Var).join(NewVar);
 						}
 

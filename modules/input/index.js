@@ -363,7 +363,7 @@ var MInput = (new function() {
                 data.forEach(function(d) {
                     rd = [];
                     d.forEach(function(elem) {
-                        rd.push(parseInt(elem.replace(' ', '')).toString());
+                        rd.push(elem.replace(/\s+/g, ''));
                     })
                     retdata.push(rd);
                 })
