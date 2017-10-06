@@ -31,16 +31,27 @@ api.connection = mongoose.connect(config.mongoUrl,{useMongoClient:true});
 mongoose.connection.on('connected', function(){
     var ModelInit = require('./classes/InitModels.js');
     ModelInit(function(){
+/*
+        var Cx = {"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":false,"IsDebug":false,"CodeDoc":"balmet","CodeObj":"102","ChildObj":null,"CodeGrp":"ALLORG","GroupType":"CodeDiv"};
+        var CalcApi = require(__base+"classes/jetcalc/CalcApi.js");
+        CalcApi.ExplainCell("$p120s35@OP_MNLZ.P56.Y2017#102?",null,Cx,function(err,Info){
+            console.log(Info);
 
+        })
+  */      
 
-
-
-
-
+    
+    
 
         
 
 /*
+
+var RowHelper = require(__base+"classes/jetcalc/Helpers/Row.js");
+    RowHelper.get(Cx,function(err,Info){
+        console.log(_.find(Info,{CodeRow:'p120'}));
+    })
+ 
         var Cx = {IsExplain:true,"CodePeriod":"56","Year":"2017","CodeValuta":"RUB","IsInput":true,"IsOlap":false,"UseCache":false,"IsDebug":false,"CodeDoc":"balmet","CodeObj":"102","ChildObj":null,"CodeGrp":"ALLORG","GroupType":"CodeDiv"};
         var Unm = require(__base+"classes/jetcalc/Unmap.js");
         var Unmap = new Unm();

@@ -25,11 +25,15 @@ var MDebugFormula = (new function(){
             swal('','Выберите ячейку для отладки','error');
         }
         var AF = null;
+        FormulaEditor.AfFormula = "";
         try{
            var Coords = BlankDocument.LastCoords;
            var Meta = BlankDocument.table.getCellMeta(Coords[0],Coords[1]);
            if (Meta.IsAFFormula){
-              AF = Meta.Formula;
+              AF = Meta.AfFormula;
+              if (!_.isEmpty(AF)){
+                FormulaEditor.AfFormula = AF;
+              }
            }
         }catch(e){
            console.debug(e);

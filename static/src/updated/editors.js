@@ -162,7 +162,7 @@ var FormulaEditor = (new function(){
 	self.SplitView = function(){
 		self.IsSpiltted(!self.IsSpiltted());
 	}
-
+	self.AfFormula = "";
 
 	self.KeyWords = [];
 
@@ -184,7 +184,6 @@ var FormulaEditor = (new function(){
 	    var from = textLine.substring(0,cur.ch).length-lastWord.length;
 	    var chars = {"$":'row',"@":'col',".P":'period',"#":'obj'};
 	    var choosed = null, choosedChar = null, choosedPos = -1;
-
 	    for (var mark in chars){
 	    	var test = lastWord.indexOf(mark);
 	    	if (test>choosedPos){
@@ -347,7 +346,8 @@ var FormulaEditor = (new function(){
 			method:'post',
 			data:{
 				Context:self.GlobalContext,
-				Cell:CellName
+				Cell:CellName,
+				Formula:_.isEmpty(self.AfFormula) ? "":self.AfFormula
 			},
 			success:function(data){
 				return done (data);
@@ -434,14 +434,13 @@ var FormulaEditor = (new function(){
 		if (self.Info()){
 			self.ColFormula(self.Info().ColFormula);
 			self.RowFormula(self.Info().RowFormula);
-			self.Formula(self.Info().FormulaParsed);
+			self.Formula(self.Info().Formula||"");
 		}
 	}
 
 	self.Do = function(done){
 		var AskCellName = self.UpdateCurrentCell();
 		self.CurrentCell(AskCellName);
-		console.log(AskCellName);
 		self.IsLoading(true);
 		self.LoadData(AskCellName,function(Json){
 			self.afterLoad(AskCellName,Json);

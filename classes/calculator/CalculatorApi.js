@@ -914,29 +914,23 @@ router.post('/api/cell/history', function(req,res,next){
 })
 
 router.post('/api/cell/explain', function(req,res){	
-	var Calculator = require('../calculator/Calculator.js');
 	var Context = getContext(req.body.Context,req.session.sandbox,req.user.CodeUser);	
-	var Cell = req.body.Cell;
-	Calculator.ExplainCell(Context,[Cell],function(err,Result){
-	  if (Result){
-	  	return res.json(Result);
-	  } else {
-	  	return res.json({err:err});
-	  }
-	}); 
+	var CalcApi = require(__base+"classes/jetcalc/CalcApi.js");
+	var Formula = req.body.Formula.replace(/\s+/g,' ');
+    CalcApi.ExplainCell(req.body.Cell,Formula,Context,function(err,Info){
+    	if (err) return next(err);
+        return res.json(Info);
+    })
 })
 
 router.post('/api/cell/calculatebyformula', function(req,res){	
 	var Context = getContext(req.body.Context,req.session.sandbox,req.user.CodeUser);	
-	var Calculator = require('../calculator/Calculator.js');
-	var Cells  = {}; Cells[req.body.Cell] = req.body.Formula.replace(/\s+/g,' ');
-	Calculator.CalculateByFormula(Context,Cells,function(err,Result){
-	  if (Result){
-	  	return res.json(Result);
-	  } else {
-	  	return res.json({err:err});
-	  }
-	}); 
+	var CalcApi = require(__base+"classes/jetcalc/CalcApi.js");
+	var Formula = req.body.Formula.replace(/\s+/g,' ');
+    CalcApi.ExplainCell(req.body.Cell,Formula,Context,function(err,Info){
+    	if (err) return next(err);
+        return res.json(Info);
+    })
 })
 
 router.get('/api/row/finddocument', function(req,res,next){	

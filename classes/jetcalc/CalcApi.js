@@ -20,15 +20,18 @@ var CalcApi = (new function(){
 
       self.ExplainCell = function(CellName,ForceFormula,Context,done){
             var Cx = _.clone(Context);
-            Cx.IsDebug = true;
-            Cx.UseCache = false;
+            Cx.IsDebug = true; Cx.IsExplain = true; Cx.UseCache = false;
             var JC = new JetCalc();
             if (!_.isEmpty(ForceFormula)){
                   JC.Override[CellName] = ForceFormula;      
             }            
             JC.NoCacheSave = true;
             JC.Calculate([CellName],Cx,function(err){
-               return done(err,JC.Result);
+               return done(err,{
+                  Cells:JC.Unmapper.HowToCalculate,
+                  CellsInfo:JC.Unmapper.DebugInfo,
+                  Values:JC.Calculated
+               });
             })
       }
 
