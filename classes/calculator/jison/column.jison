@@ -12,9 +12,10 @@ monthInKvart								  return 'FUNC';
 
 MCOUNT
 |DCOUNT
-|year                                          return 'CONSTANTA';
+|year                                         return 'CONSTANTA';
 
-___[A-Z]*                                     return 'U_CONSTANTA';
+\{[A-Za-z]+\}
+|_{2,3}[A-Za-z]+                              return 'U_CONSTANTA';
 
 
 periodin

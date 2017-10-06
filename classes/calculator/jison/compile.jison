@@ -12,7 +12,8 @@ monthInKvart								  return 'FUNC';
 
 MCOUNT
 |DCOUNT
-|___[A-Z]*
+|\{[A-Za-z]+\}
+|_{2,3}[A-Za-z]+
 |year                                          return 'CONSTANTA';
 
 

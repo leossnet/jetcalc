@@ -14,7 +14,8 @@ d_u_func                                       return 'FUNC';
 
 MCOUNT
 |DCOUNT
-|___[A-Z]*
+|\{[A-Za-z]+\}
+|_{2,3}[A-Za-z]+
 |year
 |EDITOR_CONSTANTA                              return 'U_CONSTANTA';
 
