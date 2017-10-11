@@ -1,17 +1,11 @@
 <div class="intab-container">
     <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MColEditor'>
         <div class="btn-group">
-          <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Сохранить данные',click:SaveChanges, css:{disabled:!$data.RowsChanged()}">
-            <i class="ace-icon fa fa-save"></i>
-            <!-- ko if:$data.RowsChanged() -->
-            <strong class="fa-stack-1x calendar-text" data-bind='text:$data.RowsChanged'></strong>
-            <!-- /ko -->
-          </a>
-          <a class='btn btn-sm btn-warning btn-white ' data-bind="title:'Отменить все изменения',click:RollBack">
-            <i class="ace-icon fa fa-undo"></i>
-          </a>
-          <!-- ko template:'tb_simple_loader' --><!-- /ko -->
-        </div>
+            <!-- ko template:{name:'save_with_count',data:{save:SaveChanges,count:ChangesCount}} --><!-- /ko -->
+            <a class='btn btn-sm  btn-white ' data-bind="title:'Отменить все изменения',click:RollBack">
+                <i class="ace-icon fa fa-refresh"></i>
+            </a>
+        </div>        
         <div class="btn-group">
             <!-- ko template:'tb_colapse_expand' --><!-- /ko -->      
             <!-- ko template:'tb_input_report_switch' --><!-- /ko -->   
@@ -39,9 +33,18 @@
     <!-- /ko --> 
 
 
-    <div class='handsonContainer' >
-        <div class="handsontable single" ></div>    
+
+
+
+    <div class='handsonContainer' data-bind='with:MColEditor.Config'>
+        <div class="handsontable single"  data-bind="
+                        handson-table:MColEditor.Config,
+                        handson-table-result:MColEditor.Result,
+                        handson-table-changes:MColEditor.Changes,
+                        handson-table-changes-count:MColEditor.ChangesCount
+        "></div>  
     </div>
+
 </div>    
 
 

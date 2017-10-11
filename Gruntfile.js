@@ -34,7 +34,7 @@ module.exports = function(grunt) {
                     "static/lib/sweetalert/sweetalert.min.js",
                     "static/lib/mde/simplemde.min.js",
                     "static/lib/handsontable.full.min.js",
-                    "static/lib/handsontable.extend.js",
+                    //"static/lib/handsontable.extend.js",
                     "static/lib/handsontable-double-click.min.js",
                     "static/lib/socket/socket.io.min.js",
                     "static/lib/async.js",

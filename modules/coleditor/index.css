@@ -31,3 +31,7 @@ td.nowrapped.removed_by_filter.guilty_cell logic,td.nowrapped logic{
 	color: navy;
 	font-weight: normal;
 }
+.htCheckboxRendererInput{
+	width: 100%;
+	text-align: center;
+}

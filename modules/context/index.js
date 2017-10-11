@@ -20,7 +20,9 @@ var CxCtrl = (new function() {
 
   self.ToggleIsInput = function() {
     self.IsInput(!self.IsInput());
+    Bus.Emit("context_isinput_change");
     self.Update('IsInput', self.IsInput());
+
   }
 
   self.Reloader = {};
@@ -341,7 +343,7 @@ var CxCtrl = (new function() {
       CodePeriod: self.CodePeriod(),
       Year: self.Year(),
       CodeValuta: self.CodeValuta(),
-      IsInput: self.PageName() == 'input',
+      IsInput: self.IsInput(),
       IsOlap: self.PageName() == 'olap',
       UseCache: self.UseCache(),
       IsDebug: false,

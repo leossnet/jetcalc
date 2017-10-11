@@ -8,7 +8,41 @@ var LIB        = require(__base+'lib/helpers/lib.js');
 var HP = LIB.Permits;
 
 
+
+
+router.get('/cols', function(req,res,next){
+	var Context = LIB.ReqContext(req);
+	var ColHelper = require(__base+'classes/jetcalc/Helpers/Col.js');
+	ColHelper.GetAll(Context,function(err, Cols){
+		if (err) return next (err);
+		return res.json(Cols);
+	})
+})
+
 router.put('/savechanges', HP.TaskAccess("IsColsetTuner"), function(req,res,next){
+	var Changes = req.body;
+	var Context = LIB.ReqContext(req);
+	console.log(Changes);
+	return;
+
+	
+})
+
+
+
+
+
+
+
+
+
+router.put('/savechanges', HP.TaskAccess("IsColsetTuner"), function(req,res,next){
+	var Changes = req.body;
+	var Context = LIB.ReqContext(req);
+	console.log(Changes);
+	return;
+
+
 	var Data = req.body.data, Update = {}, CodeUser = req.user.CodeUser;
 	var ModelHelper = require(__base+"src/modeledit.js"); 
 	try{
@@ -45,20 +79,6 @@ router.put('/savechanges', HP.TaskAccess("IsColsetTuner"), function(req,res,next
 		})
 	})
 
-})
-
-
-router.get('/cols', function(req,res,next){
-	//var ContextFields = ['Year', 'CodePeriod','IsInput','CodeDoc','CodeObj','ChildObj'];
-	var Context = _.merge(req.query,{IsDebug:true});
-	Context.IsInput = api.parseBoolean(Context.IsInput);
-	Context.UseCache = false;	
-	Context.Year = parseInt(Context.Year);
-	var ColHelper = require(__base+'classes/jetcalc/Helpers/Col.js');
-	ColHelper.GetAll(Context,function(err, Cols){
-		if (err) return next (err);
-		return res.json(Cols);
-	})
 })
 
 

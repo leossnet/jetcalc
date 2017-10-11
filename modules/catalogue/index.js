@@ -558,6 +558,7 @@ var ModelClientConfig = (new function() {
     self.Config = {};
 
     self.CodeAndName = function(ModelName) {
+        if (_.isEmpty(ModelName) || _.isEmpty(MModels.Config[ModelName])) return [];
         return [MModels.Config[ModelName].Code, MModels.Config[ModelName].Name];
     }
 
@@ -707,7 +708,7 @@ var ModelChooser = (new function() {
     }
 
     self.TableFields = function() {
-        return self.Fields[self.ModelName()] || [];
+        return self.Fields[self.ModelName()] || ModelClientConfig.TableFields(self.ModelName());
     }
 
     self.SearchStr = ko.observable("");
@@ -789,7 +790,7 @@ var Catalogue = (new function() {
         self.DoSearch({
             model: model,
             q: query,
-            fields: ModelChooser.Fields[model],
+            fields: ModelChooser.TableFields(model),
             extend: true
         }, callback)
     }

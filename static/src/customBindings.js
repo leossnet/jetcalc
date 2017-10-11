@@ -12,7 +12,7 @@ var HEditor = function(dom,params,ResultObservable,ChangesCount,DiscretChangesLi
         if (!_.isEmpty(changes)){
             changes.forEach(function(change){
                 var ind = change[0], col = change[1], oldv = change[2], newv = change[3], index = [ind,col].join("_");
-                  if (self.DiscretChanges[index] && self.DiscretChanges[index].old == newv){
+                  if (self.DiscretChanges[index] && _.isEqual(self.DiscretChanges[index].old,newv)){
                       delete self.DiscretChanges[index];
                   } else {
                       if (self.DiscretChanges[index]){

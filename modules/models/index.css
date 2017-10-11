@@ -68,3 +68,14 @@ a.btn.btn-sm.btn-white.dropdown-toggle,a.btn.btn-sm.btn-white.btn-primary.dropdo
 	    vertical-align: middle;
     margin-top: 2px;
 }
+
+.handsontable td.nowrapped_text{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.handsontable td.nowrapped_text.current{
+    white-space: initial;
+    overflow: initial;
+    text-overflow: initial;
+}

@@ -496,7 +496,14 @@ var Module = function(id) {
     self._error = ModelTableEdit.Error.subscribe(self.Error);
     self._isLoading = ModelTableEdit.IsLoading.subscribe(self.IsLoading);
     if (!_.isEmpty(options)) {
-      MSite.Subscribe(options);
+      MSite.Subscribe(_.omit(options,"context"));
+    }
+    if (!_.isEmpty(options) && !_.isEmpty(options.context)){
+        for (var T in options.context){
+            var contEv = "context_"+T+"_change";
+            Bus.Off(contEv,options.context[T])
+            Bus.On(contEv,options.context[T])
+        }
     }
   }
 
@@ -509,7 +516,13 @@ var Module = function(id) {
     if (self._error) self._error.dispose();
     if (self._isLoading) self._isLoading.dispose();
     if (!_.isEmpty(options)) {
-      MSite.UnSubscribe(options);
+      MSite.UnSubscribe(_.omit(options,"context"));
+    }
+    if (!_.isEmpty(options) && !_.isEmpty(options.context)){
+        for (var T in options.context){
+            var contEv = "context_"+T+"_change";
+            Bus.Off(contEv,options.context[T])
+        }
     }
     ModelTableEdit.Clear();
   }

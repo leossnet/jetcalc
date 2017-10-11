@@ -81,8 +81,13 @@ var AutoFill = (new function(){
 		})
 	}
 
+	self.Query = function(){
+
+	}
+
 	self.UpdateAll = function(Cx,done){
 		var DocHelper = require(__base+"classes/jetcalc/Helpers/Doc.js");
+		if (_.isEmpty(Cx.FirstPass)) Cx.FirstPass = true;
 		async.parallel({
 			Periods:self._periods.bind(self,Cx),
 			Doc:DocHelper.get.bind(DocHelper,Cx.CodeDoc),
@@ -101,14 +106,51 @@ var AutoFill = (new function(){
 						Context.ChildObj = Obj
 					}
 					Context.CodePeriod = Period;
-					self.SaveAF(Context,function(err){
-						console.log("...",Obj,Period," AF");
+					self.SaveAF(Context,function(err,CellsSaved){
+						console.log("...",Obj,Period," AF","Cells:",CellsSaved.length);
 						return cb(err);
 					});
 				},next)
-			},done)
+			},function(err){
+				self.ChainCount = 1;
+				self.AFChain(Cx,function(err){
+					if (err) return done(err);
+					self.SaveAF(Cx,function(err,CellsSaved){
+						console.log("... Update starting doc");
+						return done(err);
+					});
+
+				});
+			})
 		})
 	}
+
+	self.ChainCount = 1;
+
+	self.AFChain = function(Cx,done){
+		console.log("Iteratin ",self.ChainCount++);
+		mongoose.model("docrelation").find({CodeDocSourse:Cx.CodeDoc},"-_id CodeDocTarget").isactive().lean().exec(function(err,RelatedDocs){
+			var Codes = _.map(RelatedDocs,"CodeDocTarget");
+			console.log("Related docs:",Codes);
+			var CellsChanged = {};
+			async.eachSeries(Codes,function(CodeDoc,next){
+				self.SaveAF(_.merge(_.clone(Cx),{CodeDoc:CodeDoc}),function(err,Changed){
+					console.log("... CHAIN AF","Cells:",Changed.length);
+					if (!_.isEmpty(Changed)){
+						CellsChanged[CodeDoc] = Changed;
+					}
+					return next(err);
+				})
+			},function(err){
+				if (err || _.isEmpty(CellsChanged)) return done(err);
+				async.eachSeries(_.keys(CellsChanged),function(CodeDoc,recnext){
+					self.AFChain(_.merge(_.clone(Cx),{CodeDoc:CodeDoc}),recnext);
+				},done);
+			})
+		})
+	}
+
+
 	
 	self.MaxRound = function(V){
     	var dig = 10, r = Math.pow(dig,dig);
@@ -138,8 +180,10 @@ var AutoFill = (new function(){
 						ToSave[CodeCell] = V;
 					}
 				}
-				if (_.isEmpty(ToSave)) return done();
-				self.SaveCells(ToSave,Context,done);
+				if (_.isEmpty(ToSave)) return done(err,[]);
+				self.SaveCells(ToSave,Context,function(err){
+					return done(err,_.keys(ToSave));
+				});
 			})
 		})
 	}	
@@ -167,6 +211,7 @@ var AutoFill = (new function(){
 
 	return self;
 });
+
 
 
 module.exports = AutoFill;

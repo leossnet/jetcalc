@@ -1,4 +1,54 @@
 (function(){
+
+
+
+Handsontable.overrideCopy = function(data, coords) {
+    var plugin = this.getPlugin('copyPaste');
+    var _rm_empty = function(data) {
+        _.keys(data).forEach(function(k) {
+            if (typeof data[k] == "object") {
+                data[k] = _rm_empty(data[k])
+            }
+            if (data[k] === "") {
+                data[k] = null;
+            }
+        })
+        return data;
+    };
+    data = _rm_empty(data);
+    plugin.textarea.setValue(JSON.stringify(data));
+    plugin.textarea.select();
+}
+Handsontable.overridePaste = function(data, coords) {
+    data = JSON.parse(_.first(data));
+    var startRow = coords[0].startRow;
+    var startCol = coords[0].startCol;
+    var selfTable = this;
+    for (var i = 0; i < Math.min(selfTable.countRows() - startRow, data.length); ++i) {
+        for (var j = 0; j < Math.min(selfTable.countCols() - startCol, data[i].length); ++j) {
+            data[i][j].forEach(function(l) {
+                delete l._id;
+            })
+            selfTable.setDataAtCell(startRow + i, startCol + j, data[i][j]);
+        }
+    }
+    return false;
+}
+
+
+
+Handsontable.runOverrideRenders = function(instance, td, row, col, prop, value, CellInfo){
+    var addrender = instance.getSettings().universalRender;
+    if (!_.isEmpty(addrender)){
+        addrender.forEach(function(render){
+            render(instance, td, row, col, prop, value, CellInfo);
+        })
+    }
+}
+
+
+
+
 window.HandsonTableRenders = {
 
     RenderController:function(){
@@ -107,6 +157,7 @@ window.HandsonTableRenders = {
     },
 
     TreeRender:function(instance, td, row, col, prop, value, cellProperties){
+        Handsontable.runOverrideRenders(instance, td, row, col, prop, value, cellProperties); 
         Handsontable.renderers.HtmlRenderer.apply(this, arguments);
         var T = instance.getSettings().tree.data;
         if (T){
@@ -116,7 +167,7 @@ window.HandsonTableRenders = {
             var I = instance.getSettings().tree.icon(row);
             if (value)
             $(td).prepend(I);
-            td.className = 'simplecell treeCell';
+            $(td).addClass('simplecell treeCell');
             switch (Info.level) {
                 case 1 : $(td).toggleClass('topLevel'); break;
                 case 2 : $(td).toggleClass('subLevel'); break;
@@ -160,6 +211,7 @@ window.EditorRegistrator = new function(){
     self.EditRow = ko.observable();
     self.EditField = ko.observable();
     self.IsActive  = ko.observable(false);
+    self.LinkMainModel = ko.observable();
     self.CurrentEditor = ko.observable();
 
 
@@ -215,8 +267,13 @@ window.EditorRegistrator = new function(){
             },
             open:function(){
                 EditorRegistrator.CurrentEditor('select_table');
-                var ModelName = this.cellProperties.Model;
                 var Property = this.prop;
+                var MainModel = this.instance.getSettings().MainModel[Property]||this.instance.getSettings().MainModel;
+                var Field = MModels.Config[MainModel].fields[Property];
+                var ModelName = Field.refmodel;
+
+                console.log("::::","MainModel",MainModel,"Field",Field,"ModelName",ModelName);
+
                 var Obj = {}; Obj[Property] = this.originalValue;
                 var Model = ModelEdit.Model(ModelName, Obj);
 
@@ -224,22 +281,18 @@ window.EditorRegistrator = new function(){
                 EditorRegistrator.EditRow(Model);
                 EditorRegistrator.EditField(Property);
 
+                if (!_.isEmpty(Obj[Property])){
+                    ModelChooser.SearchStr(Obj[Property]);
+                }
 
 
                 var ColInd = this.cellProperties.col;
                 var Settings = this.cellProperties.instance.getSettings();
                 var ColInfo = Settings.columns[ColInd];
-                ModelChooser.ModelName(ColInfo.model);
-                var Current = EditorRegistrator.EditRow()[EditorRegistrator.EditField()]();
-                if (Current && (Current+'').length){
-                    ModelChooser.SearchStr(Current);
-                }
-
-
+                ModelChooser.ModelName(ModelName);
                 Handsontable.editors.PopupEditor.prototype.open.apply(this, arguments);
             },
             save:function(){
-
                 var CodeF = ModelChooser.ModelInfo().Code;
                 var NewV  = ModelChooser.Choosed()[CodeF]();
                 var Row   = EditorRegistrator.EditRow();
@@ -258,11 +311,13 @@ window.EditorRegistrator = new function(){
             prevLength:-1,
             open:function(){
                 EditorRegistrator.CurrentEditor('link');
-                var ModelName = this.cellProperties.Model;
                 var Property = this.prop;
-                var Obj = {}; Obj[Property] = this.originalValue;
+                var ModelName = Property.replace("Link_","");
+                EditorRegistrator.LinkMainModel(this.instance.getSettings().MainModel[Property]||this.instance.getSettings().MainModel);
+                var CFG = MModels.Config[ModelName];
+                var Obj = {}; Obj[Property] = this.originalValue ||[];
                 var Model = ModelEdit.Model(ModelName, Obj);
-                EditorRegistrator.Table(ModelName);
+                EditorRegistrator.Table(this.instance.getSettings().MainModel[Property] || this.instance.getSettings().MainModel);
                 EditorRegistrator.EditRow(Model);
                 EditorRegistrator.EditField(Property);
                 self.prevLength = Obj[Property].length;
@@ -346,6 +401,97 @@ window.EditorRegistrator = new function(){
 
 
 window.EditorRegistrator.Register();
+
+
+Handsontable.cellTypes.registerCellType ("middle_text",{
+    editor: Handsontable.editors.getEditor("text"), 
+    renderer: function(instance, td, row, col, prop, value, CellInfo){
+        Handsontable.runOverrideRenders(instance, td, row, col, prop, value, CellInfo);
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        $(td).addClass("nowrapped_text");
+    }
+})
+Handsontable.cellTypes.registerCellType ("middle_checkbox",{
+    editor: Handsontable.editors.getEditor("checkbox"), 
+    renderer: function(instance, td, row, col, prop, value, CellInfo){
+        Handsontable.runOverrideRenders(instance, td, row, col, prop, value, CellInfo);
+        Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
+    }
+})
+Handsontable.cellTypes.registerCellType ("condition",{
+    editor: Handsontable.editors.getEditor("condition"), 
+    renderer: function(instance, td, row, col, prop, value, CellInfo){
+        Handsontable.runOverrideRenders(instance, td, row, col, prop, value, CellInfo);
+        if (_.isEmpty(value)){
+            $(td).empty();
+        } else {
+            $(td).html(value);
+        }
+    }
+})
+
+Handsontable.cellTypes.registerCellType ("middle_link",{
+    editor: Handsontable.editors.getEditor("link"), 
+    renderer: function(instance, td, row, col, prop, value, CellInfo){
+        Handsontable.runOverrideRenders(instance, td, row, col, prop, value, CellInfo); 
+        var Html = [];
+        if (!_.isEmpty(value)){
+            var mainModel = instance.getSettings().MainModel[prop]||instance.getSettings().MainModel;
+            console.log(mainModel);
+            var linkModel = prop.replace("Link_","")
+            var fieldsInfo = MModels.Config[linkModel].fields;
+            var fields = LinkEditorHelper.FilterEditFields(mainModel,linkModel);
+            var boolField = null;
+            fields.forEach(function(f){
+                if (fieldsInfo[f].type=="Boolean"){
+                    boolField = f;
+                }
+            })
+            var showFields = fields;
+            if (boolField) showFields.remove(boolField);
+            value.forEach(function(v){
+                var sig = "", cl = "flatBack2"; 
+                if (boolField && v[boolField]){
+                    sig = "&nbsp;-&nbsp;"; cl = "flatBack1"
+                }
+                console.log(showFields);
+                var Text = _.values(_.pick(v,showFields)).join(":");
+                Html.push('<span class="label label-lg flat '+cl+'">'+sig+Text+'</span>')
+            })
+            $(td).html(Html.join(""));
+        } else {
+            $(td).empty();
+        }
+    }
+})
+
+
+Handsontable.cellTypes.registerCellType ("middle_select",{
+    editor: Handsontable.editors.getEditor("select_table"), 
+    renderer: function(instance, td, row, col, prop, value, CellInfo){
+        Handsontable.runOverrideRenders(instance, td, row, col, prop, value, CellInfo); 
+        if (!value){
+            $(td).empty();
+        } else {
+            var MainModel = instance.getSettings().MainModel[prop]||instance.getSettings().MainModel;
+            var Field = MModels.Config[MainModel].fields[prop];
+            var ModelName = Field.refmodel;
+            var Html = value;
+            $(td).html(Html);
+            $(td).addClass("nowrapped_text");
+        }
+    }
+})
+
+
+Handsontable.cellTypes.registerCellType ("middle_formula",{
+    editor: Handsontable.editors.getEditor("formula"), 
+    renderer: function(instance, td, row, col, prop, value, CellInfo){
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        $(td).addClass("nowrapped_text");        
+    }
+})
+
 
 
 window.HandsonTableHelper = {
