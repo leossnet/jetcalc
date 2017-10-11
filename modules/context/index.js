@@ -159,6 +159,9 @@ var CxCtrl = (new function() {
         return self.Error("Документ " + CodeDoc + " не найден");
       }
     }
+    if (PageName=="input") self.IsInput(true);
+    if (PageName=="report") self.IsInput(false);
+
     var Doc = MFolders.FindDocument(CodeDoc);
     self.IsDivObj(Doc.IsDivObj);
     pager.navigate(["/docview", CodeDoc, PageName].join('/'));
