@@ -435,7 +435,7 @@ router.put('/connector', function(req, res, next) {
     })
 })
 
-router.get('/tree-data', function(req, res, next) {
+router.get('/load-all', function(req, res, next) {
     var Fields = req.query.fields || [];
     mongoose.model(req.query.model).find({}, Fields.join(" ")).isactive().lean().exec(function(err, Data) {
         if (err) return next(err);

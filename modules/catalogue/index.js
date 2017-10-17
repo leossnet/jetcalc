@@ -115,7 +115,7 @@ var ModelTreeEdit = (new function() {
         wrapper = self.wrapper() || function(el) {
             return el[self.name_field()] + '.' + el[self.code_field()]
         };
-        $.getJSON('/api/modules/catalogue/tree-data', {
+        $.getJSON('/api/modules/catalogue/load-all', {
             model: self.model(),
             fields: [self.name_field(), self.code_field(), self.parent_code_field()].concat(self.add_fields()),
         }, function(data) {
@@ -526,18 +526,22 @@ var ModelRestrict = (new function() {
         docfolderdoc: {
             CodeDocFolder: {
                 CodeParentDocFolder: {
-                    $nin: ["",null]
+                    $nin: ["", null]
                 }
             }
         },
         docrow: {
             CodeRow: {
-                CodeParentRow: {$in:["",null]}
+                CodeParentRow: {
+                    $in: ["", null]
+                }
             }
         },
         docheader: {
             CodeHeader: {
-                CodeParentHeader: {$in:["",null]}
+                CodeParentHeader: {
+                    $in: ["", null]
+                }
             }
         }
     }
@@ -746,6 +750,18 @@ var Catalogue = (new function() {
 
     self.Init = function(done) {
         ModelClientConfig.Load(done);
+        self.LoadObjects('format', ['CodeFormat', 'FormatValue']);
+        self.LoadObjects('style', ['CodeStyle', 'CSS']);
+
+    }
+
+    self.LoadObjects = function(modelName, fields) {
+        $.getJSON('/api/modules/catalogue/load-all', {
+            model: modelName,
+            fields: fields,
+        }, function(data) {
+            self[modelName + '_objects'] = data;
+        });
     }
 
     self.LoadModels = function(modelName, Fields, Sort, Search, limit, skip, filter, done) {
@@ -917,7 +933,27 @@ var Catalogue = (new function() {
         return [];
     }
 
-
+    self.GetPretty = function(model, value) {
+        var overridePretty = {
+            'style': function(el) {
+                return '<span class="' + el.CodeStyle + '">' + el.CodeStyle + '</span>';
+            },
+            'format': function(el) {
+                return el.FormatValue;
+            },
+        }
+        if (overridePretty[model]) {
+            var retValue = value;
+            var Code = ModelClientConfig.CodeAndName(model)[0];
+            self[model + '_objects'].forEach(function(el) {
+                if (el[Code] === value) {
+                    retValue = overridePretty[model](el);
+                }
+            })
+            return retValue;
+        }
+        return value;
+    }
 
     return self;
 })
