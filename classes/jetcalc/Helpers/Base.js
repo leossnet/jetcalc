@@ -4,7 +4,7 @@ var Bus = require(__base + 'src/bus.js');
 
 
 module.exports = function(Name){
-	
+
 	var self = this;
 	self.Name = Name;
 
@@ -44,9 +44,9 @@ module.exports = function(Name){
 			redis.mset([[self.Name,"LIST"].join("_"),JSON.stringify(List)], function (err) {
 				return done(err);
 		 	})
-		})	
+		})
 	}
-	
+
 	self.ToCache = function(CodeDoc,Result,done){
 		var CK = _.compact([self.Name,CodeDoc]).join("_")
 		self.UpdateList(CodeDoc,function(){
@@ -91,4 +91,3 @@ module.exports = function(Name){
 
 	return self;
 }
-

@@ -23,9 +23,9 @@ module.exports = function(Params,done){
                     Done[AC] = [AC];
                 } else if (_.isEmpty(_.difference(Dep,_.keys(Done)))){
                     Done[AC] = [AC];
-                    Dep.forEach(function(D){
+                    Array.isArray(Dep) && Dep.forEach(function(D){
                         Done[AC] = Done[AC].concat(Done[D]);
-                    })                  
+                    })
                 } else {
                     Remain.push(AC);
                 }
@@ -34,7 +34,7 @@ module.exports = function(Params,done){
         }
         return Done;
     }
-        
+
     var Cache = {}, Tree = self._buildTree();
 
     self.NewCache.forEach(function(CellName){

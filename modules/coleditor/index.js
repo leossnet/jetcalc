@@ -25,8 +25,8 @@ var MColEditor = (new function() {
         }
         for (var Key in Changes) {
             var K = Key.split("_"),
-                F = _.last(K),
-                Ind = parseInt(_.first(K)),
+                F = Key.substr(Key.indexOf('_')),
+                Ind = parseInt(_.first(Key.split("_"))),
                 T = _.includes(["Link_coltag", "IsFormula", "InitialFormula", "Formula", "Tags",
                     "IsAfFormula", "IsAgFormula", "AfFormula", "AgFormula", "AsAgFormula"
                 ], F) ? "col" : "colsetcol",
@@ -41,7 +41,6 @@ var MColEditor = (new function() {
                 ToSave[T][Col.CodeCol][FV] = Col[F];
             }
         }
-        console.log(ToSave);
         self.rPut("savechanges", {
             Context: CxCtrl.Context(),
             Changes: ToSave
@@ -79,6 +78,13 @@ var MColEditor = (new function() {
     self.AllRows = []; // Remove
 
     self.AddRender = function(instance, td, row, col, prop, value, CellInfo) {
+        if (self.Columns) {
+            self.Columns.forEach(function(C) {
+                if (C.data === prop && C.readOnly) {
+                    $(td).attr('style', 'background-color: #e6ffe1 !important')
+                }
+            })
+        }
         if (self.Mode() == 'Filter') {
             var R = self.AllRows[row];
             if (R && R.IsRemoved) {
@@ -147,6 +153,7 @@ var MColEditor = (new function() {
                     title: Tr(FieldName),
                     readOnly: inf[1]
                 }, _.isEmpty(inf[3]) ? {} : inf[3]));
+                self.Columns = Columns;
                 ColWidths.push(inf[2]);
             }
             var TreeArr = _.map(AllRows, function(R) {
