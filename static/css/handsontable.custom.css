@@ -42,6 +42,8 @@
     pointer-events:none;
 }
 
+
+
 .handsontable td.UNDEFINED {
     background-color: #FFCCCC!important;
     color:maroon!important;

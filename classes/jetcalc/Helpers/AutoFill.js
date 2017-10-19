@@ -27,7 +27,6 @@ var Rabbit = (new function(){
 	}
 
 	self.sendMessage = function(msg,done){
-		console.log("AAAAAAAAAA",msg);
 		self.Connect(function(err){
 			if (err) console.log(err);
 			console.log("Connected");
@@ -128,7 +127,7 @@ var AutoFill = (new function(){
 	self.ChainCount = 1;
 
 	self.AFChain = function(Cx,done){
-		console.log("Iteratin ",self.ChainCount++);
+		return done();
 		mongoose.model("docrelation").find({CodeDocSourse:Cx.CodeDoc},"-_id CodeDocTarget").isactive().lean().exec(function(err,RelatedDocs){
 			var Codes = _.map(RelatedDocs,"CodeDocTarget");
 			console.log("Related docs:",Codes);

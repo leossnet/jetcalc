@@ -22,40 +22,39 @@ router.get('/cols', function(req, res, next) {
 router.put('/savechanges', HP.TaskAccess("IsColsetTuner"), function(req, res, next) {
     var Changes = req.body.Changes;
     var Context = LIB.ReqContext(req);
-    _.keys(Changes.colsetcol).forEach(function(K) {
-        mongoose.model('colsetcol').findOne({
-            CodeColsetCol: K
-        }).exec(function(err, C) {
-            if (C) {
-                _.keys(Changes.colsetcol[K]).forEach(function(F) {
-                    C[F] = Changes.colsetcol[K][F];
+    var CodeUser = req.user.CodeUser;
+    var _save = function(modelName,rChanges){
+        return function(done){
+            var M = mongoose.model(modelName), CFG = M.cfg(), Code = CFG.Code;
+            if (_.isEmpty(rChanges)) return done();
+            async.each(_.keys(rChanges),function(CodeObj,next){
+                var SetChange = rChanges[CodeObj], Q = {}; Q[Code] = CodeObj;
+                M.findOne(Q).isactive().exec(function(err,Obj){
+                    if (err) return next(err);
+                    if (!Obj) return next(CodeObj+" нет в базе данных");
+                    for (var S in SetChange){
+                        Obj[S] = SetChange[S];
+                    }
+                    Obj.save(CodeUser,next);
                 })
-                C.save(req.user.CodeUser, function(e, d) {});
-            };
-        });
+            },done);
+        }
+    }
+    async.parallel([
+        _save("col",Changes.col),
+        _save("colsetcol",Changes.colsetcol)        
+    ],function(err){
+        if (err) return next(err);
+        var ColHelper = require(__base + 'classes/jetcalc/Helpers/Header.js');
+        ColHelper.ClearCache(function(){
+            return res.json({});   
+        })
     })
-    _.keys(Changes.col).forEach(function(K) {
-        mongoose.model('col').findOne({
-            CodeCol: K
-        }).exec(function(err, C) {
-            if (C) {
-                _.keys(Changes.col[K]).forEach(function(F) {
-										C[F] = Changes.col[K][F];
-                })
-                C.save(req.user.CodeUser, function(e,d) {});
-            };
-        });
-    })
-    return res.json({})
 })
 
 router.put('/savechangesold', HP.TaskAccess("IsColsetTuner"), function(req, res, next) {
     var Changes = req.body;
     var Context = LIB.ReqContext(req);
-    console.log(Changes);
-    return;
-
-
     var Data = req.body.data,
         Update = {},
         CodeUser = req.user.CodeUser;

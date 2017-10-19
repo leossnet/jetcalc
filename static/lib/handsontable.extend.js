@@ -505,6 +505,7 @@
     Handsontable.cellTypes.registerCellType("middle_formula", {
         editor: Handsontable.editors.getEditor("formula"),
         renderer: function(instance, td, row, col, prop, value, CellInfo) {
+            Handsontable.runOverrideRenders(instance, td, row, col, prop, value, CellInfo);
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             $(td).addClass("nowrapped_text");
         }

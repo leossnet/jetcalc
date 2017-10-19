@@ -25,7 +25,7 @@ var MColEditor = (new function() {
         }
         for (var Key in Changes) {
             var K = Key.split("_"),
-                F = Key.substr(Key.indexOf('_')),
+                F = _.last(K),
                 Ind = parseInt(_.first(Key.split("_"))),
                 T = _.includes(["Link_coltag", "IsFormula", "InitialFormula", "Formula", "Tags",
                     "IsAfFormula", "IsAgFormula", "AfFormula", "AgFormula", "AsAgFormula"
@@ -41,6 +41,7 @@ var MColEditor = (new function() {
                 ToSave[T][Col.CodeCol][FV] = Col[F];
             }
         }
+        console.log("Saving...",ToSave);
         self.rPut("savechanges", {
             Context: CxCtrl.Context(),
             Changes: ToSave
@@ -80,8 +81,8 @@ var MColEditor = (new function() {
     self.AddRender = function(instance, td, row, col, prop, value, CellInfo) {
         if (self.Columns) {
             self.Columns.forEach(function(C) {
-                if (C.data === prop && C.readOnly) {
-                    $(td).attr('style', 'background-color: #e6ffe1 !important')
+                if (C.data === prop && !C.readOnly) {
+                    $(td).addClass('editableCell')
                 }
             })
         }
@@ -121,7 +122,7 @@ var MColEditor = (new function() {
             }
             switch (self.Mode()) {
                 case "Filter":
-                    ColCFG.Condition = ["condition", false, 100];
+                    ColCFG.Condition = ["condition", false, 200];
                     ColCFG.CodePeriodGrp = ["middle_select", true, 100];
                     ColCFG.IsInput = ["middle_checkbox", true, 100];
                     ColCFG.Link_colsetcolgrp = ["middle_link", false, 200];
