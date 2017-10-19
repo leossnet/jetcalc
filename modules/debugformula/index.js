@@ -20,6 +20,10 @@ var MDebugFormula = (new function(){
     }
   }
 
+  self.ClearCache = function(){
+      MCalcLog.ClearCache();
+  }
+
 	self.Debug = function(CellName){
         if (!CellName || !(CellName+'').indexOf('$')==-1){
             swal('','Выберите ячейку для отладки','error');
