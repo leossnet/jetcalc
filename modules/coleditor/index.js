@@ -96,8 +96,22 @@ var MColEditor = (new function() {
             }
         }
     }
+    self.TreeColorizer = function(instance, td, row, col, prop, value, CellInfo) {
+        if (prop=="ShowName"){
+            var R = self.AllRows[row];
+            if (R.IsFixed==false){
+                $(td).addClass("notfixedcol");
+            }
+            if (R.IsAfFormula){
+                $(td).addClass("autofillcol");
+            }
+            if (R.IsFormula){
+                $(td).addClass("formulacol");
+            }
+        }
+    }
 
-    self.AddRenders = [self.AddRender];
+    self.AddRenders = [self.AddRender,self.TreeColorizer];
 
     self.LoadCols = function(done) {
         self.rGet("cols", CxCtrl.Context(), function(Rows) {

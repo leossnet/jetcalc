@@ -2152,7 +2152,3 @@ div.row{
 div.select{
     margin-top:10px;
 }
-.handsontable td.editableCell.removed_by_filter, .handsontable td.editableCell {
-    background-color: #F7FFF4!important;
-    color:#0E3300!important;
-}

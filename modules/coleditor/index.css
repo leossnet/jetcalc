@@ -35,3 +35,19 @@ td.nowrapped.removed_by_filter.guilty_cell logic,td.nowrapped logic{
 	width: 100%;
 	text-align: center;
 }
+.handsontable td.editableCell.removed_by_filter, .handsontable td.editableCell {
+    background-color: #F7FFF4!important;
+    color:#0E3300!important;
+}
+
+.handsontable td.notfixedcol.removed_by_filter, .handsontable td.notfixedcol {
+    font-weight: bold;    
+}
+
+.handsontable td.autofillcol.removed_by_filter, .handsontable td.autofillcol {
+    color:#82AF6F!important;
+}
+
+.handsontable td.formulacol.removed_by_filter, .handsontable td.formulacol {
+    color:#546FAF!important;
+}
