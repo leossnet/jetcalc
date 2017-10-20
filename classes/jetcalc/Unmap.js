@@ -472,7 +472,7 @@ var Unmaper = function(){
 			Choosed = "Col";
 			ResultDescription = "Формула в колонке/Ряд - не IsSum";
 		}
-		if (!Result && (!Col.IsFormula && Row.IsFormula)) {
+		if (!Result && (!Col.IsFormula && Row.IsFormula && !Row.IsSum)) {
 			Result = {Type:"FRM",FRM:Row.Formula};
 			Choosed = "Row";
 			ResultDescription = "Формула в ряду/Колонка - без формулы";
@@ -533,17 +533,21 @@ var Unmaper = function(){
 			ResultDescription = "Не понятно как считать";	
 		}
 		if (Result.Type=='SUM'){
-			try{
-				var SumInfo = Row.SummInfo;
-				Result.FRM = "";
-				if (!_.isEmpty(SumInfo.Plus)) Result.FRM += "$"+SumInfo.Plus.join('? + $')+'?';
-				if (!_.isEmpty(SumInfo.Minus)) Result.FRM += " - $"+SumInfo.Minus.join('? - $')+'?';
-				if (_.isEmpty(Result.FRM)){
+			if (Row.IsFormula){
+				Result = {Type:'FRM', FRM:Row.Formula};
+			} else {
+				try{
+					var SumInfo = Row.SummInfo;
+					Result.FRM = "";
+					if (!_.isEmpty(SumInfo.Plus)) Result.FRM += "$"+SumInfo.Plus.join('? + $')+'?';
+					if (!_.isEmpty(SumInfo.Minus)) Result.FRM += " - $"+SumInfo.Minus.join('? - $')+'?';
+					if (_.isEmpty(Result.FRM)){
+						Result = {Type:'FRM', FRM:'0'};
+					}
+				} catch(e){
+					self.Err.Set(Cell.Cell,'ROW:'+Cell.Row+":UNK_SUM"+e);
 					Result = {Type:'FRM', FRM:'0'};
 				}
-			} catch(e){
-				self.Err.Set(Cell.Cell,'ROW:'+Cell.Row+":UNK_SUM"+e);
-				Result = {Type:'FRM', FRM:'0'};
 			}
 		} 
 		if (self.Cx.IsExplain){
