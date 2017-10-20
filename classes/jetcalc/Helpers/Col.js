@@ -196,9 +196,9 @@ var ColHelper = (new function(){
 					var ColCodes = self.ChildrenCodes(INFO.Result,H);
 					ColCodes.forEach(function(CC){
 						var ExFields = ['NameColsetCol','Condition','Year','CodePeriod','IsFixed','IsControlPoint','CodeStyle','CodeFormat','AfIndex','IsAfFormula','AfFormula','Link_colsetcolperiodgrp','Link_colsetcolgrp','IndexColsetCol','CodeColsetCol'];
-						if (H.IsAgFormula && H.AgFormula.length){
-							ExFields = ExFields.concat(["IsAgFormula", "AgFormula"]);
-						}
+						//if (H.IsAgFormula && H.AgFormula.length){
+						//	ExFields = ExFields.concat(["IsAgFormula", "AgFormula"]);
+						//}
 						INFO.Result[CC] = _.merge(INFO.Result[CC],_.pick(H,ExFields));
 					})
 				}
