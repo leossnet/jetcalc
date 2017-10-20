@@ -460,6 +460,13 @@ var Unmaper = function(){
 				ResultDescription = "Заголовок";
 			}
 		}
+		if (!Result && Col.IsFormula && Row.IsFormula) {
+			if (!Result && Col.DoSum && Row.IsCalcSum) {
+				Result = {Type:"FRM",FRM:Row.Formula};	
+				Choosed = "Row";
+				ResultDescription = "Формула и в ряду и в колонке, Колонка - DoSum, Ряд - IsCalcSum";	
+			}
+		}
 		if (!Result && (Col.IsFormula && !Row.IsSum)) {
 			Result = {Type:"FRM",FRM:Col.Formula};
 			Choosed = "Col";
