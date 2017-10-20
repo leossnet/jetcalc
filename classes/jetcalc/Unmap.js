@@ -524,9 +524,14 @@ var Unmaper = function(){
 			ResultDescription = "Формулы в колонке - нет, Ряд - IsSum/Колонка - NoCalcSum, Ряд - нет IsCalcSum";	
 		}
 		if (!Result && Row.IsSum) {
-			Result = {Type:"SUM"};
-			Choosed = "Row";
-			ResultDescription = "Сумма по рядам, Ряд - IsSum";
+			if (Row.IsFormula){
+				Result = {Type:"FRM",FRM:Row.Formula};	
+				ResultDescription = "Сумма по рядам, Ряд - IsSum есть сумма в ряду";
+			} else {
+				Result = {Type:"SUM"};
+				Choosed = "Row";
+				ResultDescription = "Сумма по рядам, Ряд - IsSum";
+			}
 		}
 		if (!Result){
 			Result = {Type:"UNK"};
