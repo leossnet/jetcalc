@@ -1530,6 +1530,14 @@ module.exports = {
                 "index": true,
                 "extended": true
             },
+            "CodePeriodGrp": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "periodgrp",
+                "index": true,
+                "extended": true
+            },
             "CodeGrpTarget": {
                 "type": String,
                 "default": "",
@@ -1776,7 +1784,6 @@ module.exports = {
                 "type": String,
                 "default": "",
                 "view": "none",
-
                 "refmodel": "periodgrp",
                 "index": true,
                 "extended": true

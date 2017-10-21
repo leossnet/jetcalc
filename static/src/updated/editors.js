@@ -371,7 +371,7 @@ var FormulaEditor = (new function(){
 			Text:CellName,
 			Translate:CellName,
 			Formula:Node.Formula,
-			Value:numeral(Node.Value).format(),
+			Value:Node.Value,
 			IsToggled:true,
 			IsHovered:false,
 			IsSelected:false,
