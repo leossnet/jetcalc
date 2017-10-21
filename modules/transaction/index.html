@@ -1,36 +1,89 @@
 <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MTransaction'>
-    <!-- ko template:'tb_simple_loader' -->
-    <!-- /ko -->
-    <!-- ko template:'model_edit_buttons' -->
-    <!-- /ko -->
-    <!-- ko template:'model_edit_search' -->
-    <!-- /ko -->
+  <!-- ko template:'tb_simple_loader' -->
+  <!-- /ko -->
+  <!-- ko template:'model_edit_buttons' -->
+  <!-- /ko -->
+  <!-- ko if: MTransaction.Mode() == 'DocRelations' -->
+  <!-- ko template:'docrelations_view' -->
+  <!-- /ko -->
+  <!-- /ko -->
+  <!-- ko template:'model_edit_search' -->
+  <!-- /ko -->
 </div>
 
 <div class="row adminbody" data-bind="with:MTransaction">
-    <div>
-        <!-- ko template:'model_edit' -->
-        <!-- /ko -->
-    </div>
+  <div>
+    <!-- ko if: MTransaction.Mode() == 'DocRelations' && MTransaction.DocRelationsView() == 'tree'-->
+    <!-- ko template:{name:'docrelations_tree', data:{depth:0, name:null}} -->
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko ifnot: MTransaction.Mode() == 'DocRelations' && MTransaction.DocRelationsView() == 'tree'-->
+    <!-- ko template:'model_edit' -->
+    <!-- /ko -->
+    <!-- /ko -->
+  </div>
 </div>
 
 <div class="bottomPannel" data-bind="with:MTransaction">
-    <ul class="toolPanel nav nav-tabs background-blue">
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar',title:'Проводки',mode:'BillRelations'}} -->
-        <!-- /ko -->
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-folder-open-o',title:'Счета документов',mode:'DocBills'}} -->
-        <!-- /ko -->
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-check-o',title:'Связи документов',mode:'DocRelations'}} -->
-        <!-- /ko -->
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Связи колонок',mode:'ColRelations'}} -->
-        <!-- /ko -->
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Бухгалтерские счета',mode:'Bills'}} -->
-        <!-- /ko -->
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Продукция',mode:'Prods'}} -->
-        <!-- /ko -->
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Договоры',mode:'Dogovors'}} -->
-        <!-- /ko -->
-        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Типы договоров',mode:'DogovorTypes'}} -->
-        <!-- /ko -->
-    </ul>
+  <ul class="toolPanel nav nav-tabs background-blue">
+    <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar',title:'Проводки',mode:'BillRelations'}} -->
+    <!-- /ko -->
+    <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-folder-open-o',title:'Счета документов',mode:'DocBills'}} -->
+    <!-- /ko -->
+    <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-check-o',title:'Связи документов',mode:'DocRelations'}} -->
+    <!-- /ko -->
+    <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Связи колонок',mode:'ColRelations'}} -->
+    <!-- /ko -->
+    <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Бухгалтерские счета',mode:'Bills'}} -->
+    <!-- /ko -->
+    <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Продукция',mode:'Prods'}} -->
+    <!-- /ko -->
+    <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Договоры',mode:'Dogovors'}} -->
+    <!-- /ko -->
+    <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-calendar-plus-o',title:'Типы договоров',mode:'DogovorTypes'}} -->
+    <!-- /ko -->
+  </ul>
 </div>
+
+
+<script id="docrelations_view" type="text/html">
+  <div class="btn-group">
+    <!-- ko if: MTransaction.DocRelationsView() == 'tree' -->
+    <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Таблица',click:MTransaction.ChangeView,css:{disabled:ModelTableEdit.NoAccess()}" id='modelmodetable'>
+        <i class="ace-icon fa fa-table"></i>
+    </a>
+    <!-- /ko -->
+    <!-- ko if: MTransaction.DocRelationsView() == 'table' -->
+    <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Дерево',click:MTransaction.ChangeView,css:{disabled:ModelTableEdit.NoAccess()}" id='modelmodetree'>
+        <i class="ace-icon fa fa-indent"></i>
+    </a>
+    <!-- /ko -->
+  </div>
+</script>
+
+<script id="docrelations_tree" type="text/html">
+  <!-- ko if: $data.depth == 0 -->
+  <div class="clt" style="margin-top: 20px">
+    </ul>
+    <!-- ko foreach: MTransaction.GetChilds(null) -->
+    <li>
+      <span data-bind="text:$data.name"></span>
+      <!-- ko template:{name:'docrelations_tree', data:{depth:parseInt($parent.depth) + 1, name:$data.name}} -->
+      <!-- /ko -->
+    </li>
+    <!-- /ko -->
+    </ul>
+  </div>
+  <!-- /ko -->
+  <!-- ko if: parseInt($data.depth) > 0 && parseInt($data.depth) < 10 -->
+  <ul>
+    <!-- ko foreach: MTransaction.GetChilds($data.name) -->
+    <li>
+      <span data-bind="text:$data.name"></span>
+      <!-- ko template:{name:'docrelations_tree', data:{depth:parseInt($parent.depth) + 1, name:$data.name}} -->
+      <!-- /ko -->
+    </li>
+    <!-- /ko -->
+  </ul>
+  <!-- /ko -->
+</script>
