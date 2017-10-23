@@ -46,32 +46,78 @@ var MTransaction = (new function() {
         })
     }
 
+    self.ColRelations = ko.observableArray([]);
+
+    self.LoadColRelations = function(done) {
+        $.getJSON('/api/modules/transaction/colrelations', {}, function(data) {
+            self.ColRelations(data);
+            done && done();
+        })
+    }
+
     self.GetChilds = function(name) {
         if (name) {
-            return _.map(_.filter(self.DocRelations(), function(DR) {
-                return DR.CodeDocSourse == name;
-            }), function(DR) {
-                return {
-                    name: DR.CodeDocTarget
-                }
+            var CodeDoc = name.split('::')[0];
+            var CodeColSource = name.split('::')[1].split('=>')[0];
+            var CodeColTarget = name.split('::')[1].split('=>')[1];
+            var filtered = _.filter(self.DocRelations(), function(DR) {
+                return DR.CodeDocSourse == CodeDoc;
             })
+            ret = [];
+            filtered.forEach(function(DR) {
+                DR.Link_colrelation.forEach(function(CR) {
+                    self.ColRelations().forEach(function(RCR) {
+                        if (CR === RCR._id) {
+                            var CRCS = RCR.CodeColSource ? RCR.CodeColSource : RCR.CodeColTarget;
+                            var CRCT = RCR.CodeColTarget ? RCR.CodeColTarget : RCR.CodeColSource;
+                            if (CodeColTarget === CRCS) {
+                                ret.push(
+                                    DR.CodeDocTarget + '::' + CRCS + '=>' + CRCT
+                                )
+                            }
+                        }
+                    })
+                })
+            })
+            return _.map(_.uniq(ret), function(O) {
+                return {
+                    name: O
+                }
+            });
         } else {
             var tmp = [];
             var DRS = self.DocRelations();
             for (var i = 0; i < DRS.length; i++) {
                 tmp.push(DRS[i].CodeDocTarget);
             }
-            tmp = _.uniq(tmp)
-            return _.map(_.uniq(_.map(_.filter(self.DocRelations(), function(DR) {
+            tmp = _.uniq(tmp);
+            var root_docs = _.uniq(_.map(_.filter(self.DocRelations(), function(DR) {
                 return !_.includes(tmp, DR.CodeDocSourse);
             }), function(DR) {
-                return DR.CodeDocSourse
-            })), function(CDS){return {name: CDS}})
+                return DR;
+            }))
+            var ret = [];
+            root_docs.forEach(function(DR) {
+                DR.Link_colrelation.forEach(function(CR) {
+                    self.ColRelations().forEach(function(SCR) {
+                        if (SCR._id === CR) {
+                            ret.push(
+                                DR.CodeDocSourse + '::' + (SCR.CodeColSource ? SCR.CodeColSource : SCR.CodeColTarget) + '=>' + (SCR.CodeColTarget ? SCR.CodeColTarget : SCR.CodeColSource)
+                            )
+                        }
+                    })
+                })
+            })
+            return _.map(_.uniq(ret), function(O) {
+                return {
+                    name: O
+                }
+            });
         }
     }
 
     self.Init = function(done) {
-        self.LoadDocRelations(done);
+        self.LoadDocRelations(self.LoadColRelations(done));
     }
 
     self.SaveChanges = function() {}
