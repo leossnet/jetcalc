@@ -150,8 +150,17 @@ var SearchQuery = function(ModelName) {
     self.SetFilter = function(Str) {
         try {
             var filter = JSON.parse(Str);
-            if (_.isObject(filter)) self.Filter = filter;
-        } catch (e) {;
+            var QF = {};
+            if (_.isObject(filter)) {
+                for (var K in filter){
+                    if (filter[K]!="_SKIP_FILTER_"){
+                        QF[K] = filter[K];
+                    }
+                }
+                self.Filter = QF;
+            }
+        } catch (e) {
+            console.log(e);
         }
     }
     self.SetWord = function(Word) {

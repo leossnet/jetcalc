@@ -119,7 +119,11 @@ var MUsers = (new function() {
     switch (self.Mode()) {
       case 'Users':
         ModelTableEdit.LoadedModel().IsConfirmed(true);
-        ModelTableEdit.LoadedModel().CodeObj(self.SelectedObj());
+        if (!_.isEmpty(self.SelectedObj())){
+            ModelTableEdit.LoadedModel().CodeObj(self.SelectedObj());
+        } else {
+            ModelTableEdit.LoadedModel().CodeObj(null);
+        }
         break;
       case 'Permits':
         ModelTableEdit.LoadedModel().IsPublic(true);
@@ -159,11 +163,11 @@ var MUsers = (new function() {
   self.Show = function() {
     if (!self.Mode()) return self.InitSetMode("Users");
     var Obj = self.SelectedObj();
-    if (!Obj) {
-      self.AvPrivelegeObj(PermChecker.AvPrivelegeObj("IsDocPermissionAssigner"));
-      self.SelectedObj(_.first(self.AvPrivelegeObj()));
-      Obj = self.SelectedObj();
-    }
+    //if (!Obj) {
+    //  self.AvPrivelegeObj(PermChecker.AvPrivelegeObj("IsDocPermissionAssigner"));
+    //  self.SelectedObj(_.first(self.AvPrivelegeObj()));
+    //  Obj = self.SelectedObj();
+    //}
     var F = {
       CodeObj: Obj
     };
@@ -232,7 +236,7 @@ var MUsers = (new function() {
   }
 
   self.SelectedObj = ko.observable(null);
-
+  
 
   self.Confirm = function(text, remove) {
     swal({

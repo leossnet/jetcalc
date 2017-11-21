@@ -230,7 +230,9 @@ var PermChecker = (new function(){
 				Result = _.concat(Result,_.keys(P.Tr.UsrObjs));
 			}
 		})
-		return _.uniq(Result);
+		return _.uniq(_.filter(Result,function(V){
+			return V!='null';
+		}));
 	}
 	
 
