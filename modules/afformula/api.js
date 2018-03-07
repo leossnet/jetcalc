@@ -26,6 +26,15 @@ router.get('/calculate', function(req,res,next){
 })
 
 
+router.get('/afpath',  HP.TaskAccess("IsAFSaveAllow"), function(req,res,next){
+	var AFHelper = require(__base+'classes/jetcalc/Helpers/AutoFill.js');
+	var Cx = lib.ReqContext(req);
+	Cx.CodeUser = req.user.CodeUser;
+	AFHelper.GetRoute(Cx,function(err,Route){
+		if (err) return next(err);
+		return res.json(Route);
+	})
+})
 
 
 

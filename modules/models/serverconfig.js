@@ -2943,6 +2943,34 @@ module.exports = {
             }
         }
     },
+    "objlink": {
+        "tablename": "[link].[ObjLink]",
+        "menuplace": "Link",
+        "fields": {
+            "CodeObjLink": {
+                "type": String,
+                "default": "",
+                "view": "all",
+                "role": "code",
+                "index": true,
+                "unique": true
+            },
+            "CodeObj": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "obj",
+                "index": true
+            },
+            "CodeChildObj": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "obj",
+                "index": true
+            }
+        }
+    },
     "obj": {
         "tablename": "[core].[Objs]",
         "menuplace": "Core",
@@ -3025,7 +3053,6 @@ module.exports = {
                 "type": String,
                 "default": "",
                 "view": "none",
-
                 "refmodel": "obj",
                 "index": true,
                 "extended": true
@@ -3034,7 +3061,6 @@ module.exports = {
                 "type": String,
                 "default": "",
                 "view": "none",
-
                 "refmodel": "org",
                 "index": true,
                 "extended": true
@@ -3043,7 +3069,6 @@ module.exports = {
                 "type": String,
                 "default": "",
                 "view": "none",
-
                 "refmodel": "objtype",
                 "index": true,
                 "extended": true
@@ -3052,7 +3077,6 @@ module.exports = {
                 "type": String,
                 "default": "",
                 "view": "none",
-
                 "refmodel": "valuta",
                 "index": true,
                 "extended": true
@@ -3061,7 +3085,6 @@ module.exports = {
                 "type": String,
                 "default": "",
                 "view": "none",
-
                 "refmodel": "grp",
                 "index": true,
                 "extended": true
@@ -3070,7 +3093,6 @@ module.exports = {
                 "type": String,
                 "default": "",
                 "view": "none",
-
                 "refmodel": "status",
                 "index": true,
                 "extended": true
@@ -3079,7 +3101,6 @@ module.exports = {
                 "type": String,
                 "default": "",
                 "view": "none",
-
                 "refmodel": "priority",
                 "index": true,
                 "extended": true

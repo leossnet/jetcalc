@@ -1,11 +1,6 @@
-var MRowEditor = (new function() {
+var RowEditor = (new function() {
 
     var self = new Module("roweditor");
-
-
-    self.Init = function(done) {
-        return done();
-    }
 
     self.Obj = ko.observable(null);
     self.ObjType = ko.observable(null);
@@ -23,7 +18,6 @@ var MRowEditor = (new function() {
         var Current = (_.isEmpty(Child) ? Base : Child);
         self.Obj(Current);
         var In = Info.Info[Current];
-        console.log(Base, Child, Info, In);
         if (!_.isEmpty(In)) {
             self.ObjType(In.CodeObjType);
             self.ObjClass(In.CodeObjClass);
@@ -31,159 +25,86 @@ var MRowEditor = (new function() {
         }
     }
 
-
-
-
-
-
-
-
-
-    self.IsAvailable = function(CodeDoc) {
-        var Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
-        return PermChecker.CheckPrivelege("IsRowTuner", CxCtrl.CxPermDoc());
+    self.Show = function() {
+        if (!self.Mode()) return self.InitSetMode("Filter");
+        self.UpdateObjInfo();
+        self.LoadRows(function() {
+            //self.RenderTable();
+        })
     }
 
-    self.CutRow = ko.observable(null);
+    self.RollBack = self.Show;
 
-    self.ClearBuffer = function() {
-        self.CutRow(null);
-    }
-
-    self.ContextMenu = function() {
-        var M = {
-            row_below: {
-                name: 'Добавить ряд',
-                action: function(act, place) {
-                    var i = place.end.row;
-                    self.Rows.splice((i + 1), 0, {
-                        CodeRow: self.NewCode(i),
-                        NameRow: 'Новый ряд',
-                        NumRow: "",
-                        level: 1,
-                        IsNew: true
-                    })
-                    self.AskForRender();
-                }
-            },
-            cut_row: {
-                name: 'Вырезать',
-                disabled: function() {
-                    return !_.isEmpty(self.CutRow());
-                },
-                action: function(act, place) {
-                    var Row = null;
-                    try {
-                        Row = self.Rows[place.end.row]
-                    } catch (e) {
-                        console.debug(e);
-                    }
-                    if (Row) self.CutRow(Row);
-                }
-            },
-            paste_row: {
-                name: 'Вставить после',
-                disabled: function() {
-                    if (_.isEmpty(self.CutRow())) return true;
-                },
-                action: function(act, place) {
-                    var i = place.end.row;
-                    var RowToAdd = self.Rows[i];
-                    _.remove(self.Rows, {
-                        CodeRow: self.CutRow().CodeRow
-                    });
-                    var realI = _.findIndex(self.Rows, {
-                        CodeRow: RowToAdd.CodeRow
-                    });
-                    self.Rows.splice((realI + 1), 0, self.CutRow());
-                    self.CutRow(null);
-                    self.AskForRender();
-                }
-            }
+    self.SaveChanges = function() {
+        var Changes = self.Changes();
+        var Rows = self.AllRows;
+        if (_.isEmpty(Changes)) return;
+        var SendUpdate = {};
+        for (var Key in Changes){
+        	var Ar = Key.split("_");
+        	var R = Rows[parseInt(Ar[0])];
+        	if (_.isEmpty(SendUpdate[R.CodeRow])){
+        		SendUpdate[R.CodeRow] = {};
+        	}
+        	SendUpdate[R.CodeRow][Ar[1]] = Changes[Key].new;
         }
-        return {
-            callback: function(key, options) {
-                if (M[key] && M[key].action) {
-                    setTimeout(M[key].action.bind(null, key, options), 0);
-                } else {
-                    console.log(key, options, " <<<<<< ");
-                }
-            },
-            items: M
+        self.rPut("rows",{Data:JSON.stringify(SendUpdate),Context:_.merge(CxCtrl.Context(),{ObjType:self.ObjType()})},function(){
+        	self.Show();
+        })        
+    }
+
+    self.RowsChanged = ko.observable();
+
+    self.Subscriptions = {
+        save: self.SaveChanges,
+        refresh: self.RollBack,
+        context: {
+            isinput: self.Show,
+            period: self.Show,
+            year: self.Show,
+            obj: self.Show
         }
     }
 
     self.BeforeShow = function() {
-        self.SubscribeDoc();
-        MSite.Events.off("refresh", self.RollBack);
-        MSite.Events.on("refresh", self.RollBack);
-        Bus.On("context_obj_change", self.UpdateObjInfo);
-        self.UpdateObjInfo();
-
+        self.Subscribe(self.Subscriptions);
         self.Show();
     }
 
     self.BeforeHide = function() {
-        self.UnSubscribeDoc();
-        self.Rows = null;
-        if (self.table) {
-            self.table.destroy();
-            self.table = null;
-        }
-        MSite.Events.off("refresh", self.RollBack);
-        Bus.Off("context_obj_change", self.UpdateObjInfo);
+        self.UnSubscribe(self.Subscriptions);
     }
 
-    self.CxChange = function() {
-        self.Show();
-    }
+    self.Config = ko.observable();
+    self.Result = ko.observable();
+    self.Changes = ko.observable();
+    self.ChangesCount = ko.observable(0);
 
-    self.RootBase = "";
-    self.NewCode = function(ind, key, value, oldvalue) {
-        var RootCode = "";
-        for (var index = ind; index >= 0; index--) {
-            if (self.Rows[index] && self.Rows[index].level == 0) {
-                RootCode = self.Rows[index].CodeRow;
-                break;
-            }
+    self.AllRows = []; // Remove
+
+    self.AddRender = function(instance, td, row, col, prop, value, CellInfo) {
+        if (self.Columns) {
+            self.Columns.forEach(function(C) {
+                if (C.data === prop && !C.readOnly) {
+                    $(td).addClass('editableCell')
+                }
+            })
         }
-        var _toNum = function(Code) {
-            var r = 0;
-            try {
-                r = Number(_.last(self.Rows[ind - 1].CodeRow.split(RootCode))) || 0;
-            } catch (e) {;
-            }
-            return r;
-        }
-        if (key == 'NumRow' && RootCode && value) {
-            return [RootCode, value].join("");
-        } else {
-            var postfix = 0;
-            if (self.Rows[ind - 1] && self.Rows[ind + 1] && self.Rows[ind + 1].level) {
-                var prev = _toNum(self.Rows[ind - 1].CodeRow),
-                    post = _toNum(self.Rows[ind + 1].CodeRow);
-                postfix = Math.round((prev + post) / 2);
-                console.log("1", ind, postfix, RootCode, self.Rows[ind - 1].CodeRow);
-            } else {
-                if ((self.Rows[ind - 1] && self.Rows[ind - 1].level == 0) || !self.Rows[ind - 1] || !self.Rows[ind - 1].CodeRow) {
-                    if (self.Rows[ind - 1] && self.Rows[ind - 1].CodeRow) {
-                        postfix = _toNum(self.Rows[ind - 1].CodeRow) + 10;
-                        console.log("2", ind, postfix, RootCode, self.Rows[ind - 1].CodeRow);
-                    } else {
-                        postfix = 10;
-                        console.log("3", ind, postfix, RootCode);
-                    }
-                } else {
-                    postfix = _toNum(self.Rows[ind - 1].CodeRow) + 10;
-                    console.log("4", ind, postfix, RootCode, self.Rows[ind - 1].CodeRow);
+        if (self.Mode() == 'Filter') {
+            var R = self.AllRows[row];
+            if (R && R.IsRemoved) {
+                $(td).addClass("removed_by_filter");
+                if (_.includes(R.RemoveComment, prop)) {
+                    $(td).addClass("guilty_cell");
                 }
             }
-            return RootCode + postfix;
         }
     }
 
-    self.PopulateRowsFilter = function(data) {
-        data.forEach(function(d) {
+    self.AddRenders = [self.AddRender];
+
+    self.PopulateRowsFilter = function(Rows){
+        Rows.forEach(function(d) {
             if (!_.isEmpty(d.Link_rowobj)) {
                 var Links = d.Link_rowobj;
                 Links.forEach(function(L) {
@@ -196,627 +117,135 @@ var MRowEditor = (new function() {
                 })
             }
         })
-        return data;
+        return Rows;
     }
 
-    self.LoadRows = function(WithoutCache, done) {
-        var Context = _.merge(_.pick(CxCtrl.Context(), ['CodeObj', 'Year', 'ChildObj', 'CodeDoc', "IsInput"]), {
-            IsDebug: true,
-            UseCache: WithoutCache ? false : true
-        });
-        self.rGet("/rows", Context, function(data) {
-            data.forEach(function(d) {
-                d.DoRemove = false;
-                d.IsNew = false;
-                d.ForObj = false;
-                d.ForObjType = false;
+    self.LoadRows = function(done) {
+        self.rGet("rows", CxCtrl.Context(), function(Rows) {
+            var AllRows = _.sortBy(Rows, 'lft');
+            AllRows.forEach(function(R) {
+                R.DoRemove = false;
+                R.IsNew = false;
+                R.ForObj = false;
+                R.ForObjType = false;
             })
-            data = self.PopulateRowsFilter(data);
-            self.Rows = data;
-            self.GetClassInfo();
-            var Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
-            var Root = _.first(Doc.Link_docrow);
-            if (Root && Root.CodeRow) self.RootBase = Root.CodeRow;
-            return done && done()
-        })
-    }
-
-    self.Changes = ko.observableArray([]);
-    self.DiscretChanges = {};
-    self.InitialValues = {};
-    self.RowsChanged = ko.observable(0);
-
-    self._change = function(ind, key, value, oldvalue) {
-        if (typeof oldvalue == "object" && value === "") {
-            self.table.setDataAtRowProp(ind, key, []);
-            return;
-        }
-        if (!self.Rows[ind]) {
-            self.Rows[ind] = {
-                CodeRow: self.NewCode(ind, key, value, oldvalue),
-                NameRow: 'Новый ряд',
-                NumRow: "",
-                level: 1,
-                IsNew: true
+            AllRows = self.PopulateRowsFilter(AllRows);
+            self.AllRows = AllRows;
+            var ColWidths = [],
+                Columns = [];
+            var RowCFG = {
+                "CodeRow": ["middle_text", true, 100],
+                "NameRow": ["middle_text", true, 400, {
+                    renderer: HandsonTableRenders.TreeRender
+                }]
             }
-            self.AskForRender();
-        }
-        self.Rows[ind][key] = value;
-        var Cr = self.Rows[ind].CodeRow;
-        if (!self.Rows[ind].IsNew) {
-            if (self.InitialValues[Cr] && self.InitialValues[Cr][key] == value && self.DiscretChanges[Cr] && self.DiscretChanges[Cr][key]) {
-                delete self.DiscretChanges[Cr][key];
-                if (!_.values(self.DiscretChanges[Cr]).length) delete self.DiscretChanges[Cr];
-            } else {
-                if (!self.DiscretChanges[Cr]) self.DiscretChanges[Cr] = {};
-                if (!self.InitialValues[Cr]) self.InitialValues[Cr] = {};
-                if (!self.InitialValues[Cr][key]) self.InitialValues[Cr][key] = oldvalue;
-                self.DiscretChanges[Cr][key] = value;
-            }
-        }
-        self.RowsChanged(_.keys(self.DiscretChanges).length + _.filter(self.Rows, {
-            IsNew: true
-        }).length);
-    }
-
-    self.RenderTimer = null
-
-    self.AskForRender = function() {
-        console.log("ASK");
-        if (self.RenderTimer) clearTimeout(self.RenderTimer);
-        self.RenderTimer = setTimeout(function() {
-            self.RenderTable();
-            self.RenderTimer = null;
-        }, 200);
-    }
-
-    self.AddChange = function(changes, source) {
-        switch (source) {
-            case 'edit':
-                changes.forEach(function(change) {
-                    self._change(change[0], change[1], change[3], change[2]);
-                })
+            switch (self.Mode()) {
+                case "Summ":
+                    RowCFG.IsSum = ["middle_checkbox", false, 100];
+                    RowCFG.Link_rowsumgrp = ["middle_link", false, 200];
+                    RowCFG.NoSum = ["middle_checkbox", false, 100];
+                    RowCFG.IsMinus = ["middle_checkbox", false, 100];
+                    RowCFG.IsCalcSum = ["middle_checkbox", false, 100];
+                    RowCFG.NoDoSum = ["middle_checkbox", false, 100];
+                    RowCFG.UseProdSumGrps = ["middle_checkbox", false, 100];
+                    break;
+                case "Filter":
+                    RowCFG.HasFilteredChild = ["middle_checkbox", false, 100];
+                    RowCFG.NoFiltered = ["middle_checkbox", false, 100];
+                    RowCFG.ForObj = ["middle_checkbox", false, 100];
+                    RowCFG.ForObjType = ["middle_checkbox", false, 100];
+                    RowCFG.NoOutput = ["middle_checkbox", false, 100];
+                    RowCFG.NoInput = ["middle_checkbox", false, 100];
+                    RowCFG.FromObsolete = ["middle_text", false, 100];
+                    RowCFG.FromYear = ["middle_text", false, 100];
+                    RowCFG.IsRowEditFilter = ["middle_checkbox", false, 100];
+                    RowCFG.CodeGrpEditFilter = ["middle_link", false, 200];
+                    break;
+                case 'MainFields':
+                    RowCFG.CodeMeasure = ["middle_select", false, 100];
+                    RowCFG.CodeStyle = ["middle_select", false, 100];
+                    RowCFG.CodeFormat = ["middle_select", false, 100];
+                    RowCFG.CodeValuta = ["middle_select", false, 100];
+                    RowCFG.IsAnalytic = ["middle_checkbox", false, 100];
+                    RowCFG.IsControlPoint = ["middle_checkbox", false, 100];
+                    break;
+                case 'Formula':
+                    RowCFG.Link_rowtag = ["middle_link", false, 100];
+                    RowCFG.IsFormula = ["middle_checkbox", false, 100];
+                    RowCFG.Formula = ["middle_formula", false, 200];
+                    RowCFG.FormulaFromYear = ["middle_text", false, 100];
+                    RowCFG.FormulaFromObsolete = ["middle_text", false, 100];
+                    RowCFG.IsAgFormula = ["middle_checkbox", false, 100];
+                    RowCFG.AsAgFormula = ["middle_checkbox", false, 100];
+                    RowCFG.AgFormula = ["middle_formula", false, 200];                    
+                    RowCFG.IsAfFormula = ["middle_checkbox", false, 100];
+                    RowCFG.AfFormula = ["middle_formula", false, 200];
+                    RowCFG.IsVirtual = ["middle_checkbox", false, 100];
                 break;
-            case 'autofill':
-            case 'paste':
-            case 'Autofill.fill':
-            case 'CopyPaste.paste':            
-            case 'undo':
-                changes.forEach(function(change) {
-                    self._change(change[0], change[1], change[3], change[2]);
-                })
-                break;
-            default:
-                break;
-        }
-    }
-
-    self.SelectedRow = ko.observable();
-
-    self.Deselect = function() {
-        self.SelectedRow(null);
-    }
-
-    self.Select = function(x, y) {
-        var meta = self.table.getCellMeta(x, y);
-        if (meta && meta.CodeRow) self.SelectedRow(meta.CodeRow);
-    }
-
-
-    self.SaveChanges = function() {
-        if (self.Mode() == "Structure") {
-            self.rPut("structure", {
-                Context: CxCtrl.CxPermDoc(),
-                Rows: _.map(_.filter(self.Rows, function(R) {
-                    return !_.isEmpty(R.CodeRow);
-                }), function(R) {
-                    return _.pick(R, ["level", "CodeRow", "NumRow", "NameRow", "DoRemove", "IsNew", "CodeParentRow", "IndexRow", "CodeRowLink"]);
-                })
-            }, function() {
-                self.Show();
-            })
-        } else {
-            self.rPut('/rows', {
-                Modify: JSON.stringify(self.DiscretChanges),
-                Context: CxCtrl.CxPermDoc(),
-                AddInfo: {
-                    ObjType: self.ObjType(),
-                    Obj: self.Obj()
-                }
-            }, function() {
-                self.Show();
-            })
-        }
-    }
-
-
-
-
-
-
-
-
-    self._types = {
-        checkbox: ["IsFormula", "IsAfFormula", "IsVirtual", "IsAgFormula", "AsAgFormula", "IsAnalytic", "IsControlPoint", "UseProdSumGrps", "NoOutput", "NoInput", "HasFilteredChild", "NoFiltered", "IsRowEditFilter", "IsShowMeasure", "IsSum", "NoSum", "IsMinus", "IsCalcSum", "NoDoSum", "DoRemove", "ForObj", "ForObjType"],
-        text: ["CodeRow", "NameRow", "NumRow"],
-        numeric: ["FromObsolete", "FromYear", "FormulaFromYear", "FormulaFromObsolete"],
-        formula: ["AgFormula", "AfFormula", "Formula"],
-        link: ["Link_rowsumgrp", "Link_rowtag", "Link_rowobj"],
-        select_table: ["CodeMeasure", "CodeFormat", "CodeStyle", "CodeValuta", "CodeGrpEditFilter", "CodeProd", "CodeAltOrg", "CodeDogovor", "CodeFilteredAltGrp", "CodeDogovorAkt", "CodeRowLink", "CodeBill"], //,"CodeParentRow"
-        autocomplete: []
-    }
-
-    self.ModelsByField = {
-        "CodeMeasure": 'measure',
-        "CodeFormat": 'format',
-        "CodeProd": 'prod',
-        "CodeBill": 'bill',
-        "CodeAltOrg": 'org',
-        "CodeDogovor": 'dogovor',
-        "CodeFilteredAltGrp": 'grp',
-        "CodeDogovorAkt": 'dogovorakt',
-        "CodeGrpEditFilter": 'grp',
-        "CodeStyle": 'style',
-        "CodeRowLink": "row",
-        "CodeValuta": 'valuta',
-        "CodeParentRow": 'row',
-    }
-
-    self.Type = function(FieldName) {
-        var R = "";
-        for (var Key in self._types) {
-            if (self._types[Key].indexOf(FieldName) != -1) {
-                R = Key;
+                case "Bistran":
+                    RowCFG.CodeBill = ["middle_select", false, 100];
+                    RowCFG.CodeProd = ["middle_select", false, 100];
+                    RowCFG.CodeAltOrg = ["middle_select", false, 100];
+                    RowCFG.CodeDogovor = ["middle_select", false, 100];
+                    RowCFG.CodeFilteredAltGrp = ["middle_select", false, 100];
+                    RowCFG.CodeDogovorArt = ["middle_select", false, 100];                    
                 break;
             }
-        }
-        return R;
-    }
-
-
-
-
-    self.baseConfig = {
-        rowHeaders: true,
-        colHeaders: true,
-        autoRowSize: true,
-        minSpareCols: 0,
-        currentColClassName: 'currentCol',
-        currentRowClassName: 'currentRow',
-        fixedRowsTop: 0,
-        manualColumnResize: true,
-        comments: true,
-        afterChange: self.AddChange,
-        trimDropdown: false,
-        afterDeselect: self.Deselect,
-        afterSelectionEnd: self.Select
-    };
-
-
-
-    self.MinColWidth = 100;
-    self.MaxColWidth = 300;
-
-
-    self.Mode.subscribe(function(Value) {
-        if (self.table) {
-            self.AskForRender();
-            self.FlushChanges();
-        }
-    })
-
-    self.FlushChanges = function() {
-        self.DiscretChanges = {};
-        self.InitialValues = {};
-        self.RowsChanged(0);
-    }
-
-
-
-    self.RollBack = function() {
-        self.Show();
-    }
-
-    self.Rows = [];
-
-    self.LabelClasses = {};
-    self.GetLabelClass = function(Code) {
-        if (!self.LabelClasses[Code]) {
-            self.LabelClasses[Code] = "flat flatBack" + (Math.round(Math.random(20) * 19) + 1);
-        }
-        return self.LabelClasses[Code];
-    }
-    self.GetClassInfo = function() {
-        try {
-            var Sums = _.uniq(_.map(_.flatten(_.map(self.Rows, "Link_rowsumgrp")), "CodeSumGrp"));
-            var Tags = _.uniq(_.map(_.flatten(_.map(self.Rows, "Link_rowtag")), "CodeTag"));
-            Sums.forEach(function(Sum, Index) {
-                if (Index > 20) self.LabelClasses[Sum] = "flat flatBack";
-                else self.LabelClasses[Sum] = "flat flatBack" + (Index);
-            })
-            Tags.forEach(function(Tag, Index) {
-                if (Index > 20) self.LabelClasses[Tag] = "flat flatBack";
-                else self.LabelClasses[Tag] = "flat flatBack" + (Index);
-            })
-        } catch (e) {;
-        }
-    }
-
-
-    self.EditorRender = function(instance, td, row, col, prop, value, CellInfo) {
-        var Type = self.Type(CellInfo.prop);
-        $(td).addClass("nowrapped");
-        switch (Type) {
-            case 'checkbox':
-                $(td).addClass("checkboxed");
-                Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
-                break;
-            case 'numeric':
-                Handsontable.renderers.NumericRenderer.apply(this, arguments);
-                if (value == '0') {
-                    $(td).empty();
-                }
-                break;
-            case 'select_table':
-                if (!value) {
-                    $(td).empty();
-                } else {
-                    var ModelName = self.ModelsByField[prop];
-                    var Html = Catalogue.GetHtml(ModelName, value);
-                    $(td).html(Html);
-                }
-                break;
-            case 'link':
-                if (value) {
-                    var Html = [];
-                    switch (CellInfo.prop) {
-                        case 'Link_rowtag':
-                            value.forEach(function(VL) {
-                                Html.push('<span class="label label-lg ' + self.GetLabelClass(VL.CodeTag) + '">' + VL.CodeTag + ':' + (VL.Value || '*') + '</span>');
-                            })
-                            break;
-                        case 'Link_rowobj':
-                            value.forEach(function(VL) {
-
-                                var V = {
-                                    CodeObj: VL.CodeObj ? Catalogue.GetHtml("obj", VL.CodeObj) : "",
-                                    CodeGrp: VL.CodeGrp ? Catalogue.GetHtml("grp", VL.CodeGrp) : "",
-                                    CodeObjType: VL.CodeObjType ? Catalogue.GetHtml("objtype", VL.CodeObjType) : "",
-                                }
-                                Html.push('<span class="label label-lg flat flatBack1">' + _.compact(_.values(V)).join(":") + '</span>');
-                            })
-                            break;
-                        case 'Link_rowsumgrp':
-                            value.forEach(function(VL) {
-                                Html.push('<span class="label label-lg ' + self.GetLabelClass(VL.CodeSumGrp) + '">' + VL.CodeSumGrp + '</span>');
-                            })
-                            break;
-                    }
-                    $(td).html(Html.join(""));
-                }
-                break;
-            case 'autocomplete':
-                if (value) {
-                    $(td).html(value.split('.').slice(1).join('.'));
-                } else {
-                    $(td).html('');
-                }
-                break;
-            default:
-                Handsontable.renderers.TextRenderer.apply(this, arguments);
-        }
-    }
-
-    self.FilterRender = function(instance, td, row, col, prop, value, CellInfo) {
-        if (CellInfo.IsRemoved) {
-            $(td).addClass('removed_by_filter');
-            if (CellInfo.RemoveComment.indexOf(prop) != -1) {
-                $(td).addClass('guilty_cell');
+            for (var FieldName in RowCFG) {
+                var inf = RowCFG[FieldName];
+                Columns.push(_.merge({
+                    type: inf[0],
+                    data: FieldName,
+                    title: Tr(FieldName),
+                    readOnly: inf[1]
+                }, _.isEmpty(inf[3]) ? {} : inf[3]));
+                self.Columns = Columns;
+                ColWidths.push(inf[2]);
             }
-        }
-    }
+            var TreeArr = _.map(AllRows, function(R) {
+                return _.pick(R, ['lft', 'rgt', 'level']);
+            });
 
-    self.table = null;
-
-    self.linkObjectsFields = {
-        Link_rowsumgrp: ["CodeSumGrp"],
-        Link_rowtag: ["CodeTag", "Value"],
-        Link_rowobj: ["CodeObj", "CodeGrp", "CodeObjType"]
-    }
-
-    self.Columns = function() {
-        var Cols = ["CodeRow", "NumRow", "NameRow"];
-        switch (self.Mode()) {
-            case "Structure":
-                Cols = ['level', "IndexRow"].concat(Cols).concat(["DoRemove", "CodeParentRow", "CodeRowLink"]); //
-                break;
-            case "MainFields":
-                Cols = Cols.concat(["CodeMeasure", "CodeFormat", "CodeStyle", "CodeValuta", "IsAnalytic", "IsControlPoint"]);
-                break;
-            case "Filter":
-                //
-                Cols = _.concat(Cols, ["HasFilteredChild", "NoFiltered"], ["ForObj", "ForObjType"], ["Link_rowobj"], ["NoOutput", "NoInput", "FromObsolete", "FromYear", "IsRowEditFilter", "CodeGrpEditFilter"]);
-                break;
-            case "Summ":
-                Cols = Cols.concat(["IsSum", "Link_rowsumgrp", "NoSum", "IsMinus", "IsCalcSum", "NoDoSum", "UseProdSumGrps"]);
-                break;
-            case "Formula":
-                Cols = Cols.concat(["Link_rowtag", "IsFormula", "Formula", "FormulaFromYear", "FormulaFromObsolete", "IsAgFormula", "AsAgFormula", "AgFormula", "IsAfFormula", "AfFormula", "IsVirtual"]);
-                break;
-            case "Bistran":
-                Cols = Cols.concat(["CodeBill", "CodeProd", "CodeAltOrg", "CodeDogovor", "CodeFilteredAltGrp", "CodeDogovorArt"]);
-                break;
-        }
-        return Cols;
-    }
-
-
-    self.BeforeRemoveRow = function(rowIndex) {
-        self.Rows.splice(rowIndex, 1);
-    }
-
-    self.BeforeCreateRow = function(rowIndex, colIndex, mode) {
-        return;
-        var currentIndex = self.table.getSelected()[0];
-        var current = self.Rows[currentIndex];
-        var next = self.Rows[currentIndex + 1];
-        var num = "???";
-        if (current && next) {
-            num = numbro((Number(current.NumRow) + Number(next.NumRow)) / 2).format("#.##");
-        }
-        var NewRow = {
-            CodeRow: self.NewCode(),
-            NameRow: 'Новый ряд',
-            NumRow: num,
-            level: current.level,
-            IsNew: true
-        }
-        self.Rows.splice(rowIndex, 0, NewRow);
-        var Data = self.DataForTable();
-        self.table.updateSettings(Data);
-        self.UpdateTableMeta(Data);
-    }
-
-
-    self.DataForTable = function() {
-        var Cols2Show = self.Columns(),
-            TableCells = [];
-        self.Rows.forEach(function(R) {
-            TableCells.push(_.pick(R, Cols2Show))
-        })
-        var Cols = [];
-        Cols2Show.forEach(function(Col) {
-            var R = {
-                data: Col,
-                type: "text"
-            }
-            var T = self.Type(Col);
-            if (T == 'select') {
-                R.editor = 'select';
-                R.selectOptions = _.map(list.getAll(Col.toLowerCase()), 'name');
-            }
-            if (T == 'autocomplete') {
-                R.type = 'autocomplete';
-                R.strict = false;
-                R.model = self.ModelsByField[Col];
-                R.source = function(Model) {
-                    return function(query, callback) {
-                        Catalogue.SearchModel(Model, query, function(Res) {
-                            return callback(_.map(Res, function(Rt) {
-                                return Rt.id + '.' + Rt.name;
-                            }));
-                        });
-                    }
-                }(R.model);
-            }
-            if (T == 'link') R.editor = 'link';
-            if (T == 'formula') R.editor = 'formula';
-            if (T == 'select_table') {
-                R.editor = 'select_table';
-                R.model = self.ModelsByField[Col];
-            }
-            Cols.push(R);
-        })
-        var Translated = Tr(Cols2Show);
-        return {
-            data: TableCells,
-            headers: [Translated],
-            columns: Cols,
-        }
-    }
-
-    self.Retries = 3;
-
-    self.RenderTable = function() {
-        var selector = '.handsontable.single:visible';
-        var DomPlace = $(selector)[0];
-        if (_.isEmpty($(DomPlace)) && self.Retries > 0) {
-            self.Retries--;
-            return setTimeout(self.RenderTable, 100);
-        }
-        self.Retries = 3;
-        var HandsonRenders = new HandsonTableRenders.RenderController();
-        var TreeArr = _.sortBy(self.Rows, 'lft');
-        var RowsInfo = {};
-        var Widths = [100, 50, 400];
-        var params = {
-            cells: HandsonRenders.UniversalRender,
-            fixedColumnsLeft: 3,
-            cellsParams: {},
-            levels: RowsInfo,
-            minSpareRows: (self.Mode() == 'Structure') ? 100 : 0,
-            tree: {
-                data: TreeArr,
-                icon: function() {},
-                colapsed: CxCtrl.Context().CodeDoc + 'RowEditor'
-            },
-            afterCopy: function(data, coords) {
-                var plugin = this.getPlugin('copyPaste');
-                var _rm_empty = function(data) {
-                    _.keys(data).forEach(function(k) {
-                        if (typeof data[k] == "object") {
-                            data[k] = _rm_empty(data[k])
-                        }
-                        if (data[k] === "") {
-                            data[k] = null;
-                        }
-                    })
-                    return data;
-                };
-                data = _rm_empty(data);
-                plugin.textarea.setValue(JSON.stringify(data));
-                plugin.textarea.select();
-            },
-            beforePaste: function(data, coords) {
-                data = JSON.parse(_.first(data));
-                var startRow = coords[0].startRow;
-                var startCol = coords[0].startCol;
-                for (var i = 0; i < Math.min(self.table.countRows() - startRow, data.length); ++i) {
-                    for (var j = 0; j < Math.min(self.table.countCols() - startCol, data[i].length); ++j) {
-                        data[i][j].forEach(function(l) {
-                            delete l._id;
-                        })
-                        self.table.setDataAtCell(startRow + i, startCol + j, data[i][j]);
+            var Config = {
+                Columns: Columns,
+                Rows: self.AllRows,
+                CFG: {
+                    colWidths: ColWidths,
+                    colHeaders: true,
+                    Plugins: ["Tree"],
+                    fixedColumnsLeft: 2,
+                    afterCopy: Handsontable.overrideCopy,
+                    beforePaste: Handsontable.overridePaste,
+                    MainModel: {
+                        Link_rowsumgrp: 'row',
+                        Link_rowtag: 'row',
+                        CodeMeasure: 'row',
+                        CodeStyle: 'row',
+                        CodeFormat: 'row',
+                        CodeValuta: 'row',
+                        CodeBill: 'row',
+                        CodeProd: 'row',
+                        CodeAltOrg: 'row',
+                        CodeDogovor: 'row',
+                        CodeFilteredAltGrp: 'row',
+                        CodeGrpEditFilter: 'row',
+                        CodeDogovorArt: 'row'
+                    },
+                    universalRender: self.AddRenders,
+                    tree: {
+                        data: TreeArr,
+                        icon: function() {},
+                        colapsed: CxCtrl.Context().CodeDoc + 'roweditor'
                     }
                 }
-                return false;
             }
-        }
-        if (self.Mode() == "Structure") {
-            HandsonRenders.RegisterRender("Lvl", [/[0-9]*?,0$/], self.LvlRenderer);
-            HandsonRenders.RegisterRender("Index", [/[0-9]*?,1$/], Handsontable.renderers.TextRenderer);
-            HandsonRenders.RegisterRender("Num", [/[0-9]*?,2$/], Handsontable.renderers.TextRenderer);
-            HandsonRenders.RegisterRender("Code", [/[0-9]*?,3$/], Handsontable.renderers.TextRenderer);
-            TreeArr.forEach(function(TA) {
-                if (TA) RowsInfo[TA.CodeRow] = TA.level;
-            })
-            HandsonRenders.RegisterRender("RawTree", [/[0-9]*?,4$/], self.RawTree);
-            HandsonRenders.RegisterRender("Remove", [/[0-9]*?,5$/], Handsontable.renderers.CheckboxRenderer);
-            HandsonRenders.RegisterRender("ParentRow", [/[0-9]*?,6$/], HandsonTableRenders.ReadOnlyText);
-            params.manualRowMove = true;
-            Widths = [80, 40].concat(Widths).concat([80, 200, 300]);
-        } else {
-            HandsonRenders.RegisterRender("Num", [/[0-9]*?,0$/], HandsonTableRenders.ReadOnlyText);
-            HandsonRenders.RegisterRender("Code", [/[0-9]*?,1$/], HandsonTableRenders.ReadOnlyText);
-            HandsonRenders.RegisterRender("Tree", [/[0-9]*?,2$/], HandsonTableRenders.TreeRender);
-        }
-        HandsonRenders.RegisterRender("Cell", [/[/[0-9]*?,(?![0,1,2]$)[0-9]*/], self.EditorRender);
-        if (self.Mode() == 'Filter') HandsonRenders.RegisterRender("Filter", [/[0-9]*?,[0-9]*?/], self.FilterRender);
-        if (self.Mode() == "Structure") {
-            params.contextMenu = self.ContextMenu();
-            //params.beforeCreateRow = self.BeforeCreateRow;
-            //params.beforeRemoveRow = self.BeforeRemoveRow;
-        }
-        var HandsonConfig = _.merge(_.clone(self.baseConfig), params);
-
-
-        try {
-            var Data = self.DataForTable();
-            if (!self.table) {
-                console.log("Creating new table");
-                self.table = new Handsontable(DomPlace, HandsonConfig);
-
-                self.table.updateSettings(Data);
-            } else {
-                var Update = _.merge(HandsonConfig, Data);
-                console.log(Update);
-                self.table.updateSettings(Update);
-            }
-
-
-            new HandsonTableHelper.HeaderGenerator(self.table);
-            new HandsonTableHelper.WidthFix(self.table, self.MinColWidth, self.MaxColWidth, Widths);
-            new HandsonTableHelper.DiscretScroll(self.table);
-            if (self.Mode() != "Structure") {
-                new HandsonTableHelper.TreeView(self.table);
-            }
-            self.UpdateTableMeta(Data);
-            self.table.render();
-        } catch (e) {
-            console.log("Table not rendered");
-        }
-
-    }
-
-
-    self.UpdateTableMeta = function(Data) {
-        self.Rows.forEach(function(Row, IndexRow) {
-            var Meta = _.pick(Row, ["RemoveComment", "IsRemoved", "CodeRow"]);
-            Meta.Model = "row";
-            Data.columns.forEach(function(Col, IndexCol) {
-                self.table.setCellMetaObject(IndexRow, IndexCol, Meta);
-            })
+            self.Config(Config);
         })
-    }
-
-
-    self.CollapseAllRows = function() {
-        var Info = self.table.getSettings().tree;
-        var RowCodes = [];
-        for (var Index in Info.data) {
-            var R = Info.data[Index];
-            if ((R.rgt - R.lft) > 1) {
-                RowCodes.push(parseInt(Index));
-            }
-        }
-        self.table.collapsedRows(RowCodes);
-    }
-
-    self.ExpandAllRows = function() {
-        self.table.collapsedRows([]);
-    }
-
-    self.Show = function(WithoutCache, done) {
-        if (!self.Mode()) return self.InitSetMode("Structure");
-        self.LoadRows(WithoutCache, function() {
-            self.AskForRender();
-            self.FlushChanges();
-            return done && done();
-        })
-    }
-
-    self.LvlRenderer = function(instance, td, row, col, prop, value, CellInfo) {
-        var V = parseInt(value) || 0,
-            html = "";
-        for (var i = 0; i < V; i++) html += '<i class="fa fa-icon fa-caret-right"></i>';
-        $(td).html(html);
-    }
-
-    self.RawTree = function(instance, td, row, col, prop, value, cellProperties) {
-        Handsontable.renderers.HtmlRenderer.apply(this, arguments);
-        var Lvl = parseInt(instance.getData()[row][0]);
-        td.className = 'simplecell treeCell';
-        switch (Lvl) {
-            case 0:
-                $(td).toggleClass('zeroLevel');
-                break;
-            case 1:
-                $(td).toggleClass('topLevel');
-                break;
-            case 2:
-                $(td).toggleClass('subLevel');
-                break;
-                break;
-        }
-        $(td).css("padding-left", (Lvl - 1) * 20 + 'px');
-        cellProperties.readOnly = false;
     }
 
 
     return self;
+
 })
 
-ModuleManager.Modules.RowEditor = window.MRowEditor;
-
-
-
-ko.bindingHandlers.treeEdit = {
-    init: function(element, valueAccessor, allBindingsAccessor) {
-        var value = ko.utils.unwrapObservable(valueAccessor());
-        $(element).nestable();
-    },
-    update: function(element, valueAccessor, allBindingsAccessor) {
-        var value = ko.utils.unwrapObservable(valueAccessor());
-        $(element).nestable();
-    }
-};
+ModuleManager.Modules.RowEditor = RowEditor;

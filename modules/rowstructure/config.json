@@ -1,0 +1,16 @@
+{
+  "id": "rowstructure",
+  "title": "Дерево рядов",
+  "icon": "fa-sitemap",
+  "type":"documentpage",
+  "places":{
+      "documentpage"  : true
+  },
+  "class_name":"RowStructure",
+  "is_enabled": true,
+  "sort_index": 46,
+  "initial_load":true,
+  "permissions" : [
+  		"IsRowTuner"
+  ]
+}

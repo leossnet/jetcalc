@@ -43,13 +43,12 @@
     "Link_rowtag":"Тэги",
     "Link_rowobj":"Фильтры",
     "CodeSumGrp":"Код.Сум.Грп",
-    "IsRowTuner":"Настройка рядов",
+    "IsOldRowTuner":"Старая Настройка рядов",
     "CodeObjType":"Код.Тип.Об.Уч",
     "level":"Вложенность",
     "CodeRowLink":"Ссылка.Ряд",
     "CodeParentRow":"Код.Рдт.Ряда",
     "CodeBill":"Код Счета",
     "ForObj":"Тек.Объект",
-    "docview.roweditor":"Настройка рядов",
     "ForObjType":"Тек.Тип"
 }

@@ -1,18 +1,39 @@
 <script id="tb_afformula" type="text/html">
 	
-	<!-- ko if:MAFFormula.IsSaveAvailable() -->
-	<div class="btn-group">
-		<!-- ko ifnot:MAFFormula.IsLoading() -->
-        <a class="btn btn-sm btn-warning btn-white" data-bind="title:'Прокачка данных',click:MAFFormula.Update" > 
-          <i class="fa fa-save" ></i>
-        </a>
-        <!-- /ko -->
-		<!-- ko if:MAFFormula.IsLoading() -->
-        <a class="btn btn-sm btn-info btn-white" data-bind="title:'Данные сохраняются'" > 
-          <i class="fa fa-save faa-burst animated" ></i>
-        </a>
-        <!-- /ko -->
-    </div>
+	  <!-- ko if:MAFFormula.IsAFAvailable() -->
+	    <div class="btn-group">
+          <!-- ko if:MAFFormula.IsSaveAvailable() -->
+        		<!-- ko ifnot:MAFFormula.IsLoading() -->
+                <a class="btn btn-sm btn-warning btn-white" data-bind="title:'Прокачка данных',click:MAFFormula.Update" > 
+                  <i class="fa fa-save" ></i>
+                </a>
+                <!-- /ko -->
+        		<!-- ko if:MAFFormula.IsLoading() -->
+              <a class="btn btn-sm btn-info btn-white" data-bind="title:'Данные сохраняются'" > 
+                <i class="fa fa-save faa-burst animated" ></i>
+              </a>
+            <!-- /ko -->
+          <!-- /ko -->
+          <a class="btn btn-sm btn-info btn-white" data-bind="title:'Связанные документы',click:MAFFormula.ShowPath" > 
+              <i class="fa fa-sitemap" ></i>
+          </a>
+      </div>
+
     <!-- /ko -->
+
    	
 </script>
+
+<div class="modal fade" id="showAFPath" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Путь автоматической прокачки </h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="lang:'close'"></button>
+      </div>
+    </div>
+  </div>
+</div>

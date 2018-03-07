@@ -40,10 +40,56 @@ var Rabbit = (new function() {
 })
 
 
-
+var PeriodWorker = require(__base + "classes/jetcalc/Helpers/Period.js");
 
 var AutoFill = (new function() {
     var self = new Base("JAFILL");
+
+    self.BuildDocRoute = function(CodeDoc,CodePeriod,done){
+        PeriodWorker.get(function(err,PInfo){
+            var Period = PInfo[CodePeriod];
+            if (_.isEmpty(Period)) return done("Не найден период "+CodePeriod);
+            var Q = {CodePeriodGrp:{$in:["",null]}};
+            if (!_.isEmpty(Period.Grps)){
+                Q.CodePeriodGrp["$in"] = _.concat(Q.CodePeriodGrp["$in"],Period.Grps);
+            } 
+            var Query = _.merge({CodeDocSourse: CodeDoc},Q);
+            mongoose.model("docrelation").find(Query, "-_id CodeDocTarget Link_colrelation").populate("Link_colrelation").isactive().lean().exec(function(err, RelatedDocs) {
+                var Path = {};
+                RelatedDocs.forEach(function(RD){
+                    RD.Link_colrelation.forEach(function(ColInfo){
+                        if (!Path[ColInfo.CodeColSource]) Path[ColInfo.CodeColSource] = [];
+                        Path[ColInfo.CodeColSource].push(RD.CodeDocTarget);
+                    })
+                })
+                var Result = {}; Result[CodeDoc] = Path;
+                return done(err,Result);
+            })                
+        })
+    }
+
+
+    self.GetRoute = function(Cx, done){
+        var Result = {};
+        self.BuildDocRoute(Cx.CodeDoc,Cx.CodePeriod,function(err,Info){
+            Result = _.merge(Result,Info);
+            var Docs = _.filter(_.uniq(_.flattenDeep(_.values(_.first(_.values(Info))))),function(V){
+                return _.keys(Result).indexOf(V==-1);
+            });
+            if (_.isEmpty(Docs)){
+                return done(err,Result);
+            }
+            async.each(Docs,function(CodeDoc,next){
+                self.BuildDocRoute(CodeDoc,Cx.CodePeriod,function(err,Info){
+                    Result = _.merge(Result,Info);
+                    return next();
+                })
+            },function(err){
+                console.log(Result);
+
+            })
+        })
+    }
 
     self.HasAF = function(Cx, done) {
         var ColHelper = require(__base + "classes/jetcalc/Helpers/Col.js");

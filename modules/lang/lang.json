@@ -9,7 +9,7 @@
 	"filemanager" :"Файлы",
 	"documentation" :"Документация",
 	"coleditor"  :"Настройка колонок",
-	"roweditor"  :"Настройка рядов",
+	"oldroweditor"  :"Настройка рядов",
 	"documenteditor"   :"Настройка документа",
     "presentation": "Презентация",
 	"FACT":"Факт",

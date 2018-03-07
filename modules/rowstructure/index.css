@@ -1,0 +1,52 @@
+select.htSelectEditor{
+  padding:0;
+}
+.htCore span.label.label-info.label-white.middle{
+    margin: 1px;
+    padding: 1px;
+    border: 1px solid #4e7a8f;
+    line-height: 15px;
+    font-size: 10px;
+    height: initial;
+    vertical-align: initial;
+}
+.htCheckboxRendererInput{
+	opacity: 0.3;
+}
+.htCheckboxRendererInput:checked{
+	opacity: 1;
+}
+.fa-stack-1x, .fa-stack-2x {
+    left: 12px;
+    top: 0px;
+    font-size: 7px;
+    color:orange;
+}
+.handsontable td.treeCell.zeroLevel{
+    background-color: #e8e8e8;
+    font-weight: bold;
+}
+
+div.ClipBoard{
+    position: absolute;
+    right: 0px;
+    border: 1px solid #989898;
+    z-index: 2000;
+    padding: 20px;
+    top: 70px;
+    background: #CFCFCF;
+    color: white;
+    white-space: nowrap;
+    width: 300px;
+}
+div.ClipBoard div.CB-Name{
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+div.actionLink a{
+    color: gray;
+    position: absolute;
+    right: 5px;
+}

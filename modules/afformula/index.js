@@ -4,8 +4,21 @@ var MAFFormula = (new function(){
 
 	self.IsSaveAvailableFlag = ko.observable(false);
 
+	self.IsAFAvailable = function(){
+		return PermChecker.CheckPrivelege("IsAFSaveAllow") && !MAggregate.IsWrongValuta();
+	}
+
 	self.IsSaveAvailable = function(){
-		return self.IsSaveAvailableFlag() && PermChecker.CheckPrivelege("IsAFSaveAllow") && !MAggregate.IsWrongValuta();
+		return self.IsSaveAvailableFlag() && self.IsAFAvailable();
+	}
+
+	self.Path = ko.observableArray();
+
+	self.ShowPath = function(){
+		self.rGet("afpath",{Context:CxCtrl.CxPermDoc()},function(Route){
+			self.Path(Route);
+			$('#showAFPath').modal('show');
+		})		
 	}
 
 	self.Init = function(done){

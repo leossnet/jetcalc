@@ -1,0 +1,87 @@
+<div class="intab-container">
+    <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:RowStructure'>
+        <div class="btn-group">
+          <a class='btn btn-sm btn-primary btn-white ' data-bind="title:'Сохранить данные',click:SaveChanges, css:{disabled:!$data.RowsChanged()}">
+            <i class="ace-icon fa fa-save" data-bind=" css:{'faa-vertical animated  fa-lg':$data.RowsChanged()}" ></i>
+            <!-- ko if:$data.RowsChanged() -->
+            <strong class="fa-stack-1x calendar-text" data-bind='text:$data.RowsChanged'></strong>
+            <!-- /ko -->
+          </a>
+          <a class='btn btn-sm  btn-white ' data-bind="'Отменить все изменения',click:RollBack">
+            <i class="ace-icon fa fa-refresh"></i>
+          </a>
+          <!-- ko template:'tb_simple_loader' --><!-- /ko -->
+        </div>
+        <div class="btn-group" >
+            <!-- ko template:'tb_colapse_expand' --><!-- /ko -->      
+        </div>
+    </div>
+    <!-- ko with: RowStructure.Error -->
+    <div class="alert alert-danger"><span data-bind="html:$data"></span></div>
+    <!-- /ko --> 
+    <!-- ko with:RowStructure.CutRow -->
+        <div class='ClipBoard'>
+            <div class='CB-Name' data-bind='text:$data.CodeRow+". "+$data.NameRow'></div>
+            <div class='actionLink'><a data-bind='click:RowStructure.ClearBuffer'>Очистить</a></div>
+        </div>
+    <!-- /ko -->
+    <div class='handsonContainer'>
+        <div class="handsontable single" ></div>    
+    </div>
+</div>    
+
+
+
+<div class="modal fade" id="RowBranchEditor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel" data-bind='text:RowStructure.SelectedRow()?"Редактирование узла":"Добавление узла"'></h4>
+      </div>              
+          <div class="modal-body" data-bind='with:RowStructure.Branch'>
+
+
+            <div class="dd dd-draghandle" data-bind='treeEdit:RowStructure.Branch'>
+                <ol class="dd-list">
+                    <li class="dd-item dd2-item" data-id="13">
+                        <div class="dd-handle dd2-handle">
+                        </div>
+                        <div class="dd2-content">Click on an icon to start dragging</div>
+                    </li>
+                    <li class="dd-item dd2-item" data-id="16">
+                                <div class="dd-handle dd2-handle">
+                                </div>
+                                <div class="dd2-content">Active Users</div>
+                            </li><li class="dd-item dd2-item" data-id="14">
+                        <div class="dd-handle dd2-handle">
+                        </div>
+                        <div class="dd2-content">Recent Posts</div>
+                    </li>
+                    <li class="dd-item dd2-item" data-id="15">
+                        <div class="dd-handle dd2-handle"></div>
+                        <div class="dd2-content">Statistics</div>
+                        <ol class="dd-list">
+                            <li class="dd-item dd2-item" data-id="18">
+                                <div class="dd-handle dd2-handle">
+                                </div>
+                                <div class="dd2-content">Visitors</div>
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+            </div>
+
+
+
+            <div class="modalbuttons row">
+                <button class="btn btn-white btn-success" data-bind="click:RowStructure.ApplyBranch">
+                    <i class="ace-icon fa fa-floppy-o bigger-120 green"></i><span data-bind="lang:'save'"></span>
+                </button>
+            </div>
+          </div>
+      </div>
+    </div>
+</div>
+
+

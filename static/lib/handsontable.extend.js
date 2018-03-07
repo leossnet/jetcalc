@@ -280,6 +280,7 @@
                 open: function() {
                     EditorRegistrator.CurrentEditor('select_table');
                     var Property = this.prop;
+                    window.S = this.instance.getSettings();
                     var MainModel = this.instance.getSettings().MainModel[Property] || this.instance.getSettings().MainModel;
                     var Field = MModels.Config[MainModel].fields[Property];
                     var ModelName = Field.refmodel;
