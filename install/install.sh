@@ -71,7 +71,7 @@ rabbitmqctl set_user_tags jet administrator
 #curl -sL https://deb.nodesource.com/setup_8.x | bash -s
 
 #node install
-wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 echo Fixing source ...
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -96,7 +96,9 @@ npm i --unsafe-perms
 
 node admin.js compile
 node admin.js build
-node admin.js postgress
+
+#временно отключено
+#node admin.js postgress
 
 cd /htdocs/jetcalc
 cp /htdocs/jetcalc/install/start.json /htdocs/jetcalc/start.json
