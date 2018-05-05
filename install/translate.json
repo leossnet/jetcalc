@@ -97,21 +97,32 @@
 		"CodeAltOrg": "Код.Кнтрг",
 		"CodeDogovor": "Код.Дгвр",
 		"CodeFilteredAltGrp": "Группа Контрагентов",
-		"CodeDogovorArt": "Код.Акта"
+		"CodeDogovorArt": "Код.Акта",
+		"showparamssettings": "Отображать настройки",
+		"default": "По умолчанию",
+		"Настройки презентации": "Презентация",
+		"IsLoop": "Зациклить",
+		"IsShowNavigation": "Показывать навигацию",
+		"IsAutoPlay": "Автовоспроизведение",
+		"AutoPlayInterval": "Интервал автовоспроизведения",
+		"CodePresentThema": "Тема",
+		"CodePresentTransitType": "Смена слайдов",
+		"PresentHeader": "Заголовок",
+		"PresenFooter": "Подвал"
 	},
 	"param": {
 		"CodeParam": "Код параметра",
 		"NameParam": "Название параметра"
 	},
 	"chat": {
-		"techsupport": "Тех. Поддержка",
+		"techsupport": "Тех. поддержка",
 		"orgchannel": "Общение внутри организации",
 		"docchannel": "Вопросы по документу"
 	},
 	"olapgroup": {
 		"CodeOtrasl": "Отрасли",
-		"CodeDiv": "Дивизиона",
-		"CodeRegion": "Региона",
+		"CodeDiv": "Дивизионы",
+		"CodeRegion": "Регионы",
 		"CodeCity": "Города"
 	},
 	"livefeed": {
@@ -135,5 +146,25 @@
 	"sumgrp": {
 		"CodeSumGrp": "Код.Сум.Грп",
 		"NameSumGrp": "Нзв.Сум.Грп"
+	},
+	"docview": {
+		"report": "Отчет",
+		"input": "Ввод данных",
+		"customreport": "Представления",
+		"documenteditor": "Настройка документа",
+		"rowstructure": "Добавление строк",
+		"roweditor": "Настройка строк",
+		"coleditor": "Настройка колонок",
+		"filemanager": "Файлы",
+		"documentation": "Документация",
+		"chart": "График",
+		"presentation": "Презентация"
+	},
+	"presetslot": {
+		"CodeDoc": "Код.Док",
+		"CodeReport": "КодОтчета",
+		"YearData": "Год",
+		"CodePeriod": "Код.Периода",
+		"CodeValuta": "Код.Валюты"
 	}
 }
