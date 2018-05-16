@@ -15,7 +15,7 @@ var rabbitPrefix = config.rabbitPrefix;
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect(config.mongoUrl,{useMongoClient:true});
+mongoose.connect(config.mongoUrl);
 
 
 mongoose.connection.on('connected', function(){

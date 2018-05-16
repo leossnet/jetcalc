@@ -25,7 +25,7 @@ var  config      = require('./config.js')
 
 mongoose.Promise = global.Promise;
 
-api.connection = mongoose.connect(config.mongoUrl,{useMongoClient:true});
+api.connection = mongoose.connect(config.mongoUrl);
 
 
 mongoose.connection.on('connected', function(){

@@ -19,8 +19,8 @@ var GridFS = (new function () {
         var hostName = config.host;
         var port = config.port || 27017;
         var db = new mongo.Db(dbName, new mongo.Server(hostName, port));
-        db.open(function (err) {
-            if (err) return done(err);
+        //db.open(function (err) {
+          //  if (err) return done(err);
             self.GFS = grid(db, mongo);
 
             self.router.post('/api/gfs', multer({ dest: os.tmpdir()}).single('file'),function (req, res, next) {
@@ -52,7 +52,7 @@ var GridFS = (new function () {
                 self.PipeFileStreamToResByName(req.params.id, res, next);
             })
             return done();
-        })
+       // })
     };
 
     self.SaveFile = function (FileInfo, done, filename) {
