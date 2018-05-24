@@ -97,8 +97,6 @@ npm i --unsafe-perms
 node admin.js compile
 node admin.js build
 
-#временно отключено
-#node admin.js postgress
 
 cd /htdocs/jetcalc
 cp /htdocs/jetcalc/install/start.json /htdocs/jetcalc/start.json
@@ -108,4 +106,5 @@ cp /htdocs/jetcalc/install/translate.json /htdocs/jetcalc/static/custom/translat
 pm2 start start.json
 pm2 save
 
+node admin.js postgress
 
