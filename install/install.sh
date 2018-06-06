@@ -21,10 +21,10 @@ git config core.fileMode false
 
 #mongo
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
-echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
 
 #rabbitmq
-echo 'deb http://www.rabbitmq.com/debian/ testing main' | tee /etc/apt/sources.list.d/rabbitmq.list
+echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
 wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add -
 
 #postgresql
@@ -54,6 +54,10 @@ sudo service postgresql restart
 
 #mongo install
 sudo apt-get install -y mongodb-org
+cp /htdocs/jetcalc/install/mongodb.service /etc/systemd/system/mongodb.service
+sudo systemctl start mongodb
+sudo systemctl status mongodb
+sudo systemctl enable mongodb
 
 #redis install
 sudo apt-get -y install redis-server
