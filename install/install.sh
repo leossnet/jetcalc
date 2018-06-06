@@ -43,13 +43,13 @@ rm -rf /etc/nginx/sites-enabled/default
 sudo service nginx restart
 
 #postgres install
-sudo apt-get install -y postgresql-9.5
+sudo apt-get install -y postgresql-9.6
 sudo su postgres -c "psql -c \"ALTER USER postgres WITH PASSWORD 'postgres';\""
 sudo su postgres -c "createdb -U postgres jetcalc;"
 sudo su postgres -c "psql -U postgres jetcalc < /htdocs/jetcalc/sql/dump/postgres.sql;"
-sudo echo "host all all ::0/0 md5" >> /etc/postgresql/9.5/main/pg_hba.conf
-sudo echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/9.5/main/pg_hba.conf
-sudo echo "listen_addresses = '*'" >> /etc/postgresql/9.5/main/postgresql.conf
+sudo echo "host all all ::0/0 md5" >> /etc/postgresql/9.6/main/pg_hba.conf
+sudo echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/9.6/main/pg_hba.conf
+sudo echo "listen_addresses = '*'" >> /etc/postgresql/9.6/main/postgresql.conf
 sudo service postgresql restart
 
 #mongo install
