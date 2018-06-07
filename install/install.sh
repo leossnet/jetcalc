@@ -110,5 +110,11 @@ cp /htdocs/jetcalc/install/translate.json /htdocs/jetcalc/static/custom/translat
 pm2 start start.json
 pm2 save
 
+#настройка автозапуска jetcalc
+chmod +x /htdocs/jetcalc/install/jetcalc.sh
+cp /htdocs/jetcalc/install/jetcalc.sh /etc/init.d/jetcalc.sh
+sudo update-rc.d jetcalc.sh defaults 80
+
+#тест posgresql
 node admin.js postgress
 
