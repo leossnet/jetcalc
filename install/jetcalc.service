@@ -1,0 +1,10 @@
+[Unit]
+Description=Autorun jetcalc
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/htdocs/jetcalc/jetcalc.sh
+
+[Install]
+WantedBy=multi-user.target

@@ -111,9 +111,11 @@ pm2 start start.json
 pm2 save
 
 #настройка автозапуска jetcalc
-chmod +x /htdocs/jetcalc/install/jetcalc.sh
-cp /htdocs/jetcalc/install/jetcalc.sh /etc/init.d/jetcalc.sh
-sudo update-rc.d jetcalc.sh defaults 80
+cp /htdocs/jetcalc/install/jetcalc.service /etc/systemd/system/jetcalc.service
+cp /htdocs/jetcalc/install/jetcalc.sh /htdocs/jetcalc/jetcalc.sh
+sudo chmod 644 /lib/systemd/system/jetcalc.service
+sudo chmod u+x /htdocs/jetcalc/jetcalc.sh
+sudo systemctl enable jetcalc.service
 
 #тест posgresql
 node admin.js postgress
