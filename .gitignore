@@ -26,3 +26,4 @@ static/build/
 static/custom/catalogue.json
 static/custom/translate.json
 modules/modelextractor/export.json
+/temp
