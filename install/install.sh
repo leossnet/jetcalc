@@ -108,6 +108,7 @@ cp /htdocs/jetcalc/install/catalogue.json /htdocs/jetcalc/static/custom/catalogu
 cp /htdocs/jetcalc/install/translate.json /htdocs/jetcalc/static/custom/translate.json
 
 pm2 start start.json
+pm2 startup
 pm2 save
 
 #тест posgresql
