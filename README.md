@@ -10,4 +10,4 @@
 
 По адресу [jetcalc.leossnet.ru](https://jetcalc.leossnet.ru) развернута демо-версия [JetCalc](https://www.leossnet.ru). С логином  **demo** и паролем **demo** доступен вход только по чтению для предварительного знакомства с пользовательским интерфейсом. Чтобы получить расширенный доступ, необходимо зарегистрироваться в [демо-версии JetCalc](https://jetcalc.leossnet.ru), выбрав пункт **Регистрация** на странице ввода логина и пароля.
 
-Координация по развитию проекта осуществляется с помощью трекера [YouTrack](https://leossnet.myjetbrains.com/youtrack/issues). 
+Координация деятельности экономистов и программистов, участвующих в развитии проекта, осуществляется на хостинге компании [JetBrains](https://www.jetbrains.com/) в трекере [YouTrack](https://leossnet.myjetbrains.com/youtrack/issues). 
