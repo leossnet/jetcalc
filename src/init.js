@@ -50,7 +50,7 @@ var init = {
 				U.NameUser = 'admin';
 				U.password = 'admin';
 				U.IsConfirmed = true;
-				U.save('',done);
+				U.save(null,done);
 			} else {
 				return done(null);
 			}
@@ -67,7 +67,7 @@ var init = {
 				T.NameTask = 'Администратор';
 				T.SNameTask = 'Администратор';
 
-				T.save('',done);
+				T.save(null,done);
 			} else {
 				return done(null);
 			}
@@ -84,7 +84,7 @@ var init = {
 				UT.CodeUser = 'admin';
 				UT.CodeTask = 'ADMIN';
 
-				UT.save('',done);
+				UT.save(null,done);
 			} else {
 				return done(null);
 			}
