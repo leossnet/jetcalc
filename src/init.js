@@ -22,14 +22,15 @@ var init = {
 	initAdmin: function(done){
 		var User = mongoose.model('user');
 		User.findOne({CodeUser: 'admin'}).exec(function(err,U){
-			console.log("found user",U);
 			if (!U) {
-				U = User();
-				U.CodeUser = 'admin';
-				U.LoginUser = 'admin';
-				U.NameUser = 'admin';
+				U = new User({
+					CodeUser:	'admin',
+					LoginUser:	'admin',
+					NameUser:	'Администратор',
+					CodeUser:	'admin',
+					IsConfirmed:	true
+				});
 				U.password = 'admin';
-				U.IsConfirmed = true;
 				console.log("creating admin user",U);				
 				U.save('admin',done);
 			} else {
@@ -41,11 +42,11 @@ var init = {
 		var Task = mongoose.model('task');
 		Task.findOne({CodeTask:'ADMIN'}).exec(function(err,T){
 			if (!T) {
-				T = Task();
-
-				T.CodeTask = 'ADMIN';
-				T.NameTask = 'Администратор';
-				T.SNameTask = 'Администратор';
+				T = new Task({
+					CodeTask:	'ADMIN',
+					NameTask:	'Администратор',
+					SNameTask:	'Администратор'
+				});
 				console.log("creating task ",T);				
 				T.save('admin',done);
 			} else {
@@ -58,11 +59,11 @@ var init = {
 
 		UserTask.findOne({CodeUserTask: 'admin_ADMIN'}).exec(function(err,UT){
 			if (!UT) {
-				UT = UserTask();
-
-				// UT.CodeUserTask = 'admin_ADMIN';
-				UT.CodeUser = 'admin';
-				UT.CodeTask = 'ADMIN';
+				UT = new UserTask({
+					CodeUserTask:'admin_ADMIN',
+					CodeUser:'admin',
+					CodeTask:'ADMIN',
+				});
 				console.log("creating user task ",UT);
 				UT.save('admin',done);
 			} else {
