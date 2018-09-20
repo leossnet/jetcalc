@@ -47,8 +47,13 @@ var Unmaper = function(){
 		Cells.forEach(function(CellName){
 			self.Matrix[CellName] = Rx._toObj(CellName);
 		})		
+		console.log("UNMAP 1");
 		self.FromCache(Cells,function(err,Remain){
-			if (_.isEmpty(Remain)) return done();
+			console.log("UNMAP 2",Remain);
+			if (_.isEmpty(Remain)) {
+				console.log("UNMAP 2.5");
+				return done();
+			}	
 			self.NewCache = _.clone(Remain);
 			self.ToUnmap = {};
 			for (var CellName in self.Matrix){
@@ -56,12 +61,21 @@ var Unmaper = function(){
 					self.ToUnmap[CellName] = self.Matrix[CellName];
 				}
 			}
+			console.log("UNMAP 3");			
 			self.Prepare(function(err){
+				console.log("UNMAP 4");			
 				self._unmap(function(err){
+					console.log("UNMAP 5");			
 					self.NewCache.forEach(function(CellName){
 						self.HowToCalculate[CellName].CodeDoc = self._docByRow(self.Matrix[CellName].Row);	
 					})
-					self.ToCache(done);
+					console.log("UNMAP 6");			
+					self.ToCache(function(err){
+						console.log("UNMAP 7");			
+
+						if (err) console.log("CACHE ERR ",err);
+						return done(err);
+					});
 				})
 			})
 		})
@@ -103,13 +117,17 @@ var Unmaper = function(){
 	self._unmap = function(done){
 		var Remain = _.clone(self.ToUnmap), NewUnmap = {};
 		if (_.isEmpty(Remain)) return done();
+		console.log("_unmap 1");
 		self.LoadDocs(Remain,function(err){
+			console.log("_unmap 2",Remain);
 			for (var CodeCell in Remain){
 				var Cell = Remain[CodeCell];
 				var RType = self.RowColFormula(Cell);
+				console.log("RType",RType);
 				if (!_.isEmpty(RType.FRM)){
 					self.HowToCalculate[Cell.Cell] = RType;
 					self.HowToCalculate[Cell.Cell].FRM = self.PrepareFormula(RType.FRM,Cell);
+					console.log(">>>>>",self.HowToCalculate[Cell.Cell].FRM);
 					if (!_.isEmpty(self.Dependable[Cell.Cell])){
 						self.Dependable[Cell.Cell].forEach(function(PossibleAdd){
 							if (_.isEmpty(self.HowToCalculate[PossibleAdd])){
@@ -121,6 +139,7 @@ var Unmaper = function(){
 					self.HowToCalculate[Cell.Cell] = RType;
 				}
 			}
+			console.log("_unmap 3");
 			self.ToUnmap = NewUnmap;
 			self._unmap(done);
 		})
@@ -153,7 +172,7 @@ var Unmaper = function(){
 
 
 	self.PrepareFormula = function(Formula,Cell){
-		var d = false;
+		var d = true;
 		if (Formula==0 || _.isEmpty(Formula)) return Formula;
 		d && console.log("1",Formula);
 		Formula  = (Formula+"");
@@ -246,7 +265,8 @@ var Unmaper = function(){
 		var Rows = self._rows(Cell);
 		var Row = Rows[Cell.Row];
 		var Col = self.Help.AllCols[Cell.Col];
-		var Obj = self.Help.Div[Cell.Obj]; 
+		var Obj = self.Help.Div[Cell.Obj] || Cell.Obj; 
+		console.log(Obj);
 		var CellCx = {
 			grp: Obj.Groups,
 			year: Cell.Year,

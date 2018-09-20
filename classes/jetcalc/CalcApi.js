@@ -48,9 +48,12 @@ var CalcApi = (new function(){
       }
 
 	self.CalculateDocument = function(Cx,done){
+            console.log("CalculateDocument 1");
 		Structure.getCells(Cx,function(err,Cells,Formats){
       		var JC = new JetCalc();
+                  console.log("CalculateDocument 2");
                   JC.Calculate(Cells,Cx,function(err){
+                        console.log("CalculateDocument 3");
                   	var CellValues = JC.Result, AnswerCells = {}, Unmap = JC.Unmapper.HowToCalculate;
                   	for (var CellName in CellValues){
                   		var T = Unmap[CellName], M = {};
@@ -70,6 +73,7 @@ var CalcApi = (new function(){
                   			Value:CellValues[CellName]
                   		},M);
                   	}
+                        console.log("CalculateDocument 4");
                   	var AnswerToUser = {
                   		Cells:AnswerCells,
                   		CacheUsed:_.isEmpty(JC.Unmapper.NewCache),
@@ -81,6 +85,7 @@ var CalcApi = (new function(){
                   	}
                   	JC.Unmapper = null;
                         JC = null;
+                        console.log("CalculateDocument 5");
                         return done(err,AnswerToUser);
                   })
 		})

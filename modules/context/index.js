@@ -35,6 +35,7 @@ var CxCtrl = (new function() {
   self.IsDivObj = ko.observable(false); // Склеенные объекты учета
 
   self.IsAgregate = ko.observable(false);
+  self.AgregateObjs = ko.observable(false);
 
   self.ChangeAgregateMode = function() {
     self.IsAgregate(!self.IsAgregate());
@@ -358,7 +359,10 @@ var CxCtrl = (new function() {
       GroupType: self.GroupType()
     }
     if (self.IsAgregate()) {
-      try {
+        Result.IsAgregate = true;
+        Result.AgregateObjs = self.AgregateObjs();
+
+      /*try {
         Result.Agregate = _.find(MFavorites.Agregates()[self.AgregateType()], {
           code: self.Agregate()
         }).objs;
@@ -369,7 +373,7 @@ var CxCtrl = (new function() {
         if (!Result.Agregate.length) throw "Пустой агрегат";
       } catch (e) {
         console.log(e);
-      }
+      }*/
     }
     for (var Key in self.Override) {
       if (self.Override[Key]() && self.Override[Key]() != Result[Key]) {
@@ -587,6 +591,20 @@ var CxCtrl = (new function() {
 	    }
   }
 
+  self.SetAggregateSimple = function(){
+    self.IsAgregate(false);
+    self.AgregateObjs([]);
+    self.AskForUpdate();
+    console.log("SetAggregateSimple arguments",arguments);  
+  }
+
+  self.SetAggregateComplex = function(payload){
+    self.IsAgregate(true);
+    self.AgregateObjs(payload.objs);
+    self.AskForUpdate();
+    console.log("SetAggregateComplex arguments",arguments);
+  }
+
 
   self.Init = function (done) {
 
@@ -594,6 +612,11 @@ var CxCtrl = (new function() {
       Bus.On("params_changed",self.UpdateParams);
       Bus.On("report_loaded",self.UpdateReport);
       Bus.On("aggregate_info_loaded",self.InitValues);
+
+      Bus.On("aggregate_complex",self.SetAggregateComplex);
+      Bus.On("aggregate_simple",self.SetAggregateSimple);
+
+
       MSite.Events.on("initialnavigate", function(){
       	  self.InitValues();
           self.UpdateDocInfo ();

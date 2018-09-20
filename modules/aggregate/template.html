@@ -1,15 +1,38 @@
 <script id="tb_aggregate_small" type="text/html">
       <!-- ko template:'tb_aggregate_switch' --><!-- /ko -->
       <!-- ko template:'tb_valuta' --><!-- /ko -->
-      <!-- ko template:'tb_aggregate_simple' --><!-- /ko -->
-      <!-- ko template:'tb_aggregate_childobjs' --><!-- /ko -->
+      <!-- ko ifnot: MAggregate.IsAggregateMode() -->
+        <!-- ko template:'tb_aggregate_simple' --><!-- /ko -->
+        <!-- ko template:'tb_aggregate_childobjs' --><!-- /ko -->
+      <!-- /ko -->      
+      <!-- ko if: MAggregate.IsAggregateMode() -->
+        <!-- ko template:'tb_aggregate_info' --><!-- /ko -->
+      <!-- /ko -->      
+      
+</script>
+
+
+<script id="tb_aggregate_info" type="text/html">
+    <div class="btn-group" style='white-space: nowrap'>
+		<!-- ko template:'tb_aggregate_complex' --><!-- /ko -->          	
+      <a class="btn btn-sm btn-white btn-primary dropdown-toggle" style='width:150px;overflow: hidden;text-overflow: ellipsis;text-align: left;' data-bind='click: MAggregate.OpenAggregatePopup' >
+          <!-- ko template:{name:'catalogue',data:{model:MAggregate.ChoosedAggreagetType(),id: MAggregate.ChoosedAggreagetCode()}} --><!-- /ko -->
+      </a>
+  </div>
+</script>
+
+
+<script id="tb_aggregate_complex" type="text/html">
+        <a class="btn btn-sm btn-white btn-yellow" data-bind="title:'Агрегирование',click: MAggregate.AggregateChangeMode, css: {'active': MAggregate.IsAggregateMode()}">
+          <i class="fa fa-text fa-comm">Σ</i>
+        </a>
 </script>
 
 
 
 <script id="tb_aggregate_switch" type="text/html">
     <div class="btn-group">
-        <a class="btn btn-sm btn-white btn-yellow" data-bind="title:'Развернуть',click: MAggregate.TogglePannel, css: {'active': MAggregate.IsPannel()}">
+        <a class="btn btn-sm btn-white btn-yellow" data-bind="title:'Список избранных объектов',click: MAggregate.TogglePannel, css: {'active': MAggregate.IsPannel()}">
           <i class="fa fa-compress"></i>
         </a>
     </div>
@@ -44,6 +67,7 @@
 
 <script id="tb_aggregate_simple" type="text/html">
     <div class="btn-group" style='white-space: nowrap'>
+    	<!-- ko template:'tb_aggregate_complex' --><!-- /ko -->      
       <a class="btn btn-sm btn-white btn-primary dropdown-toggle" style='width:150px;overflow: hidden;text-overflow: ellipsis;text-align: left;' data-toggle="dropdown">
         <!-- ko with:CxCtrl.CodeObj -->
           <!-- ko template:{name:'catalogue',data:{model:'obj',id:$data}} --><!-- /ko -->
@@ -144,4 +168,23 @@
   </div>
 </script>
 
+
+
+<div class="modal fade" id="showAggregateTree" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" data-bind='lang:"chooseaggregate"'></h4>
+     </div>
+     <div style='padding:10px;'  class="modal-body" data-bind='with:MAggregate.AggregateTree'>
+          <ul class='noselect' data-bind='treeSelector:{dataSource:MAggregate.AggregateTreeDataSource,selected:MAggregate.ChoosedAggregate}'>            
+          </ul>
+      </div>   
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-success btn-white" data-bind="lang: 'open',click:MAggregate.ApplyAggregate" ></button>
+      </div>
+    </div>
+  </div>
+</div>
 

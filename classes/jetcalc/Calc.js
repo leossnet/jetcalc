@@ -64,9 +64,12 @@ var Calculator = function(){
 		})
 		self.Unmapper.Override = self.Override;
 		self.Unmapper.NoCacheSave = self.NoCacheSave;
+		console.log("Calculate 1");		
 		self.PrepareValuta(function(err){
 			self.Timer.Start('Разбор формул');
 			self.Unmapper.Unmap(Cells,Cx,function(err){
+				console.log("Calculate 3");		
+				console.log("UNMAP!");
 				self.Timer.End('Разбор формул');
 				if (err) return done(err);
 				self.HowToCalculate = self.Unmapper.HowToCalculate;
@@ -82,17 +85,23 @@ var Calculator = function(){
 						RemainCells[CellName] = self.HowToCalculate[CellName];
 					}
 				}
+				console.log("Calculate 4");		
 				self.HowToCalculate = RemainCells;
 				self.Timer.Start('Вычисление формул');
+				console.log(Primaries2Load);
 		 		self.LoadPrimaries(Primaries2Load,function(err){
+		 			console.log("PRIMARIES ARE LOADED!");
 					if (err) return done(err);
 					self.CRecursion = 0;
+					console.log("_calculate");
 					self._calculate(function(err){
+						console.log("_calculate end",err);
 						for (var CellName in self.Result){
 							self.Result[CellName] = self.Calculated[CellName];
 						}
 						self.Timer.End('Вычисление формул');
 						self.Timer.End('Вычисление документа');
+						console.log("No problems in calculate");
 						return done(err);
 					});
 				})

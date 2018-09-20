@@ -10,6 +10,113 @@ var MAggregate = (new function(){
     self.AllGroups = ko.observable();
     self.Groups = ko.observable(); // Filtered based on current document CodeGrp
 
+    self.IsAggregateMode = ko.observable(false);
+    self.ChoosedAggreagetType = ko.observable();
+    self.ChoosedAggreagetCode = ko.observable();
+    self.ChoosedAggregate = ko.observable();
+    self.AggregateTree = ko.observable();
+
+
+    self.ReturnToSimple = function(){
+        self.IsAggregateMode(false);
+        self.ChoosedAggreagetType(null);
+        self.ChoosedAggreagetCode(null);
+        Bus.Emit("aggregate_simple");
+    }
+
+    self.ApplyAggregate = function(){
+        var spl = self.ChoosedAggregate().split(";");
+        if (spl.length<2){
+            ;
+        } else {
+            var modelName = self.AggregateTypes[_.last(spl)];
+            var modelCode = _.first(spl);
+            self.ChoosedAggreagetType(modelName);
+            self.ChoosedAggreagetCode(modelCode);
+            self.IsAggregateMode(true);
+            var Field = _.findKey ( self.AggregateTypes,function(o){return o==modelName});
+            Bus.Emit("aggregate_complex",{objs:_.map(_.filter(self.AllObjs(),function(possible){
+                return (Field=='CodeGrp')? _.includes(possible.Groups,modelCode):possible[Field] == modelCode;
+            }),"CodeObj")});
+            $('#showAggregateTree').modal('hide'); 
+        }
+    }
+
+    self.OpenAggregatePopup = function(){
+        var Tree = self.BuildAggregateTree();
+        $('#showAggregateTree').modal('show'); 
+    }
+
+    self.AggregateChangeMode = function(){
+        if (self.IsAggregateMode()){
+            self.ReturnToSimple();   
+        } else {
+            self.OpenAggregatePopup();            
+        }
+
+    }
+
+    self.AggregateTree = ko.observable();
+
+    
+
+    self.AggregateTreeDataSource = function(options, callback){
+        var Answ  = {};
+        if(!("text" in options) && !("type" in options)){
+            return callback({ data: self.AggregateTree() });
+        } else if("type" in options && options.type == "folder") {
+            var Answ = options.additionalParameters.children;
+        }
+        callback({ data: Answ });
+    }
+
+    self.BuildAggregateTree = function(){
+        var possibleAggregates = _.keys(_.omit(self.AggregateTypes,["CodeGrp"]));
+        var groupped = {CodeGrp:{}};
+        var objs = self.AllObjs();
+        objs.forEach(function(obj){
+            possibleAggregates.forEach(function(aggrType){
+                if (!groupped[aggrType]) groupped[aggrType] = {};
+                if (_.isEmpty(groupped[aggrType][obj[aggrType]])) groupped[aggrType][obj[aggrType]] = [];
+                groupped[aggrType][obj[aggrType]].push(obj.CodeObj);
+            })
+            obj.Groups.forEach(function(codeGroup){
+                if (!groupped.CodeGrp[codeGroup]) groupped.CodeGrp[codeGroup] = [];
+                groupped.CodeGrp[codeGroup].push(obj.CodeObj);
+            })
+        })
+        var reFiltered = {},tree_data = {};
+        for (var type in groupped){
+            for (var code in groupped[type]){
+                if (groupped[type][code].length>1){
+                    if (_.isEmpty(reFiltered[type])){
+                        reFiltered[type] = {};
+                    }
+                    reFiltered[type][code] = groupped[type][code];
+                }
+            }
+        }
+        var tree = {};
+        for (var type in reFiltered){              
+            var folders = [];
+            for (var code in reFiltered[type]){      
+                folders.push({code:[code,type].join(";"),text:Catalogue.GetHtml(self.AggregateTypes[type],code)+" ("+reFiltered[type][code].join(", ")+")",type:"item"});                
+            }
+            tree[type] = {code:type,name:Lang.Tr("aggregate."+self.AggregateTypes[type]),type:"folder",additionalParameters:{children:folders}};
+        }
+        self.AggregateTree(tree);
+    }
+
+    self.AggregateTypes = {
+        "CodeRegion":"region",
+        "CodeCity":"city",
+        "CodeDiv":"div",
+        "CodeObjType":"objtype",
+        "CodeOtrasl":"otrasl",
+        "CodeGrp":"grp"
+    }
+
+    
 
     
     self.MaxSearchResults = 10;

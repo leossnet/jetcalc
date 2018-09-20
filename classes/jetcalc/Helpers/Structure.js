@@ -37,24 +37,37 @@ var StructureHelper = (new function(){
 		if (INFO.Doc.HasChildObjs && INFO.Doc.IsObjToRow){
 			Plugin = ObjToRow;
 		}
+		if (Context.IsAgregate){
+			Plugin = Agregate;
+		}
 		return Plugin;
 	}	
 
 	self.get = function(Cx,done){
+		console.log("get 1");
 		self.LoadInfo(Cx,function(err,INFO){
+			console.log("get 2");
 			if (err) return done(err);
 			INFO.Row.forEach(function(R){
 				if (!_.isEmpty(R.Link2Use)){
 					R = _.merge(R,R.Link2Use);
 				}
 			})
+			console.log("get 3");
 			var Plugin = self.Plugin(Cx,INFO);
-			Plugin.get(Cx,INFO,done);
+			console.log("get 4",Plugin);
+			Plugin.get(Cx,INFO,function(err,Answer){
+				console.log("get 5",Answer,err);
+				return done(err,Answer);
+
+			});
 		})
 	}
 
 	self.getCells = function(Cx,done){
+		console.log("getCells 1");
 		self.get(Cx,function(err,Answer){
+			console.log("getCells 2");
 			if (err) return done(err);
 			var Result = [];
 			Answer.Cells.forEach(function(Row){
@@ -68,6 +81,7 @@ var StructureHelper = (new function(){
 			})
 			var AllFormats = _.uniq(_.values(CellFormats));
 			if (_.isEmpty(AllFormats)){
+				console.log("getCells 3");
 				return done(err,_.uniq(CellNames),CellFormats);	
 			} else {
 				mongoose.model("format").find({CodeFormat:{$in:AllFormats}},"CodeFormat FormatValue").isactive().lean().exec(function(err,Fs){
@@ -75,6 +89,7 @@ var StructureHelper = (new function(){
 					for (var CellName in CellFormats){
 						CellFormats[CellName] = FInd[CellFormats[CellName]];
 					}
+					console.log("getCells 4");
 					return done(err,_.uniq(CellNames),CellFormats);	
 				})
 			}
@@ -152,6 +167,81 @@ var Simple = (new function(){
             })
             Answer.Cells.push(EmptRow)            
         })
+        return done(null,Answer);
+	}
+	return self;
+})
+
+
+
+var Agregate = (new function(){
+	var self = this;
+	self.Name = "Agregate";
+
+	self.get = function(Cx,INFO,done){
+		console.log("Agregate get 0",Cx.AgregateObjs,Cx);
+		var CodeObj = "["+Cx.AgregateObjs.join(",")+"]", Rows = INFO.Row, Cols = INFO.Col, Doc = INFO.Doc,
+	    	Valuta = _.find(INFO.Valuta,{CodeValuta:Cx.CodeValuta}),
+	    	ValutaSign = "";
+	    console.log("Agregate get 1");
+	    if (Valuta){
+	    	ValutaSign = _.isEmpty(Valuta.SignValuta) ? Valuta.SNameValuta:Valuta.SignValuta;
+	    }
+	    console.log("Agregate get 2");
+	    if (INFO.Doc.HasChildObjs && !_.isEmpty(Cx.ChildObj)){
+	    	CodeObj = Cx.ChildObj;
+	    }
+	    console.log("Agregate get 3");
+        var FL = 2;
+		var Answer = {Header:['Код','Название'],Tree:{},Cells:[]}
+        if (Doc.IsShowMeasure){
+            Answer.Header.push('Ед/из'); FL = 3;
+        }
+        console.log("Agregate get 4");
+        Cols && Cols.forEach(function(C){
+            Answer.Header.push(C.NameColsetCol);
+        })
+ 		Rows && Rows.forEach(function(R,I){
+            Answer.Tree[I] = _.pick(R,['lft','rgt','level', 'CodeRow']);
+        })
+        console.log("Agregate get 5");
+        Rows && Rows.forEach(function(Row){
+            var EmptRow = [Row.NumRow,Row.NameRow];        	
+            if (Doc.IsShowMeasure){
+                var M = Row.Measure||"";
+                if (M.indexOf("[")!=-1){
+                    if (!_.isEmpty(ValutaSign)) M = M.replace(/\[.*?\]/g,ValutaSign);
+                    else M = M.replace("[","").replace("]","");                    
+                }
+                EmptRow.push(M);
+            }
+        	Cols && Cols.forEach(function(Col){
+            	var CellName = [
+            		"$",Row.CodeRow,
+            		"@",Col.CodeCol,
+            		".P",Col.ContextPeriod,
+            		".Y",Col.Year,
+            		"#",CodeObj,"?"
+            	].join("");
+                var CellInfo = {
+                    Cell:CellName,
+                    IsAFFormula:Col.IsAfFormula,
+                    AfFormula:(Col.IsAfFormula) ? Col.AfFormula:'',
+                    IsControlPoint:(Col.IsControlPoint && Row.IsControlPoint),
+                    IsPrimary:(!Col.IsFormula && !Row.IsFormula && !Row.IsSum && (Row.rgt-Row.lft)==1),
+                    IsSum:Row.IsSum,
+                    Style:_.compact([Row.CodeStyle,Col.CodeStyle])
+                };
+                var Fs =  _.compact([Col.CodeFormat,Row.CodeFormat]);
+                if (!_.isEmpty(Fs)){
+                    CellInfo.Format = Fs;
+                }
+                CellInfo.IsEditablePrimary = (CellInfo.IsPrimary && !Col.IsFixed && Cx.IsInput);
+                EmptRow.push(CellInfo);
+            })
+            Answer.Cells.push(EmptRow)            
+        })
+        console.log("Agregate get end!");
         return done(null,Answer);
 	}
 	return self;

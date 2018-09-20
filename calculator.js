@@ -47,7 +47,9 @@ mongoose.connection.on('connected', function(){
 		            	LogsChannel.publish(rabbitPrefix+'log', '', (new Buffer(JSON.stringify({Status:"BUSY",Consumer:msg.fields.consumerTag}))));
 		            	var Context = JSON.parse(msg.content.toString());
 		            	LastCx = Context;
+		            	console.log("CalculateDocument start");
 						Calculator.CalculateDocument(Context,function(err,Result){
+							console.log("CalculateDocument end");
 							if (!Result) err = 'Пустой документ';
 							if (err) {
 								if (global.gc) global.gc();

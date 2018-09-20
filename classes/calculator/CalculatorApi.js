@@ -134,7 +134,7 @@ router.post('/api/cell/validateformula', function(req, res, next) {
 var getContext = function(Context, SandBox, CodeUser) {
     Context.SandBox = null;
     if (SandBox.On) Context.SandBox = SandBox.CodeUser;
-    ['IsInput', 'UseCache', 'IsDebug', 'IsOlap'].forEach(function(Field) {
+    ['IsInput', 'UseCache', 'IsDebug', 'IsOlap','IsAgregate'].forEach(function(Field) {
         Context[Field] = (Context[Field] === true || Context[Field] === "true");
     })
     Context.Year = parseInt(Context.Year);

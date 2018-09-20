@@ -2,5 +2,13 @@
 	"grp":"Группа",
 	"region":"Регион",
 	"div":"Дивизион",
-	"otrasl":"Отрасль"
+	"chooseaggregate":"Выберите способ агрегации",
+	"otrasl":"Отрасль",
+	"aggregate.grp":"По группе",
+	"aggregate.region":"По регионам",
+	"aggregate.city":"По городам",
+	"aggregate.div":"По дивизионам",
+	"aggregate.objtype":"По типам",
+	"aggregate.otrasl":"По отраслям"
+
 }
