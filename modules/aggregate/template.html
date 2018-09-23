@@ -177,12 +177,20 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" data-bind='lang:"chooseaggregate"'></h4>
      </div>
+
      <div style='padding:10px;'  class="modal-body" data-bind='with:MAggregate.AggregateTree'>
+     	  <!-- ko ifnot:_.isEmpty($data) -->
           <ul class='noselect' data-bind='treeSelector:{dataSource:MAggregate.AggregateTreeDataSource,selected:MAggregate.ChoosedAggregate}'>            
           </ul>
+          <!-- /ko -->
+     	  <!-- ko if:_.isEmpty($data) -->
+          		<div class='alert alert-warning'> Не настроены возможные способы агрегации</div>
+          <!-- /ko -->
       </div>   
-      <div class="modal-footer">
+      <div class="modal-footer"  data-bind='with:MAggregate.ChoosedAggregate'>
+      	<!-- ko ifnot:_.isEmpty($data) -->
         <button type="button" class="btn btn-sm btn-success btn-white" data-bind="lang: 'open',click:MAggregate.ApplyAggregate" ></button>
+        <!-- /ko -->
       </div>
     </div>
   </div>

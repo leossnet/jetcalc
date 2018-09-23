@@ -119,6 +119,7 @@ var MSite = (new function () {
         ctrls: null,
         ctrlo:null,
         scroll: null,
+        altq: null,
         addrecord: null,
         addrecordtemplate: null,
         refresh: null
@@ -169,6 +170,14 @@ var MSite = (new function () {
         }, 500);
     }
 
+    self.AnnounceAltQ = function () {
+        if (self.AnnounceTimeout.altq) clearTimeout(self.AnnounceTimeout.altq);
+        self.AnnounceTimeout.altq = setTimeout(function () {
+            Bus.Emit("altq");
+            self.AnnounceTimeout.altq = null;
+        }, 500);
+    }
+
     self.AnnounceScrollBottom = function () {
         if (ModuleManager.IsLoading()) return;
         self.FlashButton("fa-angle-double-up");
@@ -196,6 +205,10 @@ var MSite = (new function () {
             self.Events.emit("initialnavigate", window.location.search ? window.location.search.queryObj() : {});
             $("body").removeClass("loading");
             document.addEventListener("keydown", function (e) {
+                if (e.keyCode == 81 && (navigator.platform.match("Mac") ? e.metaKey : e.altKey)) {
+                    e.preventDefault();
+                    self.AnnounceAltQ();                    
+                }
                 if (e.keyCode == 79 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
                     e.preventDefault();
                     self.AnnounceCtrO();                    

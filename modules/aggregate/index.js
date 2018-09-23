@@ -88,7 +88,7 @@ var MAggregate = (new function(){
         var reFiltered = {},tree_data = {};
         for (var type in groupped){
             for (var code in groupped[type]){
-                if (groupped[type][code].length>1){
+                if (groupped[type][code].length>0){ // >1 - чтоб нормальные агрегаты а не с 1 м объектом учета
                     if (_.isEmpty(reFiltered[type])){
                         reFiltered[type] = {};
                     }
@@ -100,7 +100,8 @@ var MAggregate = (new function(){
         for (var type in reFiltered){              
             var folders = [];
             for (var code in reFiltered[type]){      
-                folders.push({code:[code,type].join(";"),text:Catalogue.GetHtml(self.AggregateTypes[type],code)+" ("+reFiltered[type][code].join(", ")+")",type:"item"});                
+                var langToLoad = Catalogue.GetHtml(self.AggregateTypes[type],code);
+                folders.push({code:[code,type].join(";"),text:langToLoad+" ("+reFiltered[type][code].join(", ")+")",type:"item"});                
             }
             tree[type] = {code:type,name:Lang.Tr("aggregate."+self.AggregateTypes[type]),type:"folder",additionalParameters:{children:folders}};
         }
@@ -218,6 +219,7 @@ var MAggregate = (new function(){
         CxCtrl.Events.on("documentchanged",function(){
             self.RebuildAvailable(CxCtrl.CodeDoc());
         });
+        Bus.On("altq",self.OpenAggregatePopup);
     }
 
 

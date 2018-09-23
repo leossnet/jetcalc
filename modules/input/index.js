@@ -271,6 +271,15 @@ var MInput = (new function() {
                 Title: "Период закрыт"
             });
         }
+        if (MAggregate.IsAggregateMode()) {
+            Class2Add = "IsAgregate";
+            Labels.push({
+                Icon: "fa-exclamation-triangle",
+                CSS: "label-warning",
+                Text: "Агрегирование",
+                Title: "Включен режим агрегирования"
+            });
+        }
         if (!self.CheckFormIsOpened()) Class2Add = "Block";
         var Primaries = _.filter(self.table.getCellsMeta(), {
             IsEditablePrimary: true

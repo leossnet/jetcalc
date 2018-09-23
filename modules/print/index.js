@@ -126,10 +126,10 @@ var PrintInterface = function() {
 
     self.ContextText = ko.pureComputed(function(){
         var CX = {};
-        console.log('here')
         CX["CodePeriod"] = CxCtrl.CodePeriod();
         CX["Year"] = CxCtrl.Override.Year() || CxCtrl.Year();
         CX["CodeObj"] = CxCtrl.ChildObj()||CxCtrl.CodeObj();
+        CX.IsAgregate = CxCtrl.IsAgregate();
         var period = {
             planperiods       : {
                 title  : ' план',
@@ -145,11 +145,13 @@ var PrintInterface = function() {
             }
         }
         var periodTitle = ' факт';
-        if (CX.CodeObj) {
-            _.keys(period).forEach(function (name,index){
-                if (_.includes(period[name].values,CX.CodePeriod))
-                    periodTitle = period[name].title;
-            });
+        _.keys(period).forEach(function (name,index){
+            if (_.includes(period[name].values,CX.CodePeriod))
+                periodTitle = period[name].title;
+        });
+        if (CX.IsAgregate){
+            return Catalogue.GetHtml(MAggregate.ChoosedAggreagetType(),MAggregate.ChoosedAggreagetCode())+ periodTitle + ' за ' + Catalogue.GetHtml('period',CX.CodePeriod) + ' ' + CX.Year;
+        } else if (CX.CodeObj) {
             return Catalogue.GetHtml("obj",CX.CodeObj)+ periodTitle + ' за ' + Catalogue.GetHtml('period',CX.CodePeriod) + ' ' + CX.Year;
         }
     });
