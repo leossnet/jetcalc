@@ -22,7 +22,7 @@ var LogsChannel = null;
 
 
 mongoose.Promise = global.Promise;
-mongoose.connect(config.mongoUrl);
+mongoose.connect(config.mongoUrl,{ useMongoClient: true });
 
 mongoose.connection.on('connected', function(){
 	InitMongoose(function(){
