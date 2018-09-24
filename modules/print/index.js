@@ -150,7 +150,7 @@ var PrintInterface = function() {
                 periodTitle = period[name].title;
         });
         if (CX.IsAgregate){
-            return Catalogue.GetHtml(MAggregate.ChoosedAggreagetType(),MAggregate.ChoosedAggreagetCode())+ periodTitle + ' за ' + Catalogue.GetHtml('period',CX.CodePeriod) + ' ' + CX.Year;
+            return Catalogue.GetHtml(MAggregate.ChoosedAggreagetType(),MAggregate.ChoosedAggreagetCode())+ ' - '+periodTitle + ' за ' + Catalogue.GetHtml('period',CX.CodePeriod) + ' ' + CX.Year;
         } else if (CX.CodeObj) {
             return Catalogue.GetHtml("obj",CX.CodeObj)+ periodTitle + ' за ' + Catalogue.GetHtml('period',CX.CodePeriod) + ' ' + CX.Year;
         }

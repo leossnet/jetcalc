@@ -1,6 +1,8 @@
 var config = require(__base + '/config.js').gridfs || {};
-var mongo = require('mongodb');
+var mongoose = require('mongoose');
 var grid = require('gridfs-stream');
+grid.mongo = mongoose.mongo; 
+
 var fs = require('fs');
 var mime = require('mime-types');
 var _ = require('lodash');
@@ -15,16 +17,19 @@ var GridFS = (new function () {
     self.router = require("express").Router();
 
     self.Init = function (done) {
-        var dbName = config.dbname;
-        var hostName = config.host;
-        var port = config.port || 27017;
-        var db = new mongo.Db(dbName, new mongo.Server(hostName, port));
-        //db.open(function (err) {
-          //  if (err) return done(err);
-            self.GFS = grid(db, mongo);
+       // var dbName = config.dbname;
+       // var hostName = config.host;
+       // var port = config.port || 27017;
+       // var db = new mongo.Db(dbName, new mongo.Server(hostName, port));
 
-            self.router.post('/api/gfs', multer({ dest: os.tmpdir()}).single('file'),function (req, res, next) {
-            	console.log(req.file);
+        var url = 'mongodb://localhost:27017/'+config.dbname;
+        console.log(url);
+        var conn = mongoose.createConnection(url);
+        conn.once('open', function () {
+          self.GFS = grid(conn.db);
+          console.log("GFS is inited");
+          self.router.post('/api/gfs', multer({ dest: os.tmpdir()}).single('file'),function (req, res, next) {
+                console.log(req.file);
                 if (!req.file || !req.file) return next("Upload File Error");
                 var File = req.file;
                 File.name = File.originalname;
@@ -43,6 +48,7 @@ var GridFS = (new function () {
                 self.DownloadStreamToRes(req.params.id, res, next);
             })
             self.router.get('/api/gfs/:id', function (req, res, next) {
+                console.log(req.params.id);
                 self.PipeFileStreamToRes(req.params.id, res, next);
             })
             self.router.get('/api/gfs/byname/download/:id', function (req, res, next) {
@@ -52,7 +58,7 @@ var GridFS = (new function () {
                 self.PipeFileStreamToResByName(req.params.id, res, next);
             })
             return done();
-       // })
+        })
     };
 
     self.SaveFile = function (FileInfo, done, filename) {
@@ -92,8 +98,9 @@ var GridFS = (new function () {
 
     self.FileInfo = function (id, done) {
         try {
-            id = new mongo.ObjectID(id);
+            id = new grid.mongo.ObjectID(id);
         } catch (e) {
+            console.log(e);
             return done("Файл не найден");
         }
         self.GFS.files.find({
