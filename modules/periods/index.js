@@ -328,6 +328,7 @@ ko.components.register('period-formula-editor', {
                 var A = "";
                 if (sV.From && sV.To) {
                     A = sV.From + "=" + sV.To;
+                    //if (sV.Year) A += ":" + sV.Year;
                     if (sV.Header) A += "!" + sV.Header;
                     if (sV.Year) A += ":" + sV.Year;
                     StrArr.push(A);
