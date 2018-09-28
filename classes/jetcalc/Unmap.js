@@ -47,11 +47,11 @@ var Unmaper = function(){
 		Cells.forEach(function(CellName){
 			self.Matrix[CellName] = Rx._toObj(CellName);
 		})		
-		//console.log("UNMAP 1");
+		console.log("UNMAP 1");
 		self.FromCache(Cells,function(err,Remain){
-			//console.log("UNMAP 2",Remain);
+			console.log("UNMAP 2",Remain);
 			if (_.isEmpty(Remain)) {
-				//console.log("UNMAP 2.5");
+				console.log("UNMAP 2.5");
 				return done();
 			}	
 			self.NewCache = _.clone(Remain);
@@ -61,17 +61,17 @@ var Unmaper = function(){
 					self.ToUnmap[CellName] = self.Matrix[CellName];
 				}
 			}
-			//console.log("UNMAP 3");			
+			console.log("UNMAP 3");			
 			self.Prepare(function(err){
-				//console.log("UNMAP 4");			
+				console.log("UNMAP 4");			
 				self._unmap(function(err){
-					//console.log("UNMAP 5");			
+					console.log("UNMAP 5");			
 					self.NewCache.forEach(function(CellName){
 						self.HowToCalculate[CellName].CodeDoc = self._docByRow(self.Matrix[CellName].Row);	
 					})
-					//console.log("UNMAP 6");			
+					console.log("UNMAP 6");			
 					self.ToCache(function(err){
-						//console.log("UNMAP 7");			
+						console.log("UNMAP 7");			
 
 						if (err) console.log("CACHE ERR ",err);
 						return done(err);
@@ -117,17 +117,17 @@ var Unmaper = function(){
 	self._unmap = function(done){
 		var Remain = _.clone(self.ToUnmap), NewUnmap = {};
 		if (_.isEmpty(Remain)) return done();
-		//console.log("_unmap 1");
+		console.log("_unmap 1");
 		self.LoadDocs(Remain,function(err){
-			//console.log("_unmap 2",Remain);
+			console.log("_unmap 2",Remain);
 			for (var CodeCell in Remain){
 				var Cell = Remain[CodeCell];
 				var RType = self.RowColFormula(Cell);
-				//console.log("RType",RType);
+				console.log("RType",RType);
 				if (!_.isEmpty(RType.FRM)){
 					self.HowToCalculate[Cell.Cell] = RType;
 					self.HowToCalculate[Cell.Cell].FRM = self.PrepareFormula(RType.FRM,Cell);
-					//console.log(">>>>>",self.HowToCalculate[Cell.Cell].FRM);
+					console.log(">>>>>",self.HowToCalculate[Cell.Cell].FRM);
 					if (!_.isEmpty(self.Dependable[Cell.Cell])){
 						self.Dependable[Cell.Cell].forEach(function(PossibleAdd){
 							if (_.isEmpty(self.HowToCalculate[PossibleAdd])){
@@ -139,7 +139,7 @@ var Unmaper = function(){
 					self.HowToCalculate[Cell.Cell] = RType;
 				}
 			}
-			//console.log("_unmap 3");
+			console.log("_unmap 3");
 			self.ToUnmap = NewUnmap;
 			self._unmap(done);
 		})
@@ -172,7 +172,7 @@ var Unmaper = function(){
 
 
 	self.PrepareFormula = function(Formula,Cell){
-		var d = false;
+		var d = true;
 		if (Formula==0 || _.isEmpty(Formula)) return Formula;
 		d && console.log("1",Formula);
 		Formula  = (Formula+"");
@@ -266,7 +266,7 @@ var Unmaper = function(){
 		var Row = Rows[Cell.Row];
 		var Col = self.Help.AllCols[Cell.Col];
 		var Obj = self.Help.Div[Cell.Obj] || Cell.Obj; 
-		//console.log(Obj);
+		console.log(Obj);
 		var CellCx = {
 			grp: Obj.Groups,
 			year: Cell.Year,
@@ -333,18 +333,13 @@ var Unmaper = function(){
 	}
 
 	self.ExtendVariables = function(Formula,Cell){
-		//console.log("===ExtendVariables",Formula,Cell);
 		var Vars = _.uniq(Formula.match(Rx.Vars));
 		Vars && Vars.forEach(function(Var){
 			var Incomplete = Rx._fromIncomplete(Var,Cell);
-		//	console.log("Incomplete",Incomplete);
 			var ToVar = Rx._toCell(Incomplete);
-		//	console.log("ToVar 1",ToVar);			
 			ToVar = self.Extract(ToVar,Cell);
-		//	console.log("ToVar 2",ToVar);						
 			Formula = Formula.split(Var).join(ToVar);			
 		})
-		//console.log("===ExtendVariables",Formula,"<<<<< RESULT");
 		return Formula;
 	}
 
@@ -365,35 +360,17 @@ var Unmaper = function(){
 		var Cols = _paramToArr(Cx.Col);
 		var Years = _paramToArr(Cx.Year);
 		var Periods = [], PeriodOp = "SUM";
-
 		if (_.includes(self.Help.Period.FormulaPeriods,Cx.Period)){
 			var InfoPeriod = self.Help.Period[Cx.Period] || {};
 			var Info = InfoPeriod[Cell.Period];
 			if (_.isEmpty(Info)){
 				self.Err.Set(Cell.Cell,"Unknown period formula "+Cell.Period+", "+Cx.Period);
-				console.log("Unknown period formula ",Cell.Period+", "+Cx.Period);
 				return "0";	
 			}
 			if (!Array.isArray(Info)){
-				var YearOffset = 0;
-				try{
-					var name2test = self.Help.Period.DisplayNames[Cx.Period][Cell.Period];
-					var testArr = name2test.split(":");
-					if (testArr.length>1){
-						YearOffset = _.last(testArr);
-					}
-				} catch(e){
-					console.log(e);
-				}
 				var Ar = Info.split(":");
 				if (Ar.length>1) {
 					Years.forEach(function(Y){ Y = Y+Number(Ar[1]);})	
-				}
-
-				if (YearOffset){
-					Years.forEach(function(Y,ind){ 
-						Years[ind] = Number(Y)+Number(YearOffset);
-					})		
 				}
 				Periods = [_.first(Ar)];
 			} else {

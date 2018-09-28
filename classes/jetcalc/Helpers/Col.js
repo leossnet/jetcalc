@@ -232,7 +232,11 @@ var ColHelper = (new function(){
 						var TestString = INFO.Period.DisplayNames[H.CodePeriod] && INFO.Period.DisplayNames[H.CodePeriod][Cx.CodePeriod];
 						if (TestString){
 							var R = TestString.split(":");
-							if (R[1]) H.NameYear += parseInt(R[1]);
+							var adder = parseInt(R[1]);
+							if (adder) {
+								H.NameYear += adder;
+								H.Year += adder;	
+							}							
 							CodePeriod = R[0];
 						}
 					}
