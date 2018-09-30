@@ -75,6 +75,7 @@ var MModels = (new function(){
 						}(Config[Key]);
 					}
                     self.Template = function(FieldName){
+                        if (FieldName==Config.Code) return "form_code_text";
                         return Config.EditTemplate[FieldName] || "form_text";
                     }
                     self.IsEdit = ko.observable(false);
@@ -182,6 +183,16 @@ ko.bindingHandlers.mask = {
             $(element).mask(value);
         }
     }, 
+};
+
+ko.bindingHandlers.codemask = {
+    init: function(element, valueAccessor, allBindingsAccessor) {
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        $(element).keypress(function(key) {
+            var input = key.key;
+            if (!input.match(/[A-Za-z0-9\-_]/)) return false;
+        });
+    }
 };
 
 ko.bindingHandlers.FileUpload = {

@@ -42,6 +42,10 @@
 	</div>
 </script>
 
+<script id="form_code_text" type="text/html">
+    <input class="col-xs-12" type="text" data-bind="value: $parent[$data],attr:{'placeholder':Lang.Tr($data)},codemask: $parent[$data],valueUpdate:'afterkeydown'">
+</script>
+
 <script id="form_text" type="text/html">
     <input class="col-xs-12" type="text" data-bind="value: $parent[$data],attr:{'placeholder':Lang.Tr($data)},mask:$parent.Mask[$data],valueUpdate:'afterkeydown'">
 </script>
