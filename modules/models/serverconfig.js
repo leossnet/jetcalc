@@ -2994,6 +2994,18 @@ module.exports = {
                 "default": "",
                 "view": "none"
             },
+            "ModelNameObj": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+            "ModelSNameObj": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
             "NumObj": {
                 "type": String,
                 "default": "",
@@ -4896,6 +4908,18 @@ module.exports = {
                 "default": "",
                 "view": "none"
             },
+            "ModelNameGrp": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+            "ModelSNameGrp": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
             "IsFilter": {
                 "type": Boolean,
                 "default": false,
@@ -5010,7 +5034,19 @@ module.exports = {
                 "default": "",
                 "view": "none"
             },
-            "CodeOtrasl": {
+            "ModelNameOrg": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+            "ModelSNameOrg": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+			},
+			"CodeOtrasl": {
                 "type": String,
                 "default": "",
                 "view": "none",
@@ -5712,7 +5748,19 @@ module.exports = {
                 "view": "all",
                 "role": "name"
             },
-            "SNameObjType": {
+            "ModelNameObjType": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+            "ModelSNameObjType": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+			"SNameObjType": {
                 "type": String,
                 "default": "",
                 "view": "none"
