@@ -3867,7 +3867,19 @@ module.exports = {
                 "default": "",
                 "view": "none"
             },
-            "Comment": {
+            "ModelNameDiv": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+            "ModelSNameDiv": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+			"Comment": {
                 "type": String,
                 "default": "",
                 "view": "none"
