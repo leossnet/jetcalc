@@ -2994,7 +2994,12 @@ module.exports = {
                 "default": "",
                 "view": "none"
             },
-            "ModelNameObj": {
+            "IsModel": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+            },
+			"ModelNameObj": {
                 "type": String,
                 "default": "",
                 "view": "none",
