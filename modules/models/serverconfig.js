@@ -4614,21 +4614,66 @@ module.exports = {
             "VersionModel": {
                 "type": String,
                 "default": null,
-                "view": "none"
+                "view": "all"
             },
             "YearModel": {
                 "type": String,
                 "default": null,
-                "view": "none"
+                "view": "all"
             },
             "AuthorModel": {
                 "type": String,
                 "default": null,
-                "view": "none"
+                "view": "all"
             },
-            "DescriptionModel": {
+            "RepositoryModel": {
                 "type": String,
                 "default": null,
+                "view": "all"
+            },
+            "LicenseModel": {
+                "type": String,
+                "default": "MIT",
+                "view": "all"
+            },
+            "CategoryModel": {
+                "type": String,
+                "default": null,
+                "view": "all"
+            },
+            "RepositoryModel": {
+                "type": String,
+                "default": null,
+                "view": "none"
+            },
+	        "DataFirstYear": {
+                "type": Number,
+                "default": 0,
+                "view": "none"
+            },
+            "DataLastYear": {
+                "type": Number,
+                "default": 0,
+                "view": "none"
+            },
+            "DataOffsetYear": {
+                "type": Number,
+                "default": 0,
+                "view": "none"
+            },
+            "ValutaFirstYear": {
+                "type": Number,
+                "default": 0,
+                "view": "none"
+            },
+            "ValutaLastYear": {
+                "type": Number,
+                "default": 0,
+                "view": "none"
+            },
+            "ValutaOffsetYear": {
+                "type": Number,
+                "default": 0,
                 "view": "none"
             }
         }
