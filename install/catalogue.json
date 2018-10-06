@@ -804,5 +804,34 @@
 			"objtypetag",
 			"docobjtype"
 		]
+	},
+	"model": {
+		"TableFields": [
+			"CodeModel",
+			"NameModel",
+			"VersionModel",
+			"YearModel",
+			"AuthorModel",
+			"RepositoryModel",
+			"LicenseModel"
+		],
+		"EditFields": [
+			"CodeModel",
+			"NameModel",
+			"SNameModel",
+			"VersionModel",
+			"YearModel",
+			"AuthorModel",
+			"RepositoryModel",
+			"LicenseModel",
+			"CategoryModel",
+			"DataFirstYear",
+			"DataLastYear",
+			"DataOffsetYear",
+			"ValutaFirstYear",
+			"ValutaLastYear",
+			"ValutaOffsetYear"
+		],
+		"Links": []
 	}
 }

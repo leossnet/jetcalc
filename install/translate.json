@@ -172,7 +172,21 @@
 		"IsAgGroup": "Исп.Аггр",
 		"IsAllOrg": "Для всех орг.",
 		"IsFilter": "Фильтр",
-		"IsExFilter": "Исключения из фильтра"
+		"IsExFilter": "Исключения из фильтра",
+		"NameModel": "Наим.Модели",
+		"SNameModel": "Кр.Наим.Модели",
+		"VersionModel": "ВерсияМодели",
+		"YearModel": "ГодМодели",
+		"AuthorModel": "АвторМодели",
+		"RepositoryModel": "Репозиторий",
+		"LicenseModel": "Лицензия",
+		"CategoryModel": "КатегорияМодели",
+		"DataFirstYear": "Нач.ГодДанных",
+		"DataLastYear": "Кон.ГодДанных",
+		"DataOffsetYear": "ГодСмещ.Данных",
+		"ValutaFirstYear": "Нач.ГодВалюты",
+		"ValutaLastYear": "Кон.ГодВалюты",
+		"ValutaOffsetYear": "ГодСмещ.Валюты"
 	},
 	"param": {
 		"CodeParam": "Код параметра",
@@ -252,5 +266,17 @@
 	"grp": {
 		"CodeGrp": "Гр.Об.Уч",
 		"NameGrp": "Название"
+	},
+	"model": {
+		"CodeModel": "Код.Модели",
+		"NameModel": "NameModel",
+		"VersionModel": "VersionModel",
+		"YearModel": "YearModel",
+		"AuthorModel": "AuthorModel",
+		"RepositoryModel": "RepositoryModel",
+		"LicenseModel": "LicenseModel"
+	},
+	"customreport": {
+		"public": "Доступные всем"
 	}
 }
