@@ -97,8 +97,9 @@ var Calculator = function(){
 					self._calculate(function(err){
 						//console.log("_calculate end",err);
 						for (var CellName in self.Result){
-							self.Result[CellName] = self.Calculated[CellName];
+							self.Result[CellName] = self.fixJSError(self.Calculated[CellName]);
 						}
+						//console.log(self.Result);
 						self.Timer.End('Вычисление формул');
 						self.Timer.End('Вычисление документа');
 						//console.log("No problems in calculate");
@@ -177,7 +178,7 @@ var Calculator = function(){
 					CodeUser:CodeUser,
 					DateEdit:DateEdit
 				};
-				self.Calculated[PC] = Value2Set;
+				self.Calculated[PC] = self.fixJSError(Value2Set);
 			})
 			return done();
 		})
@@ -194,6 +195,13 @@ var Calculator = function(){
 			}
 		})
 		return result;
+	}
+
+	self.fixJSError = function(number){
+		if (!isNaN(number)){
+			number = Number(number.toFixed(11));
+		}
+		return number;
 	}
 
 	self._calculateFormula = function(CellName,Formula,Vars){
@@ -218,7 +226,7 @@ var Calculator = function(){
 				return 0;
 			}
 		}
-		self.Calculated[CellName] = EvalResult;
+		self.Calculated[CellName] = self.fixJSError(EvalResult);
 	}
 
 	self.GetCells = function(What2Ask,Primaries,done){
