@@ -295,7 +295,7 @@ router.get('/validate', LIB.Require(['model', 'code']), function(req, res, next)
         _id = req.query._id;
 
     if (CodeValue.match(/[^A-Za-z0-9\-_]/)){
-         return next("badcodesymbols");
+         return next("Для поля Код - используйте латинские буквы, цифры и знаки - и _");
     }
 
     var M = mongoose.model(model),
