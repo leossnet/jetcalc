@@ -260,14 +260,17 @@
 		"EditFields": [
 			"CodeObj",
 			"NameObj",
+			"SNameObj",
+			"ModelNameObj",
+			"ModelSNameObj",
 			"IndexObj",
 			"Comment",
+			"DateBegin",
+			"DateEnd",
 			"CodeParentObj",
 			"CodeOrg",
 			"CodeObjType",
-			"CodeValuta",
-			"DateBegin",
-			"DateEnd"
+			"CodeValuta"
 		],
 		"Links": [
 			"objgrp",
@@ -282,8 +285,15 @@
 		"EditFields": [
 			"CodeGrp",
 			"NameGrp",
+			"SNameGrp",
+			"ModelNameGrp",
+			"ModelSNameGrp",
+			"IsFilter",
+			"IsExFilter",
 			"IsAgGroup",
-			"Idx"
+			"IsFormula",
+			"Formula",
+			"IsAllOrg"
 		],
 		"Links": [
 			"objgrp"
@@ -377,12 +387,14 @@
 		"EditFields": [
 			"CodeOrg",
 			"NameOrg",
+			"SNameOrg",
+			"ModelNameOrg",
+			"ModelSNameOrg",
 			"CodeOtrasl",
-			"CodeHoldingOrg",
-			"CodeParentOrg",
-			"CodeCity",
 			"CodeDiv",
-			"SNameOrg"
+			"CodeCity",
+			"CodeParentOrg",
+			"CodeHoldingOrg"
 		],
 		"Links": []
 	},
@@ -774,16 +786,52 @@
 	"objtype": {
 		"TableFields": [
 			"CodeObjType",
-			"NameObjType"
+			"NameObjType",
+			"CodeObjClass"
 		],
 		"EditFields": [
 			"CodeObjType",
-			"NameObjType"
+			"IndexObjType",
+			"NameObjType",
+			"ModelNameObjType",
+			"ModelSNameObjType",
+			"SNameObjType",
+			"Comment",
+			"CodeObjClass"
 		],
 		"Links": [
 			"rowobj",
-			"docobjtype",
-			"objtypetag"
+			"objtypetag",
+			"docobjtype"
 		]
+	},
+	"model": {
+		"TableFields": [
+			"CodeModel",
+			"NameModel",
+			"VersionModel",
+			"YearModel",
+			"AuthorModel",
+			"RepositoryModel",
+			"LicenseModel"
+		],
+		"EditFields": [
+			"CodeModel",
+			"NameModel",
+			"SNameModel",
+			"VersionModel",
+			"YearModel",
+			"AuthorModel",
+			"RepositoryModel",
+			"LicenseModel",
+			"CategoryModel",
+			"DataFirstYear",
+			"DataLastYear",
+			"DataOffsetYear",
+			"ValutaFirstYear",
+			"ValutaLastYear",
+			"ValutaOffsetYear"
+		],
+		"Links": []
 	}
 }

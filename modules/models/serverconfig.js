@@ -2994,6 +2994,23 @@ module.exports = {
                 "default": "",
                 "view": "none"
             },
+            "IsModel": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+            },
+			"ModelNameObj": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+            "ModelSNameObj": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
             "NumObj": {
                 "type": String,
                 "default": "",
@@ -3855,7 +3872,19 @@ module.exports = {
                 "default": "",
                 "view": "none"
             },
-            "Comment": {
+            "ModelNameDiv": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+            "ModelSNameDiv": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+			"Comment": {
                 "type": String,
                 "default": "",
                 "view": "none"
@@ -4585,21 +4614,66 @@ module.exports = {
             "VersionModel": {
                 "type": String,
                 "default": null,
-                "view": "none"
+                "view": "all"
             },
             "YearModel": {
                 "type": String,
                 "default": null,
-                "view": "none"
+                "view": "all"
             },
             "AuthorModel": {
                 "type": String,
                 "default": null,
-                "view": "none"
+                "view": "all"
             },
-            "DescriptionModel": {
+            "RepositoryModel": {
                 "type": String,
                 "default": null,
+                "view": "all"
+            },
+            "LicenseModel": {
+                "type": String,
+                "default": "MIT",
+                "view": "all"
+            },
+            "CategoryModel": {
+                "type": String,
+                "default": null,
+                "view": "all"
+            },
+            "RepositoryModel": {
+                "type": String,
+                "default": null,
+                "view": "none"
+            },
+	        "DataFirstYear": {
+                "type": Number,
+                "default": 0,
+                "view": "none"
+            },
+            "DataLastYear": {
+                "type": Number,
+                "default": 0,
+                "view": "none"
+            },
+            "DataOffsetYear": {
+                "type": Number,
+                "default": 0,
+                "view": "none"
+            },
+            "ValutaFirstYear": {
+                "type": Number,
+                "default": 0,
+                "view": "none"
+            },
+            "ValutaLastYear": {
+                "type": Number,
+                "default": 0,
+                "view": "none"
+            },
+            "ValutaOffsetYear": {
+                "type": Number,
+                "default": 0,
                 "view": "none"
             }
         }
@@ -4896,6 +4970,18 @@ module.exports = {
                 "default": "",
                 "view": "none"
             },
+            "ModelNameGrp": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+            "ModelSNameGrp": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
             "IsFilter": {
                 "type": Boolean,
                 "default": false,
@@ -5010,7 +5096,19 @@ module.exports = {
                 "default": "",
                 "view": "none"
             },
-            "CodeOtrasl": {
+            "ModelNameOrg": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+            "ModelSNameOrg": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+			},
+			"CodeOtrasl": {
                 "type": String,
                 "default": "",
                 "view": "none",
@@ -5712,7 +5810,19 @@ module.exports = {
                 "view": "all",
                 "role": "name"
             },
-            "SNameObjType": {
+            "ModelNameObjType": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+            "ModelSNameObjType": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "role": "model"
+            },
+			"SNameObjType": {
                 "type": String,
                 "default": "",
                 "view": "none"
