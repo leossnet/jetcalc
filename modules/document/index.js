@@ -41,6 +41,7 @@ var MDocument = (new function() {
   self.FolderStructure = ko.observable(null);
 
   self.LoadFolders = function(done) {
+    console.log("reload folders");
     self.rGet("folders", {}, function(List) {
       var Tree = {};
       var FirstLevel = _.filter(List, {

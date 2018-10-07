@@ -241,6 +241,7 @@ var MSite = (new function () {
             moment.locale('ru');
         });
         History.Adapter.bind(window, 'statechange', function () {
+            console.log("navigarte History.Adapter.bind");
             self.Events.emit("navigate");
             window.scrollTo(0, 0);
         });

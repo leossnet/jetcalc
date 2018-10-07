@@ -128,6 +128,7 @@ var CxCtrl = (new function() {
   self.Error = ko.observable(null);
 
   self.UpdateViewShow = function() {
+    if (!MBreadCrumbs.CheckPath('docview')) return;
     if (!ModuleManager.IsLoaded()) return;
     self.Error(null);
     if (MPrint.IsPrint()) self.AfterShowUpdate = {
@@ -165,6 +166,7 @@ var CxCtrl = (new function() {
 
     var Doc = MFolders.FindDocument(CodeDoc);
     self.IsDivObj(Doc.IsDivObj);
+    console.log("UpdateViewShow docview");
     pager.navigate(["/docview", CodeDoc, PageName].join('/'));
     var DocPlugins = ModuleManager.DocTabs();
     var Choosed = _.first(_.filter(DocPlugins, function(P) {
@@ -226,7 +228,9 @@ var CxCtrl = (new function() {
         Updater = null; // Полное обновление
         break;
       case "page":
+        console.log("DoUpdate docview");
         pager.navigate('/docview/' + self.CodeDoc() + '/' + value);
+
         var DocPlugins = ModuleManager.DocTabs();
         var Choosed = _.first(_.filter(DocPlugins, function(P) {
           return P.id == value;
