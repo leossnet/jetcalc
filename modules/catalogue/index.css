@@ -114,3 +114,12 @@ a.btn.btn-sm.btn-white,a.btn-scroll-up{
 	    }
 
 /* @end */
+
+.alert.alert-warning.gray-warning{
+
+	background: transparent;
+    border-color: transparent;
+    padding-left: 0px;
+    color: #CFCFCF;
+    
+}

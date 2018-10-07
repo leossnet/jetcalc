@@ -43,7 +43,9 @@
 </script>
 
 <script id="form_code_text" type="text/html">
-    <input class="col-xs-12" type="text" data-bind="value: $parent[$data],attr:{'placeholder':Lang.Tr($data)},codemask: $parent[$data],valueUpdate:'afterkeydown'">
+    <input class="col-xs-12" type="text" style="margin-bottom: 10px;" data-bind="value: $parent[$data],attr:{'placeholder':Lang.Tr($data)},valueUpdate:'afterkeydown'" ></input>
+    <br/>
+    <div class="alert alert-warning gray-warning" data-bind='lang:"codemasktips"'></div>
 </script>
 
 <script id="form_text" type="text/html">

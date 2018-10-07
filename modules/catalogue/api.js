@@ -289,10 +289,15 @@ router.get('/search', function(req, res) {
 })
 
 
-router.get('/validate', LIB.Require(['model', 'code']), function(req, res) {
+router.get('/validate', LIB.Require(['model', 'code']), function(req, res, next) {
     var model = req.query.model,
         CodeValue = (req.query.code + '').trim(),
         _id = req.query._id;
+
+    if (CodeValue.match(/[^A-Za-z0-9\-_]/)){
+         return next("badcodesymbols");
+    }
+
     var M = mongoose.model(model),
         CFG = M.cfg(),
         CodeField = CFG.Code,

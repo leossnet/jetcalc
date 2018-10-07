@@ -188,10 +188,12 @@ ko.bindingHandlers.mask = {
 ko.bindingHandlers.codemask = {
     init: function(element, valueAccessor, allBindingsAccessor) {
         var value = ko.utils.unwrapObservable(valueAccessor());
+        var valold = "";
         $(element).keypress(function(key) {
             var input = key.key;
             if (!input.match(/[A-Za-z0-9\-_]/)) return false;
         });
+
     }
 };
 

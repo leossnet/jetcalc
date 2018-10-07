@@ -1003,6 +1003,7 @@ var ModelTableEdit = (new function() {
     self.AllLinks = ko.observableArray();
 
 
+
     self.TableFieldsModel = ko.observable(null);
 
     self.ChangeMode = function() {
