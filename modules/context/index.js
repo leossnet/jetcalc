@@ -128,7 +128,7 @@ var CxCtrl = (new function() {
   self.Error = ko.observable(null);
 
   self.UpdateViewShow = function() {
-    if (!MBreadCrumbs.CheckPath('docview')) return;
+    if (MBreadCrumbs.CheckPath('adminpage')) return;
     if (!ModuleManager.IsLoaded()) return;
     self.Error(null);
     if (MPrint.IsPrint()) self.AfterShowUpdate = {
