@@ -79,6 +79,8 @@ var MPeriods = (new function () {
     self.SaveChanges = function () {
         if (self.Mode() == "PeriodEdit") {
             self.SaveChangesPEdit();
+        } else if (self.Mode()=='PeriodAutoFill' || self.Mode()=='PeriodMap'){
+            ModelConnectorEdit.SaveChanges();
         }
     }
 

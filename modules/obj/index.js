@@ -6,7 +6,7 @@ var MObj = (new function() {
         return PermChecker.CheckPrivelegeAny(["IsObjTunner","IsOrgTunner","IsLocationTunner"]);
     }
     
-    self.SubMode = ko.observable("Orgs");
+    self.SubMode = ko.observable(null);
 
     self.ByType = {
         Objs:["Objs","ObjClasses","ObjTypes","Grps"],
@@ -33,6 +33,7 @@ var MObj = (new function() {
             self.Mode(ToSet);
         }
     })
+    self.SubMode("Orgs");
 
     self.BeforeShow = function(){
         self.Subscribe();

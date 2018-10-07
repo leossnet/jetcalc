@@ -47,7 +47,7 @@ var MBreadCrumbs = (new function(){
 
 
 	self.CheckPath = function(path){
-		return self.CurrentPath().indexOf(path)>=0;
+		return self.CurrentRoute().indexOf(path)!=-1;
 	}
 	
 	self._breadcrumbsFromPages = function(){

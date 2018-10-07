@@ -329,6 +329,7 @@ var ModelConnectorEdit = (new function() {
     self.IsLoaded = ko.observable(false);
 
     self.Init = function(data, done) {
+        console.log("init >>>>>>>>>>>>>>>>>>>>>>>>>>>",data);
         if (data) {
             self.MainModels([]);
             self.LinkModels({});
