@@ -5152,6 +5152,26 @@ module.exports = {
                 "refmodel": "org",
                 "index": true,
                 "extended": true
+            },
+            "INN": {
+                "type": String,
+                "default": null,
+                "view": "all"
+            },
+            "KPP": {
+                "type": String,
+                "default": null,
+                "view": "all"
+            },
+            "OGRN": {
+                "type": String,
+                "default": null,
+                "view": "all"
+            },
+            "ADDRESS": {
+                "type": String,
+                "default": null,
+                "view": "all"
             }
         }
     },

@@ -186,7 +186,30 @@
 		"DataOffsetYear": "ГодСмещ.Данных",
 		"ValutaFirstYear": "Нач.ГодВалюты",
 		"ValutaLastYear": "Кон.ГодВалюты",
-		"ValutaOffsetYear": "ГодСмещ.Валюты"
+		"ValutaOffsetYear": "ГодСмещ.Валюты",
+		"INN": "ИНН",
+		"KPP": "КПП",
+		"OGRN": "ОГРН",
+		"ADDRESS": "Адрес",
+		"orggrp": "Группа",
+		"codemasktips": "Используйте латинские буквы, цифры и знаки - и _",
+		"NameDiv": "Назв.Дивизиона",
+		"SNameDiv": "Кр.Назв.Дивизиона",
+		"CodeDivOrg": "Двз.Организация",
+		"ModelNameDiv": "Модел.Назв.Дивизиона",
+		"ModelSNameDiv": "Модел.Кр.Назв.Дивизиона",
+		"NameOtrasl": "Нзв.Отрасли",
+		"SNameOtrasl": "Кр.Нзв.Отрасли",
+		"NameCity": "Нзв.Города",
+		"CodeRegion": "Код.Региона",
+		"Cities": "Города",
+		"Regions": "Регионы",
+		"Countries": "Страны",
+		"NameRegion": "Назв.Региона",
+		"SNameRegion": "Назв.Региона",
+		"CodeCountry": "Код.Страны",
+		"NameCountry": "Назв.Страны",
+		"SNameCountry": "Кр.Назв.Страны"
 	},
 	"param": {
 		"CodeParam": "Код параметра",
@@ -253,7 +276,8 @@
 	"org": {
 		"CodeOrg": "Код.Орг",
 		"NameOrg": "Название",
-		"CodeOtrasl": "Код.Отрасли"
+		"CodeOtrasl": "Код.Отрасли",
+		"INN": "ИНН"
 	},
 	"objclass": {
 		"CodeObjClass": "Код.Класс",
@@ -278,5 +302,28 @@
 	},
 	"customreport": {
 		"public": "Доступные всем"
+	},
+	"div": {
+		"CodeDiv": "Код.Дивизиона",
+		"NameDiv": "Нзв.Дивизиона"
+	},
+	"otrasl": {
+		"CodeOtrasl": "Код.Отрасли",
+		"NameOtrasl": "Нзв.Отрасли",
+		"SNameOtrasl": "Кр.Нзв.Отрасли"
+	},
+	"city": {
+		"CodeCity": "Код.Города",
+		"NameCity": "Нзв.Города",
+		"CodeRegion": "Код.Региона"
+	},
+	"region": {
+		"CodeRegion": "Код.Региона",
+		"NameRegion": "Нзв.Региона",
+		"CodeCountry": "Код.Страны"
+	},
+	"country": {
+		"CodeCountry": "Код.Страны",
+		"NameCountry": "Назв.Страны"
 	}
 }

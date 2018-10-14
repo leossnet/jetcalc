@@ -382,7 +382,8 @@
 		"TableFields": [
 			"CodeOrg",
 			"NameOrg",
-			"CodeOtrasl"
+			"CodeOtrasl",
+			"INN"
 		],
 		"EditFields": [
 			"CodeOrg",
@@ -394,9 +395,15 @@
 			"CodeDiv",
 			"CodeCity",
 			"CodeParentOrg",
-			"CodeHoldingOrg"
+			"CodeHoldingOrg",
+			"INN",
+			"KPP",
+			"OGRN",
+			"ADDRESS"
 		],
-		"Links": []
+		"Links": [
+			"orggrp"
+		]
 	},
 	"div": {
 		"TableFields": [
@@ -407,7 +414,8 @@
 			"CodeDiv",
 			"NameDiv",
 			"SNameDiv",
-			"Idx",
+			"ModelNameDiv",
+			"ModelSNameDiv",
 			"Comment",
 			"CodeDivOrg"
 		],
@@ -422,6 +430,7 @@
 		"EditFields": [
 			"CodeCity",
 			"NameCity",
+			"Comment",
 			"CodeRegion"
 		],
 		"Links": []
@@ -831,6 +840,32 @@
 			"ValutaFirstYear",
 			"ValutaLastYear",
 			"ValutaOffsetYear"
+		],
+		"Links": []
+	},
+	"region": {
+		"TableFields": [
+			"CodeRegion",
+			"NameRegion",
+			"CodeCountry"
+		],
+		"EditFields": [
+			"CodeRegion",
+			"NameRegion",
+			"SNameRegion",
+			"CodeCountry"
+		],
+		"Links": []
+	},
+	"country": {
+		"TableFields": [
+			"CodeCountry",
+			"NameCountry"
+		],
+		"EditFields": [
+			"CodeCountry",
+			"NameCountry",
+			"SNameCountry"
 		],
 		"Links": []
 	}
