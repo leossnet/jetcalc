@@ -77,15 +77,17 @@ var MapPeriods = (new function() {
         self.Map = {};
         self.Groups = {};
         self.SimpleLoad(function(err) {
-            self.DefineGroups(function(err, Result) {
-                var Answer = {};
-                for (var CodeGroup in self.Groups) {
-                    Answer[CodeGroup] = {};
-                    self.Groups[CodeGroup].forEach(function(CodePeriod) {
-                        Answer[CodeGroup][CodePeriod] = self.Map[CodePeriod];
-                    })
-                }
-                return done(err, Answer);
+            self.Load(function(){
+                self.DefineGroups(function(err, Result) {
+                    var Answer = {};
+                    for (var CodeGroup in self.Groups) {
+                        Answer[CodeGroup] = {};
+                        self.Groups[CodeGroup].forEach(function(CodePeriod) {
+                            Answer[CodeGroup][CodePeriod] = self.Map[CodePeriod];
+                        })
+                    }
+                    return done(err, Answer);
+                })
             })
         })
     }
