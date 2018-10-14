@@ -39,6 +39,11 @@ var Md_Helper = (new function(){
 	}
 
 	self.UpdateToc = function(done){
+		var readmePath = __base+"/gitbook/README.md";
+		var fs = require("fs");
+		if (!fs.existsSync(readmePath)) {
+			fs.writeFileSync(readmePath,""); 			
+		}
 		self.getSummaryPage(function(err,SummaryPage){
 			var DocPage = mongoose.model('docpage');
 			DocPage.find({Code:{$nin:["SUMMARY","README"]}}).lean().exec(function(err,Pages){
