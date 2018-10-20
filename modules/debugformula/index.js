@@ -7,7 +7,7 @@ var MDebugFormula = (new function(){
 
   self.IsDebugAvailable = function(){
     var CellType = BlankDocument.LastCellType();
-    return (CellType=="FRM");
+    return (CellType=="FRM" || CellType=='AF');
   }
 
   self.DebugCell = function(){
