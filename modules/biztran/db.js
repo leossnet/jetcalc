@@ -43,6 +43,9 @@ var AddLinker = (new function(){
 				return cb(err);
 			})
 		},function(err){
+			console.log("LIST");
+			console.log(List);
+			console.log("LIST");
 			if (err) return done(err);
 			var Docs = _.map(_.filter(List.docrelation,{CodeDocSourse:BiztranRow.CodeDoc}),"CodeDocTarget");
 			if (_.isEmpty(Docs)) return done(err,[]);
@@ -52,8 +55,9 @@ var AddLinker = (new function(){
 			})
 			var MainBills = _.map(_.filter(List.docbill,{CodeDoc:BiztranRow.CodeDoc}),"CodeBill");
 			Docs.forEach(function(CodeDoc){
-				var UsedBills = _.map(_.filter(List.docbill,{CodeDoc:CodeDoc}),"CodeBill");
+				var UsedBills = _.map(_.filter(List.docbill,{CodeDoc:CodeDoc}),"CodeBill") || [];
 				var NewBill = Bills[BiztranRow.CodeBill];
+				console.log(Bills);
 				if (UsedBills.indexOf(NewBill.CodeBill)!=-1){
 					var Add = new BR({
 						CodeDoc:CodeDoc,

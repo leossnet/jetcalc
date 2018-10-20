@@ -173,7 +173,7 @@ module.exports = (new function(){
 	}
 
 	self.SetFilters = function(CodeDoc,CodeUser,done){
-		var Helper = require(__base+"modules/oldroweditor/helper.js");
+		var Helper = require(__base+"modules/roweditor/helper.js");
 		var Link = mongoose.model("rowobj");
 		Helper.LoadRoots(CodeDoc,function(err,RowsWithRoots){
 			var Rows = RowsWithRoots[_.first(_.keys(RowsWithRoots))];
@@ -214,8 +214,8 @@ module.exports = (new function(){
 	}
 
 	self.SyncTree = function(CodeDoc,CodeUser,done){
-		var Struct = require(__base+"modules/oldroweditor/lib.js");
-		var Helper = require(__base+"modules/oldroweditor/helper.js");
+		var Struct = require(__base+"modules/roweditor/lib.js");
+		var Helper = require(__base+"modules/roweditor/helper.js");
 		self.GenerateTree(CodeDoc,CodeUser,function(err,Rows){
 			Helper.LoadRoot(_.first(Rows).CodeRow,function(err,Current){
 				Struct.UpdateRoot(Current,Rows,["NumRow","CodeRow","CodeProd","CodeBill","CodeAltOrg","NameRow","CodeMeasure","treeroot","HasFilteredChild"],CodeUser,function(err){
