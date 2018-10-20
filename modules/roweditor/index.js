@@ -159,7 +159,7 @@ var RowEditor = (new function() {
                     RowCFG.FromObsolete = ["middle_text", false, 100];
                     RowCFG.FromYear = ["middle_text", false, 100];
                     RowCFG.IsRowEditFilter = ["middle_checkbox", false, 100];
-                    RowCFG.CodeGrpEditFilter = ["middle_link", false, 200];
+                    RowCFG.CodeGrpEditFilter = ["middle_select", false, 200];
                     break;
                 case 'MainFields':
                     RowCFG.CodeMeasure = ["middle_select", false, 100];
