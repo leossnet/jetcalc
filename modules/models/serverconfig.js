@@ -4403,6 +4403,11 @@ module.exports = {
                 "index": true,
                 "extended": true
             },
+            "IsRowEditFilter": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+            },            
             "CodeGrpEditFilter": {
                 "type": String,
                 "default": "",

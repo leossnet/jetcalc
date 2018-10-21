@@ -34,7 +34,7 @@ var RowHelper = function(Context){
 			if (Result && false) {
 				var Rows = self.DebugClean(Result);
 				cb1(null,Rows);	
-			} else {		
+			} else {	
 				self.compileInfo(function(err,Result){
 					if (err) return cb1(err);
 					self.saveToCache(Result,function(err){
@@ -354,6 +354,25 @@ var RowHelper = function(Context){
 					})
 				}
 			}
+			// Фильтр по группам
+			for (var CodeR in Indexed){
+				var N = Indexed[CodeR];
+
+				if (N.IsRowEditFilter){
+					die();
+					if (!_.isEmpty(N.CodeGrpEditFilter)){
+						if (self.ObInfo.indexOf(N.CodeGrpEditFilter)==-1 || true){
+							var children = self._children(N.CodeRow,Indexed);
+							N = self._setStatus(N,null,8,"CodeGrpEditFilter");
+							children.forEach(function(C){
+								Indexed[C] = self._setStatus(Indexed[C],null,8,"CodeGrpEditFilter");			
+							})
+						}
+					}
+				}
+			}	
+			
+
 			// FromObsolete и FromYear -> отрываем все вместе с чаилдами
 			// NoOutput и NoInput -> отрываем все вместе с чаилдами
 			for (var CodeR in Indexed){
@@ -377,7 +396,10 @@ var RowHelper = function(Context){
 			var result = []; var parents2show = [];
 			for (var CodeR in Indexed){
 			    var N = Indexed[CodeR];
-			    if (N.ForceRemove===2){ // Фильтрация по годам или типу формы
+			    if (N.ForceRemove===8){ // Фильтрация по группе
+		        	N.IsRemoved = true;
+		          	result.push(N);
+			    } else if (N.ForceRemove===2){ // Фильтрация по годам или типу формы
 		        	N.IsRemoved = true;
 		          	result.push(N);
 				} else if (N.ForceRemove===1){ // Фильтрация по парентам            	 

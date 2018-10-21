@@ -184,6 +184,23 @@ var Helper = (new function(){
 					})
 				}
 			}
+			// Фильтр по группам
+			for (var CodeR in Indexed){
+				var N = Indexed[CodeR];
+				if (N.IsRowEditFilter){
+					if (!_.isEmpty(N.CodeGrpEditFilter)){
+						if (Context.ObjInfo.indexOf(N.CodeGrpEditFilter)==-1){
+							var children = self._children(N.CodeRow,Indexed);
+							N = self._setStatus(N,null,8,"CodeGrpEditFilter");
+							children.forEach(function(C){
+								Indexed[C] = self._setStatus(Indexed[C],null,8,"CodeGrpEditFilter");			
+							})
+						}
+					}
+				}
+			}	
+			
+
 			// FromObsolete и FromYear -> отрываем все вместе с чаилдами
 			// NoOutput и NoInput -> отрываем все вместе с чаилдами
 			for (var CodeR in Indexed){
@@ -207,7 +224,10 @@ var Helper = (new function(){
 			var result = []; var parents2show = [];
 			for (var CodeR in Indexed){
 			    var N = Indexed[CodeR];
-			    if (N.ForceRemove===2){ // Фильтрация по годам или типу формы
+			    if (N.ForceRemove===8){ // Фильтрация по группе
+		        	N.IsRemoved = true;
+		          	result.push(N);
+			    } else if (N.ForceRemove===2){ // Фильтрация по годам или типу формы
 		        	N.IsRemoved = true;
 		          	result.push(N);
 				} else if (N.ForceRemove===1){ // Фильтрация по парентам            	 
