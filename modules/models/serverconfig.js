@@ -2370,6 +2370,15 @@ module.exports = {
                 "refmodel": "objtype",
                 "index": true,
                 "extended": true
+            },
+            "CodeObjClass": {
+                "type": String,
+                "default": "",
+                "view": "none",
+
+                "refmodel": "objclass",
+                "index": true,
+                "extended": true
             }
         }
     },
