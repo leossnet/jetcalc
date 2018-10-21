@@ -57,7 +57,14 @@ var AddLinker = (new function(){
 			Docs.forEach(function(CodeDoc){
 				var UsedBills = _.map(_.filter(List.docbill,{CodeDoc:CodeDoc}),"CodeBill") || [];
 				var NewBill = Bills[BiztranRow.CodeBill];
-				console.log(Bills);
+				console.log("======");
+				console.log("Bills",Bills,"Bills");
+				console.log("======");
+				console.log("UsedBills",UsedBills,"UsedBills");
+				console.log("NewBill",NewBill,"NewBill");
+				console.log("BiztranRow",BiztranRow,"BiztranRow");
+				console.log("======");
+				if (_.isEmpty(NewBill)) return done("Не настроена модель billrelation для "+BiztranRow.CodeBill);
 				if (UsedBills.indexOf(NewBill.CodeBill)!=-1){
 					var Add = new BR({
 						CodeDoc:CodeDoc,
@@ -83,6 +90,7 @@ module.exports = {
 			schema.pre('save',function(next, CodeUser, done){
 				var self = this, Docs = [];
 				AddLinker.Adders(self,function(err,Links){
+					if (err) return done(err);
 					if (_.isEmpty(Links)) {
 						Planner.AddPlan(self.CodeDoc,CodeUser);
 						return next();
@@ -99,6 +107,7 @@ module.exports = {
 			schema.pre('remove',function(next, CodeUser, done){
 				var self = this, Docs = [];
 				AddLinker.Adders(self,function(err,Links){
+					if (err) return done(err);
 					if (_.isEmpty(Links)) return next();
 					async.each(Links,function(L,cb){
 						mongoose.model("biztranrow").findOne(_.pick(L,["CodeDoc","CodeBill","CodeProd","CodeObj","CodeOrg"])).isactive().exec(function(err,Current){

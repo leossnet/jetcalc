@@ -114,7 +114,10 @@ var ModelEdit = function(CodeUser,IsNew){
 			},function(err){
 				async.each(ToSave,function(TR,cb2){
 					TR.save(self.CodeUser,function(err){
-						if (err) console.log("Save error ",err);
+						if (err) {
+							console.log("Save error ",err);
+							return done(err);
+						}
 						cb2(err);
 					});
 				},done);
