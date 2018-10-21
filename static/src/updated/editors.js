@@ -365,7 +365,7 @@ var FormulaEditor = (new function(){
 	self._recursiveBuild = function(CellName){
 		if (!self.Nodes[CellName]) return null;
 		var Node = self.Nodes[CellName];
-		var Parts = (Node.Formula+'').split(/([$@].*?\?)/);
+		var Parts = (Node.Formula+'').split(/([$@{\.P}].*?\?)/);
 		var Result = {
 			Type:"Node",
 			Text:CellName,
