@@ -214,6 +214,8 @@
 		"EditFields": [
 			"CodeDocFolder",
 			"NameDocFolder",
+			"SNameDocFolder",
+			"NumDocFolder",
 			"IndexDocFolder",
 			"CodeParentDocFolder",
 			"Icon"
@@ -703,8 +705,9 @@
 		],
 		"EditFields": [
 			"CodeDocBill",
+			"CodeDoc",
 			"CodeBill",
-			"CodeDoc"
+			"IndexDocBill"
 		],
 		"Links": []
 	},
@@ -755,19 +758,19 @@
 	"billrelation": {
 		"TableFields": [
 			"CodeBillRelation",
+			"IsMirror",
 			"CodeBillSource",
-			"CodeBillTarget",
-			"IsMirror"
+			"CodeBillTarget"
 		],
 		"EditFields": [
 			"CodeBillRelation",
-			"CodeGrpTarget",
-			"CodeBillTarget",
-			"CodeBillSource",
-			"IsMirror",
-			"IsNotGrpTarget",
 			"IsNotGrpSource",
-			"CodeGrpSource"
+			"IsNotGrpTarget",
+			"IsMirror",
+			"CodeBillSource",
+			"CodeBillTarget",
+			"CodeGrpSource",
+			"CodeGrpTarget"
 		],
 		"Links": []
 	},
@@ -866,6 +869,59 @@
 			"CodeCountry",
 			"NameCountry",
 			"SNameCountry"
+		],
+		"Links": []
+	},
+	"doctype": {
+		"TableFields": [
+			"CodeDocType",
+			"NameDocType"
+		],
+		"EditFields": [
+			"CodeDocType",
+			"NameDocType",
+			"SNameDocType"
+		],
+		"Links": []
+	},
+	"dogovor": {
+		"TableFields": [
+			"NameDogovor",
+			"NumDogovor",
+			"DateDogovor",
+			"CodeAltOrg"
+		],
+		"EditFields": [
+			"CodeDogovor",
+			"NameDogovor",
+			"SNameDogovor",
+			"NumDogovor",
+			"DateDogovor",
+			"BeginDate",
+			"EndDate",
+			"DelayDate",
+			"SummaDogovor",
+			"IsAddDogovor",
+			"IsGarantDogovor",
+			"Comment",
+			"CodeOrg",
+			"CodeAltOrg",
+			"CodeThirdOrg",
+			"CodeDogovorType",
+			"CodeParentDogovor",
+			"CodeValuta"
+		],
+		"Links": []
+	},
+	"dogovortype": {
+		"TableFields": [
+			"CodeDogovorType",
+			"NameDogovorType"
+		],
+		"EditFields": [
+			"CodeDogovorType",
+			"NameDogovorType",
+			"SNameDogovorType"
 		],
 		"Links": []
 	}
