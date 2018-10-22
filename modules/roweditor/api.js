@@ -182,12 +182,14 @@ var CheckToLinks = (new function(){
                         })
                     }
                 }
+                console.log("AAAAAAAAAAA!~",V.Link_rowobjgrp)
+
                 if (!_.isEmpty(V.Link_rowobjgrp)){
                     V.Link_rowobjgrp.forEach(function(GrB){
                         ExistedByRows[CodeRow].push({CodeRow:CodeRow,CodeGrp:GrB.CodeGrp});
                     })                    
-                } else {
-                    console.log(ExistedByRows[CodeRow],"<<<<<<<<<<<");
+                } else if (!_.has(V,"Link_rowobjgrp")){
+                    ExistedByRows[CodeRow] = ExistedByRows[CodeRow].concat(GrpLinks);
                 }
                 Update[CodeRow] = _.omit(Update[CodeRow],["ForObj","ForObjType","ForObjClass","Link_rowobjgrp"]);
                 Update[CodeRow].Link_rowobj = ExistedByRows[CodeRow];
