@@ -122,7 +122,7 @@ router.put('/structure',  HP.TaskAccess("IsRowTuner"), function(req,res,next){
 var CheckToLinks = (new function(){
     var self = this;
 
-    self.Fields = ["ForObjType","ForObj"];
+    self.Fields = ["ForObjType","ForObj","ForObjClass","Link_rowobjgrp"];
 
     self.Do = function(Context,Update,done){
         console.log(Context);
@@ -134,7 +134,13 @@ var CheckToLinks = (new function(){
             }
         }
         if (_.isEmpty(ToDo)) return done(null,Update);
-        mongoose.model("rowobj").find({CodeRow:{$in:_.keys(ToDo)}}).exec(function(err,Existed){
+        mongoose.model("rowobj").find({CodeRow:{$in:_.keys(ToDo)}}).exec(function(err,ExistedAll){
+            var Existed = _.filter(ExistedAll,function(Ex){
+                return _.isEmpty(Ex.CodeGrp);
+            })
+            var GrpLinks = _.filter(ExistedAll,function(Ex){
+                return !_.isEmpty(Ex.CodeGrp);
+            })
             var ExistedByRows = {};
             Existed.forEach(function(E){
                 if (!ExistedByRows[E.CodeRow]) ExistedByRows[E.CodeRow] = [];
@@ -142,6 +148,9 @@ var CheckToLinks = (new function(){
             })
             for (var CodeRow in ToDo){
                 var V = ToDo[CodeRow];
+
+                console.log("TODO !!!!!!!!!!",V,"!!!!!!!!!!!!");
+
                 if (!ExistedByRows[CodeRow]) ExistedByRows[CodeRow] = [];
                 if (_.isBoolean(V["ForObjType"])){
                     var Ex = _.find(ExistedByRows[CodeRow],{CodeObjType:Context.ObjType});
@@ -150,6 +159,16 @@ var CheckToLinks = (new function(){
                     } else {
                         ExistedByRows[CodeRow] = _.filter(ExistedByRows[CodeRow], function(R){
                             return R.CodeObjType!=Context.ObjType;
+                        })
+                    }
+                }
+                if (_.isBoolean(V["ForObjClass"])){
+                    var Ex = _.find(ExistedByRows[CodeRow],{CodeObjClass:Context.ObjClass});
+                    if (V["ForObjClass"]){
+                        ExistedByRows[CodeRow].push({CodeRow:CodeRow,CodeObjClass:Context.ObjClass});
+                    } else {
+                        ExistedByRows[CodeRow] = _.filter(ExistedByRows[CodeRow], function(R){
+                            return R.CodeObjClass!=Context.ObjClass;
                         })
                     }
                 }
@@ -163,7 +182,14 @@ var CheckToLinks = (new function(){
                         })
                     }
                 }
-                Update[CodeRow] = _.omit(Update[CodeRow],["ForObj","ForObjType"]);
+                if (!_.isEmpty(V.Link_rowobjgrp)){
+                    V.Link_rowobjgrp.forEach(function(GrB){
+                        ExistedByRows[CodeRow].push({CodeRow:CodeRow,CodeGrp:GrB.CodeGrp});
+                    })                    
+                } else {
+                    console.log(ExistedByRows[CodeRow],"<<<<<<<<<<<");
+                }
+                Update[CodeRow] = _.omit(Update[CodeRow],["ForObj","ForObjType","ForObjClass","Link_rowobjgrp"]);
                 Update[CodeRow].Link_rowobj = ExistedByRows[CodeRow];
             }
             return done(null,Update);
@@ -194,7 +220,7 @@ router.put('/rows', HP.TaskAccess("IsRowTuner"), function(req, res,next){
                     console.log("FIELD : ",Field);
                     if (Field.indexOf("Link_")!=0) {
                         Fields[Field] = Update[C.CodeRow][Field];   
-                    } else {
+                    } else if(Field!='Link_rowobjgrp'){
                         Links[Field] = Update[C.CodeRow][Field];
                         if (_.isArray(Links[Field])){
                             Links[Field].forEach(function(L){

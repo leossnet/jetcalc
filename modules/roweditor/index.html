@@ -30,6 +30,11 @@
                         Тип: <!-- ko template:{name:'catalogue',data:{model:'objtype',id:$data}} --><!-- /ko -->
                     </a>
                     <!-- /ko -->
+                    <!-- ko with:$data.ObjClass -->
+                    <a class="btn btn-sm btn-white btn-primary">
+                        Класс: <!-- ko template:{name:'catalogue',data:{model:'objclass',id:$data}} --><!-- /ko -->
+                    </a>
+                    <!-- /ko -->
                 <!-- /ko -->
             </div>
         </div>

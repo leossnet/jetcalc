@@ -48,9 +48,7 @@ var RowEditor = (new function() {
         	}
         	SendUpdate[R.CodeRow][Ar.splice(1).join("_")] = Changes[Key].new;
         }
-        console.log(SendUpdate);
-
-        self.rPut("rows",{Data:JSON.stringify(SendUpdate),Context:_.merge(CxCtrl.Context(),{ObjType:self.ObjType()})},function(){
+        self.rPut("rows",{Data:JSON.stringify(SendUpdate),Context:_.merge(CxCtrl.Context(),{ObjType:self.ObjType(),ObjClass:self.ObjClass()})},function(){
         	self.Show();
         })        
     }
@@ -108,15 +106,27 @@ var RowEditor = (new function() {
     self.PopulateRowsFilter = function(Rows){
         Rows.forEach(function(d) {
             if (!_.isEmpty(d.Link_rowobj)) {
-                var Links = d.Link_rowobj;
+                var Links = _.filter(d.Link_rowobj,function(LL){
+                    return _.isEmpty(LL.CodeGrp);
+                });
+                var GrpLinks = _.filter(d.Link_rowobj,function(L){
+                    return !_.isEmpty(L.CodeGrp);
+                })
                 Links.forEach(function(L) {
                     if (L.CodeObjType == self.ObjType()) {
                         d.ForObjType = true;
+                    }
+                    console.log(L.CodeObjClass,"===",self.ObjClass());
+                    if (L.CodeObjClass == self.ObjClass()) {
+                        d.ForObjClass = true;
                     }
                     if (L.CodeObj == self.Obj()) {
                         d.ForObj = true;
                     }
                 })
+                if (!_.isEmpty(GrpLinks)){
+                    d.Link_rowobjgrp = GrpLinks;
+                }
             }
         })
         return Rows;
@@ -130,6 +140,7 @@ var RowEditor = (new function() {
                 R.IsNew = false;
                 R.ForObj = false;
                 R.ForObjType = false;
+                R.ForObjClass = false;
             })
             AllRows = self.PopulateRowsFilter(AllRows);
             self.AllRows = AllRows;
@@ -156,6 +167,7 @@ var RowEditor = (new function() {
                     RowCFG.NoFiltered = ["middle_checkbox", false, 100];
                     RowCFG.ForObj = ["middle_checkbox", false, 100];
                     RowCFG.ForObjType = ["middle_checkbox", false, 100];
+                    RowCFG.ForObjClass = ["middle_checkbox", false, 100];
                     RowCFG.NoOutput = ["middle_checkbox", false, 100];
                     RowCFG.NoInput = ["middle_checkbox", false, 100];
                     RowCFG.FromObsolete = ["middle_text", false, 100];

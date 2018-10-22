@@ -117,7 +117,7 @@ var RowHelper = (new function(){
 			'HasFilteredChild','NoFiltered','Link_rowobj','Link_rowobjgrp','Link_rowsumgrp','Link_rowtag',
 			'CodeValuta','CodeProd','CodeBill','CodeAltOrg','CodeDogovor','CodeFilteredAltGrp','CodeDogovorArt'
 		],
-		rowobj:['CodeObj','CodeObjType','CodeGrp','CodeRow'],
+		rowobj:['CodeObj','CodeObjType',"CodeObjClass",'CodeGrp','CodeRow'],
 		rowobjgrp:['CodeGrp','CodeRow'],
 		rowsumgrp:['CodeSumGrp', 'CodeRow'],
 		rowtag:['CodeTag','Value','CodeRow'],
@@ -170,7 +170,7 @@ var RowHelper = (new function(){
 			var CodeObj = !_.isEmpty(Context.ChildObj) ? Context.ChildObj:Context.CodeObj;
 			var Info = DivInfo[CodeObj];
 			if (_.isEmpty(Info)) return done (err,[]);
-			return done(err,[Info.CodeObj,Info.CodeObjType].concat(Info.Groups));
+			return done(err,[Info.CodeObj,Info.CodeObjType,Info.CodeObjClass].concat(Info.Groups));
 		})
 	}
 
@@ -260,10 +260,12 @@ var RowHelper = (new function(){
 			Row.Filter = _.compact(_.uniq(
 				_.map(Row.Link_rowobj,'CodeObj')
 				.concat(
-				_.map(Row.Link_rowobjgrp,'CodeGrp')
+				_.map(Row.Link_rowobj,'CodeGrp')
+				.concat(
+				_.map(Row.Link_rowobj,'CodeObjClass')
 				.concat(
 				_.map(Row.Link_rowobj,'CodeObjType')
-			))));
+			)))));
 			Row.Tags = _.map(Row.Link_rowtag, function(TI){
 				return TI.CodeTag+':'+(_.isEmpty(TI.Value) ? '*':TI.Value);
 			})
