@@ -203,21 +203,11 @@ router.put('/rows', HP.TaskAccess("IsRowTuner"), function(req, res,next){
                         }
                     }               
                 }
-
-                console.log(">>>>>>>>>> 111 : ",Links);
-
                 var M = new ModelHelper(CodeUser);
-                console.log(">>>>>>>>>> 112 : ",Links);
                 M.SaveModel("row",Fields,function(err){
-                    console.log(">>>>>>>>>> 113 : ",Links);
-                    console.log("AAAAAAAAAAAAAAAA",err);
-                    console.log(" =========== ",Links);
-
                     async.each(_.keys(Links),function(LinkName,done){
-
-                        var ModelName = _.last(LinkName.split("Link_"));
-                        console.log("save links ",Links[LinkName],JSON.stringify(Links[LinkName]));
-                        M.SaveLinks(ModelName,Links[LinkName],done);
+                           var ModelName = _.last(LinkName.split("Link_"));
+                            M.SaveLinks(ModelName,Links[LinkName],done);
                     },cb);
                 })
             },function(err){

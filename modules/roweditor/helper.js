@@ -186,6 +186,7 @@ var Helper = (new function(){
 				}
 			}
 			// Фильтр по группам
+			/* Устарело
 			for (var CodeR in Indexed){
 				var N = Indexed[CodeR];
 				if (N.IsRowEditFilter){
@@ -200,8 +201,8 @@ var Helper = (new function(){
 					}
 				}
 			}	
-			
-
+			*/		
+	
 			// FromObsolete и FromYear -> отрываем все вместе с чаилдами
 			// NoOutput и NoInput -> отрываем все вместе с чаилдами
 			for (var CodeR in Indexed){
