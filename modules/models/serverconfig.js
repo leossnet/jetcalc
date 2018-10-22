@@ -2372,6 +2372,37 @@ module.exports = {
                 "extended": true
             }
         }
+    },    
+    "rowobjgrp": {
+        "tablename": "[link].[RowObjGrps]",
+        "menuplace": "Link",
+        "fields": {
+            "CodeRowObjGrp": {
+                "type": String,
+                "default": null,
+                "view": "all",
+                "role": "code",
+                "index": true,
+                "unique": true
+            },
+            "CodeRow": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "row",
+                "index": true,
+                "extended": true
+            },
+            "CodeGrp": {
+                "type": String,
+                "default": "",
+                "view": "none",
+
+                "refmodel": "grp",
+                "index": true,
+                "extended": true
+            }
+        }
     },
     "userfavorite": {
         "tablename": "[link].[UserFavorites]",

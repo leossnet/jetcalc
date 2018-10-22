@@ -46,8 +46,10 @@ var RowEditor = (new function() {
         	if (_.isEmpty(SendUpdate[R.CodeRow])){
         		SendUpdate[R.CodeRow] = {};
         	}
-        	SendUpdate[R.CodeRow][Ar[1]] = Changes[Key].new;
+        	SendUpdate[R.CodeRow][Ar.splice(1).join("_")] = Changes[Key].new;
         }
+        console.log(SendUpdate);
+
         self.rPut("rows",{Data:JSON.stringify(SendUpdate),Context:_.merge(CxCtrl.Context(),{ObjType:self.ObjType()})},function(){
         	self.Show();
         })        
@@ -158,8 +160,9 @@ var RowEditor = (new function() {
                     RowCFG.NoInput = ["middle_checkbox", false, 100];
                     RowCFG.FromObsolete = ["middle_text", false, 100];
                     RowCFG.FromYear = ["middle_text", false, 100];
-                    RowCFG.IsRowEditFilter = ["middle_checkbox", false, 100];
-                    RowCFG.CodeGrpEditFilter = ["middle_select", false, 200];
+                    RowCFG.Link_rowobjgrp = ["middle_link", false, 200];
+                    //RowCFG.IsRowEditFilter = ["middle_checkbox", false, 100];
+                    //RowCFG.CodeGrpEditFilter = ["middle_select", false, 200];
                     break;
                 case 'MainFields':
                     RowCFG.CodeMeasure = ["middle_select", false, 100];
@@ -219,6 +222,7 @@ var RowEditor = (new function() {
                     MainModel: {
                         Link_rowsumgrp: 'row',
                         Link_rowtag: 'row',
+                        Link_rowobjgrp: 'row',
                         CodeMeasure: 'row',
                         CodeStyle: 'row',
                         CodeFormat: 'row',

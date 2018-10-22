@@ -105,7 +105,7 @@ var RowHelper = (new function(){
 
 	var self = new Base("JROW"); 
 
-	self.Links = ['rowobj','rowsumgrp','rowtag']
+	self.Links = ['rowobj','rowsumgrp','rowtag','rowobjgrp']
 
 	self.FieldsToLoad = {
 		row:['NumRow','IndexRow','NameRow','rowpath','FromObsolete','FromYear','CodeFormat',
@@ -114,10 +114,11 @@ var RowHelper = (new function(){
 			'IsSum','NoSum','NoDoSum','IsCalcSum','IsFormula','Formula','IsAfFormula','AfFormula','IsVirtual',
 			'IsAgFormula','AsAgFormula','AgFormula','UseProdSumGrps',
 			'CodeRowLink','IsMinus','IsControlPoint','CodeRow','CodeParentRow','lft','rgt',
-			'HasFilteredChild','NoFiltered','Link_rowobj','Link_rowsumgrp','Link_rowtag',
+			'HasFilteredChild','NoFiltered','Link_rowobj','Link_rowobjgrp','Link_rowsumgrp','Link_rowtag',
 			'CodeValuta','CodeProd','CodeBill','CodeAltOrg','CodeDogovor','CodeFilteredAltGrp','CodeDogovorArt'
 		],
 		rowobj:['CodeObj','CodeObjType','CodeGrp','CodeRow'],
+		rowobjgrp:['CodeGrp','CodeRow'],
 		rowsumgrp:['CodeSumGrp', 'CodeRow'],
 		rowtag:['CodeTag','Value','CodeRow'],
 		docrow:['-_id','CodeRow','IsExpandTree'],
@@ -259,7 +260,7 @@ var RowHelper = (new function(){
 			Row.Filter = _.compact(_.uniq(
 				_.map(Row.Link_rowobj,'CodeObj')
 				.concat(
-				_.map(Row.Link_rowobj,'CodeGrp')
+				_.map(Row.Link_rowobjgrp,'CodeGrp')
 				.concat(
 				_.map(Row.Link_rowobj,'CodeObjType')
 			))));
@@ -373,9 +374,9 @@ var RowHelper = (new function(){
 				}
 			}
 			// Фильтр по группам
+			/* Устарело
 			for (var CodeR in Indexed){
 				var N = Indexed[CodeR];
-
 				if (N.IsRowEditFilter){
 					if (!_.isEmpty(N.CodeGrpEditFilter)){
 						if (Context.ObjInfo.indexOf(N.CodeGrpEditFilter)==-1){
@@ -388,7 +389,7 @@ var RowHelper = (new function(){
 					}
 				}
 			}	
-
+			*/
 			// FromObsolete и FromYear -> отрываем все вместе с чаилдами
 			// NoOutput и NoInput -> отрываем все вместе с чаилдами
 			for (var CodeR in Indexed){

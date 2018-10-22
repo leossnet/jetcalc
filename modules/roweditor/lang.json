@@ -51,5 +51,6 @@
     "CodeBill":"Код Счета",
     "ForObj":"Тек.Объект",
     "docview.roweditor":"Настройка рядов",
-    "ForObjType":"Тек.Тип"
+    "ForObjType":"Тек.Тип",
+    "Link_rowobjgrp":"По группам"
 }

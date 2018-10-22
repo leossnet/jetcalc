@@ -180,26 +180,43 @@ var CheckToLinks = (new function(){
 
 router.put('/rows', HP.TaskAccess("IsRowTuner"), function(req, res,next){
     var Update = JSON.parse(req.body.Data), CodeUser = req.user.CodeUser;
+
+    console.log(Update,"<<< 1 ");
+
     var ModelHelper = require(__base+"src/modeledit.js");
     if (_.isEmpty(Update)) return res.json({});
     CheckToLinks.Do(req.body.Context, Update, function(err,Update){
+        console.log(Update,"<<< 2 ");
         mongoose.model("row").find({CodeRow:{$in:_.keys(Update)}}).isactive().exec(function(err,Current){
             async.each(Current,function(C,cb){
                 var Fields = _.pick(C,["_id","CodeRow"]), Links = {};
                 for (var Field in Update[C.CodeRow]){
+                    console.log("FIELD : ",Field);
                     if (Field.indexOf("Link_")!=0) {
                         Fields[Field] = Update[C.CodeRow][Field];   
                     } else {
                         Links[Field] = Update[C.CodeRow][Field];
-                        Links[Field].forEach(function(L){
-                            L.CodeRow = C.CodeRow;
-                        })
+                        if (_.isArray(Links[Field])){
+                            Links[Field].forEach(function(L){
+                                L.CodeRow = C.CodeRow;
+                            })
+                        }
                     }               
                 }
+
+                console.log(">>>>>>>>>> 111 : ",Links);
+
                 var M = new ModelHelper(CodeUser);
-                M.SaveModel("row",Fields,function(){
+                console.log(">>>>>>>>>> 112 : ",Links);
+                M.SaveModel("row",Fields,function(err){
+                    console.log(">>>>>>>>>> 113 : ",Links);
+                    console.log("AAAAAAAAAAAAAAAA",err);
+                    console.log(" =========== ",Links);
+
                     async.each(_.keys(Links),function(LinkName,done){
+
                         var ModelName = _.last(LinkName.split("Link_"));
+                        console.log("save links ",Links[LinkName],JSON.stringify(Links[LinkName]));
                         M.SaveLinks(ModelName,Links[LinkName],done);
                     },cb);
                 })
