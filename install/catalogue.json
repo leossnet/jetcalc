@@ -125,16 +125,18 @@
 	},
 	"measure": {
 		"TableFields": [
-			"IsExchange",
 			"CodeMeasure",
+			"NameMeasure",
 			"SNameMeasure",
-			"NameMeasure"
+			"IsExchange"
 		],
 		"EditFields": [
-			"IsExchange",
 			"CodeMeasure",
+			"NameMeasure",
 			"SNameMeasure",
-			"NameMeasure"
+			"NumMeasure",
+			"Comment",
+			"IsExchange"
 		],
 		"Links": []
 	},
