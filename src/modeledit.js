@@ -17,6 +17,9 @@ var ModelEdit = function(CodeUser,IsNew){
 	self.SaveModel = function(ModelName, Model, done){
 		var M = mongoose.model(ModelName), CFG = M.cfg(), Q = {};
 		Q[CFG.Code] = Model[CFG.Code]; self.BaseModelCode = CFG.Code;
+
+		console.log("Will save ",ModelName,Model," === Will Save");
+
 		M.findOne(Q).isactive().exec(function(err,Found){
 			if (!Found || IsNew) Found = new M(Model);
 			var Fields = _.intersection(_.keys(Model),CFG.EditFields);
@@ -127,7 +130,11 @@ var ModelEdit = function(CodeUser,IsNew){
 
 	self.SaveLinks = function(ModelName, Links, done){
 		var Q = {};
+
+		console.log("Base Model ",self.BaseModel,"======");
+
 		Q[self.BaseModelCode] = self.BaseModel[self.BaseModelCode];
+		console.log("Save links ",Q,Links,"=== Save links");
 		self.SyncLinks(ModelName, Q, Links, done);
 	}
 

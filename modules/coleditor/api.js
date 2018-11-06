@@ -21,33 +21,39 @@ router.get('/cols', function(req, res, next) {
 
 
 router.put('/savechanges', HP.TaskAccess("IsColsetTuner"), function(req, res, next) {
-    var Changes = req.body.Changes;
+    var Changes = JSON.parse(req.body.Changes);
     var Context = LIB.ReqContext(req);
     var CodeUser = req.user.CodeUser;
     var _save = function(modelName,rChanges){
         return function(done){
+    		var ModelHelper = require(__base+"src/modeledit.js");
             var M = mongoose.model(modelName), CFG = M.cfg(), Code = CFG.Code;
             if (_.isEmpty(rChanges)) return done();
             async.each(_.keys(rChanges),function(CodeObj,next){
                 var SetChange = rChanges[CodeObj], Q = {}; Q[Code] = CodeObj;
-                M.findOne(Q).isactive().exec(function(err,Obj){
-                    if (err) return next(err);
-                    if (!Obj) return next(CodeObj+" нет в базе данных");
-                    for (var S in SetChange){
-                        Obj[S] = SetChange[S];
-                    }
-                    Obj.save(CodeUser,next);
-                })
+                var Links = {}, fieldsToUpdate = {};
+                fieldsToUpdate[Code] = CodeObj;
+                for (var Field in SetChange){
+                	if (Field.indexOf("Link_")==0){
+                		Links[Field] = SetChange[Field];
+                	} else {
+                		fieldsToUpdate[Field] = SetChange[Field];
+                	}
+                }
+				var M = new ModelHelper(CodeUser);
+            	M.SaveModel(modelName,fieldsToUpdate,function(err){
+                	async.each(_.keys(Links),function(LinkName,cb){
+                    	var LinkModelName = _.last(LinkName.split("Link_"));
+                    	console.log("++++ SaveLinks",LinkModelName,Links[LinkName]," ---- Save Links");
+                        M.SaveLinks(LinkModelName,Links[LinkName],cb);
+                	},next);
+            	}) 
             },done);
         }
     }
-
-    console.log("Changes.col",Changes.col,"Changes.col");
-    console.log("Changes.colsetcol",Changes.colsetcol,"Changes.colsetcol");
-
     async.parallel([
         _save("col",Changes.col),
-        _save("colsetcol",Changes.colsetcol)        
+        _save("colsetcol",Changes.colsetcol)
     ],function(err){
         if (err) return next(err);
         var ColHelper = require(__base + 'classes/jetcalc/Helpers/Header.js');

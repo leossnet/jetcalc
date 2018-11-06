@@ -27,24 +27,37 @@ var MColEditor = (new function() {
             var K = Key.split("_"),
                 F = _.last(K),
                 Ind = parseInt(_.first(Key.split("_"))),
-                T = _.includes(["Link_coltag", "IsFormula", "InitialFormula", "Formula", "Tags",
+                T = _.includes(["coltag","Link_coltag", "IsFormula", "InitialFormula", "Formula", "Tags",
                     , "IsAgFormula",  "AgFormula", "AsAgFormula"
                 ], F) ? "col" : "colsetcol",
                 FV = _.isEmpty(FieldTranslate[F]) ? F : FieldTranslate[F];
             var Col = self.AllRows[Ind];
             if (T == "colsetcol") {
                 if (_.isEmpty(ToSave[T][Col.CodeColsetCol])) ToSave[T][Col.CodeColsetCol] = {};
-                ToSave[T][Col.CodeColsetCol][FV] = Col[F];
-            }
+                if (["colsetcolperiodgrp","colsetcolgrp"].indexOf(FV)!=-1){
+                    ToSave[T][Col.CodeColsetCol]["Link_"+FV] = _.map(Col["Link_"+F],function(ColLink){
+                        return _.merge(ColLink,{CodeColsetCol:Col.CodeColsetCol});    
+                    })
+                } else {
+                    ToSave[T][Col.CodeColsetCol][FV] = Col[F];
+                }
+            } 
             if (T == "col") {
-                if (_.isEmpty(ToSave[T][Col.CodeCol])) ToSave[T][Col.CodeCol] = {};
-                ToSave[T][Col.CodeCol][FV] = Col[F];
+                if (_.isEmpty(ToSave[T][Col.CodeCol])) ToSave[T][Col.CodeCol] = {};                
+                if (["coltag"].indexOf(FV)!=-1){
+                    ToSave[T][Col.CodeCol]["Link_"+FV] = _.map(Col["Link_"+F],function(ColLink){
+                        return _.merge(ColLink,{CodeCol:Col.CodeCol});    
+                    })
+                } else {
+                    ToSave[T][Col.CodeCol][FV] = Col[F];
+                }                
             }
         }
-        console.log("Saving...",ToSave);
+        console.log("ToSave",ToSave);
+
         self.rPut("savechanges", {
             Context: CxCtrl.Context(),
-            Changes: ToSave
+            Changes: JSON.stringify(ToSave)
         }, function() {
             self.Show();
         })

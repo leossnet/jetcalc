@@ -15,9 +15,9 @@ var HeaderHelper = (new function(){
 		"colset":"CodeColset NameColset SNameColset",
 		"colsetcol":'-_id CodeColsetCol CodeStyle CodeFormat CodeColset CodeCol Condition Year NameColsetCol SNameColsetCol CodePeriod IsFixed IsControlPoint Link_colsetcolperiodgrp Link_colsetcolgrp IndexColsetCol IsAgFormula AgFormula AfIndex IsAfFormula AfFormula CodeRole IsNoRole',
 		"col":'-_id AsAgFormula IsAgFormula AgFormula CodeCol Formula IsFormula Link_coltag DoSum NoCalcSum NoCalcSumHard NameCol Comment CodeValuta',
-		"colsetcolgrp":'-_id CodeGrp NotInGrp CodeColsetCol',
-		"colsetcolperiodgrp":'-_id CodePeriodGrp NotInGrp CodeColsetCol',
-		"coltag":'-_id CodePeriodGrp NotInGrp CodeColsetCol',
+		"colsetcolgrp":'CodeGrp NotInGrp CodeColsetCol',
+		"colsetcolperiodgrp":'CodePeriodGrp NotInGrp CodeColsetCol',
+		"coltag":'CodePeriodGrp NotInGrp CodeColsetCol',
 	}
 	
 	self.SubscribeChanges(_.keys(self.FieldsByModel));
@@ -153,15 +153,15 @@ var HeaderHelper = (new function(){
 	    		Answer.Colsets = Colsets;
 				mongoose.model('colsetcol').find({CodeColset:{$in:UsedColsets}},self.Fields["colsetcol"])
 				.sort({IndexColsetCol:1})
-				.populate("Link_colsetcolperiodgrp",'-_id NotInGrp CodePeriodGrp')
-				.populate("Link_colsetcolgrp",'-_id NotInGrp CodeGrp')
+				.populate("Link_colsetcolperiodgrp",'NotInGrp CodePeriodGrp')
+				.populate("Link_colsetcolgrp",'NotInGrp CodeGrp')
 				.isactive()
 				.lean().exec(function(err,ColsetCols){
 					if (err) return done(err);
 					Answer.ColsetCols = ColsetCols;
 					var UsedCols = _.uniq(_.map(ColsetCols,"CodeCol"));
 					mongoose.model('col').find({CodeCol:{$in:UsedCols}},self.Fields["col"])
-					.populate('Link_coltag','-_id CodeTag Value')
+					.populate('Link_coltag','CodeTag Value')
 					.isactive()
 					.lean()
 					.exec(function(err,Cols){
