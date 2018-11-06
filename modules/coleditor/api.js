@@ -41,6 +41,10 @@ router.put('/savechanges', HP.TaskAccess("IsColsetTuner"), function(req, res, ne
             },done);
         }
     }
+
+    console.log("Changes.col",Changes.col,"Changes.col");
+    console.log("Changes.colsetcol",Changes.colsetcol,"Changes.colsetcol");
+
     async.parallel([
         _save("col",Changes.col),
         _save("colsetcol",Changes.colsetcol)        

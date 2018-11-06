@@ -28,7 +28,7 @@ var MColEditor = (new function() {
                 F = _.last(K),
                 Ind = parseInt(_.first(Key.split("_"))),
                 T = _.includes(["Link_coltag", "IsFormula", "InitialFormula", "Formula", "Tags",
-                    "IsAfFormula", "IsAgFormula", "AfFormula", "AgFormula", "AsAgFormula"
+                    , "IsAgFormula",  "AgFormula", "AsAgFormula"
                 ], F) ? "col" : "colsetcol",
                 FV = _.isEmpty(FieldTranslate[F]) ? F : FieldTranslate[F];
             var Col = self.AllRows[Ind];
