@@ -1,0 +1,124 @@
+<script type="text/html" id="chat_topmenu">
+    <!-- ko with: MChat -->
+    <li class="green"  data-bind='title:"Общение",click:ToggleBox'>
+        <a class="dropdown-toggle" >
+            <i class="ace-icon fa fa-comments"  data-bind='css:{"icon-animated-vertical":AllCount()}' style='margin-top:12px;'></i>
+            <span data-bind='text:AllCount,css:{"badge badge-important":AllCount()>0}'></span>
+        </a>
+    </li>
+    <!-- /ko -->
+</script>
+<!-- ko with:MChat -->
+<div class='chatbox main' data-bind='visible:!$data.IsToggled()' style="display: none;">
+    <button class="close closechatbox"  data-bind='click:ToggleBox'><i class="ace-icon fa fa-times"></i></button>
+    <div class='chat channels'>
+       <span data-bind='foreach:$data.AvailableRoomTypes'>
+            <span class='channel'>
+                <span class="label label-lg " data-bind='model:"chat",
+                                                         lang:$data.Type,
+                                                         css:$parent.IsChoosen($data)?$data.Label:"label-light",
+                                                         click:$parent.Choose'>
+                </span>
+                <!-- ko with:MChat.Counts -->
+                    <!-- ko if: $data[$parent.RoomId] -->
+                         <span class="badge badge-warning badge-left attentionBadge" data-bind='text:$data[$parent.RoomId]'></span>
+                    <!-- /ko -->
+                <!-- /ko -->
+            </span>
+       </span>
+    </div>
+    <!-- ko template:'jetchat' --><!-- /ko -->
+</div>
+<!-- /ko -->
+
+
+<script id="jetchat" type="text/html">
+    <div class="jetteam-chat" >
+            <!-- ko with:MChat -->
+            <div data-bind="template: 'jetchat-form-tmpl'"></div>
+            <!-- /ko -->
+            <div class="messages" data-bind="foreach:{
+                                            data: MChat.RootComments,
+                                            as: 'comment'
+                                          }">
+                <div class="comment" data-bind="template: 'jetchat-comment-tmpl'"></div>
+            </div>
+    </div> 
+</script>
+
+<script id="jetchat-form-tmpl" type="text/html">
+    <form >
+        <div contenteditable="true" placeholder="Текст сообщения..." class="textarea" data-bind="contentEditable: $data.MyComment, enterkey: $data.Reply"></div>
+        <span class="btn btn-sm btn-info btn-white chatsendbtn" data-bind="click: $data.Reply, visible:$data.MyComment().length>0">Отправить</span>
+    </form>
+</script>
+
+<script id="jetchat-form-edit-tmpl" type="text/html">
+    <form >
+        <div contenteditable="true" placeholder="Текст сообщения..." class="textarea" data-bind="contentEditable: $data.Body"></div>
+        <span class="btn btn-sm btn-info btn-white chatsendbtn" data-bind="click: $data.Edit, visible:$data.Body().length>0">Отправить</span>
+    </form>
+</script>
+
+<script id="jetchat-comment-tmpl" type="text/html">
+    <div class="self">
+        <div class="profile_name_img edit_ico read_only header_block">
+            <!-- ko ifnot:_.isEmpty(comment.UserPhoto()) -->
+                <span class="empty_photo_letters not_empty_photo_letters" data-bind='background-image:comment.UserPhoto()'></span>
+            <!-- /ko -->
+            <!-- ko if:_.isEmpty(comment.UserPhoto()) -->
+                <span class="empty_photo_letters" data-bind='text:comment.UserSmName()'></span>
+            <!-- /ko -->
+        </div>
+        <div class="heading">
+            <span class="user">
+                <span data-bind="text: UserName"></span>
+            </span>
+            <span class="info">
+            <!-- <span data-bind="text: List.get('role',comment.user.Role)+','"></span> -->
+            <span data-bind="moment: {date:comment.Created,format:'fromNow'}"></span>
+            </span>
+        </div>
+        <div class="body" >
+            <!-- ko ifnot:comment.EditMode() -->
+            <span style='white-space: pre-wrap;' data-bind="html: comment.Body"></span>
+            <!-- /ko -->
+            <!-- ko if:comment.EditMode() -->
+            <div class="comment-reply" data-bind="template: 'jetchat-form-edit-tmpl', visible: comment.EditMode()"></div>
+            <!-- /ko -->
+        </div>
+        <div class="footing" style='line-height:15px' >
+            <a class="replylink" href="" data-bind="click: comment.ToggleReply">Ответить</a>
+            <!-- ko if:MChat.CanEdit(comment) --> 
+                <a class="replylink" href="" data-bind="click: comment.ToggleEdit">Редактировать</a>
+            <!-- /ko -->
+            <span class="rating" data-bind="
+                text:(comment.Points()<0?'':'+')+ comment.Points(),
+                visible: comment.Points()!=0,
+                css:{pos:comment.Points()>0,neg:comment.Points()<0}
+              "></span>
+            <span class="voting">
+                        <i class="fa" data-bind="
+                            click: comment.UpVote,
+                            css:{
+                                'fa-thumbs-up': comment.Ups.indexOf(true) > -1,
+                                'fa-thumbs-o-up': comment.Ups.indexOf(true) < 0
+                            }"></i>
+                        <i class="fa fa-thumbs-up" style="transform:rotate(180deg)" data-bind="
+                            click: comment.DownVote,
+                            css:{
+                                'fa-thumbs-up': comment.Downs.indexOf(true) > -1,
+                                'fa-thumbs-o-up': comment.Downs.indexOf(true) < 0
+                            }
+                        "></i>
+                    </span>
+            <div class="comment-reply" data-bind="template: 'jetchat-form-tmpl', visible: !comment.CollapsedReply()"></div>
+        </div>
+    </div>
+    <div class="children" data-bind=" foreach:{
+            data: comment.Children(),
+            as: 'comment'
+        }">
+        <div class="comment" data-bind="template: 'jetchat-comment-tmpl'"></div>
+    </div>
+</script>  

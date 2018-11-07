@@ -1,0 +1,24 @@
+{
+  "id": "livefeed",
+  "class_name": "LiveFeed",
+  "title": "Новостная лента",
+  "icon": "fa-comments",
+  "places":{
+      "homepage"   : true,
+      "topmenu"   : true
+  },
+  "is_enabled": true,
+  "permissions" : [
+      "IsFeedWriter"
+  ],
+  "sort_index":1,
+  "extended":{
+    "Documentation":"Позволяет добавлять в текст сообщений, прямые ссылки на страницы документации",
+    "FileManager":"Позволяет добавлять в текст сообщений, прямые ссылки на прикрепленные файлы"
+  },
+  "required":{
+    "Socket":"Оповещение пользователей об изменении в новостной ленте",
+    "Permissions":"Разграничение прав пользователей"
+  },
+  "initial_load":true
+}

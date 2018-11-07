@@ -1,0 +1,57 @@
+<!-- ko with:MOnlineUsers -->
+<div class='chatbox main' data-bind='visible:!$data.IsToggled()' style="display: none;">
+    <button class="close closechatbox"  data-bind='click:ToggleBox'><i class="ace-icon fa fa-times"></i></button>
+    <div class='chat channels onlineusers'>
+        <table class="table table-bordered table-hover no-margin-bottom no-border-top usersonline" >
+            <tbody data-bind='with:Users'>
+                <!-- ko foreach:_.keys($data) -->
+                <tr>
+                    <td class="col-sm-12" colspan="5" >
+                        <!-- ko template:{name:'catalogue',data:{model:'obj',id:$data}} --><!-- /ko -->
+                    </td>
+                </tr>
+                    <!-- ko foreach: $parent[$data] -->
+                    <tr>
+                        <td style="position: relative;width: 25px;">
+                            <div class="profile_name_img edit_ico read_only header_block">
+                                <!-- ko ifnot:_.isEmpty($data.User.UserPhoto) -->
+                                    <span class="empty_photo_letters not_empty_photo_letters" data-bind="background-image:'/api/gfs/'+$data.User.UserPhoto"></span>
+                                <!-- /ko -->
+                            </div>
+                        </td>
+                        <td data-bind='text:$data.User.NameUser'></td>
+                        <td >
+                            <!-- ko foreach:_.keys($data.Sessions) -->
+                                <!-- ko with:$parent.Sessions[$data] -->
+                                    <div class='session_info as_table_row' >   
+                                        <span class='as_table_cell' data-bind='text:IP' style='min-width: 100px;'></span>
+                                        <span class='as_table_cell' >
+                                            <i class='fa fa-icon' data-bind='css:MOnlineUsers.BrowserIcon(Browser.Name)'></i>
+                                            <span data-bind='text:Browser.Name'></span>
+                                            <span data-bind='text:Browser.Version'></span>
+                                        </span>                                        
+                                    </div>
+                                <!-- /ko -->
+                            <!-- /ko -->
+                        </td>                           
+                    </tr>
+                    <!-- /ko -->
+                <!-- /ko -->
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- /ko -->
+                            
+
+
+<script type="text/html" id="onlineusers_topmenu">
+    <!-- ko with: MOnlineUsers -->
+    <li class="red noselect"  data-bind='title:"Пользователей в сети"'>
+        <a class="dropdown-toggle" data-bind="click: $data.ToggleBox">
+            <i class="ace-icon fa fa-user" style='margin-top:12px;'></i>
+            <span class="" data-bind="text: Count" style="   margin-left: -0.3em;"></span>
+        </a>
+    </li>
+    <!-- /ko -->
+</script>

@@ -1,0 +1,305 @@
+div.chat.channels{
+    padding: 10px;
+    background: #fff;
+    border-top: 4px solid #2e8965;
+    border-left: 1px solid #CFCFCF;
+}
+div.chatbox{
+    width: 50%;
+    height: 80%;
+    position: fixed;
+    z-index: 1315;
+    right: 0px;
+    top: 46px;
+    background-color: white;
+    background: transparent;
+}
+.closechatbox{
+    right: 20px;
+    position: absolute;
+    top: 10px;
+}
+.chatbox .channel{
+    position: relative;
+    margin-right: 15px;
+}
+.close.closechatbox{
+    color: #337ab7;
+}
+.chatbox .channel .badge {
+    position: absolute;
+    top: -11px;
+    right: -9px;
+    border-radius: 0px;
+    min-width: 17px;
+    border-radius: 100%;    
+}
+.ht_clone_top.handsontable{
+    z-index: 1;
+}
+.no-margin{
+    margin:0px;
+}
+.chatbox div.form-actions{
+    bottom: 0px;
+}
+.chatbox .chat-feeds{
+    height: 100px;
+    overflow-y: visible;
+}
+.widget-toolbar{
+    height: 35px;
+}
+.widget-toolbar>a, .widget-toolbar>.widget-menu>a{
+    margin: 10px 0px;
+}
+
+.messages {
+    padding: 1em 0;
+    max-height: 70%;
+    padding-bottom: 100px;
+}
+
+.jetteam-chat {
+    background: #fff;
+    padding: 1em;
+    border-left: 1px solid #CFCFCF;
+    border-bottom: 1px solid #CFCFCF;
+    overflow-y: auto;
+}
+
+.jetteam-chat .userpic {
+    display: block;
+    width: 3em;
+    height: 3em;
+    background-size: cover;
+    border-radius: 50%;
+    /*    float: left;*/
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.jetteam-chat .comment {
+    /*  background-color: rgba(0, 0, 0, 0.03);*/
+    /*  margin-top: 1em;*/
+    /*  padding: 0.5em 0.1em;*/
+}
+
+.jetteam-chat .comment .self > div {
+    /*  padding: 0.3em 1em;*/
+}
+
+.jetteam-chat .comment .self .heading .toggle {
+    margin-right: 0.5em;
+}
+
+.jetteam-chat .comment .self .heading .user {
+    color: #4B99DE;
+}
+
+.jetteam-chat .comment .self .heading .info {
+    color: #999;
+}
+
+.jetteam-chat .comment .self .body {
+    color: #333;
+    padding: 0.3em 0em;
+    line-height: 1.4em;
+}
+
+.jetteam-chat .comment .self {
+    padding-left: 4em;
+    position: relative;
+    margin-bottom: 1em;
+}
+
+.jetteam-chat .comment .children {
+    padding: 0.5em 0.5em 0.5em 3.5em;
+}
+.jetteam-chat .comment .children.flat{
+    padding: 0;
+}
+
+.jetteam-chat .comment .self .footing .voting {
+    color: #ccc;
+    display: none;
+}
+
+.jetteam-chat .replylink {
+    text-decoration: initial;
+    color: #999;
+    font-size: 0.9em;
+}
+.jetteam-chat .replylink:hover {
+    color: #666;
+}
+
+.jetteam-chat .comment .self:hover >.footing> .voting {
+    display: inline
+}
+
+.jetteam-chat .comment .self .footing .voting i:hover {
+    color: #999;
+}
+
+.jetteam-chat .comment-reply {margin-top: 1em}
+.jetteam-chat .rating {}
+
+.jetteam-chat .rating.pos {
+    color: green
+}
+
+.jetteam-chat .rating.neg {
+    color: maroon
+}
+
+.jetteam-chat .sendbtn {
+    background: #54B2EA;
+    padding: 0.7em 1em;
+    display: inline-block;
+    /* float: right; */
+    margin-top: 5px;
+    border-radius: 2px;
+    color: #fff;
+    cursor: pointer
+}
+
+.jetteam-chat .sendbtn:hover {
+    background: #3D9AD2;
+}
+
+.jetteam-chat .comment .self i {
+    cursor: pointer;
+    margin-left: 0.2em;
+}
+
+.jetteam-chat .textarea {
+    background-color: white;
+    border: 1px solid gray;
+    min-height: 5em;
+    overflow: auto;
+    /*  width: 20em;*/
+    padding: 0.3em;
+    resize: horizontal;
+    /*  overflow: hidden;*/
+    /*  display: inline;*/
+    box-sizing: border-box;
+    width: 100%;
+    background-color: #fff;
+    white-space: pre-wrap;
+    font-size: 1em;
+    padding: 1em;
+    resize: none;
+    border-radius: 2px;
+    background-clip: padding-box;
+    word-wrap: break-word;
+    border: 1px solid #e1e4e6;
+    box-shadow: 0 0 1px rgba(0, 0, 0, .01), 0 2px 1px rgba(0, 0, 0, .04);
+    transition-property: height;
+    transition-duration: .25s;
+}
+
+[contenteditable=true]:empty:before{
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+    color: #aaa
+} 
+
+.profile_name_img {
+    position: relative;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 88px;
+    height: 88px;
+    cursor: pointer;    image-rendering: auto;
+}
+
+.profile_name_img.edit_ico.read_only.header_block{
+    position: absolute;
+    margin-top: 0px;
+    width: 40px;
+    height: 40px;
+    left: 4px;
+    top: 0px;
+}
+.profile_name_img.edit_ico.read_only.header_block>.empty_photo_letters{
+    top: 0px;
+    font-size: 15px;
+    line-height: 32px;
+    color: rgba(17, 58, 113, 0.5);
+}
+.comment .profile_name_img.edit_ico.read_only.header_block>.empty_photo_letters{
+    top: 2px;
+}
+
+.profile_name_img:hover>.empty_photo_letters{
+    display:none;
+}
+.profile_name_img.d_tc.val_mid.read_only{
+    background-size: cover;
+}
+.profile_name_img.edit_ico{
+    background-size: cover;
+}
+.profile_name_img.d_tc.val_mid{
+    background-color: #DDE1ED;
+        box-shadow: 1px 1px 2px 1px #C8CACF;
+    display: inline-block;
+}
+.profile_name_img.read_only:hover>.empty_photo_letters{
+    display:block;
+}
+.chatsendbtn{
+    margin-top:5px;
+}
+.profile_name_img {
+    position: relative;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 88px;
+    height: 88px;
+    cursor: pointer;
+    image-rendering: auto;
+}
+.empty_photo_letters{
+    width: 100%;
+    text-align: center;
+    font-size: 27px;
+    color: #B6BCCE;
+    top: 30px;
+    position: absolute;
+}
+.profile_name_img.edit_ico.read_only.header_block>.empty_photo_letters{
+    font-size: 15px;
+    line-height: 32px;
+    color: rgba(17, 58, 113, 0.5);
+}
+.profile_name_img.edit_ico {
+    background-size: cover;
+}
+.profile_name_img.edit_ico {
+    background: #DDE1ED;
+}
+.profile_name_img.edit_ico.read_only.header_block>.not_empty_photo_letters{
+    background-size: cover;
+    width: 40px;
+    height: 40px;
+}
+.attentionBadge{
+    background: #B74635!important;
+    line-height: 17px;
+    border-radius: 50%;
+    width: 17px;
+    height: 17px;
+    line-height: 17px;
+    padding: 0px;    
+}
+.ace-nav>li>a>.badge{
+    width: 17px;
+    height: 17px;
+    line-height: 17px;
+    padding: 0px;
+}
