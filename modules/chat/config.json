@@ -1,0 +1,22 @@
+{
+  "id": "chat",
+  "class_name": "Chat",
+  "title": "Общение",
+  "icon": "fa-comments",
+  "places":{
+      "topmenu"   : true
+  },
+  "is_enabled": true,
+  "permissions" : [
+      "IsTechSupportMember",
+  		"IsTechDoc"
+  ],
+  "depends":[
+    "socket","permissions"
+  ],
+  "optional":[
+    "breadcrumbs","context"
+  ],
+  "sort_index":1,
+  "initial_load":true
+}

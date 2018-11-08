@@ -1,0 +1,137 @@
+div.lf-message-manual a,div.lf-message-attach a{
+  display: block;
+  text-decoration: none;
+  padding: 5px;
+}
+div.lf-message-manual,div.lf-message-attach{
+  padding: 5px;
+  border:1px solid #EFEFEF;
+  margin-bottom: 2px;
+}
+
+.livefeed{
+  width:50%;
+  height: 100%;
+}
+#newFeedModal .editor-toolbar,#newFeedModal .editor-statusbar{
+  display: none;
+}
+.questionAnswers table tr td{
+    vertical-align: middle;
+}
+.questionTextView{
+  width: 100%;
+  font-size: 15px;
+  line-height: 20px;
+  color: gray;
+}
+.questionButtons{
+  width: 100%;
+  position: relative;
+  padding: 10px;
+}
+.timeline-container.highlight .widget-main .lf-message{
+    background-color: #FEF0DE!important;
+    -webkit-transition: background-color 500ms linear;
+    -ms-transition: background-color 500ms linear;
+    transition: background-color 500ms linear;
+}
+
+.widget-box.real-transparent,.timeline-item:nth-child(even) .widget-box.real-transparent, .widget-box.real-transparent .widget-header, .widget-box.real-transparent .widget-main,.widget-box.real-transparent .lf-message{
+  background-color: transparent;
+  border: 0px;
+  background: none;
+  -webkit-transition: background-color 500ms linear;
+  -ms-transition: background-color 500ms linear;
+  transition: background-color 500ms linear;
+}
+  
+.questionVariantView{
+  width: 100%;
+  font-size: 13px;
+  line-height: 20px;
+  padding: 10px;
+  color: gray;
+}
+div.lf-message{
+    margin-top: 5px;
+    padding-top: 5px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-top:1px solid #EFEFEF;
+    line-height: 20px;
+}
+.questionBoxView{
+  padding:10px;
+  margin: 10px;
+  border:1px solid #efefef;
+}
+a.lfconfirm{
+    h1eight: 37px;
+    padding: 3px;
+    position: static;
+
+}
+.timeline-items .action-buttons{
+    padding: 10px;
+}
+.timeline-items .widget-box{
+  max-width: 90%;
+}
+.confirm-label{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background: #62A8D1;
+    padding: 5px;
+    color: white;
+}
+.timeline-indicator.ace-icon.fa.btn.no-hover{
+    opacity: 1;
+    border-radius: 100%;
+    display: inline-block;
+    font-size: 16px!important;
+    height: 36px;
+    line-height: 30px!important;
+    width: 36px;
+    text-align: center;
+    text-shadow: none!important;
+    padding: 0;
+    cursor: default;
+    border: 3px solid #FFF!important;
+}
+.timeline-items .widget-box.transparent{
+  margin-left:50px;
+}
+a.livefeed.settings{
+  color:gray;
+  border-bottom: 1px dashed gray;
+}
+a.livefeed.settings:hover{
+  color:orange;
+}
+
+.widget-title.gray{
+  color: gray;
+}
+.action-buttons.gray-icons a{
+  color:#CFCFCF;
+}
+.action-buttons.gray-icons a:hover{
+  color:gray;
+}
+.action_link.gray{
+    color: #CFCFCF;
+    font-size: 15px;
+    position: absolute;
+    right: 100px;
+    top: 10px;
+    text-decoration: underline;
+    z-index: 1;
+}
+.action_link.gray:hover{
+  color:gray;
+}
+.action_link_container{
+  position: relative;
+}

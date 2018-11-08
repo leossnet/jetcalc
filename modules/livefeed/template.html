@@ -1,0 +1,315 @@
+<script id="hpbutton_livefeed" type="text/html">
+<!--  <div class="btn btn-app btn-xs btn-success ace-settings-btn" data-bind='click:MLiveFeed.StartNewMessage,Permit:{Id:"IsFeedWriter",Type:"Task"}'>
+    <i class="ace-icon fa fa-plus bigger-130"></i>
+  </div>
+-->
+</script>
+
+<script id="livefeed_topmenu" type="text/html">
+  <!-- ko with:MLiveFeed.Feeds() -->
+    <!-- ko ifnot:_.isEmpty($data.urgent) -->
+        <li class="purple dropdown-modal">
+          <a  data-bind='click:MLiveFeed.Read'>
+            <i class="ace-icon fa fa-bell icon-animated-bell"></i>
+              <span class="badge badge-important" data-bind='text:$data.urgent.length'></span>
+          </a>
+        </li>
+    <!-- /ko -->
+  <!-- /ko -->
+</script>
+
+<script id="feed_view" type="text/html">
+  <div class="widget-box real-transparent" >
+      <div class="widget-header widget-header-small">
+        <h5 class="widget-title gray ">
+          <!-- ko with:$data.CodeUser -->
+            <!-- ko template:{name:'catalogue',data:{model:'user',id:$data}} --><!-- /ko -->
+          <!-- /ko -->
+          <span class="action-buttons gray-icons" data-bind='Permit:{Id:"IsFeedWriter",Type:"Task"}'>
+              <a href="" data-bind='title:Lang.Tr("livefeed","editmessage"), click:MLiveFeed.EditMessage'><i class="ace-icon fa fa-pencil"></i></a>
+              <a href="" data-bind='title:Lang.Tr("livefeed","deletemessage"),click:MLiveFeed.DeleteMessage'><i class="ace-icon fa fa-times"></i></a>
+          </span>
+        </h5>
+        <div>
+          <!-- ko foreach:$data.CodeRole -->
+          <span class='label label-sm  label-pink arrowed-right unclickable' >
+            <!-- ko template:{name:'catalogue',data:{model:'role',id:$data}} --><!-- /ko -->
+          </span>
+          <!-- /ko -->
+          <!-- ko foreach:$data.CodeGrp -->
+          <span class='label label-sm  label-danger arrowed-right unclickable' >
+            <!-- ko template:{name:'catalogue',data:{model:'grp',id:$data}} --><!-- /ko -->
+          </span>
+          <!-- /ko -->
+          <!-- ko if:$data.NeedConfirm -->
+          <span class='label label-sm  label-warning arrowed-in' data-bind='click:MLiveFeed.UsersToShow'>
+            <span data-bind='model:"livefeed",lang:"readed"'></span> 
+            <span data-bind='text:$data.UsersConfirmed.length+" / "+$data.UsersToShow.length'></span>
+          </span>
+          <!-- /ko -->
+        </div>
+      </div>
+      <div class="widget-body">
+        <div class="widget-main">
+          <div class='lf-message' data-bind='html:$data.HTML'></div>     
+            <!-- ko if:ModuleManager.IsInstalled("Documentation") -->     
+              <!-- ko ifnot:_.isEmpty($data.CodeManualPage) -->
+                  <div class='lf-message-manual' data-bind="foreach:$data.CodeManualPage">
+                      <a data-bind='click:MDocumentation.ShowByCode' >
+                        <i class='fa fa-icon fa-bookmark orange'></i> 
+                        <!-- ko template:{name:'catalogue',data:{model:'docpage',id:$data}} --><!-- /ko -->
+                      </a>
+                  </div>                
+              <!-- /ko -->
+            <!-- /ko -->
+            <!-- ko if:ModuleManager.IsInstalled("FileManager") -->     
+              <!-- ko ifnot:_.isEmpty($data.CodeAttach) -->
+                  <div class='lf-message-attach' data-bind="foreach:$data.CodeAttach">
+                      <a data-bind='click:MFileManager.ShowPDFByCode' >
+                          <i class='fa fa-icon fa-paperclip orange'></i> 
+                          <!-- ko template:{name:'catalogue',data:{model:'file',id:$data}} --><!-- /ko -->
+                      </a>
+                  </div>                
+              <!-- /ko -->
+            <!-- /ko -->              
+          <span>
+          <!-- ko if:$data.NeedConfirm -->
+            <!-- ko if:$data.UsersConfirmed.indexOf(MSite.Me().CodeUser())==-1 -->
+            <a type="button"  class="btn btn-white btn-success lfconfirm" data-bind='click:MLiveFeed.ConfirmRead'><i class="ace-icon fa fa-check"></i> <span data-bind='model:"livefeed",lang:"confirmreaded"'></span></a>
+            <!-- /ko -->
+          <!-- /ko -->
+
+          </span>
+          <!-- /ko -->
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script id="app_livefeed" type="text/html">
+  <!-- ko with:MLiveFeed.Feeds -->
+  <div class="col-xs-12 col-sm-10 action_link_container" data-bind='click:MLiveFeed.StartNewMessage,Permit:{Id:"IsFeedWriter",Type:"Task"}'>
+      <a class='action_link gray' data-bind='lang:"addmessage"'></a>
+  </div>
+    <div class='row'>
+      <div class='col-xs-12 col-sm-10' style='margin-top: 10px;'>
+        <!-- ko foreach:_.keys($data) -->
+            <!-- ko if:$parent[$data].length -->
+            <div class="timeline-container" data-bind='css:(MLiveFeed.HighLight() &&  $data=="urgent") ? "highlight":""'>
+                <div class="timeline-label">
+                  <span class="label arrowed-in-right label-lg" data-bind="css: ($data=='urgent') ? 'label-warning' : 'label-primary ' ">
+                    <!-- ko if:["Today","Yesterday","Tomorrow","urgent"].indexOf($data)!=-1 -->
+                      <span data-bind='model:"livefeed",lang:$data'></span>
+                    <!-- /ko -->
+                    <!-- ko ifnot:["Today","Yesterday","Tomorrow","urgent"].indexOf($data)!=-1 -->
+                      <span data-bind='text:$data'></span>
+                    <!-- /ko -->
+                  </span>
+                </div>
+                <div class="timeline-items" data-bind='foreach:$parent[$data]'> 
+                  <div class="timeline-item clearfix">
+                    <div class="timeline-info">
+                      <i class="timeline-indicator ace-icon btn btn-default fa no-hover" data-bind='css:MLiveFeed.Icon($data.MessageType)'></i>
+                      <span class="label label-default label-sm" data-bind='moment:{date:$data.DateAdded,format:"HH:mm"}'></span>
+                    </div>
+                  <!-- ko template:'feed_view' --><!-- /ko -->
+                </div>
+              </div>
+            </div>
+          <!-- /ko -->    
+        <!-- /ko -->    
+      </div>
+    </div>
+  <!-- /ko -->    
+</script>
+
+
+<div class="modal fade" id="newFeedModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" style='width:100%;height:90%;'>
+        <!-- ko if:MLiveFeed.IsWriting() -->
+          <div data-bind='with:MLiveFeed.NewFeed'>
+              <div class="page-header" >
+                <h1><i class='timeline-indicator ace-icon fa btn no-hover green' data-bind='css:MLiveFeed.Icon()'></i> <span data-bind='model:"livefeed",lang:"feeds"'></span></h1>
+              </div>
+              <!-- ko with:MLiveFeed -->
+                <!-- ko template: 'inline_error' --><!-- /ko -->
+              <!-- /ko -->
+              <div class="profile-user-info profile-user-info-striped"  style='padding:10px;'>
+                    <div class="profile-info-row">
+                      <div class="profile-info-name" data-bind='model:"livefeed",lang:"MarkDown"'></div>
+                      <div class="profile-info-value">
+                        <div class="wysiwyg-toolbar btn-toolbar toolH" >
+                          <div class="btn-group" >
+                            <!-- ko with:MdeEditor.controls -->
+                            <div class="btn-group" data-bind='if:$data.length'>
+                            <label class='btn btn-sm btn-primary btn-white ' data-bind="title:Lang.Tr('livefeed','insertimage')">
+                              <input type="file" data-bind="documentationImage: {}" style='display:none;'/>
+                              <i class="ace-icon fa fa-image" ></i>
+                            </label>
+                            <label class='btn btn-sm btn-primary btn-white ' data-bind="title:Lang.Tr('livefeed','inserttable')">
+                              <i class="ace-icon fa fa-table"  data-bind='click:MdeEditor.insertTable'></i>
+                            </label>
+                            <!-- ko foreach:$data -->
+                              <a class='btn btn-sm btn-primary btn-white ' data-bind="title:$data.title, click:$data.action.bind(null,MdeEditor.editor)">
+                               <i class="ace-icon " data-bind='css:$data.className'></i>
+                              </a>
+                            <!-- /ko -->
+                            </div>
+                            <!-- /ko -->
+                          </div>        
+                        </div>                      
+                        <textarea data-bind="value:$data.MarkDown,simplemde:$data.MarkDown" style="display: none;"></textarea>           
+                      </div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-name"  data-bind='model:"livefeed",lang:"MessageType"'></div>
+                        <div class="profile-info-value">
+                        <select data-bind="value:$data.MessageType, options:['Critical','Announcement','Message'], optionsText:Lang.Tr"></select>
+                        </div>
+                    </div>
+                    <div class="profile-info-row">
+                      <div class="profile-info-name" data-bind='model:"livefeed",lang:"CodeGrp"'></div>
+                      <div class="profile-info-value">
+                      <select multiple="multiple" data-bind="valueAllowUnset: true, selectedOptions:$data.CodeGrp, optionsText:'name',optionsValue:'id',modelName:'grp',selectize_tags:{plugins: ['remove_button']}" class="selectized" tabindex="-1" style="display: none;"></select>
+                      </div>
+                    </div>
+                    <div class="profile-info-row">
+                      <div class="profile-info-name" data-bind='model:"livefeed",lang:"CodeRole"'></div>
+                      <div class="profile-info-value">
+                         <select multiple="multiple" data-bind="valueAllowUnset: true, selectedOptions:$data.CodeRole, optionsText:'name',optionsValue:'id', modelName:'role', selectize_tags:{plugins: ['remove_button']}" class="selectized" tabindex="-1" style="display: none;"></select>
+                      </div>
+                    </div>
+                    <!-- ko if:ModuleManager.IsInstalled("Documentation") -->
+                    <div class="profile-info-row">
+                      <div class="profile-info-name" data-bind='model:"livefeed",lang:"CodeManualPage"'></div>
+                      <div class="profile-info-value">
+                         <select multiple="multiple" data-bind="valueAllowUnset: true, selectedOptions:$data.CodeManualPage, optionsText:'name',optionsValue:'id', modelName:'docpage', selectize_tags:{plugins: ['remove_button']}" class="selectized" tabindex="-1" style="display: none;"></select>                       
+                      </div>
+                    </div>                   
+                    <!-- /ko -->
+                    <!-- ko if:ModuleManager.IsInstalled("FileManager") -->
+                    <div class="profile-info-row">
+                      <div class="profile-info-name" data-bind='model:"livefeed",lang:"CodeAttach"'></div>
+                      <div class="profile-info-value">
+                         <select multiple="multiple" data-bind="valueAllowUnset: true, selectedOptions:$data.CodeAttach, optionsText:'name',optionsValue:'id', modelName:'file', selectize_tags:{plugins: ['remove_button']}" class="selectized" tabindex="-1" style="display: none;"></select>                       
+                      </div>
+                    </div>
+                    <!-- /ko -->
+                    <div class="profile-info-row">
+                      <div class="profile-info-name" data-bind="model:'livefeed',lang:'NeedConfirm'"></div>
+                      <div class="profile-info-value">
+                          <label>
+                            <input name="form-field-checkbox" type="checkbox" class="ace" data-bind='checked:$data.NeedConfirm'>
+                            <span class="lbl"></span>
+                          </label>
+                      </div>
+                    </div>
+                    <div class="profile-info-row">
+                      <div class="profile-info-name" data-bind='model:"livefeed",lang:"check"'></div>
+                      <div class="profile-info-value">
+                          <label>
+                            <input name="form-field-checkbox" type="checkbox" class="ace" data-bind='checked:$data.HasQuestion'>
+                            <span class="lbl"></span>
+                          </label>
+                      </div>
+                    </div>
+                    <!-- ko if:$data.HasQuestion() -->
+                    <div class="profile-info-row">
+                      <div class="profile-info-name" data-bind='model:"livefeed",lang:"question"'></div>
+                      <div class="profile-info-value">
+                            <div class="questionBox">
+                              <div class="questionText">
+                                <textarea class="autosize-transition form-control" data-bind="value:$data.Question"></textarea>
+                              </div>
+                              <div class="questionAnswers">
+                                <table class="table table-striped table-bordered table-hover dataTable no-footer small-paddings" style='margin-top:10px;'>
+                                  <tbody data-bind='foreach:$data.Options()'>
+                                      <tr><td><label>
+                                            <input name="form-field-checkbox" type="checkbox" class="ace" data-bind='checked:$parent.Correct()[$index()]' />
+                                            <span class="lbl"></span>
+                                        </label></td><td>
+                                            <input type="text" class="text_field input-xxlarge" data-bind="value:$parent.Options()[$index()]" />        
+                                        </td>
+                                        <td >
+                                           <a data-bind="click:MLiveFeed.RemoveVariant.bind($parent,$index())"><i class="fa fa-icon fa-times"></i></a>        
+                                        </td></tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          <button type="button" class="btn btn-white btn-success btn-permit-add float-right no-border" style="padding:2px 4px 2px 4px;" data-bind="click:MLiveFeed.AddVariant,model:'livefeed',lang:'addoption'"></button>
+                      </div>
+                    </div>
+                    <!-- /ko -->
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"></div>
+                      <div class="profile-info-value">
+                        <div style="margin:20px;text-align: right;">
+                          <button class="btn btn-white btn-success" data-bind="click:MLiveFeed.Publish"><i class="ace-icon fa fa-floppy-o bigger-120 green"></i><span data-bind='model:"livefeed",lang:"apply"'></span></button>
+                        </div>
+                      </div>
+                    </div>
+              </div>
+          </div>
+        <!-- /ko -->
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="feedQuestionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" style='width:100%;height:90%;padding: 5px;'>
+      <div class="well" style='margin: 10px;' data-bind='model:"livefeed",lang:"inattentivemessage"'>
+      </div>
+      <div class="questionBoxView" data-bind='with:MLiveFeed.QuestionFeed'>
+        <div class="questionText">
+          <div class='questionTextView' data-bind="html:$data.Question"></div>
+        </div>
+        <div class="questionAnswers">
+          <table class="table table-striped table-bordered table-hover dataTable no-footer" style='margin-top:10px;'>
+          <tbody data-bind='foreach:$data.Options()'>
+            <tr><td><label>
+              <input name="form-field-checkbox" type="checkbox" class="ace" data-bind='checked:MLiveFeed.UserAnswer()[$index()]' />
+              <span class="lbl"></span>
+            </label></td><td>
+              <span class="questionVariantView" data-bind="text:$parent.Options()[$index()]" ></span>        
+            </td>
+          </tr>
+          </tbody>
+          </table>
+        </div>
+      <!-- ko with:MLiveFeed -->
+        <!-- ko template: 'inline_error' --><!-- /ko -->
+      <!-- /ko -->
+      </div>
+      <div class='questionButtons'>
+          <button type="button"  class="btn btn-white btn-success pull-right" data-bind='click:MLiveFeed.Answer'><i class="ace-icon fa fa-check"></i> <span data-bind='model:"livefeed",lang:"answerquestion"'></span></button>
+          <button type="button"  class="btn btn-white btn-default pull-left" data-bind='click:MLiveFeed.PostPone'> <i class="ace-icon fa fa-times red2"></i> <span data-bind='model:"livefeed",lang:"postpone"'></span></button>
+     </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="feedApproversList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" style='width:100%;height:90%;padding: 5px;'>
+      <!-- ko with:MLiveFeed.ShowUserList -->
+      <table class="table table-striped table-bordered table-hover dataTable no-footer small-paddings" style='margin-top:10px;'>
+        <tbody data-bind='foreach:$data.UsersToShow'>
+          <tr><td><label>
+              <input name="form-field-checkbox" type="checkbox" readonly="readonly" class="ace" data-bind='value:$data,checked:$parent.UsersConfirmed' />
+              <span class="lbl"></span>
+            </label></td><td>
+              <span >
+                <!-- ko template:{name:'catalogue',data:{model:'user',id:$data}} --><!-- /ko -->
+              </span>        
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- /ko -->
+    </div>
+  </div>
+</div>

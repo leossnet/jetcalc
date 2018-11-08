@@ -1,0 +1,57 @@
+.vertical-stack > div {
+    border: 1px solid black;
+    font-size: 10pt;
+    width: 100px;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+.vertical-stack > div.selected-item {
+    border-style: dashed;
+}
+div .chat.channels.onlineusers{
+    border-top-color:#B74635;
+}
+div.session_info{
+    width: 100%;
+    border-bottom: 1px solid #CFCFCF;
+}
+td div.session_info:last-child{
+    border-bottom: 0px;   
+}
+table.usersonline tr{
+    height: 50px;
+}
+table.usersonline tr td{
+    vertical-align: middle;
+}
+table.usersonline div.profile_name_img.edit_ico.read_only.header_block{
+    margin-top: 5px;
+}
+div.chat.channels.onlineusers{
+    padding-top: 50px;
+    max-height: 600px;
+    min-height:300px;
+    overflow-y: auto;
+    border-bottom: 1px solid #CFCFCF;
+}
+.as_table{
+    display:table;
+}
+.as_table_row{
+    display:table-row;
+    min-height: 25px;
+}
+.as_table_cell{
+    display:table-cell;
+    padding: 1px;
+    border:1px solid #F5F5F5;
+}

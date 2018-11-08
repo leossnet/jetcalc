@@ -1,0 +1,13 @@
+{
+	"chat":"Общение",
+	"IsTechDoc":"Канал Документации(упр)",
+	"choosechannel":"Выбор канала",
+	"IsTechSupportMember":"Канал ТехПоддержки(упр)",
+	"onlineusers":"Пользователи в сети",
+	"onlineusers":"Пользователи в сети",
+	"onlineusers":"Пользователи в сети",
+	"IsUserActivityViewer":"Активность пользователей",
+	"techsupport":"Тех. Поддержка",
+	"orgchannel":"Общение внутри организации",
+	"docchannel":"Вопросы по документу"
+}

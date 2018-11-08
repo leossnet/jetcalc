@@ -1,0 +1,15 @@
+{
+  "id": "onlineusers",
+  "class_name": "OnlineUsers",
+  "title": "Пользователи онлайн",
+  "icon": "fa-user",
+  "places":{
+      "topmenu"   : true
+  },
+  "is_enabled": true,
+  "permissions" : [
+  		"IsUserActivityViewer"
+  ],
+  "sort_index":2,
+  "initial_load":true
+}
