@@ -1927,7 +1927,27 @@ module.exports = {
                 "type": Boolean,
                 "default": false,
                 "view": "none"
-            },
+			},
+            "IndexProd": {
+                "type": Number,
+                "default": 1,
+                "view": "none"
+            },			
+            "IndexOrg": {
+                "type": Number,
+                "default": 2,
+                "view": "none"
+            },			
+            "IndexDogovor": {
+                "type": Number,
+                "default": 3,
+                "view": "none"
+            },			
+            "IndexDogovorArt": {
+                "type": Number,
+                "default": 4,
+                "view": "none"
+            },			
             "IsShowMeasure": {
                 "type": Boolean,
                 "default": false,
