@@ -1928,22 +1928,22 @@ module.exports = {
                 "default": false,
                 "view": "none"
 			},
-            "IndexProd": {
+            "LevelProd": {
                 "type": Number,
                 "default": 1,
                 "view": "none"
             },			
-            "IndexOrg": {
+            "LevelOrg": {
                 "type": Number,
                 "default": 2,
                 "view": "none"
             },			
-            "IndexDogovor": {
+            "LevelDogovor": {
                 "type": Number,
                 "default": 3,
                 "view": "none"
             },			
-            "IndexDogovorArt": {
+            "LevelDogovorArt": {
                 "type": Number,
                 "default": 4,
                 "view": "none"
