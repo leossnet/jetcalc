@@ -730,11 +730,11 @@ module.exports = {
                 "index": true,
                 "unique": true
             },
-            "CodeCol": {
+            "CodeColsetCol": {
                 "type": String,
                 "default": "",
                 "view": "none",
-                "refmodel": "col",
+                "refmodel": "colsetcol",
                 "index": true,
                 "extended": true
             },
