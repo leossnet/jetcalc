@@ -712,7 +712,42 @@ module.exports = {
                 "extended": true
             }
         }
-    },
+	},
+    "colsetcoltag": {
+        "tablename": "[link].[ColsetColTags]",
+        "menuplace": "Link",
+        "fields": {
+            "Value": {
+                "type": String,
+                "default": null,
+                "view": "none"
+            },
+            "CodeColsetColTag": {
+                "type": String,
+                "default": null,
+                "view": "all",
+                "role": "code",
+                "index": true,
+                "unique": true
+            },
+            "CodeCol": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "col",
+                "index": true,
+                "extended": true
+            },
+            "CodeTag": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "tag",
+                "index": true,
+                "extended": true
+            }
+        }
+    },	
     "valid": {
         "tablename": "[spr].[Valids]",
         "menuplace": "Service",
