@@ -81,6 +81,7 @@ var MAFFormula = (new function(){
 
 	self.AFCellRender = function(instance, td, row, col, prop, value, CellInfo){
 		if (CellInfo.IsAFFormula && CellInfo.IsPrimary){
+			CellInfo.IsEditablePrimary = false;
 			if (CellInfo.IsCorrect){
 				$(td).addClass("IsAFCorrect");
 			} else {
