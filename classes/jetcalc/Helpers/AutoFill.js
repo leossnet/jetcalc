@@ -186,7 +186,6 @@ var AutoFill = (new function() {
     self.ChainCount = 1;
 
     self.AFChain = function(Cx, done) {
-        return done();
         mongoose.model("docrelation").find({
             CodeDocSourse: Cx.CodeDoc
         }, "-_id CodeDocTarget").isactive().lean().exec(function(err, RelatedDocs) {
