@@ -21,12 +21,14 @@ var ModelEdit = function(CodeUser,IsNew){
 		console.log("Will save ",ModelName,Model," === Will Save");
 
 		M.findOne(Q).isactive().exec(function(err,Found){
+			if (err) return done(err);
 			if (!Found || IsNew) Found = new M(Model);
 			var Fields = _.intersection(_.keys(Model),CFG.EditFields);
 			Fields.forEach(function(F){
 				Found[F] = Model[F];
 			})
 			Found.save(self.CodeUser,function(err){
+				if (err) return done(err);
 				self.BaseModel = Found;
 				return done(err);
 			})			
@@ -86,7 +88,9 @@ var ModelEdit = function(CodeUser,IsNew){
 	self.SyncLinks = function(ModelName, Query, Links, done){
 		var M = mongoose.model(ModelName), CFG = M.cfg(), EditFields = CFG.EditFields, ToSave = [], ToRemove = [];
 		Links = Links || [];
+		console.log("Existed search ",Query);
 		M.find(Query).isactive().exec(function(err,Existed){
+			if (err) return done(err);
 			var IndexedOld = {};
 			Existed.forEach(function(Ex){
 				IndexedOld[Ex._id+""] = Ex;
@@ -110,13 +114,18 @@ var ModelEdit = function(CodeUser,IsNew){
 			for (var Key in IndexedOld){
 				ToRemove.push(IndexedOld[Key]);
 			}
+			console.log("To Remove",ToRemove);
 			async.each(ToRemove,function(TR,cb1){
 				TR.remove(self.CodeUser,function(err){
 					cb1(err);
 				});
 			},function(err){
+				if (err) return done(err);
+				console.log("To Save",ToSave);
 				async.each(ToSave,function(TR,cb2){
+					console.log("Saving ...",TR);
 					TR.save(self.CodeUser,function(err){
+						console.log(TR,err);
 						if (err) {
 							console.log("Save error ",err);
 							return done(err);
@@ -130,9 +139,7 @@ var ModelEdit = function(CodeUser,IsNew){
 
 	self.SaveLinks = function(ModelName, Links, done){
 		var Q = {};
-
 		console.log("Base Model ",self.BaseModel,"======");
-
 		Q[self.BaseModelCode] = self.BaseModel[self.BaseModelCode];
 		console.log("Save links ",Q,Links,"=== Save links");
 		self.SyncLinks(ModelName, Q, Links, done);
