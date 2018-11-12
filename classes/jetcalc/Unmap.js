@@ -140,6 +140,7 @@ var Unmaper = function(){
 			if (_.isEmpty(self.LoadedRows[Ind])) ToLoad.push(Ind);	
 		})
 		ToLoad = _.uniq(ToLoad);
+		console.log("!!!!!!!!!!!!!! Will load",ToLoad);
 		if (_.isEmpty(ToLoad)) return done();
 		async.each(ToLoad,function(CxP,cb){
 			var Arr = CxP.split("!");
@@ -158,7 +159,7 @@ var Unmaper = function(){
 
 
 	self.PrepareFormula = function(Formula,Cell){
-		var d = false;
+		var d = true;
 		if (Formula==0 || _.isEmpty(Formula)) return Formula;
 		d && console.log("1",Formula);
 		Formula  = (Formula+"");
@@ -169,7 +170,11 @@ var Unmaper = function(){
 		d && console.log("4",Formula);
 		Formula = self.RemoveTags((Formula+''),Cell);
 		d && console.log("5",Formula);		
-		Formula = self.SimplifyFormula((Formula+''),Cell);
+		try{
+			Formula = self.SimplifyFormula((Formula+''),Cell);
+		} catch(e){
+			console.log("Simplify Error ",e);
+		}
 		d && console.log("6",Formula);		
 		Formula = self.UpdateModifiers((Formula+''),Cell);
 		d && console.log("7",Formula);
