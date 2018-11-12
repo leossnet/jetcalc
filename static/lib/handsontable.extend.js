@@ -108,6 +108,10 @@
                     }
                 })
             }
+            if (CellInfo.IsAFFormula && CellInfo.IsEditablePrimary){
+                CellInfo.readOnly = true;
+                CellInfo.IsEditablePrimary = false;
+            }
             if (CellInfo.IsEditablePrimary && !CellInfo.IsLocked) {
                 CellInfo.readOnly = false;
             }
