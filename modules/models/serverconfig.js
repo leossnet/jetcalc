@@ -712,7 +712,42 @@ module.exports = {
                 "extended": true
             }
         }
-    },
+	},
+    "colsetcoltag": {
+        "tablename": "[link].[ColsetColTags]",
+        "menuplace": "Link",
+        "fields": {
+            "Value": {
+                "type": String,
+                "default": null,
+                "view": "none"
+            },
+            "CodeColsetColTag": {
+                "type": String,
+                "default": null,
+                "view": "all",
+                "role": "code",
+                "index": true,
+                "unique": true
+            },
+            "CodeColsetCol": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "colsetcol",
+                "index": true,
+                "extended": true
+            },
+            "CodeTag": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "tag",
+                "index": true,
+                "extended": true
+            }
+        }
+    },	
     "valid": {
         "tablename": "[spr].[Valids]",
         "menuplace": "Service",
@@ -1927,7 +1962,27 @@ module.exports = {
                 "type": Boolean,
                 "default": false,
                 "view": "none"
-            },
+			},
+            "LevelProd": {
+                "type": Number,
+                "default": 1,
+                "view": "none"
+            },			
+            "LevelOrg": {
+                "type": Number,
+                "default": 2,
+                "view": "none"
+            },			
+            "LevelDogovor": {
+                "type": Number,
+                "default": 3,
+                "view": "none"
+            },			
+            "LevelDogovorArt": {
+                "type": Number,
+                "default": 4,
+                "view": "none"
+            },			
             "IsShowMeasure": {
                 "type": Boolean,
                 "default": false,
