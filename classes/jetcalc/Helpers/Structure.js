@@ -149,10 +149,20 @@ var Simple = (new function(){
             		".Y",Col.Year,
             		"#",CodeObj,"?"
             	].join("");
+
+            	var setAfFormula = "";
+            	if (Col.IsAfFormula && Row.IsAFFormula){
+            		setAfFormula = Row.AFFormula;
+            	} else if (Col.IsAfFormula){
+            		setAfFormula = Col.AFFormula;
+            	} else if (Row.IsAfFormula){
+            		setAfFormula = Row.AFFormula;
+            	}
+
                 var CellInfo = {
                     Cell:CellName,
                     IsAFFormula:Col.IsAfFormula || Row.IsAfFormula,
-                    AfFormula:(Col.IsAfFormula) ? Col.AfFormula:(Row.IsAfFormula)?Row.AfFormula:"",
+                    AfFormula:setAfFormula,
                     IsControlPoint:(Col.IsControlPoint && Row.IsControlPoint),
                     IsPrimary:(!Col.IsFormula && !Row.IsFormula && !Row.IsSum && (Row.rgt-Row.lft)==1),
                     IsSum:Row.IsSum,
