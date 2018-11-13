@@ -152,7 +152,7 @@ var Simple = (new function(){
                 var CellInfo = {
                     Cell:CellName,
                     IsAFFormula:Col.IsAfFormula || Row.IsAfFormula,
-                    AfFormula:(Row.IsAfFormula)?Row.AfFormula:(Col.IsAfFormula) ? Col.AfFormula:'',
+                    AfFormula:(Col.IsAfFormula) ? Col.AfFormula:(Row.IsAfFormula)?Row.AfFormula:"",
                     IsControlPoint:(Col.IsControlPoint && Row.IsControlPoint),
                     IsPrimary:(!Col.IsFormula && !Row.IsFormula && !Row.IsSum && (Row.rgt-Row.lft)==1),
                     IsSum:Row.IsSum,
