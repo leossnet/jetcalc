@@ -152,11 +152,11 @@ var Simple = (new function(){
 
             	var setAfFormula = "";
             	if (Col.IsAfFormula && Row.IsAFFormula){
-            		setAfFormula = Row.AFFormula;
+            		setAfFormula = Row.AfFormula;
             	} else if (Col.IsAfFormula){
-            		setAfFormula = Col.AFFormula;
+            		setAfFormula = Col.AfFormula;
             	} else if (Row.IsAfFormula){
-            		setAfFormula = Row.AFFormula;
+            		setAfFormula = Row.AfFormula;
             	}
 
                 var CellInfo = {
