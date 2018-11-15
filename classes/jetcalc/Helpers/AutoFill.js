@@ -141,6 +141,8 @@ var AutoFill = (new function() {
 
     }
 
+
+
     self.UpdateAll = function(Cx, done) {
         var DocHelper = require(__base + "classes/jetcalc/Helpers/Doc.js");
         if (_.isEmpty(Cx.FirstPass)) Cx.FirstPass = true;
@@ -169,6 +171,7 @@ var AutoFill = (new function() {
                     });
                 }, next)
             }, function(err) {
+            	return done(err);
                 self.ChainCount = 1;
                 self.AFChain(Cx, function(err) {
                     if (err) return done(err);
@@ -216,9 +219,7 @@ var AutoFill = (new function() {
 
 
     self.MaxRound = function(V) {
-        var dig = 10,
-            r = Math.pow(dig, dig);
-        return Math.round(V * r) / r;
+        return Number(V.toFixed(8));
     }
 
     self.LoadPrimaries = function(Cells, done) {
