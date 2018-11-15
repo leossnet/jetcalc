@@ -19,31 +19,25 @@
 	},
 	"col": {
 		"TableFields": [
-			"IsFormula",
-			"CodeCol",
-			"NameCol"
-		],
-		"EditFields": [
-			"IsFormula",
 			"CodeCol",
 			"NameCol",
-			"Formula",
+			"IsFormula"
+		],
+		"EditFields": [
+			"CodeCol",
+			"NameCol",
 			"SNameCol",
 			"Comment",
+			"IsFormula",
+			"Formula",
 			"DoSum",
 			"NoCalcSum",
 			"NoCalcSumHard",
-			"DoExRef",
-			"AsAgFormula",
-			"IsAgFormula",
-			"AgFormula",
 			"IsVirtual",
 			"CodeValuta"
 		],
 		"Links": [
-			"coltag",
-			"colrelation",
-			"rowcoloption"
+			"coltag"
 		]
 	},
 	"period": {
@@ -267,6 +261,8 @@
 			"SNameObj",
 			"ModelNameObj",
 			"ModelSNameObj",
+			"IsFormula",
+			"Formula",
 			"IndexObj",
 			"Comment",
 			"DateBegin",
