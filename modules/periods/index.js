@@ -119,6 +119,8 @@ var MPeriods = (new function () {
                     target_model: 'periodautofill',
                     source_index_field_name: 'Idx',
                     source_model_field_name: 'CodeSourcePeriod',
+                    get_fields:["-_id","CodePeriod","NamePeriod"].join(" "),
+                    code_source_model: 'CodePeriod',
                     get_sort: {
                         MCount: 1,
                         BeginDate: 1
@@ -138,6 +140,8 @@ var MPeriods = (new function () {
                     source_model: 'period',
                     target_model: 'reportperiods',
                     source_index_field_name: 'IndexReportPeriod',
+                    source_model_field_name: 'CodePeriod',
+                    get_fields:["-_id","CodePeriod","NamePeriod"].join(" "),
                     get_sort: {
                         MCount: 1,
                         BeginDate: 1

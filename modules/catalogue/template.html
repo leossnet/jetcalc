@@ -510,7 +510,7 @@
                     <td data-bind='text:$data[ModelConnectorEdit.name_source_model()]'></td>
                     <td>
                         <table class="table openperiods table-striped table-bordered table-hover dataTable no-footer" style='min-width: 600px;'>
-                            <thead data-bind='if:ModelConnectorEdit.LinkModels()[$data[ModelConnectorEdit.code_source_model()]()]().length'>
+                            <thead data-bind='if:_.isFunction($data[ModelConnectorEdit.source_model_field_name()]) && ModelConnectorEdit.LinkModels()[$data[ModelConnectorEdit.source_model_field_name()]()]().length'>
                                 <tr>
                                     <!-- ko foreach:ModelConnectorEdit.model_edit_fields -->
                                     <td data-bind="text:$data.name"></td>
@@ -582,7 +582,7 @@
 					name:'small_form_with_header',
 					data:{
                         Name:'',
-                        Fields: [ModelConnectorEdit.code_source_model()],
+                        Fields: [ModelConnectorEdit.source_model_field_name()],
                         Model: ModelConnectorEdit.empty_target_model
                     }
 			     } -->

@@ -221,7 +221,7 @@ var ModelConnectorEdit = (new function() {
     }
 
     self._AddMainModel = function() {
-        var main_for_add_code = self.empty_target_model()[self.code_source_model()]();
+        var main_for_add_code = self.empty_target_model()[self.source_model_field_name()]();
         if (!self.LinkModels()[main_for_add_code]) {
             self.LinkModels()[main_for_add_code] = ko.observableArray();
             var MM = {};
@@ -254,23 +254,26 @@ var ModelConnectorEdit = (new function() {
     }
 
     self.LoadModels = function(done) {
-        $.getJSON('/api/modules/catalogue/connector', {
+        var query = {
             source_model: self.source_model(),
             target_model: self.target_model(),
             get_query: self.get_query(),
             get_fields: self.get_fields(),
             get_sort: self.get_sort(),
             indexfieldname: self.source_index_field_name(),
-        }, function(data) {
+        };
+        $.getJSON('/api/modules/catalogue/connector', query, function(data) {
             self.row_data(data);
-            self.MainModels(_.map(data.MainModels, function(MM) {
+            self.MainModels(_.map(_.clone(data.MainModels), function(MM) {
                 return MModels.Create(self.source_model(), MM);
             }));
             var Str = {};
             data.MainModels.forEach(function(MM) {
                 Str[MM[self.code_source_model()]] = ko.observableArray();
             })
+            console.log("STR ",Str);
             data.LinkModels.forEach(function(LM) {
+                console.log(LM,self.source_model_field_name(),LM[self.source_model_field_name()],"<>><<<<>>");
                 if (Str[LM[self.source_model_field_name()]]) {
                     Str[LM[self.source_model_field_name()]].push(MModels.Create(self.target_model(), LM));
                 }
@@ -281,8 +284,10 @@ var ModelConnectorEdit = (new function() {
                     Str2[k] = Str[k];
                 }
             })
+            console.log("STR2 ",Str2);
             self.LinkModels(Str2);
             self.MainModels(_.filter(self.MainModels(), function(e) {
+                console.log(e,e.Code,self.LinkModels());
                 return self.LinkModels()[e[e.Code]()];
             }))
             done && done();
@@ -329,7 +334,6 @@ var ModelConnectorEdit = (new function() {
     self.IsLoaded = ko.observable(false);
 
     self.Init = function(data, done) {
-        console.log("init >>>>>>>>>>>>>>>>>>>>>>>>>>>",data);
         if (data) {
             self.MainModels([]);
             self.LinkModels({});
