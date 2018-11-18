@@ -173,12 +173,14 @@ var CheckToLinks = (new function(){
                     }
                 }
                 if (_.isBoolean(V["ForObj"])){
-                    var Ex = _.find(ExistedByRows[CodeRow],{CodeObj:Context.CodeObj});
+                    var codeToSet = Context.CodeObj;
+                    if (!_.isEmpty(Context.ChildObj)) codeToSet = Context.ChildObj;
+                    var Ex = _.find(ExistedByRows[CodeRow],{CodeObj:codeToSet});
                     if (V["ForObj"]){
-                        ExistedByRows[CodeRow].push({CodeRow:CodeRow,CodeObj:Context.CodeObj});
+                        ExistedByRows[CodeRow].push({CodeRow:CodeRow,CodeObj:codeToSet});
                     } else {
                         ExistedByRows[CodeRow] = _.filter(ExistedByRows[CodeRow], function(R){
-                            return R.CodeObj!=Context.CodeObj;
+                            return R.CodeObj!=codeToSet;
                         })
                     }
                 }
