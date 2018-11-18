@@ -215,7 +215,8 @@ var ModelConnectorEdit = (new function() {
     }
 
     self.AddMainModel = function() {
-        self.empty_target_model = ko.observable(MModels.Create(self.target_model(), {}));
+        self.empty_target_model_loaded(false);
+        self.empty_target_model(MModels.Create(self.target_model(), {}));
         self.empty_target_model_loaded(true);
         $("#add_main_model_modal").modal('show');
     }
