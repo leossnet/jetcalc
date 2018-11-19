@@ -19,8 +19,14 @@
         plugin.textarea.setValue(JSON.stringify(data));
         plugin.textarea.select();
     }
-    Handsontable.overridePaste = function(data, coords) {
-        data = JSON.parse(_.first(data));
+    Handsontable.overridePaste = function(dataRaw, coords) {
+        console.log(dataRaw);
+        var data;
+        try{
+            data = JSON.parse(_.first(dataRaw));
+        } catch(e){
+            data = dataRaw;
+        }
         var startRow = coords[0].startRow;
         var startCol = coords[0].startCol;
         var selfTable = this;
