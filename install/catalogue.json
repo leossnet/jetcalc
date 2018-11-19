@@ -74,6 +74,7 @@
 		"EditFields": [
 			"CodePeriodGrp",
 			"NamePeriodGrp",
+			"SNamePeriodGrp",
 			"ForPermits"
 		],
 		"Links": [
@@ -155,9 +156,10 @@
 		"EditFields": [
 			"CodeStyle",
 			"NameStyle",
+			"SNameStyle",
 			"CSS",
-			"IsForm",
-			"IsReport"
+			"IsReport",
+			"IsForm"
 		],
 		"Links": []
 	},
@@ -228,21 +230,17 @@
 		"EditFields": [
 			"CodeDoc",
 			"NameDoc",
-			"IsOlap",
+			"PrintNameDoc",
+			"FirstYear",
+			"IndexDoc",
+			"IsShowRoots",
 			"IsInput",
-			"IsChart",
-			"IsPresent",
 			"IsShowMeasure",
 			"CodeDocType",
 			"CodeRole",
 			"CodeGrp",
-			"CodeMeasure",
-			"IndexDoc",
-			"PrintNameDoc",
-			"IsObjToRow",
-			"FirstYear",
-			"IsShowRoots",
-			"CodeModel"
+			"CodeModel",
+			"CodeMeasure"
 		],
 		"Links": [
 			"docfolderdoc",
@@ -745,8 +743,9 @@
 			"IsOuterLink",
 			"IsMirror",
 			"CodeDocSourse",
-			"CodeGrpSource",
 			"CodeDocTarget",
+			"CodeGrpSource",
+			"CodePeriodGrp",
 			"CodeGrpTarget"
 		],
 		"Links": [
@@ -920,6 +919,19 @@
 			"CodeDogovorType",
 			"NameDogovorType",
 			"SNameDogovorType"
+		],
+		"Links": []
+	},
+	"reportperiods": {
+		"TableFields": [
+			"CodeReportPeriod",
+			"IndexReportPeriod",
+			"ReportYear",
+			"IsOptional",
+			"CodePeriod"
+		],
+		"EditFields": [
+			"CodeReportPeriods"
 		],
 		"Links": []
 	}
