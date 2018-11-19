@@ -1998,6 +1998,11 @@ module.exports = {
                 "default": false,
                 "view": "none"
             },
+            "UseMultilevelHeader": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+            },
             "IsInnerOrg": {
                 "type": Boolean,
                 "default": false,
