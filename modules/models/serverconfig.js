@@ -318,7 +318,15 @@ module.exports = {
                 "index": true,
                 "unique": true
             },
-            "CodeSourcePeriod": {
+            "CodeDocType": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "doctype",
+                "index": true,
+                "extended": true
+			},
+			"CodeSourcePeriod": {
                 "type": String,
                 "default": "",
                 "view": "none",
