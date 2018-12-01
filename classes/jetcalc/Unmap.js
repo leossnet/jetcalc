@@ -159,7 +159,7 @@ var Unmaper = function(){
 
 
 	self.PrepareFormula = function(Formula,Cell){
-		var d = false;
+		var d = true;
 		if (Formula==0 || _.isEmpty(Formula)) return Formula;
 		d && console.log("1",Formula);
 		Formula  = (Formula+"");
@@ -275,7 +275,12 @@ var Unmaper = function(){
 		};
 		jison_prepare.setContext(CellCx);
 		try{
-			Formula = jison_prepare.parse(Formula);
+			if (!Formula.match(Rx.Vars)){
+				console.log("Без переменных");
+			} else {
+				Formula = jison_prepare.parse(Formula);	
+			}
+			
 		} catch(e){
 			self.Err.Set(Cell.Cell,'FRM:'+Cell.Type.FRM+' : '+e.message);
 		}
