@@ -33,7 +33,7 @@ var MDebugFormula = (new function(){
         try{
            var Coords = BlankDocument.LastCoords;
            var Meta = BlankDocument.table.getCellMeta(Coords[0],Coords[1]);
-           if (Meta.IsAFFormula){
+           if (Meta.IsAFFormula && Meta.IsPrimary){
               AF = Meta.AfFormula;
               if (!_.isEmpty(AF)){
                 FormulaEditor.AfFormula = AF;
@@ -45,6 +45,7 @@ var MDebugFormula = (new function(){
     		FormulaEditor.History([]);
         FormulaEditor.History.push(CellName);
         FormulaEditor.CurrentCell(CellName);
+
         FormulaEditor.Do(function(){
            	FormulaEditor.IsPopupShowned(true);
           	$('#debugFormula').modal('show');
