@@ -318,7 +318,15 @@ module.exports = {
                 "index": true,
                 "unique": true
             },
-            "CodeSourcePeriod": {
+            "CodeDocType": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "doctype",
+                "index": true,
+                "extended": true
+			},
+			"CodeSourcePeriod": {
                 "type": String,
                 "default": "",
                 "view": "none",
@@ -1994,6 +2002,11 @@ module.exports = {
                 "view": "none"
             },
             "UseSelfOrg": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+            },
+            "UseMultilevelHeader": {
                 "type": Boolean,
                 "default": false,
                 "view": "none"
