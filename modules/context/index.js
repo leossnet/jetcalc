@@ -539,7 +539,7 @@ var CxCtrl = (new function() {
 
 
       } catch(e){
-        console.log(e);
+        //console.log(e);
       }
 
       //var R = SettingController.ChoosedReport();

@@ -2152,3 +2152,7 @@ div.row{
 div.select{
     margin-top:10px;
 }
+
+.breadcrumb>li:last-child>a {
+    font-weight: bold;
+}
