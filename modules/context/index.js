@@ -547,7 +547,7 @@ var CxCtrl = (new function() {
 //        r = '<span class="info"> / ' + SettingController.ChoosedReport().NameReport + "</span>";
   //    }
       if (self.PrintNameDoc() && self.PrintNameDoc().length) {
-        return self.PrintNameDoc() + ' за ' + Catalogue.GetHtml('period', p) + ' ' + y + s + r + k;
+        return self.PrintNameDoc() + ' за ' + Catalogue.GetHtml('period', p) + ' ' + y + s  + k + r;
       }
       MSite._breadcrumbsFromPages();
     } else {
