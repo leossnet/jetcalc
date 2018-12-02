@@ -533,8 +533,8 @@ var CxCtrl = (new function() {
         if (current!='default'){
           r = _.find(ParamManager.List(),{CodeReport:ReportManager.CurrentReport()}).PrintNameReport
         }
-        if (!_.isEmpty(addReportName)){
-          r = "["+addReportName+"]";
+        if (!_.isEmpty(r)){
+          r = " ["+r+"]";
         }
 
 
