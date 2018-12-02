@@ -164,7 +164,7 @@ var Calculator = function(){
 						Comment = ResultCells[PC].Comment;
 					}
 					if (ResultCells[PC][self.Field]){
-						Value2Set = parseFloat(ResultCells[PC][self.Field]);
+						Value2Set = Number(ResultCells[PC][self.Field]);
 					}
 					if (ResultCells[PC][self.Field] ==0 || Number(ResultCells[PC][self.Field])==0){
 						IsRealNull = true;
@@ -209,23 +209,19 @@ var Calculator = function(){
 	self._calculateFormula = function(CellName,Formula,Vars){
 		if (!_.isEmpty(self.Calculated[CellName])) return;
 		var InitialFormula = Formula;
-		console.log("1. Formula",Formula);
 		Vars && Vars.forEach(function(V){
 			Formula = Formula.split(V).join(self.Calculated[V]);
 		})
 		Formula = Formula.replace(/-\s-/g,'+');
-		console.log("2. Formula",Formula);
 		var EvalResult = 0, digits = 5;
 		try{
 			var nums = Formula.match(/[0-9]+\.([0-9]+)/g);
 			!_.isEmpty(nums) && nums.forEach(function(num){
-				console.log(num,"num")
 				digits = Math.min(_.last(num.split(".")).length,digits);
 			})
 		} catch (e){
 			console.log(e);
 		}
-		console.log(Formula,digits);
 		try{
 			eval("EvalResult="+Formula);
 			if (isNaN(EvalResult)) throw 'IsNan';

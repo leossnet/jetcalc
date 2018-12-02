@@ -85,7 +85,7 @@ var AutoFill = (new function() {
                     return next();
                 })
             },function(err){
-                console.log(Result);
+
 
             })
         })
@@ -93,10 +93,19 @@ var AutoFill = (new function() {
 
     self.HasAF = function(Cx, done) {
         var ColHelper = require(__base + "classes/jetcalc/Helpers/Col.js");
+        var RowHelper = require(__base + "classes/jetcalc/Helpers/Row.js");
         ColHelper.get(Cx, function(err, Colls) {
-            return done(err, !_.isEmpty(_.filter(Colls, {
-                IsAfFormula: true
-            })))
+            RowHelper.get(Cx, function(err, Rows) {
+                return done(err, 
+                    !_.isEmpty(_.filter(Colls, {
+                        IsAfFormula: true
+                    })) 
+                    || 
+                    !_.isEmpty(_.filter(Rows, {
+                        IsAfFormula: true
+                    })) 
+                )
+            })
         })
     }
 
@@ -104,18 +113,17 @@ var AutoFill = (new function() {
         var StrWorker = require(__base + "classes/jetcalc/Helpers/Structure.js");
         var CalcApi = require(__base + "classes/jetcalc/CalcApi.js");
         StrWorker.get(Cx, function(err, Str) {
-        	console.log(Str.Cells);
             var AFCells = _.filter(_.flatten(Str.Cells), {
                 IsAFFormula: true,
                 IsPrimary: true
             });
-        	console.log(AFCells);            
             if (_.isEmpty(AFCells)) return done(err, []);
             var ToCalculate = {};
             AFCells.forEach(function(A) {
                 ToCalculate[A.Cell] = A.AfFormula;
             })
             CalcApi.CalculateByFormula(ToCalculate, Cx, function(err, Result) {
+                console.log(Result);
                 return done(err, Result);
             })
         })
@@ -164,14 +172,12 @@ var AutoFill = (new function() {
                 async.eachSeries(Objs, function(Obj, cb) {
 
                     var Context = _.cloneDeep(Cx);
-                    console.log(Context);
                     if (IsChildObj) {
                         Context.ChildObj = Obj
                     }
                     Context.CodePeriod = Period;
                     self.SaveAF(Context, function(err, CellsSaved) {
                     	if (err) console.log("BBBBB ERR ",err);
-                        console.log("...", Obj, Period, " AF", "Cells:", CellsSaved.length);
                         return cb(err);
                     });
                 }, function(err){
@@ -184,8 +190,6 @@ var AutoFill = (new function() {
                 self.AFChain(Cx, function(err) {
                     if (err) return done(err);
                     self.SaveAF(Cx, function(err, CellsSaved) {
-                        console.log("...", " AF", "Cells:", CellsSaved.length);
-                        console.log("... Update starting doc");
                         return done(err);
                     });
 
@@ -201,13 +205,11 @@ var AutoFill = (new function() {
             CodeDocSourse: Cx.CodeDoc
         }, "-_id CodeDocTarget").isactive().lean().exec(function(err, RelatedDocs) {
             var Codes = _.map(RelatedDocs, "CodeDocTarget");
-            console.log("Related docs:", Codes);
             var CellsChanged = {};
             async.eachSeries(Codes, function(CodeDoc, next) {
                 self.SaveAF(_.merge(_.clone(Cx), {
                     CodeDoc: CodeDoc
                 }), function(err, Changed) {
-                    console.log("... CHAIN AF", "Cells:", Changed.length);
                     if (!_.isEmpty(Changed)) {
                         CellsChanged[CodeDoc] = Changed;
                     }
@@ -227,6 +229,7 @@ var AutoFill = (new function() {
 
 
     self.MaxRound = function(V) {
+        console.log("=-=======",V.toFixed(8),"=======","V",V,Number(V.toFixed(8)));
         return Number(V.toFixed(8));
     }
 
@@ -247,13 +250,9 @@ var AutoFill = (new function() {
     }
 
     self.SaveAF = function(Context, done) {
-    	console.log("Save AF 1");
         self.GetAF(Context, function(err, Cells) {
-        	console.log("Save AF 2",err,Cells);
             if (_.isEmpty(Cells)) return done(err,[]);
-			console.log("Save AF 3");
             self.LoadPrimaries(_.keys(Cells), function(err, Current) {
-            	console.log("Save AF 4");
                 var ToSave = {};
                 for (var CodeCell in Cells) {
                     var V = self.MaxRound(Cells[CodeCell]);
@@ -261,11 +260,8 @@ var AutoFill = (new function() {
                         ToSave[CodeCell] = V;
                     }
                 }
-                console.log("Save AF 5");
                 if (_.isEmpty(ToSave)) return done(err, []);
-                console.log("Save AF 6");
                 self.SaveCells(ToSave, Context, function(err) {
-                	console.log("Save AF 7");
                     return done(err, _.keys(ToSave));
                 });
             })

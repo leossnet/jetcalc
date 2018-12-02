@@ -159,7 +159,7 @@ var Unmaper = function(){
 
 
 	self.PrepareFormula = function(Formula,Cell){
-		var d = true;
+		var d = false;
 		if (Formula==0 || _.isEmpty(Formula)) return Formula;
 		d && console.log("1",Formula);
 		Formula  = (Formula+"");
