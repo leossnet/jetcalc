@@ -39,7 +39,13 @@ var MReport = (new function() {
         } else {
             HandsonRenders.RegisterRender("Code",[/[0-9]*?,0$/], HandsonTableRenders.ReadOnlyText);
             HandsonRenders.RegisterRender("Tree",[/[0-9]*?,1$/], HandsonTableRenders.TreeRender);
-            HandsonRenders.RegisterRender("Cell",[/[0-9]*?,(?![0,1]$)[0-9]*/],HandsonTableRenders.CellRender);
+            if (Doc.IsShowMeasure){
+                HandsonRenders.RegisterRender("Measure",[/[0-9]*?,2$/], HandsonTableRenders.ReadOnlyText);
+                HandsonRenders.RegisterRender("Cell",[/[0-9]*?,(?![0,1,2]$)[0-9]*/],HandsonTableRenders.CellRender);    
+            } else {
+                HandsonRenders.RegisterRender("Cell",[/[0-9]*?,(?![0,1]$)[0-9]*/],HandsonTableRenders.CellRender);    
+            }
+            
         }
         if (Doc.IsShowMeasure){
             FixedLeft++;FixedColsWidths.push(80);

@@ -353,7 +353,12 @@ var MInput = (new function() {
         } else {
             self.HandsonRenders.RegisterRender("Code", [/[0-9]*?,0$/], HandsonTableRenders.ReadOnlyText);
             self.HandsonRenders.RegisterRender("Tree", [/[0-9]*?,1$/], HandsonTableRenders.TreeRender);
-            self.HandsonRenders.RegisterRender("Cell", [/[0-9]*?,(?![0,1]$)[0-9]*/], HandsonTableRenders.CellRender);
+            if (Doc.IsShowMeasure){
+                self.HandsonRenders.RegisterRender("Measure",[/[0-9]*?,2$/], HandsonTableRenders.ReadOnlyText);
+                self.HandsonRenders.RegisterRender("Cell",[/[0-9]*?,(?![0,1,2]$)[0-9]*/],HandsonTableRenders.CellRender);    
+            } else {
+                self.HandsonRenders.RegisterRender("Cell",[/[0-9]*?,(?![0,1]$)[0-9]*/],HandsonTableRenders.CellRender);    
+            }
         }
         if (Doc.IsShowMeasure) {
             FixedLeft++;
