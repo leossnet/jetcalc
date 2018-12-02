@@ -43,3 +43,7 @@
 #historyModal .cellInfo .col{
     font-weight: bold;
 }
+
+textarea.htCommentTextArea{
+    border:1px solid #CFCFCF;
+}

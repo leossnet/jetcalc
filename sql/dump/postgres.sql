@@ -254,6 +254,7 @@ SET
   "DateEdit"=(now()),
   "ReportValue" = tc."ReportValue",
   "ReportValue1" = tc."ReportValue1",
+  "Comment" = tc."Comment",
   "ReportValue2" = tc."ReportValue2"
 FROM public.cells AS cell
 INNER JOIN temp_cell AS tc ON tc."CodeCell" = cell."CodeCell"

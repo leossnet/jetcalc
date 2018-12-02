@@ -123,7 +123,6 @@ var Calculator = function(){
 				if (_.isEmpty(Formula) || Formula=='0' || Formula==0){
 					self.Calculated[CellName] = 0;
 				} else {
-					console.log(">>>>> ",CellName,Formula,self.Dependable[CellName])
 					self._calculateFormula(CellName,Formula,self.Dependable[CellName]);
 				}
 				keys2omit.push(CellName);

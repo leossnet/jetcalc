@@ -290,10 +290,6 @@ var Unmaper = function(){
 	self.RemoveTags = function(Formula,Cell){
 		var Tags = _.uniq(Formula.match(Rx.Tags)); // Заменяем тэги
 
-		console.log(">>>>>>>>>>>>>>>>>>>");
-		console.log(":::::::::::::::",Tags,"::::::::::::::::::::::::::");
-		console.log(">>>>>>>>>>>>>>>>>>>");
-
 		Tags.forEach(function(Tag){
 			var Value = self.TagValue(Cell,Tag);
 			if (Value=="UNKNOWNTAG") self.Err.Set(Cell.Cell,'TAG:'+Tag+":NO_VALUE");

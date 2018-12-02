@@ -597,8 +597,6 @@ router.put('/api/cells', function(req, res) {
                 err: 'Ошибка в выборе валюты'
             });
             var Cells2Save = _.values(ToSaveReparsed);
-
-
             //CellSaveHelper.EnsurePresence(CodeUser,Cells2Save,function(){
             setCells(Cells2Save, function(err) {
                 var AFHelper = require(__base + 'src/afill.js');

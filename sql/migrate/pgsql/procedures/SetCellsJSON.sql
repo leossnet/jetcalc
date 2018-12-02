@@ -81,6 +81,7 @@ SET
   "ReportValue2" = tc."ReportValue2",
   "CodeRow" = tc."CodeRow",
   "CodeCol" = tc."CodeCol",
+  "Comment" = tc."Comment",
   "CodeObj" = tc."CodeObj"
 
 FROM public.cells AS cell

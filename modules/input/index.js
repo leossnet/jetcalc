@@ -63,8 +63,11 @@ var MInput = (new function() {
                 Cell: Cell.Cell
             }
             if (Type == 'Comment') {
-                OldValue = Cell.Comment;
+                OldValue = Cell.Comment || "";
                 var Comment = Value.value || "";
+                if (_.isEqual(OldValue,Comment)){
+                    return;
+                }
                 Cell.Comment = Comment;
                 CellParams.Value = Cell.Value;
                 CellParams.OldValue = Cell.Value;
@@ -121,7 +124,7 @@ var MInput = (new function() {
                 if (data.err) {
                     return self.Error(data.err);
                 } else {
-                    var Backup = _.clone(self.Calculate);
+                    var Backup = _.cloneDeep(self.Calculate);
                     self.Changes([]);
                     self.LoadCells(function() {
                         var NewResult = self.Calculate;
@@ -138,6 +141,7 @@ var MInput = (new function() {
                                     Me.IsChangedBySave = true;
                                     if (Me.IsChanged) Me.IsChanged = false;
                                 }
+                                Me.IsChanged = false;
                             })
                         })
                     })
