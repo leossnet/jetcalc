@@ -525,6 +525,23 @@ var CxCtrl = (new function() {
       if (!_.isEmpty(ke)) {
         k = ", " + (ke + '');
       }
+
+      var r = "";
+
+      try {
+        var current = ReportManager.CurrentReport();
+        if (current!='default'){
+          r = _.find(ParamManager.List(),{CodeReport:ReportManager.CurrentReport()}).PrintNameReport
+        }
+        if (!_.isEmpty(addReportName)){
+          r = "["+addReportName+"]";
+        }
+
+
+      } catch(e){
+        console.log(e);
+      }
+
       //var R = SettingController.ChoosedReport();
       //if (R && R.CodeReport != 'default') {
 //        r = '<span class="info"> / ' + SettingController.ChoosedReport().NameReport + "</span>";
