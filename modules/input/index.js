@@ -25,7 +25,7 @@ var MInput = (new function() {
             case 'CopyPaste.paste':
             case 'edit':
             case 'KeyDel':
-                console.log(changes);
+                console.log("changes",changes);
                 changes.forEach(function(change) {
                     var row = change[0],
                         col = change[1];
@@ -160,6 +160,7 @@ var MInput = (new function() {
 
     // История заполнения ячейки
     self.PasteValue = function(Value) {
+        console.log("PasteValue",Value);
         self.table.setDataAtCell(BlankDocument.LastCoords[0], BlankDocument.LastCoords[1], Value, "paste");
         $('#historyModal').modal('hide');
     }
@@ -381,10 +382,11 @@ var MInput = (new function() {
                 data.forEach(function(d) {
                     rd = [];
                     d.forEach(function(elem) {
-                        rd.push(elem.replace(/\s+/g, ''));
+                        rd.push(elem.replace(/\s+/g, '').replace(/\,/g,"."));
                     })
                     retdata.push(rd);
                 })
+                console.log("beforePaste",retdata);
                 return [true, retdata];
             }
         })
