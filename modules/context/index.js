@@ -643,6 +643,7 @@ var CxCtrl = (new function() {
           self.UpdateDocInfo ();
           self.UpdateSubPeriods();
           self.Update ();
+          setTimeout(self.UpdateDocInfo,1000);
 
       });
       return done();
