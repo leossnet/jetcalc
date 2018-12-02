@@ -107,7 +107,16 @@ var MFolders = (new function() {
         if (s == 0) realData = _.omit(realData, i);
         counts[i] = s;
       }
-      self.DocTree(realData);
+      var reSort = {};
+      for (var k1 in realData){
+        reSort[k1] = {};
+        for (var k2 in realData[k1]){
+          reSort[k1][k2] = _.sortBy(realData[k1][k2],"IndexDoc");
+        }
+      }
+
+
+      self.DocTree(reSort);
       self.DocTreeCounts(counts);
       self.LoadStates(done);
     })
