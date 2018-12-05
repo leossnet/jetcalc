@@ -104,13 +104,13 @@ router.post('/requestreject', HP.TaskAccess("IsRequestApprover"), function (req,
     })
 });
 
-router.get('/requestapprovers', function (req, res, next) {
+router.get('/requestapprovers',HP.TaskAccess("IsRequestApprover"), function (req, res, next) {
     SignupHelper.RequestApprovers(function (err, data) {
         return res.json(data)
     })
 })
 
-router.get('/userapprovers', function (req, res, next) {
+router.get('/userapprovers', HP.TaskAccess("IsRequestApprover"), function (req, res, next) {
     var ToSend = [];
     var works = 1;
     mongoose.model("obj").find({}, "-_id CodeObj NameObj CodeParentObj").isactive().lean().exec(function (err, Os) {
@@ -273,7 +273,7 @@ router.delete('/userpermit', HP.TaskAccess("IsDocPermissionAssigner"), function 
 })
 
 // Tasks (Roles)
-router.get('/priveleges', function (req, res, next) {
+router.get('/priveleges', HP.TaskAccess("IsFunctionEditor"),  function (req, res, next) {
     mongoose.model("privelege").find({}, "CodePrivelege NamePrivelege ModuleName").isactive().lean().sort({
         ModuleName: 1
     }).exec(function (err, Roles) {
@@ -285,7 +285,7 @@ router.get('/priveleges', function (req, res, next) {
         return res.json(Answer);
     })
 })
-router.get('/task/:code', function (req, res, next) {
+router.get('/task/:code', HP.TaskAccess("IsFunctionEditor"), function (req, res, next) {
     mongoose.model("task").findOne({
         CodeTask: req.params.code
     }, "CodeTask Link_taskprivelege").populate("Link_taskprivelege").isactive().exec(function (err, Task) {
@@ -314,7 +314,7 @@ router.put('/task', HP.TaskAccess("IsFunctionEditor"), function (req, res, next)
     })
 })
 
-router.get('/permits', function (req, res, next) {
+router.get('/permits', HP.TaskAccess("IsDocPermissionAssigner"), function (req, res, next) {
     var Answer = {
         Roles: [],
         AddRoles: [],
@@ -337,7 +337,7 @@ router.get('/permits', function (req, res, next) {
     })
 })
 
-router.get('/permit', function (req, res, next) {
+router.get('/permit',  HP.TaskAccess("IsDocPermissionAssigner"), function (req, res, next) {
     var CodePermit = req.query.CodePermit;
     mongoose.model("permitrole").find({
         CodePermit: CodePermit
@@ -362,7 +362,7 @@ router.put('/permit', HP.TaskAccess(["IsDocPermissionAssigner", "IsExtendedDocPe
 })
 
 // Fix
-router.get('/user/:code', function (req, res, next) {
+router.get('/user/:code',   HP.TaskAccess("IsUserAcceptor"), function (req, res, next) {
     var Answer = {
         User: null,
     }

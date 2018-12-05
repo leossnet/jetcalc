@@ -988,7 +988,7 @@
 
                     if (!me.val('withOnShow')) {
                         if (me.valueAccessor() && me.valueAccessor().ifmodule){ // HACK!
-                            me.element.innerHTML = "<!-- ko if:ModuleManager.IsChoosed('"+me.valueAccessor().ifmodule+"')  -->"+me.element.innerHTML+"<!-- /ko -->";
+                            me.element.innerHTML = "<!-- ko if:ModuleManager.IsChoosed('"+me.valueAccessor().ifmodule+"') && ModuleManager.IsAvailable('"+me.valueAccessor().ifmodule+"')  -->"+me.element.innerHTML+"<!-- /ko -->";
                         }
                         applyBindingsToDescendants(me);
                     } else if (me.val('withOnShow')) {

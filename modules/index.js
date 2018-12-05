@@ -98,8 +98,21 @@ var ModuleManager = (new function() {
     return (name == self.Choosed());
   }
 
+  self.IsAvailable = function(moduleName){
+      var result = true;
+      try{
+        var className = _.find(self.ModulesConfigs,{name:moduleName}).config.class_name;
+        var class2check = self.Modules[className];
+        result = class2check.IsAvailable();
+      } catch(e){
+          console.log(e);
+      }
+      return result;
+  }
+
+
   self.IsInstalled = function(ModuleName) {
-    return !_.isEmpty(ModuleManager.Modules[ModuleName]);
+    return !_.isEmpty(self.Modules[ModuleName]);
   }
 
   self.Opened = ko.observable();
@@ -149,7 +162,7 @@ var ModuleManager = (new function() {
         pageInfo = pager.getActivePage().valueAccessor();
       } catch (e) {;
       }
-      var needed = _.first(_.filter(ModuleManager.ModulesConfigs, function(M) {
+      var needed = _.first(_.filter(self.ModulesConfigs, function(M) {
         return !_.isEmpty(M.config.pages) && _.find(M.config.pages, {
           id: pageInfo.id
         });
@@ -255,7 +268,7 @@ var ModuleManager = (new function() {
 
   self.CheckAvailable = function(data) {
 
-    var Cl = ModuleManager.Modules[data.class_name];
+    var Cl = self.Modules[data.class_name];
     if (Cl && Cl.IsAvailable && Cl.IsAvailable()) {
       return true;
     }
@@ -575,6 +588,7 @@ var Module = function(id) {
   }
 
   self._request = function(method, urlpart, data, done) {
+
     self.Error(null);
     self.IsLoading(true);
     $.ajax({
