@@ -42,24 +42,24 @@
 	},
 	"period": {
 		"TableFields": [
-			"IsReportPeriod",
-			"IsFormula",
 			"CodePeriod",
-			"NamePeriod"
+			"NamePeriod",
+			"IndexPeriod",
+			"IsFormula",
+			"IsReportPeriod"
 		],
 		"EditFields": [
 			"CodePeriod",
 			"NamePeriod",
-			"BeginDateText",
-			"EndDateText",
+			"SNamePeriod",
+			"IndexPeriod",
 			"MCount",
 			"IsFormula",
 			"Formula",
 			"IsReportPeriod",
 			"IsNone",
-			"BeginDate",
-			"EndDate",
-			"SNamePeriod"
+			"BeginDateText",
+			"EndDateText"
 		],
 		"Links": [
 			"periodgrpref"

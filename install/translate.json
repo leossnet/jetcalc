@@ -63,8 +63,8 @@
 		"IndexDoc": "Индекс",
 		"CodeDocFolder": "Код.Папки",
 		"CodeRole": "КодГруппыДок.",
-		"IsDesigner": "Дизайн",
-		"IsTester": "Тестирование",
+		"IsDesigner": "Дизайн.Докум.",
+		"IsTester": "Тест.Докум.",
 		"HasChildObjs": "Дочер.Объекты",
 		"IsShow": "Показывать",
 		"IsBiztranDoc": "Использовать транзакции",
@@ -258,8 +258,8 @@
 		"SNameDogovor": "Кр.Наим.Дог",
 		"NumDogovor": "НомерДог.",
 		"DateDogovor": "ДатаДог.",
-		"BeginDate": "ДатаНач.Дог.",
-		"EndDate": "ДатаОкон.Дог.",
+		"BeginDate": "ДатаНачала",
+		"EndDate": "ДатаОконч.",
 		"DelayDate": "ДатаПродл.Дог.",
 		"SummaDogovor": "СуммаДог.",
 		"IsAddDogovor": "Доп.Согл.",
@@ -325,7 +325,7 @@
 		"LevelOrg": "Уров.Орг.",
 		"LevelDogovor": "Уров.Догов.",
 		"LevelDogovorArt": "Уров.Стат.Догов.",
-		"CodeDocType": "Код.Тип.Док",
+		"CodeDocType": "ТипДокумента",
 		"Docs": "Список",
 		"Link_docfolderdoc": "Папки расположения",
 		"Link_docrow": "Корневые узлы",
@@ -343,7 +343,85 @@
 		"IsOuterLink": "Внеш.Связь",
 		"Link_colrelation": "Связи колонок",
 		"CodeColSource": "Колонка-Источник",
-		"CodeColTarget": "Колонка-Назначение"
+		"CodeColTarget": "Колонка-Назначение",
+		"CodeParamKey": "Логич.Метка",
+		"NameParamKey": "Назв.Логич.Метки",
+		"SNameParamKey": "Кр.Назв.Логич.Метки",
+		"ParamKeys": "Метки",
+		"CodeListDefinition": "СписокЗначений",
+		"NameListDefinition": "Назв.СпискаЗначений",
+		"SNameListDefinition": "Кр.Назв.СпискаЗначений",
+		"NameParamSet": "Название",
+		"SNameParamSet": "Кр.Название",
+		"Link_paramsetkey": "Логические метки",
+		"KeyValue": "TRUE (вкл) / FALSE (выкл)",
+		"CodeParamGrp": "КодГруппы",
+		"ParamGrp": "Группы",
+		"NameParamGrp": "Назв.Группы",
+		"SNameParamGrp": "Кр.Назв.Группы",
+		"CodeFileType": "Тип",
+		"NameFileType": "Назв.ТипаФайлов",
+		"SNameFileType": "Кр.Назв.ТипаФайлов",
+		"FileTypes": "ТипФайлов",
+		"NameUser": "ФИО",
+		"CodeUser": "КодПольз.",
+		"LoginUser": "Логин",
+		"JobTitle": "Должность",
+		"WorkPhone": "Телефон(раб)",
+		"Mail": "E-mail",
+		"IsAdmin": "Глав.Админ",
+		"IsDepAdmin": "АдминДепарт.",
+		"IsDivAdmin": "АдминДивиз.",
+		"IsOrgAdmin": "АдминОрг.",
+		"TabNum": "№(Табель)",
+		"Birthday": "Дата рождения",
+		"MobilePhone": "Телефон(моб)",
+		"InAttentive": "Невнимательный",
+		"UserPhoto": "Фото",
+		"Users": "Пользователи",
+		"noobjchoose": "Без фильтрации",
+		"Link_labeluser": "Подписи",
+		"AuthDoc": "Разр.Документ.",
+		"CodeRoute": "Маршрут",
+		"NameRoute": "Название",
+		"SNameRoute": "Кр.Название",
+		"CodeFinalState": "Кон.Состояние",
+		"CodeInitState": "Нач.Состояние",
+		"NoGrp": "Не в группе",
+		"CodeRouteCheckPeriod": "КодПроверки",
+		"RelYear": "Смещ.Года",
+		"CodeCheckPeriod": "Провер.Период",
+		"CodeCheckState": "Провер.Состояние",
+		"CheckPeriods": "Зависимые периоды",
+		"CodeRouteRefPeriod": "КодСсылки",
+		"CodeRefPeriod": "Связ.Период",
+		"Link_routefiletype": "Проверка наличия файлов",
+		"CodeState": "КодСтатуса",
+		"NameState": "НазваниеСтатуса",
+		"SNameState": "Кр.НазваниеСтатуса",
+		"IsDefault": "СтатусПоУмолчанию",
+		"IsOpened": "Открыт",
+		"IsClosed": "Заблокирован",
+		"IsAgreed": "Подтвержден",
+		"States": "Статусы",
+		"Link_routeperiod": "Периоды блокировки",
+		"Link_routecheckperiod": "Проверка состояния периодов",
+		"routefiletype": "Типы файлов",
+		"routeperiod": "Периоды маршрутов",
+		"routerefperiod": "Связанные периоды",
+		"routecheckperiod": "Зависимые периоды",
+		"Routes": "Маршруты",
+		"Периоды блокировки": "Периоды маршрутов",
+		"Link_routerefperiod": "Связанные периоды",
+		"NamePeriod": "Назв.Периода",
+		"SNamePeriod": "Кр.Назв.Периода",
+		"IndexPeriod": "Индекс",
+		"MCount": "Кол.Месяцев",
+		"IsReportPeriod": "Отч.Период",
+		"IsNone": "ПоУмолчанию",
+		"BeginDateText": "ДеньМес.Начала",
+		"EndDateText": "ДеньМес.Оконч.",
+		"Periods": "Список"
 	},
 	"param": {
 		"CodeParam": "Код параметра",
@@ -372,7 +450,7 @@
 	"paramset": {
 		"CodeParamSet": "Знч.Парам",
 		"NameParamSet": "Нзв.Набор.Прм",
-		"CodeListDefinition": "CodeListDefinition"
+		"CodeListDefinition": "КодСпискаЗначений"
 	},
 	"style": {
 		"CodeStyle": "Стиль",
@@ -394,7 +472,8 @@
 		"documentation": "Документация",
 		"chart": "График",
 		"presentation": "Презентация",
-		"biztran": "Транзакции"
+		"biztran": "Транзакции",
+		"olap": "OLAP"
 	},
 	"presetslot": {
 		"CodeDoc": "Код.Док",
@@ -556,5 +635,61 @@
 		"IsMirror": "Зерк.Контраг.",
 		"CodeDocSourse": "Док.-Источник",
 		"CodeDocTarget": "Док.-Назначение"
+	},
+	"paramkey": {
+		"CodeParamKey": "CodeParamKey",
+		"NameParamKey": "NameParamKey"
+	},
+	"listdefinition": {
+		"CodeListDefinition": "CodeListDefinition",
+		"NameListDefinition": "NameListDefinition"
+	},
+	"paramgrp": {
+		"CodeParamGrp": "КодГруппы",
+		"NameParamGrp": "Назв.Группы"
+	},
+	"filetype": {
+		"CodeFileType": "Тип",
+		"NameFileType": "Назв.ТипаФайлов"
+	},
+	"user": {
+		"NameUser": "ФИО",
+		"LoginUser": "Логин",
+		"JobTitle": "Должность",
+		"MobilePhone": "Телефон(моб)"
+	},
+	"state": {
+		"CodeState": "Статусы",
+		"NameState": "Название"
+	},
+	"route": {
+		"CodeRoute": "Маршрут",
+		"NameRoute": "Название"
+	},
+	"routeperiod": {
+		"NoGrp": "Не в группе",
+		"CodeGrp": "ОбъектУчета",
+		"CodeDocType": "Код.Тип.Док",
+		"CodeRoute": "Маршрут",
+		"CodePeriod": "Период"
+	},
+	"routecheckperiod": {
+		"NoGrp": "Не в группе",
+		"CodeGrp": "ОбъектУчета",
+		"CodeDocType": "Код.Тип.Док",
+		"CodeRoute": "Маршрут",
+		"CodeCheckPeriod": "Прв.Период",
+		"CodePeriod": "CodePeriod"
+	},
+	"routerefperiod": {
+		"CodeRoute": "Маршрут",
+		"CodeRefPeriod": "Свз.Период"
+	},
+	"period": {
+		"CodePeriod": "Период",
+		"NamePeriod": "Нзв.Периода",
+		"IndexPeriod": "Индекс",
+		"IsFormula": "Вкл.Формулу",
+		"IsReportPeriod": "Отч.Период"
 	}
 }
