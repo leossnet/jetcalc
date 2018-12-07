@@ -5311,6 +5311,11 @@ module.exports = {
                 "default": "",
                 "view": "none"
             },
+            "IndexPeriod": {
+                "type": Number,
+                "default": 0,
+                "view": "none"
+            },
             "ValutaRateFormula": {
                 "type": String,
                 "default": null,
