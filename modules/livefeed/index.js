@@ -116,14 +116,14 @@ var MLiveFeed = (new function(){
         setTimeout(self.IsWriting.bind(self,true),500);         // починить биндинг
         $("#newFeedModal").modal('show');
         $("#newFeedModal").on('hidden.bs.modal', function(){
-            $("#newFeedModal").off('hidden.bs.modal');
+        $("#newFeedModal").off('hidden.bs.modal');
             self.IsWriting(false);
         })  
     }
 
     self.ConfirmRead = function(data){
         if (typeof data.toJS == 'function') data = data.toJS();
-        if (MSite.Me().InAttentive() &&  data.HasQuestion){
+        if (data.HasQuestion){
             self.ShowQuestion(data);
         } else {
             self.DoConfirm(data);

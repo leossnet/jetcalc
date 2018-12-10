@@ -21,10 +21,11 @@ module.exports = {
 			Correct: {type: Array, default: []},
 			UsersToShow:{type: Array, default: [],index:true},
 			UsersConfirmed:{type: Array, default: [],index:true}
-		},
+		}/*,
 		user:{
 			InAttentive: {type : Boolean, default:false}
 		}
+		*/
 	},
 	schema: {
 		lfmessage:function(schema){
