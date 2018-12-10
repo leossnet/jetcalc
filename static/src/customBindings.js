@@ -129,8 +129,13 @@ ko.bindingHandlers['handson-table'] = {
         var result = allBindings()['handson-table-result'];
         var count = allBindings()['handson-table-changes-count'];
         var changes = allBindings()['handson-table-changes'];
+        var instance = allBindings()['handson-table-table'];
+
         var Editor = new HEditor(element,params,result,count,changes);                
         element.HTable = Editor;
+        if (_.isFunction(instance)){
+          instance(element.HTable);
+        }
         element.HTable.Init();
         ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
             element.HTable.Dispose()

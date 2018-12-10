@@ -132,6 +132,49 @@ var RowEditor = (new function() {
         return Rows;
     }
 
+    self.lastAutoFillStart = null;
+
+
+    self.beforeAutofill = function(start, end, data){
+        self.lastAutoFillStart = start;
+    }
+
+    self.delayedUpdate = function(){
+        setTimeout(function(){
+            self.Config.valueHasMutated();
+        },100)
+    }
+
+    self.Table = ko.observable();
+
+    self.updateAutoFill = function(to,direction,data){
+        var toRow = function(index,data){
+            var row = self.AllRows[index];
+            console.log("Will Set ",row.CodeRow,index,data);
+            if (!row){
+                console.log("row not found");
+            } else {
+
+                self.AllRows[index].Link_rowsumgrp = _.map(data[0][0],function(link){
+                    return {
+                        CodeSumGrp:link.CodeSumGrp,
+                        CodeRow:row.CodeRow
+                    }
+                })
+                self.Table().Table.setDataAtCell(index,3,self.AllRows[index].Link_rowsumgrp);
+            }
+        }
+        if (self.Mode()=='Summ' && self.lastAutoFillStart.col==3){
+            var rowIndex = self.lastAutoFillStart.row;
+            if (direction=='up'){
+                rowIndex = rowIndex-to.row;
+            } else {
+                rowIndex = rowIndex+to.row;
+            }
+            toRow(rowIndex,data);            
+        }
+    }
+
     self.LoadRows = function(done) {
         self.rGet("rows", CxCtrl.Context(), function(Rows) {
             var AllRows = _.sortBy(Rows, 'lft');
@@ -231,6 +274,8 @@ var RowEditor = (new function() {
                     fixedColumnsLeft: 2,
                     afterCopy: Handsontable.overrideCopy,
                     beforePaste: Handsontable.overridePaste,
+                    beforeAutofill:self.beforeAutofill,
+                    beforeAutofillInsidePopulate:self.updateAutoFill,
                     MainModel: {
                         Link_rowsumgrp: 'row',
                         Link_rowtag: 'row',
