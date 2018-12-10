@@ -95,7 +95,7 @@
     </a>
     <ul class="dropdown-menu dropdown-light dropdown-caret">
       <!-- ko with:MFavorites.UserFavs.CodePeriod -->
-        <!-- ko foreach:$data -->
+        <!-- ko foreach:MPeriods.sortPeriods($data) -->
           <!-- ko template:{name:'fav_item',data:{type:'CodePeriod',code:$data,model:'period',click:CxCtrl.Update.bind(null,'period',$data)}} --><!-- /ko -->
         <!-- /ko -->
       <!-- /ko -->
