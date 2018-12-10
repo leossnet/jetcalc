@@ -637,14 +637,12 @@ var CxCtrl = (new function() {
       Bus.On("aggregate_complex",self.SetAggregateComplex);
       Bus.On("aggregate_simple",self.SetAggregateSimple);
 
+      Bus.On("documentisrendered",self.UpdateDocInfo);
 
       MSite.Events.on("initialnavigate", function(){
       	  self.InitValues();
-          self.UpdateDocInfo ();
           self.UpdateSubPeriods();
           self.Update ();
-          setTimeout(self.UpdateDocInfo,1000);
-
       });
       return done();
   }

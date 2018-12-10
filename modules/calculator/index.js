@@ -253,6 +253,7 @@ var BaseDocPlugin = function() {
         self.IsLoading(true);
         self.Timer.Start("stage5");
         self.Render(function(err) {
+            Bus.Emit("documentisrendered");
             self.IsLoading(false);
             if (err) self.Error(err);
             self.Timer.End("stage5");
