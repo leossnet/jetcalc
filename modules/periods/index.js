@@ -1,21 +1,21 @@
-var MPeriods = (new function () {
+var MPeriods = (new function() {
 
     var self = new Module("periods");
 
     self.IsUseOrg = ko.observable(false);
 
-    self.RollBack = function () {
+    self.RollBack = function() {
         self.Show();
     }
 
-    self.BeforeHide = function () {
+    self.BeforeHide = function() {
         self.UnSubscribe({
             save: self.SaveChanges,
             refresh: self.RollBack
         });
     }
 
-    self.BeforeShow = function () {
+    self.BeforeShow = function() {
         self.Subscribe({
             save: self.SaveChanges,
             refresh: self.RollBack
@@ -23,11 +23,11 @@ var MPeriods = (new function () {
         self.Show();
     }
 
-    self.ModelIsCreated = function () {}
-    self.ModelIsLoaded = function () {}
-    self.ModelIsSaved = function () {}
+    self.ModelIsCreated = function() {}
+    self.ModelIsLoaded = function() {}
+    self.ModelIsSaved = function() {}
 
-    self.IsAvailable = function () {
+    self.IsAvailable = function() {
         return PermChecker.CheckPrivelegeAny(["IsPeriodEditTunner", "IsPeriodMapTunner", "IsPeriodGrpsTunner", "IsPeriodTunner"]);
     }
 
@@ -37,37 +37,45 @@ var MPeriods = (new function () {
     self.DefaultPeriods = ko.observable();
     self.Opened = ko.observable();
     self.Redirects = ko.observable();
+    self.MapSortOrder = ko.observable();
 
-    self.Init = function (done) {
-        self.rGet("init", {}, function (data) {
+    self.Init = function(done) {
+        self.rGet("init", {}, function(data) {
             console.log(data);
             if (data.err) return self.Error(data.err);
             self.IsLoaded(true);
             var periods = {};
             for (var group in data.Map) {
-                periods[group] = _.keys(data.Map[group]);
+                if (group != "SortOrder") {
+                    periods[group] = _.keys(data.Map[group]);
+                }
             }
             self.DefaultPeriods(periods);
             var prepared = {};
+            if (!_.isEmpty(data.Map.SortOrder)) {
+                self.MapSortOrder(data.Map.SortOrder);
+            }
             for (var group in data.Map) {
-                for (var CodePeriod in data.Map[group]) {
-                    var arr = [];
-                    data.Map[group][CodePeriod].forEach(function (I) {
-                        var year = 0,
-                            notNowYear = false;
-                        if (I.year) {
-                            notNowYear = true;
-                            year = Number((I.year + '').replace("Y", ""));
-                        }
-                        arr.push({
-                            period: Catalogue.Get('period', I.period),
-                            code: I.period + '',
-                            year: year,
-                            isoptional: I.isoptional,
-                            anotherYear: notNowYear,
+                if (group != "SortOrder") {
+                    for (var CodePeriod in data.Map[group]) {
+                        var arr = [];
+                        data.Map[group][CodePeriod].forEach(function(I) {
+                            var year = 0,
+                                notNowYear = false;
+                            if (I.year) {
+                                notNowYear = true;
+                                year = Number((I.year + '').replace("Y", ""));
+                            }
+                            arr.push({
+                                period: Catalogue.Get('period', I.period),
+                                code: I.period + '',
+                                year: year,
+                                isoptional: I.isoptional,
+                                anotherYear: notNowYear,
+                            })
                         })
-                    })
-                    prepared[CodePeriod] = arr;
+                        prepared[CodePeriod] = arr;
+                    }
                 }
             }
             self.Map(prepared);
@@ -77,19 +85,29 @@ var MPeriods = (new function () {
         })
     }
 
-    self.SaveChanges = function () {
+    self.sortPeriods = function(periods){
+        var toSort = [], sortOrder = self.MapSortOrder();
+        periods.forEach(function(codePeriod){
+            toSort.push({CodePeriod:codePeriod,sort:sortOrder[codePeriod]||-1});
+        })
+        return _.map(_.sortBy(toSort,function(obj){
+            return obj.sort?obj.sort:Infinity;
+        }),"CodePeriod");
+    }
+
+    self.SaveChanges = function() {
         if (self.Mode() == "PeriodEdit") {
             self.SaveChangesPEdit();
-        } else if (self.Mode()=='PeriodAutoFill' || self.Mode()=='PeriodMap'){
+        } else if (self.Mode() == 'PeriodAutoFill' || self.Mode() == 'PeriodMap') {
             ModelConnectorEdit.SaveChanges();
         }
     }
 
-    self.IsModelEdit = ko.computed(function () {
+    self.IsModelEdit = ko.computed(function() {
         return ["Periods", "PeriodGrps", "PeriodRedirect", "Calendar"].indexOf(self.Mode()) != -1;
     })
 
-    self.Show = function (done) {
+    self.Show = function(done) {
         if (!self.Mode()) return self.InitSetMode("Periods");
         switch (self.Mode()) {
             case "Periods":
@@ -119,7 +137,7 @@ var MPeriods = (new function () {
                     target_model: 'periodautofill',
                     source_index_field_name: 'Idx',
                     source_model_field_name: 'CodeSourcePeriod',
-                    get_fields:["-_id","CodePeriod","NamePeriod"].join(" "),
+                    get_fields: ["-_id", "CodePeriod", "NamePeriod"].join(" "),
                     code_source_model: 'CodePeriod',
                     get_sort: {
                         MCount: 1,
@@ -141,7 +159,7 @@ var MPeriods = (new function () {
                     target_model: 'reportperiods',
                     source_index_field_name: 'IndexReportPeriod',
                     source_model_field_name: 'CodePeriod',
-                    get_fields:["-_id","CodePeriod","NamePeriod"].join(" "),
+                    get_fields: ["-_id", "CodePeriod", "NamePeriod"].join(" "),
                     get_sort: {
                         MCount: 1,
                         BeginDate: 1
@@ -161,7 +179,7 @@ var MPeriods = (new function () {
     // PeriodEdit
     self.Table = ko.observable();
     self.Year = ko.observable();
-    self.UpdateYear = function (Year) {
+    self.UpdateYear = function(Year) {
         self.Year(Year);
         self.LoadTable();
     }
@@ -170,20 +188,23 @@ var MPeriods = (new function () {
     self.PeriodEditChangesCount = ko.observable(0);
     self.PeriodEditChanges = ko.observable();
 
-    self.LoadTable = function () {
+    self.LoadTable = function() {
         if (!self.Year()) self.Year(CxCtrl.Year());
         self.rGet('table', {
             Year: self.Year()
-        }, function (data) {
+        }, function(data) {
             var ColWidths = [200];
             var ToTranslate = {}
-            var Header = [[{
-                    label: 'Группа документов',
-                    colspan: 1
-                }], [{
-                    label: '',
-                    colspan: 1
-                }]],
+            var Header = [
+                    [{
+                        label: 'Группа документов',
+                        colspan: 1
+                    }],
+                    [{
+                        label: '',
+                        colspan: 1
+                    }]
+                ],
                 Rows = {},
                 Columns = [{
                     data: "Name",
@@ -205,7 +226,7 @@ var MPeriods = (new function () {
                 }
             }
             for (var K in Trs) Trs[K] = _.uniq(Trs[K]);
-            Catalogue.ForceLoad(Trs, function () {
+            Catalogue.ForceLoad(Trs, function() {
                 for (var CodePeriodGrp in data) {
                     var PeriodsInfo = data[CodePeriodGrp];
                     Header[0].push({
@@ -247,10 +268,10 @@ var MPeriods = (new function () {
         })
     }
 
-    self.SaveChangesPEdit = function () {
+    self.SaveChangesPEdit = function() {
         self.rPut("update", {
             Year: self.Year(),
-            Value: _.flatten(_.map(self.PeriodEditResult(), function (Row) {
+            Value: _.flatten(_.map(self.PeriodEditResult(), function(Row) {
                 var CodeRole = Row.CodeRole;
                 var Enabled = [];
                 for (var CodePeriod in Row) {
@@ -263,7 +284,7 @@ var MPeriods = (new function () {
                 }
                 return Enabled;
             }))
-        }, function (data) {
+        }, function(data) {
             self.LoadTable();
             self.Init();
         })
@@ -276,7 +297,7 @@ ModuleManager.Modules.Periods = MPeriods;
 
 
 ko.components.register('period-formula-editor', {
-    viewModel: function (params) {
+    viewModel: function(params) {
         var self = this,
             result = [];
         var value = params.field() + '';
@@ -290,10 +311,10 @@ ko.components.register('period-formula-editor', {
             Keys = _.keys(Base);
         if (value.indexOf("=") != -1) {
             var parts = value.split(",");
-            parts.forEach(function (P) {
+            parts.forEach(function(P) {
                 var Ob = ko.mapping.fromJS(_.clone(Base)),
                     YP = P.split(/[=!:]/g);
-                Keys.forEach(function (F, i) {
+                Keys.forEach(function(F, i) {
                     if (YP[i]) Ob[F] = YP[i];
                 })
                 result.push(Ob);
@@ -302,8 +323,8 @@ ko.components.register('period-formula-editor', {
 
         self.ParsedArray(result);
 
-        self.AddLastCellListener = function () {
-            $(".formula-editor-year").last().keydown(function (e) {
+        self.AddLastCellListener = function() {
+            $(".formula-editor-year").last().keydown(function(e) {
                 if (e.keyCode == 9) {
                     self.AddFormula()
                     return false;
@@ -313,24 +334,24 @@ ko.components.register('period-formula-editor', {
 
         setTimeout(self.AddLastCellListener, 500)
 
-        self.AddFormula = function () {
+        self.AddFormula = function() {
             $(".formula-editor-year").last().off();
             var Obj = ko.mapping.fromJS(_.clone(Base));
             self.ParsedArray.push(Obj);
             setTimeout(self.AddLastCellListener, 200);
 
         }
-        self.RemoveFormula = function (data) {
+        self.RemoveFormula = function(data) {
             $(".formula-editor-year").last().off();
             self.ParsedArray.remove(data);
             setTimeout(self.AddLastCellListener, 200);
         }
-        ko.computed(function () {
+        ko.computed(function() {
             return ko.toJSON(self.ParsedArray);
-        }).subscribe(function () {
+        }).subscribe(function() {
             var V = self.ParsedArray();
             var StrArr = [];
-            V.forEach(function (sVo) {
+            V.forEach(function(sVo) {
                 var sV = ko.mapping.toJS(sVo)
                 var A = "";
                 if (sV.From && sV.To) {

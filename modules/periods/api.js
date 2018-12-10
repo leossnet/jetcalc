@@ -70,6 +70,7 @@ var MapPeriods = (new function() {
 
     self.Map = {};
     self.Groups = {};
+    self.Orders = {};
 
     self.Result = null;
 
@@ -86,6 +87,7 @@ var MapPeriods = (new function() {
                             Answer[CodeGroup][CodePeriod] = self.Map[CodePeriod];
                         })
                     }
+                    Answer.SortOrder = self.Orders;
                     return done(err, Answer);
                 })
             })
@@ -130,12 +132,12 @@ var MapPeriods = (new function() {
     self.SimpleLoad = function(done) {
         mongoose.model("period").find({
             IsReportPeriod: true
-        }, "-_id CodePeriod NamePeriod").sort({
-            MCount: 1,
-            BeginDate: 1
+        }, "-_id CodePeriod NamePeriod IndexPeriod").sort({
+            IndexPeriod:1
         }).isactive().exec(function(err, Main) {
             Main.forEach(function(M) {
                 self.Map[M.CodePeriod] = [];
+                self.Orders[M.CodePeriod] = M.IndexPeriod;
             })
             return done(err);
         })
