@@ -161,7 +161,7 @@ var MInput = (new function() {
     // История заполнения ячейки
     self.PasteValue = function(Value) {
         console.log("PasteValue",Value);
-        self.table.setDataAtCell(BlankDocument.LastCoords[0], BlankDocument.LastCoords[1], Value, "paste");
+        self.table.setDataAtCell(BlankDocument.LastCoords[0], BlankDocument.LastCoords[1], Value, "CopyPaste.paste");
         $('#historyModal').modal('hide');
     }
     self.HistoryData = ko.observableArray();
