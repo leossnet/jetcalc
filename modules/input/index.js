@@ -419,6 +419,11 @@ var MInput = (new function() {
 
 
 ModuleManager.Events.on("modulesinited", function() {
+    Bus.On("aggregate_rebuld_available", function() {
+        if (CxCtrl.PageName() == "input") {
+            setTimeout(MInput.AllowInput, 0);
+        }
+    })
     Workflow.Events.addListener("statuschange", function() {
         if (CxCtrl.PageName() == "input") {
             setTimeout(MInput.AllowInput, 0);

@@ -211,7 +211,8 @@ var MAggregate = (new function(){
             var Grs = self.AllGroups(), R = {}; 
             R[DocGrp] = Grs[DocGrp];
             self.Groups(R);
-        }        
+        }       
+        Bus.Emit("aggregate_rebuld_available");
     }
 
     self.Init = function(done){
