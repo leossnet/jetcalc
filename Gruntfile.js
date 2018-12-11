@@ -118,7 +118,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-shell');
-//    grunt.loadNpmTasks('grunt-babel');
+    //grunt.loadNpmTasks('grunt-babel');
     grunt.registerTask('default', ['concat', 'cssmin', 'uglify']);
     grunt.registerTask('hookmeup', ['clean:hooks', 'shell:hooks']);
 };
