@@ -412,28 +412,61 @@ var MInput = (new function() {
         })
     }
 
+
+    self.reCalculateTimer = null;
+
+    self.doReCalculateAvaible = function(){
+        if (CxCtrl.PageName() == "input") {
+            MInput.AllowInput();
+        }
+        if (self.reCalculateTimer){
+            clearTimeout(self.reCalculateTimer);            
+            self.reCalculateTimer = null;        
+        }
+    }
+
+    self.reCalculateAvaible = function(){
+        if (self.reCalculateTimer){
+            clearTimeout(self.reCalculateTimer);
+        } 
+        self.reCalculateTimer = setTimeout(self.doReCalculateAvaible,500);
+    }
+
     self = _.merge(new BaseDocPlugin(), self);
+
+
+
     return self;
 })
 
 
 
 ModuleManager.Events.on("modulesinited", function() {
-    Bus.On("aggregate_rebuld_available", function() {
+
+    
+    Bus.On("aggregate_rebuld_available", MInput.reCalculateAvaible)
+    Bus.On("statuschange", MInput.reCalculateAvaible)
+    Bus.On("rendercells", MInput.reCalculateAvaible)
+
+   /* Bus.On("aggregate_rebuld_available", function() {
+        console.log(">>> aggregate_rebuld_available");
         if (CxCtrl.PageName() == "input") {
             setTimeout(MInput.AllowInput, 0);
         }
     })
     Workflow.Events.addListener("statuschange", function() {
+        console.log(">>> statuschange");
         if (CxCtrl.PageName() == "input") {
             setTimeout(MInput.AllowInput, 0);
         }
     })
     MInput.Events.addListener("rendercells", function() {
+        console.log(">>> rendercells");
         if (CxCtrl.PageName() == "input") {
             setTimeout(MInput.AllowInput, 0);
         }
     })
+    */
     BlankDocument.Events.addListener("key", function(e) {
         var isControlPressed = (e.ctrlKey || e.metaKey);
         if (e.keyCode == 113) { //Ctrl + F2
