@@ -31,6 +31,7 @@ router.get('/afpath',  HP.TaskAccess("IsAFSaveAllow"), function(req,res,next){
 	var Cx = lib.ReqContext(req);
 	Cx.CodeUser = req.user.CodeUser;
 	AFHelper.GetRoute(Cx,function(err,Route){
+		console.log(Route);
 		if (err) return next(err);
 		return res.json(Route);
 	})

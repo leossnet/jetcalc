@@ -8,3 +8,15 @@
     color:#B74635!important;
     background-color: #FDF5F2;
 }
+.timeline-item-body{
+	min-height: 50px;
+    background: white;
+    border: 1px solid #CFCFCF;
+    padding-top: 10px;
+}
+.af-indicator{
+	margin-top:5px;
+}
+.af-text{
+	padding-top:10px;
+}

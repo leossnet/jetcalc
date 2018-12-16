@@ -45,6 +45,28 @@ var PeriodWorker = require(__base + "classes/jetcalc/Helpers/Period.js");
 var AutoFill = (new function() {
     var self = new Base("JAFILL");
 
+
+
+    self.UpdateChainDocuments = function(Cx,done){
+        self.GetRoute(Cx,function(err, route){
+            if (_.isEmpty(route)){
+                return done();
+            }
+            var start = route[Cx.CodeDoc];
+            var tasks = [], breakCounter = 10;
+            while(!_.isEmpty(start) && (--breakCounter)>0){
+                var CodeDocs = _.first(_.values(start));
+                tasks = tasks.concat(CodeDocs);
+            }
+            async.eachSeries(tasks,function(CodeDoc,next){
+                var context = _.merge(_.cloneDeep(Cx),{CodeDoc:CodeDoc});
+                self.UpdateAll(context,next);
+            },function(err){
+                if (err) return done(err);
+            })
+        })
+    }
+
     self.BuildDocRoute = function(CodeDoc,CodePeriod,done){
         PeriodWorker.get(function(err,PInfo){
             var Period = PInfo[CodePeriod];
@@ -55,6 +77,7 @@ var AutoFill = (new function() {
             } 
             var Query = _.merge({CodeDocSourse: CodeDoc},Q);
             mongoose.model("docrelation").find(Query, "-_id CodeDocTarget Link_colrelation").populate("Link_colrelation").isactive().lean().exec(function(err, RelatedDocs) {
+                console.log(RelatedDocs);
                 var Path = {};
                 RelatedDocs.forEach(function(RD){
                     RD.Link_colrelation.forEach(function(ColInfo){
@@ -85,7 +108,7 @@ var AutoFill = (new function() {
                     return next();
                 })
             },function(err){
-
+                return done(err,Result);
 
             })
         })
@@ -187,12 +210,11 @@ var AutoFill = (new function() {
             }, function(err) {
             	return done(err);
                 self.ChainCount = 1;
-                self.AFChain(Cx, function(err) {
+                self.UpdateChainDocuments(Cx, function(err) {
                     if (err) return done(err);
                     self.SaveAF(Cx, function(err, CellsSaved) {
                         return done(err);
                     });
-
                 });
             })
         })
@@ -291,6 +313,8 @@ var AutoFill = (new function() {
 
     return self;
 });
+
+
 
 
 
