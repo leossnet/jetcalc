@@ -105,7 +105,11 @@ mongoose.connection.on('connected', function() {
                 var AF = require(__base + "classes/jetcalc/Helpers/AutoFill.js");
                 AF.UpdateAll(msg, function(err) {
                     if (err) console.log(err);
-                    return done();
+                    AF.UpdateChainDocuments(msg,function(err){
+                        console.log("Rabbit task is finished");
+                        return done(err);
+
+                    })
                 });
             }
         })

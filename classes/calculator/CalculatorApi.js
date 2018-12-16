@@ -558,7 +558,6 @@ router.put('/api/cells', function(req, res) {
             var RValue = null;
             if (IsCalcValue) {
                 try {
-                    console.log("RValue" + Value);
                     eval("RValue" + Value);
                 } catch (e) {
                     RValue = 0;

@@ -57,7 +57,6 @@ module.exports = {
 			var Cont = _.clone(Context); 
 			var Unmapper = new Helper.Unmapper(Cont,Info);
 			Unmapper.Unmap(Cells,function(err){
-				console.log(Unmapper.Err);
 				var Evaluator = new Helper.Evaluator(Unmapper);
 				Evaluator.Calculate(function(err){			
 					if (err) console.log(err);

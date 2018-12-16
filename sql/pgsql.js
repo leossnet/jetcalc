@@ -18,7 +18,6 @@ var Sql = (new function(){
 	}
 
 	self.SetCellsJSON = function(JSON_A,done){
-		console.log("SELECT public.\"SetCellsJSON\" ('"+JSON_A+"',0)");
 		self.DB.Exec(
 			"SELECT public.\"SetCellsJSON\" ('"+JSON_A+"',0)",
 			done

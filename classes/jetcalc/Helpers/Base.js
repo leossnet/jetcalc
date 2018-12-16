@@ -73,7 +73,6 @@ module.exports = function(Name){
 			self.FlushTimeout = null;
 		}
 		self.FlushTimeout = setTimeout(function(){
-			console.log("FLUSH FOR:",self.Name);
 			self.ClearCache();
 			clearTimeout(self.FlushTimeout);
 			Bus.Emit("FLUSH:"+self.Name);

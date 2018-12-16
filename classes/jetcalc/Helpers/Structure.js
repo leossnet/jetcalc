@@ -44,20 +44,15 @@ var StructureHelper = (new function(){
 	}	
 
 	self.get = function(Cx,done){
-		console.log("get 1");
 		self.LoadInfo(Cx,function(err,INFO){
-			console.log("get 2");
 			if (err) return done(err);
 			INFO.Row.forEach(function(R){
 				if (!_.isEmpty(R.Link2Use)){
 					R = _.merge(R,R.Link2Use);
 				}
 			})
-			console.log("get 3");
 			var Plugin = self.Plugin(Cx,INFO);
-			console.log("get 4",Plugin);
 			Plugin.get(Cx,INFO,function(err,Answer){
-				console.log("get 5",Answer,err);
 				return done(err,Answer);
 
 			});
@@ -65,9 +60,7 @@ var StructureHelper = (new function(){
 	}
 
 	self.getCells = function(Cx,done){
-		console.log("getCells 1");
 		self.get(Cx,function(err,Answer){
-			console.log("getCells 2");
 			if (err) return done(err);
 			var Result = [];
 			Answer.Cells.forEach(function(Row){
@@ -81,7 +74,6 @@ var StructureHelper = (new function(){
 			})
 			var AllFormats = _.uniq(_.values(CellFormats));
 			if (_.isEmpty(AllFormats)){
-				console.log("getCells 3");
 				return done(err,_.uniq(CellNames),CellFormats);	
 			} else {
 				mongoose.model("format").find({CodeFormat:{$in:AllFormats}},"CodeFormat FormatValue").isactive().lean().exec(function(err,Fs){
@@ -89,7 +81,6 @@ var StructureHelper = (new function(){
 					for (var CellName in CellFormats){
 						CellFormats[CellName] = FInd[CellFormats[CellName]];
 					}
-					console.log("getCells 4");
 					return done(err,_.uniq(CellNames),CellFormats);	
 				})
 			}
@@ -189,32 +180,26 @@ var Agregate = (new function(){
 	self.Name = "Agregate";
 
 	self.get = function(Cx,INFO,done){
-		console.log("Agregate get 0",Cx.AgregateObjs,Cx);
 		var CodeObj = "["+Cx.AgregateObjs.join(",")+"]", Rows = INFO.Row, Cols = INFO.Col, Doc = INFO.Doc,
 	    	Valuta = _.find(INFO.Valuta,{CodeValuta:Cx.CodeValuta}),
 	    	ValutaSign = "";
-	    console.log("Agregate get 1");
 	    if (Valuta){
 	    	ValutaSign = _.isEmpty(Valuta.SignValuta) ? Valuta.SNameValuta:Valuta.SignValuta;
 	    }
-	    console.log("Agregate get 2");
 	    if (INFO.Doc.HasChildObjs && !_.isEmpty(Cx.ChildObj)){
 	    	CodeObj = Cx.ChildObj;
 	    }
-	    console.log("Agregate get 3");
         var FL = 2;
 		var Answer = {Header:['Код','Название'],Tree:{},Cells:[]}
         if (Doc.IsShowMeasure){
             Answer.Header.push('Ед/из'); FL = 3;
         }
-        console.log("Agregate get 4");
         Cols && Cols.forEach(function(C){
             Answer.Header.push(C.NameColsetCol);
         })
  		Rows && Rows.forEach(function(R,I){
             Answer.Tree[I] = _.pick(R,['lft','rgt','level', 'CodeRow']);
         })
-        console.log("Agregate get 5");
         Rows && Rows.forEach(function(Row){
             var EmptRow = [Row.NumRow,Row.NameRow];        	
             if (Doc.IsShowMeasure){
@@ -251,7 +236,6 @@ var Agregate = (new function(){
             })
             Answer.Cells.push(EmptRow)            
         })
-        console.log("Agregate get end!");
         return done(null,Answer);
 	}
 	return self;

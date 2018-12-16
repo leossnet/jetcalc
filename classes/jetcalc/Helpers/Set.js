@@ -129,15 +129,12 @@ var SetHelper = (new function(){
 		var Reports = _.filter(_.filter(INFO.Reports,{CodeDoc:CodeDoc}),function(R){
 			var Result = true;
 			if (!_.isEmpty(R.CodePeriodGrp) && !_.includes(INFO.PeriodMap[CodePeriod],R.CodePeriodGrp)){
-				console.log("CodePeriodGrp");
 				Result = false;
 			}
 			if (!_.isEmpty(R.CodeGrp)  && !_.includes(INFO.ObjMap[CodeObj],R.CodeGrp)){
-				console.log("CodeGrp");
 				Result = false;	
 			}
 			if (R.IsPrivate && R.CodeUser!=CodeUser){
-				console.log("IsPrivate");
 				Result = false;		
 			}
 			return Result;

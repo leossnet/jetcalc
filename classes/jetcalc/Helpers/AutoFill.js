@@ -48,6 +48,8 @@ var AutoFill = (new function() {
 
 
     self.UpdateChainDocuments = function(Cx,done){
+        console.log("UpdateChainDocuments!!!!!!!!!!!!!");
+
         self.GetRoute(Cx,function(err, route){
             if (_.isEmpty(route)){
                 return done();
@@ -58,11 +60,14 @@ var AutoFill = (new function() {
                 var CodeDocs = _.first(_.values(start));
                 tasks = tasks.concat(CodeDocs);
             }
+            tasks = _.uniq(tasks);
             async.eachSeries(tasks,function(CodeDoc,next){
                 var context = _.merge(_.cloneDeep(Cx),{CodeDoc:CodeDoc});
                 self.UpdateAll(context,next);
             },function(err){
-                if (err) return done(err);
+                if (err) console.log("All Updated");
+                console.log("ALL DONE! UpdateChainDocuments");
+                return done(err);
             })
         })
     }
@@ -77,7 +82,6 @@ var AutoFill = (new function() {
             } 
             var Query = _.merge({CodeDocSourse: CodeDoc},Q);
             mongoose.model("docrelation").find(Query, "-_id CodeDocTarget Link_colrelation").populate("Link_colrelation").isactive().lean().exec(function(err, RelatedDocs) {
-                console.log(RelatedDocs);
                 var Path = {};
                 RelatedDocs.forEach(function(RD){
                     RD.Link_colrelation.forEach(function(ColInfo){
@@ -146,7 +150,6 @@ var AutoFill = (new function() {
                 ToCalculate[A.Cell] = A.AfFormula;
             })
             CalcApi.CalculateByFormula(ToCalculate, Cx, function(err, Result) {
-                console.log(Result);
                 return done(err, Result);
             })
         })
@@ -191,9 +194,10 @@ var AutoFill = (new function() {
             } else {
                 Objs = [Cx.CodeObj];
             }
+            console.log("... UpdateAll",Cx.CodeDoc,Result.Periods,Objs)
+
             async.eachSeries(Result.Periods, function(Period, next) {
                 async.eachSeries(Objs, function(Obj, cb) {
-
                     var Context = _.cloneDeep(Cx);
                     if (IsChildObj) {
                         Context.ChildObj = Obj
@@ -208,9 +212,10 @@ var AutoFill = (new function() {
                 	return next(err);
                 })
             }, function(err) {
-            	return done(err);
-                self.ChainCount = 1;
+                console.log("Update All is finished");
+                return done(err);
                 self.UpdateChainDocuments(Cx, function(err) {
+                    return done(err);
                     if (err) return done(err);
                     self.SaveAF(Cx, function(err, CellsSaved) {
                         return done(err);
@@ -251,7 +256,6 @@ var AutoFill = (new function() {
 
 
     self.MaxRound = function(V) {
-        console.log("=-=======",V.toFixed(8),"=======","V",V,Number(V.toFixed(8)));
         return Number(V.toFixed(8));
     }
 

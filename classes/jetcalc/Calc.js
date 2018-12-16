@@ -68,7 +68,6 @@ var Calculator = function(){
 		self.PrepareValuta(function(err){
 			self.Timer.Start('Разбор формул');
 			self.Unmapper.Unmap(Cells,Cx,function(err){
-				console.log(self.Unmapper.HowToCalculate);
 				//console.log("Calculate 3");		
 				//console.log("UNMAP!");
 				self.Timer.End('Разбор формул');

@@ -16,14 +16,17 @@ var MAFFormula = (new function(){
 
 	self.ShowPath = function(){
 		self.rGet("afpath",{Context:CxCtrl.CxPermDoc()},function(Route){
-			var ArrToFill = [];
+			var ArrToFill = [], Used = [];
 			var start = Route[CxCtrl.CodeDoc()];
 			var breakCounter = 10;
 			while(!_.isEmpty(start) && (--breakCounter)>0){
 				var col = _.first(_.keys(start));
 				var doc = _.first(_.values(start));
-				ArrToFill.push({CodeDoc:doc,CodeCol:col});
-				start = Route[doc];
+				if (Used.indexOf(_.first(doc))==-1){
+					ArrToFill.push({CodeDoc:doc,CodeCol:col});
+					start = Route[doc];
+					Used.push(_.first(doc));
+				}				
 			}
 			self.Path(ArrToFill);
 			$('#showAFPath').modal('show');

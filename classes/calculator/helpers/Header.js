@@ -83,7 +83,6 @@ var HeaderHelper = function(Context){
 							break;
 						}
 					})
-					//console.log(FlatTree);
 					return done(null,FlatTree);
 				})
 			})
@@ -300,9 +299,11 @@ var HeaderHelperOld = function(Context){
 		self.query('docheader',{CodeDoc:self.Context.CodeDoc},'-_id CodeDocHeader CodeHeader CodePeriodGrp IsInput IndexDocHeader')
 			.sort({IndexDocHeader:1}).exec(function(err,HeaderLinks){
 			if (!HeaderLinks.length) return done("У документа "+self.Context.CodeDoc+" не настроены заголовки");
+			/*
 			_.map(HeaderLinks,function(H){
 				console.log(_.pick(H,["IndexDocHeader","CodeHeader"]));
 			})
+			*/
 			HeaderLinks.forEach(function(HLink){
 				self.AddToTree (HLink.CodeHeader,_.merge(self.HInfo[HLink.CodeHeader],{Type:'header',CodePeriodGrp:HLink.CodePeriodGrp, IsInput:HLink.IsInput}),"ROOT");//HLink.CodeDocHeader
 			})			

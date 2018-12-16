@@ -147,9 +147,6 @@ var Unmapper = function(Context, InfoCacher){
 				self.CacheInfo[CellName].Dependable[V] = self.HowToCalculate[V];
 			})
 		}	
-		console.log(self.HowToCalculate["$z10010000@KOL.P56.Y2017#102_PL_ESPC_CE_ST230?"]);
-		console.log(self.Dependencies["$z10010000@KOL.P56.Y2017#102_PL_ESPC_CE_ST230?"]);
-		console.log(DependanceTree["$z10010000@KOL.P56.Y2017#102_PL_ESPC_CE_ST230?"]);
 	}	
 
 	self.UpdateCache = function(done){
@@ -168,7 +165,6 @@ var Unmapper = function(Context, InfoCacher){
 		if ( (++self.unmapCounter)>1000) {
 			throw "1000 unmaps";
 		}
-		console.log(self.unmapCounter);
 		self.LoadInfo(self.Unmapped,function(err){
 			if (err) return done(err);
 			for (var CellName in self.Unmapped){
@@ -1387,7 +1383,6 @@ var Evaluator = function(Unmapper){
 				EvalResult = jison.parse(Formula);
 				if (EvalResult==void(0) || isNaN(EvalResult)) EvalResult = 0;
 			} catch (e2){
-				console.log(e2);
 				EvalResult = 0;
 				Unmapper.Err.Set(CellName,"CALCERROR: "+InitialFormula+" : "+e2.message);
 				return 0;
