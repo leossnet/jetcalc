@@ -1866,6 +1866,11 @@ module.exports = {
                 "default": "",
                 "view": "none"
             },
+            "UseMultilevelHeader": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+            },
             "FirstYear": {
                 "type": Number,
                 "default": 0,

@@ -74,7 +74,7 @@ var MDocumentEditor = (new function() {
 		switch(self.Mode()){
 			case "RootRows":
 				Result.Links = Result.Links.concat(['docrow','docheader']);
-				Result.Fields = Result.Fields.concat(['IsShowRoots']);
+				Result.Fields = Result.Fields.concat(['IsShowRoots',"UseMultilevelHeader"]);
 			break;
 			case "Placement":
 				Result.Links = Result.Links.concat(['docfolderdoc','docpacket']);

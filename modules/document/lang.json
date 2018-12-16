@@ -14,5 +14,6 @@
 	"CodeParentDocFolder":"Код.Рдт.Папки",
 	"IndexDocFolder":"Индекс",
 	"Icon":"Иконка",
+	"UseMultilevelHeader":"Многоуровневые заголовки",
 	"IsDocumentCreator":"Управление документами"
 }
