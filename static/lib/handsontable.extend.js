@@ -126,6 +126,9 @@
                     value: CellInfo.Comment
                 };
             }
+            if (CellInfo.IsPrimary && !_.isEmpty(CellInfo.CalcValue)) {
+                $(td).addClass("htCalcValueCell");
+            }
             // Формульные выражения
             if ((value + '').trim().indexOf('=') === 0) {
                 try {

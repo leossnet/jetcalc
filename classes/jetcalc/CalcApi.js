@@ -62,7 +62,7 @@ var CalcApi = (new function(){
                   		} else {
                   			M = _.pick(T,["Type","CodeDoc"]);
                   			if (T.Type=='PRM'){
-                  				M = _.merge(M,_.pick(JC.PrimariesInfo[CellName],["Comment","DateEdit","IsRealNull","CodeUser"]));
+                  				M = _.merge(M,_.pick(JC.PrimariesInfo[CellName],["Comment","DateEdit","IsRealNull","CodeUser","CalcValue"]));
                   			}
                   		} 
                               M.Formatter = _.isEmpty(Formats[CellName]) ? "":Formats[CellName];

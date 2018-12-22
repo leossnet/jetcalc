@@ -85,7 +85,7 @@ var BlankDocument = (new function() {
                 self.LastCellDoc(Info.CodeDoc);
                 self.LastCellType(Info.Type);
                 if (Info.Type == "PRM") {
-                    if (Info.CalcValue) Info.FRM = Info.CalcValue.replace("=", "");
+                    if (Info.CalcValue) Info.FRM = Info.Value + " = "+Info.CalcValue.replace("=", "");
                     else Info.FRM = Info.Value;
                 }
                 var Formula = self.SimplifyFormula(Info.Cell, Info.FRM);
