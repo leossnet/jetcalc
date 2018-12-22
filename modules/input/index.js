@@ -475,7 +475,6 @@ ModuleManager.Events.on("modulesinited", function() {
             }
         }
         if (isControlPressed && e.keyCode == 'S'.charCodeAt(0)) {
-            alert();
             MInput.SaveChanges();
         }
     })
