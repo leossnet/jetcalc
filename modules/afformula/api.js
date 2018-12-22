@@ -19,8 +19,11 @@ router.get('/calculate', function(req,res,next){
 	AFHelper.HasAF(Cx,function(err,R){
 		if (err) return next(err);
 		if (!R) return res.json({});
-		AFHelper.GetAF(Cx,function(err,Answ){
-			return res.json(Answ);
+		AFHelper.GetAF(Cx,function(err,Answ,Expl){
+			return res.json({
+				Values:Answ,
+				Explain:Expl
+			});
 		})
 	})
 })

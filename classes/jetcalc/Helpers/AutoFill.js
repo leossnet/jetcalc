@@ -149,8 +149,12 @@ var AutoFill = (new function() {
             AFCells.forEach(function(A) {
                 ToCalculate[A.Cell] = A.AfFormula;
             })
-            CalcApi.CalculateByFormula(ToCalculate, Cx, function(err, Result) {
-                return done(err, Result);
+            CalcApi.CalculateByFormula(ToCalculate, Cx, function(err, Result, AllResult) {
+                var Explain = {};
+                for (var CodeCell in ToCalculate){
+                    Explain[CodeCell] = AllResult.Unmapper.HowToCalculate[CodeCell].FRM;
+                }
+                return done(err, Result, Explain);
             })
         })
     }

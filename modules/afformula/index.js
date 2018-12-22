@@ -46,12 +46,20 @@ var MAFFormula = (new function(){
 		return done();
 	}
 
+
 	self.CheckAF = function(){
-		self.rGet("calculate",{Context:CxCtrl.Context()},function(data){
+		self.rGet("calculate",{Context:CxCtrl.Context()},function(dataRaw){
+			var data = dataRaw.Values;
+			var formulas = dataRaw.Explain;
+
+
 			var Meta = MInput.table.getCellsMeta(), RealValues = data||{};
 			var IsSaveAvailable = false;
 			Meta.forEach(function(M){
 				if (!_.isEmpty(M) && !_.isEmpty(M.Cell) && M.IsAFFormula && M.IsPrimary){
+					if (!_.isEmpty(formulas[M.Cell])){
+						M.AfFormula = formulas[M.Cell];
+					}
 					if (!RealValues[M.Cell]) RealValues[M.Cell] = 0;
 					if (!M.Value) {
 						M.Value = 0;					

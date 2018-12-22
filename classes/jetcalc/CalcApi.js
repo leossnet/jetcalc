@@ -43,7 +43,7 @@ var CalcApi = (new function(){
             JC.Override = Cells;
             JC.NoCacheSave = true;
             JC.Calculate(_.keys(Cells),Cx,function(err){
-               return done(err,JC.Result);
+               return done(err,JC.Result,JC);
             })
       }
 
