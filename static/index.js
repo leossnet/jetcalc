@@ -157,6 +157,7 @@ var MSite = (new function () {
         if (self.AnnounceTimeout.ctrls) clearTimeout(self.AnnounceTimeout.ctrls);
         self.AnnounceTimeout.ctrls = setTimeout(function () {
             self.Events.emit("save");
+            Bus.Emit("save");
             self.AnnounceTimeout.ctrls = null;
         }, 500);
     }

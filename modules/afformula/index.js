@@ -43,6 +43,11 @@ var MAFFormula = (new function(){
 		BlankDocument.Events.addListener("LastCellUpdate",function(){
 			self.UpdateLastCell();
 		})
+		Bus.On("save",function(){
+			if (self.IsSaveAvailable()){
+				self.Update();
+			}
+		})
 		return done();
 	}
 
