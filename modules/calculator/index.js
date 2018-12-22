@@ -89,6 +89,10 @@ var BlankDocument = (new function() {
                     else Info.FRM = Info.Value;
                 }
                 var Formula = self.SimplifyFormula(Info.Cell, Info.FRM);
+                if (!Info.IsPrimary && Info.Value){
+                    Formula = Formula + " = "+Info.Value;
+                }
+                console.log("UP ",Info);
                 self.LastCellFormula(Formula);
                 self.Events.emit("LastCellUpdate");
             }
