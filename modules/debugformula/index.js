@@ -7,7 +7,7 @@ var MDebugFormula = (new function(){
 
   self.IsDebugAvailable = function(){
     var CellType = BlankDocument.LastCellType();
-    return (CellType=="FRM" || CellType=='AF');
+    return (CellType=="FRM" || CellType=='AF' || CellType=='SUM');
   }
 
   self.DebugCell = function(){
