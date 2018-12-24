@@ -161,6 +161,14 @@ var HeaderHelper = (new function(){
 					if (err) return done(err);
 					Answer.ColsetCols = ColsetCols;
 					var UsedCols = _.uniq(_.map(ColsetCols,"CodeCol"));
+
+					var TagOverride = {};
+					ColsetCols.forEach(function(ColsetCol){
+						TagOverride[ColsetCol.CodeCol] = ColsetCol.Link_colsetcoltag;
+					})
+
+					console.log(TagOverride);
+
 					mongoose.model('col').find({CodeCol:{$in:UsedCols}},self.Fields["col"])
 					.populate('Link_coltag','CodeTag Value')
 					.isactive()
@@ -170,6 +178,13 @@ var HeaderHelper = (new function(){
 							var Tags = [];
 							if(Col.Link_coltag.length){
 								Col.Link_coltag.forEach(function(CT){
+									var Value = "*";
+									if (CT.Value) Value = CT.Value;
+									Tags.push(CT.CodeTag+":"+Value);				
+								})
+							}
+							if (TagOverride[Col.CodeCol]){
+								TagOverride[Col.CodeCol].forEach(function(CT){
 									var Value = "*";
 									if (CT.Value) Value = CT.Value;
 									Tags.push(CT.CodeTag+":"+Value);				

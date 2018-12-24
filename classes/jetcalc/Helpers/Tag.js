@@ -13,16 +13,17 @@ var TagHelper = (new function(){
 		rowtag:["-_id","CodeRow","CodeTag","Value"],
 		objtag:["-_id","CodeObj","CodeTag","Value"],
 		doctag:["-_id","CodeDoc","CodeTag","Value"],
+		colsetcoltag:["-_id","CodeColsetCol","CodeTag","Value"],
 		coltag:["-_id","CodeCol","CodeTag","Value"]
 	}
 
-	self.Links = {objtypetag:"CodeObjType",rowtag:"CodeRow",objtag:"CodeObj",doctag:"CodeDoc",coltag:"CodeCol"};
+	self.Links = {objtypetag:"CodeObjType",rowtag:"CodeRow",objtag:"CodeObj",doctag:"CodeDoc",coltag:"CodeCol",colsetcoltag:"CodeColsetCol"};
 
 	self.SubscribeChanges(_.keys(self.Fields));
 
 	self.get = function(done){
 		self.FromCache(null,function(err,Result){
-			if (Result) {
+			if (Result ) {
 				return done (err,Result);
 			}
 			self.CreateInfo(function(err,Data){
@@ -33,6 +34,18 @@ var TagHelper = (new function(){
 		})
 	};
 
+
+	self.ColsetColToCols = function(records,done){
+		if (_.isEmpty(records)) return done(null,[]);
+		mongoose.model("colsetcol").find({CodeColsetCol:{$in:_.map(records,"CodeColsetCol")}}).lean().exec(function(err,Links){
+			var answer = [];
+			Links.forEach(function(col){
+				answer.push(_.merge({CodeCol:col.CodeCol},_.find(records,{CodeColsetCol:col.CodeColsetCol})))
+			})	
+			return done(err,answer);
+		})
+	}
+
 	self.CreateInfo = function(done){
 		var Info = {};
 		async.each(_.keys(self.Fields),function(F,cb){
@@ -41,20 +54,22 @@ var TagHelper = (new function(){
 				return cb(err);
 			})
 		},function(err){
-			var Linked = _.keys(self.Links);
-			var Result = {};
-			Info.tag.forEach(function(T){
-				Result[T.CodeTag] = T;
-				Linked.forEach(function(link){
-					var LinkModels = _.filter(Info[link],{CodeTag:T.CodeTag});
-					Result[T.CodeTag][link] = {};
-					LinkModels.forEach(function(L){
-						Result[T.CodeTag][link][L[self.Links[link]]] = L.Value;
-					})					
+			self.ColsetColToCols(Info.colsetcoltag,function(err,ToCols){
+				Info.coltag = Info.coltag.concat(ToCols);
+				var Linked = _.keys(self.Links);
+				var Result = {};
+				Info.tag.forEach(function(T){
+					Result[T.CodeTag] = T;
+					Linked.forEach(function(link){
+						var LinkModels = _.filter(Info[link],{CodeTag:T.CodeTag});
+						Result[T.CodeTag][link] = {};
+						LinkModels.forEach(function(L){
+							Result[T.CodeTag][link][L[self.Links[link]]] = L.Value;
+						})					
+					})
 				})
+				return done(err,Result)			
 			})
-			return done(err,Result)
-
 		})
 	}
 

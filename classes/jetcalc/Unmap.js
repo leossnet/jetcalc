@@ -415,6 +415,9 @@ var Unmaper = function(){
 	self.TagValue = function(Cell, TagNameRaw){
 		var TagName = _.trimStart(TagNameRaw,'_').replace("{","").replace("}","");
 		var TagInfo = self.Help.Tag[TagName];
+
+		console.log(self.Help.Tag[TagName]);
+		
 		if (_.isEmpty(TagInfo)) {
 			if (self.DefaultTags[TagName]) return self.DefaultTags[TagName];
 			return "UNKNOWNTAG";
