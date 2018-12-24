@@ -16,11 +16,11 @@ var ColHelper = (new function(){
 	self.GetClean = function(Cx,done){
 		self.GetAll(Cx,function(err,Result){
 			var FieldsToClean = [
-				'Link_coltag','Type','lft','rgt','IsRemoved','RemoveComment','code','parent','InitialPeriod','ShowName','InitialName','Link_colsetcolperiodgrp','Link_colsetcolgrp',
+				'Link_coltag','Link_colsetcoltag','Type','lft','rgt','IsRemoved','RemoveComment','code','parent','InitialPeriod','ShowName','InitialName','Link_colsetcolperiodgrp','Link_colsetcolgrp',
 				'IndexColsetCol','InitialYear','level','NameYear','NamePeriod','MCount','NameCol','Comment'
 			];
 			FieldsToClean = [
-				'Link_coltag','Link_colsetcolperiodgrp','Link_colsetcolgrp'
+				'Link_coltag','Link_colsetcolperiodgrp','Link_colsetcolgrp','Link_colsetcoltag'
 			];
 			var Answ =  _.map(_.filter(Result,function(El){
 				return !El.IsRemoved && El.Type=='col';
@@ -195,7 +195,7 @@ var ColHelper = (new function(){
 				if (H.Type=='colsetcol'){      
 					var ColCodes = self.ChildrenCodes(INFO.Result,H);
 					ColCodes.forEach(function(CC){
-						var ExFields = ['NameColsetCol','Condition','Year','CodePeriod','IsFixed','IsControlPoint','CodeStyle','CodeFormat','AfIndex','IsAfFormula','AfFormula','Link_colsetcolperiodgrp','Link_colsetcolgrp','IndexColsetCol','CodeColsetCol'];
+						var ExFields = ['NameColsetCol','Condition','Year','CodePeriod','IsFixed','IsControlPoint','CodeStyle','CodeFormat','AfIndex','IsAfFormula','AfFormula','Link_colsetcolperiodgrp','Link_colsetcolgrp','IndexColsetCol','CodeColsetCol','Link_colsetcoltag'];
 						//if (H.IsAgFormula && H.AgFormula.length){
 						//	ExFields = ExFields.concat(["IsAgFormula", "AgFormula"]);
 						//}

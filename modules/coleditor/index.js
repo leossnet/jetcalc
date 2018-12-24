@@ -34,7 +34,7 @@ var MColEditor = (new function() {
             var Col = self.AllRows[Ind];
             if (T == "colsetcol") {
                 if (_.isEmpty(ToSave[T][Col.CodeColsetCol])) ToSave[T][Col.CodeColsetCol] = {};
-                if (["colsetcolperiodgrp","colsetcolgrp"].indexOf(FV)!=-1){
+                if (["colsetcolperiodgrp","colsetcolgrp","colsetcoltag"].indexOf(FV)!=-1){
                     ToSave[T][Col.CodeColsetCol]["Link_"+FV] = _.map(Col["Link_"+F],function(ColLink){
                         return _.merge(ColLink,{CodeColsetCol:Col.CodeColsetCol});    
                     })
@@ -164,6 +164,7 @@ var MColEditor = (new function() {
                     break;
                 case 'Formula':
                     ColCFG.Link_coltag = ["middle_link", false, 100];
+                    ColCFG.Link_colsetcoltag = ["middle_link", false, 100];
                     ColCFG.IsFormula = ["middle_checkbox", false, 100];
                     ColCFG.InitialFormula = ["middle_formula", false, 200];
                     ColCFG.IsAfFormula = ["middle_checkbox", false, 100];
@@ -200,6 +201,7 @@ var MColEditor = (new function() {
                     beforePaste: Handsontable.overridePaste,
                     MainModel: {
                         Link_coltag: 'col',
+                        Link_colsetcoltag: 'colsetcol',
                         Link_colsetcolgrp: 'colsetcol',
                         Link_colsetcolperiodgrp: 'colsetcol',
                         CodeStyle: 'colsetcol',
