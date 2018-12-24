@@ -123,6 +123,18 @@ var MColEditor = (new function() {
             }
         }
     }
+    self.ConditionFormatter = function(instance, td, row, col, prop, value, CellInfo) {
+        if (prop=="Condition"){
+            var R = self.AllRows[row];
+            var test = _.filter(R.RemoveComment,function(v){
+                return _.has(v,"ConditionHTML");
+            })
+            if (!_.isEmpty(test)){
+                var condition = _.first(test).ConditionHTML;
+                $(td).html(condition);
+            }
+        }
+    }
 
     self.AddRenders = [self.AddRender,self.TreeColorizer];
 
@@ -149,7 +161,9 @@ var MColEditor = (new function() {
             }
             switch (self.Mode()) {
                 case "Filter":
-                    ColCFG.Condition = ["condition", false, 200];
+                    ColCFG.Condition = ["condition", false, 200, {
+                        renderer: self.ConditionFormatter
+                    }];
                     ColCFG.CodePeriodGrp = ["middle_select", true, 100];
                     ColCFG.IsInput = ["middle_checkbox", true, 100];
                     ColCFG.Link_colsetcolgrp = ["middle_link", false, 200];

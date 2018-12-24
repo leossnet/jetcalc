@@ -20,6 +20,22 @@ td.nowrapped.removed_by_filter.guilty_cell good, td.nowrapped good{
 	color:#82AF6F;
 	font-weight: bold;
 }
+
+td bad{
+	color:#B74635;
+	font-weight: bold;
+}
+
+td good{
+	color:#82AF6F;
+	font-weight: bold;
+}
+
+td logic {
+	color: navy;
+	font-weight: normal;
+}
+
 td.nowrapped.removed_by_filter.guilty_cell bad, td.nowrapped bad{
 	font-weight: bold;
 }
