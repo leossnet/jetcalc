@@ -513,7 +513,7 @@ var FormulaEditor = (new function(){
 	self.SetCell = function(CellName){
 		var C = CxCtrl.Context();
 		if (C.ChildObj) C.CodeObj = C.ChildObj;
-		self.GlobalContext = _.pick(C,["CodeDoc","CodeValuta","CodeObj","CodePeriod","Year"]);
+		self.GlobalContext = _.pick(C,["CodeDoc","CodeValuta","CodeObj","CodePeriod","Year","IsInput"]);
 		self.CurrentCell(CellName);
 		var Set = _.clone(self.GlobalContext);
 		if (CellName){
@@ -522,7 +522,9 @@ var FormulaEditor = (new function(){
 			Set = _.merge(Set,CellSet);
 		}
 		for (var Field in Set){
-			self.CellContext[Field](Set[Field]);
+			if (_.isFunction(self.CellContext[Field])){
+				self.CellContext[Field](Set[Field]);
+			}
 		}
 	}
 

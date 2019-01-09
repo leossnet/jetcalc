@@ -48,7 +48,9 @@ mongoose.connection.on('connected', function(){
 		            	var Context = JSON.parse(msg.content.toString());
 		            	LastCx = Context;
 		            	console.log("CalculateDocument start");
+		            	console.log("1");
 						Calculator.CalculateDocument(Context,function(err,Result){
+							console.log("2");
 							console.log("CalculateDocument end");
 							if (!Result) err = 'Пустой документ';
 							if (err) {

@@ -4,6 +4,7 @@ var mongoose = require("mongoose");
 var HPath = __base+"classes/jetcalc/Helpers/";
 var Rx = require(__base+"classes/jetcalc/RegExp.js");
 var RowHelper = require(HPath+"Row.js");
+var ColHelper = require(HPath+"Col.js");
 var jison_prepare  = require(__base+'classes/calculator/jison/compile.js'); // Упрощалка
 var RabbitMQClient = require(__base + "src/rabbitmq_wc.js").client;
 var config = require(__base+"config.js");
@@ -30,6 +31,8 @@ var Unmaper = function(){
 	self.NewCache = [];
 	self.Override = {};
 	self.NoCacheSave = false;
+
+	self.ColTags = {};
 
 	self.Prepare = function(done){
 		async.each(["DocRow","Div","Period","Tag","AllCols"],function(HName,cb){
@@ -132,6 +135,7 @@ var Unmaper = function(){
 	}
 	
 	self.LoadedRows = {};
+
 
 	self.LoadDocs = function(Remain,done){
 		var ToLoad = [];
@@ -288,10 +292,17 @@ var Unmaper = function(){
 
 	self.RemoveTags = function(Formula,Cell){
 		var Tags = _.uniq(Formula.match(Rx.Tags)); // Заменяем тэги
-
 		Tags.forEach(function(Tag){
 			var Value = self.TagValue(Cell,Tag);
-			if (Value=="UNKNOWNTAG") self.Err.Set(Cell.Cell,'TAG:'+Tag+":NO_VALUE");
+			if (Value=="UNKNOWNTAG") {
+				var ClearedTag = Tag.replace("{","").replace("}","");
+				if (!_.isEmpty(self.ColTags[Cell.Cell]) && !_.isEmpty(self.ColTags[Cell.Cell][ClearedTag])){
+					Value = self.ColTags[Cell.Cell][ClearedTag];
+				}
+				if (Value=="UNKNOWNTAG"){
+					self.Err.Set(Cell.Cell,'TAG:'+Tag+":NO_VALUE");	
+				}
+			}
 			Formula = Formula.split(Tag).join(Value);
 		})
 		return Formula;
@@ -415,9 +426,6 @@ var Unmaper = function(){
 	self.TagValue = function(Cell, TagNameRaw){
 		var TagName = _.trimStart(TagNameRaw,'_').replace("{","").replace("}","");
 		var TagInfo = self.Help.Tag[TagName];
-
-		console.log(self.Help.Tag[TagName]);
-		
 		if (_.isEmpty(TagInfo)) {
 			if (self.DefaultTags[TagName]) return self.DefaultTags[TagName];
 			return "UNKNOWNTAG";
@@ -544,6 +552,7 @@ var Unmaper = function(){
 			}
 			if (!Result){
 				Choosed = "Col";
+				//console.log(">>>>>",Col,">>>>>");
 				Result = {Type:"FRM",FRM:Col.Formula};
 				ResultDescription = "Формула в колонке";		
 			}

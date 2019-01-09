@@ -45,7 +45,6 @@ var MDebugFormula = (new function(){
     		FormulaEditor.History([]);
         FormulaEditor.History.push(CellName);
         FormulaEditor.CurrentCell(CellName);
-
         FormulaEditor.Do(function(){
            	FormulaEditor.IsPopupShowned(true);
           	$('#debugFormula').modal('show');

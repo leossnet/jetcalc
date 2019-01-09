@@ -74,14 +74,14 @@ var StructureHelper = (new function(){
 			})
 			var AllFormats = _.uniq(_.values(CellFormats));
 			if (_.isEmpty(AllFormats)){
-				return done(err,_.uniq(CellNames),CellFormats);	
+				return done(err,_.uniq(CellNames),CellFormats,Cells);	
 			} else {
 				mongoose.model("format").find({CodeFormat:{$in:AllFormats}},"CodeFormat FormatValue").isactive().lean().exec(function(err,Fs){
 					var FInd = {}; Fs.forEach(function(F){FInd[F.CodeFormat] = F.FormatValue;})
 					for (var CellName in CellFormats){
 						CellFormats[CellName] = FInd[CellFormats[CellName]];
 					}
-					return done(err,_.uniq(CellNames),CellFormats);	
+					return done(err,_.uniq(CellNames),CellFormats,Cells);	
 				})
 			}
 		})
@@ -157,6 +157,7 @@ var Simple = (new function(){
                     IsControlPoint:(Col.IsControlPoint && Row.IsControlPoint),
                     IsPrimary:(!Col.IsFormula && !Row.IsFormula && !Row.IsSum && (Row.rgt-Row.lft)==1),
                     IsSum:Row.IsSum,
+                    ColTags:Col.TagsInfo,
                     Style:_.compact([Row.CodeStyle,Col.CodeStyle])
                 };
                 var Fs =  _.compact([Col.CodeFormat,Row.CodeFormat]);
@@ -225,6 +226,7 @@ var Agregate = (new function(){
                     IsControlPoint:(Col.IsControlPoint && Row.IsControlPoint),
                     IsPrimary:(!Col.IsFormula && !Row.IsFormula && !Row.IsSum && (Row.rgt-Row.lft)==1),
                     IsSum:Row.IsSum,
+                    ColTags:Col.TagsInfo,
                     Style:_.compact([Row.CodeStyle,Col.CodeStyle])
                 };
                 var Fs =  _.compact([Col.CodeFormat,Row.CodeFormat]);

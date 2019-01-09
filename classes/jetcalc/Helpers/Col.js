@@ -5,6 +5,7 @@ var _ = require('lodash');
 var HelpersPath = __base + 'classes/jetcalc/Helpers/';
 var Base = require(HelpersPath+'Base.js');
 var jison_prepare  = require(__base+'classes/calculator/jison/column.js') // Упрощалка
+var regExp = require(__base+"classes/jetcalc/RegExp.js");
 
 
 
@@ -45,6 +46,7 @@ var ColHelper = (new function(){
 				self.UpdatePeriods(Cx,INFO),     // Меняем периоды и сдвигаем года
 				self.UpdateNames(Cx,INFO),       // Меняем {} на соответствующие названия
 				self.SimplifyFormula(Cx,INFO),   // Упрощаем формулы в зависимости от контекста
+				self.UpdateTags(Cx,INFO),        // Заменяем тэги на значения определенные в Link_colsetcoltag				
 			],function(err){
 				return done(err,_.values(INFO.Result));
 			})			
@@ -305,6 +307,34 @@ var ColHelper = (new function(){
 						console.log(e.message);
 					}
 					H.Formula = Formula;
+					INFO.Result[Code] = H;
+				}
+			}			
+			return cb();
+		}
+	}
+
+	self.UpdateTags = function(Cx,INFO){
+		return function (cb){
+			var PeriodGrps = (!_.isEmpty(INFO.Period[Cx.CodePeriod])) ? INFO.Period[Cx.CodePeriod].Grps:[];
+			var ObjGrps = !_.isEmpty(INFO.Div[Cx.CodeObj]) ? INFO.Div[Cx.CodeObj].Groups:[];
+			var ObjTags = !_.isEmpty(INFO.Div[Cx.CodeObj]) ? INFO.Div[Cx.CodeObj].Tags:[];
+			for (var Code in INFO.Result){
+				var H = INFO.Result[Code];
+				if (H.Type=='col' && H.IsFormula && H.Formula.length){  
+					var Formula = (H.Formula+'').replace(/\s+/g,' ');
+					var Tags = Formula.match(regExp.Tags);
+					var TagsInfo = {};
+					if (!_.isEmpty(Tags)){
+						Tags.forEach(function(tagWithBrackets){
+							var tagName = tagWithBrackets.replace("{","").replace("}","");
+							var tagObj = _.find(H.Link_colsetcoltag,{CodeTag:tagName});
+							if (!_.isEmpty(tagObj)){
+								TagsInfo[tagName] = tagObj.Value;
+							}
+						})
+					}
+					H.TagsInfo = TagsInfo;
 					INFO.Result[Code] = H;
 				}
 			}			

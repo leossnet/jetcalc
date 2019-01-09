@@ -20,18 +20,21 @@ var CalcApi = (new function(){
 
       self.ExplainCell = function(CellName,ForceFormula,Context,done){
             var Cx = _.clone(Context);
-            Cx.IsDebug = true; Cx.IsExplain = true; Cx.UseCache = false;
-            var JC = new JetCalc();
-            if (!_.isEmpty(ForceFormula)){
-                  JC.Override[CellName] = ForceFormula;      
-            }            
-            JC.NoCacheSave = true;
-            JC.Calculate([CellName],Cx,function(err){
-               return done(err,{
-                  Cells:JC.Unmapper.HowToCalculate,
-                  CellsInfo:JC.Unmapper.DebugInfo,
-                  Values:JC.Calculated
-               });
+            Structure.get(Cx,function(err,R){
+                  var RawCells = _.filter(_.flatten(R.Cells),{Cell:CellName});
+                  Cx.IsDebug = true; Cx.IsExplain = true; Cx.UseCache = false;
+                  var JC = new JetCalc();
+                  if (!_.isEmpty(ForceFormula)){
+                        JC.Override[CellName] = ForceFormula;      
+                  }            
+                  JC.NoCacheSave = true;
+                  JC.CalculateWithRaw([CellName],Cx,RawCells,function(err){
+                     return done(err,{
+                        Cells:JC.Unmapper.HowToCalculate,
+                        CellsInfo:JC.Unmapper.DebugInfo,
+                        Values:JC.Calculated
+                     });
+                  })
             })
       }
 
@@ -48,9 +51,11 @@ var CalcApi = (new function(){
       }
 
 	self.CalculateDocument = function(Cx,done){
-		Structure.getCells(Cx,function(err,Cells,Formats){
+            //console.log("Structure.getCells start");
+		Structure.getCells(Cx,function(err,Cells,Formats,RawCells){
+              //    console.log("Structure.getCells end");
       		var JC = new JetCalc();
-                  JC.Calculate(Cells,Cx,function(err){
+                  JC.CalculateWithRaw(Cells,Cx,RawCells,function(err){
                   	var CellValues = JC.Result, AnswerCells = {}, Unmap = JC.Unmapper.HowToCalculate;
                   	for (var CellName in CellValues){
                   		var T = Unmap[CellName], M = {};
