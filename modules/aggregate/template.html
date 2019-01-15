@@ -74,7 +74,7 @@
         <!-- /ko -->
         <i class="fa fa-angle-down icon-on-right fa-light" style="float:right;"></i>
       </a>
-      <ul class="dropdown-menu dropdown-caret" style='width: 100%;min-width: 400px;'>
+      <ul class="dropdown-menu dropdown-caret dropdown-light" style='width: 100%;min-width: 400px;'>
         <!-- ko with:MFavorites.UserFavs.CodeObj -->
           <!-- ko foreach:$data -->
             <!-- ko template:{name:'fav_item',data:{type:'CodeObj',code:$data,model:'obj',click:CxCtrl.Update.bind(null,'obj',$data)}} --><!-- /ko -->
@@ -93,19 +93,19 @@
         </li>
         <!-- ko with:MAggregate.SearchGroups -->
           <!-- ko foreach:_.keys($data) -->
-              <li class="dropdown-hover">
+              <li class="dropdown-hover" data-bind="css:{'active-bold':!_.isEmpty(_.find($parent[$data],{code:CxCtrl.CodeObj()}))}" >
                   <a tabindex="-1" class="clearfix">
                     <span class="pull-left">
                     <!-- ko template:{name:'fav_item',data:{type:'CodeGrp',icon:'fa-folder-o',code:$data,text:Catalogue.GetHtmlWithCode('grp',$data),click:CxCtrl.Update.bind(null,'grp',$data)}} --><!-- /ko -->
                     </span>
                     <i class="fa fa-caret-right pull-right"></i>
                   </a>
-                  <ul class="dropdown-menu pull-right">
+                  <ul class="dropdown-menu pull-right dropdown-light">
                     <!-- ko with:$parent[$data] -->
                       <!-- ko foreach:$data -->
                       <li>
                         <a >
-                    <!-- ko template:{name:'fav_item',data:{type:'CodeObj',code:code,text:$data.name,click:CxCtrl.Update.bind(null,'obj',code)}} --><!-- /ko -->
+                          <!-- ko template:{name:'fav_item',data:{type:'CodeObj',code:code,text:$data.name,click:CxCtrl.Update.bind(null,'obj',code),addCss:(CxCtrl.CodeObj()==code)?'active-bold':''}} --><!-- /ko -->
                         </a>
                      </li>
                      <!-- /ko -->
@@ -116,7 +116,7 @@
         <!-- /ko -->
         <!-- ko with:MAggregate.SearchObjResult -->
           <!-- ko foreach:$data -->
-            <!-- ko template:{name:'fav_item',data:{type:'CodeObj',code:code,text:$data.name,click:CxCtrl.Update.bind(null,'obj',code)}} --><!-- /ko -->
+            <!-- ko template:{name:'fav_item',data:{type:'CodeObj',code:code,text:$data.name,click:CxCtrl.Update.bind(null,'obj',code),addCss:(CxCtrl.CodeObj()==code)?'active-bold':''}} --><!-- /ko -->
           <!-- /ko -->
         <!-- /ko -->
       </ul>
@@ -134,9 +134,9 @@
         <!-- /ko -->
         <i class="fa fa-angle-down icon-on-right fa-light" style="float:right;"></i>
       </a>
-     <ul class="dropdown-menu dropdown-caret" style='width: 100%;min-width: 400px;'>
+     <ul class="dropdown-menu dropdown-caret dropdown-light" style='width: 100%;min-width: 400px;'>
           <!-- ko foreach:$data -->
-             <li>
+             <li data-bind="css:{'active-bold':CxCtrl.ChildObj()==$data}">
                 <a data-bind="click: CxCtrl.Update.bind(null,'childobj',$data)">
                   <!-- ko template:{name:'catalogue',data:{model:'obj',id:$data}} --><!-- /ko -->
                </a>
@@ -156,9 +156,9 @@
         <span data-bind="text: CxCtrl.CodeValuta()"></span>
         <i class="fa fa-angle-down icon-on-right fa-light"></i>
       </a>
-      <ul class="dropdown-menu dropdown-light dropdown-caret">
+      <ul class="dropdown-menu  dropdown-caret dropdown-light">
           <!-- ko foreach: MValuta.GetValutas() -->
-            <li>
+            <li data-bind='css:{"active-bold":CxCtrl.CodeValuta()==$data}'>
               <a data-bind="click: CxCtrl.Update.bind(null,'valuta',$data)">
                 <span data-bind="text: $data"></span>
               </a>

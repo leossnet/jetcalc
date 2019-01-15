@@ -1,5 +1,5 @@
 <script id="fav_item" type="text/html">
-      <li>
+      <li data-bind='css:$data.addCss||""'>
           <a data-bind="click: $data.click">
             <input name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox" data-bind="checked: MFavorites.IsInFavorites($data.type, $data.code),click:MFavorites.ModifyFavorites.bind(null,$data.type, $data.code),clickBubble: false">
             <span  class="lbl"></span>

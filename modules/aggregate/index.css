@@ -6,3 +6,6 @@ ul.dropdown-menu a, ul.dropdown-menu.pull-right a span{
     color: #333;
     text-decoration: none;
 }
+li.active-bold a, ul.dropdown-menu.pull-right li.active-bold a span{
+	font-weight: 600!important;
+}

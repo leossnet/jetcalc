@@ -19,6 +19,7 @@ mongoose.connect(config.mongoUrl, { useMongoClient: true });
 
 
 mongoose.connection.on('connected', function() {
+
     var ModelInit = require(__base + '/classes/InitModels.js');
 
     ModelInit(function() {
@@ -231,15 +232,6 @@ mongoose.connection.on('connected', function() {
     });
 })
 
-    setTimeout(function(){
-        var AF = require(__base + "classes/jetcalc/Helpers/AutoFill.js");
-        var cx = {CodeDoc:"repair",CodePeriod:"12"};
-        AF.BuildDocRoute(cx.CodeDoc,cx.CodePeriod,function(err,Path){
-                console.log(err,Path);
-
-        })
-
-    },1000)
 
 
 

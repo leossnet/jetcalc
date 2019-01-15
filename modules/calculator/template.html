@@ -100,17 +100,17 @@
         <!-- /ko -->
       <!-- /ko -->
       <!-- ko foreach:_.keys(MPeriods.DefaultPeriods()) -->
-        <li class="dropdown-hover">
+        <li class="dropdown-hover" data-bind='css:{"active-bold":MPeriods.DefaultPeriods()[$data].indexOf(CxCtrl.CodePeriod())!=-1}'>
           <a tabindex="-1" class="clearfix">
             <span class="pull-left">
               <!-- ko template:{name:'catalogue',data:{model:'periodgrp',id:$data}} --><!-- /ko -->
             </span>
             <i class="fa fa-caret-right pull-right"></i>
           </a>
-          <ul class="dropdown-menu pull-right width200_300 periods">
+          <ul class="dropdown-menu pull-right width200_300 periods dropdown-light">
             <!-- ko with:MPeriods.DefaultPeriods -->
               <!-- ko foreach:MPeriods.sortPeriods($data[$parent]) -->
-                <!-- ko template:{name:'fav_item',data:{type:'CodePeriod',code:$data,model:'period',click:CxCtrl.Update.bind(null,'period',$data)}} --><!-- /ko -->
+                <!-- ko template:{name:'fav_item',data:{type:'CodePeriod',code:$data,model:'period',click:CxCtrl.Update.bind(null,'period',$data), addCss:(CxCtrl.CodePeriod()==$data)?'active-bold':'' }} --><!-- /ko -->
               <!-- /ko -->
             <!-- /ko -->
           </ul>
@@ -126,7 +126,7 @@
     </a>
     <ul class="dropdown-menu dropdown-light dropdown-caret">
         <!-- ko foreach: _.sortBy(Catalogue.GetAll('year'),'name').reverse() -->
-        <li>
+        <li data-bind='css:{"active-bold":CxCtrl.Year()==$data.id}'>
           <a data-bind="click: CxCtrl.Update.bind(null,'year',$data.id)">
             <span data-bind="text: $data.name"></span>
           </a>
