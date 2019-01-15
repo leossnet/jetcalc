@@ -96,7 +96,7 @@
     <ul class="dropdown-menu dropdown-light dropdown-caret">
       <!-- ko with:MFavorites.UserFavs.CodePeriod -->
         <!-- ko foreach:MPeriods.sortPeriods($data) -->
-          <!-- ko template:{name:'fav_item',data:{type:'CodePeriod',code:$data,model:'period',click:CxCtrl.Update.bind(null,'period',$data)}} --><!-- /ko -->
+          <!-- ko template:{name:'fav_item',data:{type:'CodePeriod',code:$data,model:'period',click:CxCtrl.Update.bind(null,'period',$data), addCss:(CxCtrl.CodePeriod()==$data)?'active-bold':'' }} --><!-- /ko -->
         <!-- /ko -->
       <!-- /ko -->
       <!-- ko foreach:_.keys(MPeriods.DefaultPeriods()) -->

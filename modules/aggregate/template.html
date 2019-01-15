@@ -77,7 +77,7 @@
       <ul class="dropdown-menu dropdown-caret dropdown-light" style='width: 100%;min-width: 400px;'>
         <!-- ko with:MFavorites.UserFavs.CodeObj -->
           <!-- ko foreach:$data -->
-            <!-- ko template:{name:'fav_item',data:{type:'CodeObj',code:$data,model:'obj',click:CxCtrl.Update.bind(null,'obj',$data)}} --><!-- /ko -->
+            <!-- ko template:{name:'fav_item',data:{type:'CodeObj',code:$data,model:'obj',click:CxCtrl.Update.bind(null,'obj',$data),addCss:(CxCtrl.CodeObj()==$data)?'active-bold':''}} --><!-- /ko -->
           <!-- /ko -->
         <!-- /ko -->
         <!-- ko with:MFavorites.UserFavs.CodeGrp -->
