@@ -160,7 +160,16 @@ var LIB = {
     },
     'round':function(args) {
       args = LIB._argsNumeric(args);
-      var result = Math.round(args[0]);
+      var result;
+      if (args[1]){
+        if (args[1]>0){
+          result = Math.round(args[1]*args[0])/args[0];
+        } else {
+          result = Math.round(args[1]/args[0])*args[0];
+        }        
+      } else {
+        result = Math.round(args[0]);
+      }
       return result;
     },
     'limit':function(args) {
