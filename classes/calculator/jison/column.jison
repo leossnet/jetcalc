@@ -44,6 +44,7 @@ d_u_boolconst                                  return 'U_BOOLCONSTANTA';
 
 'forcol'
 |'forobj'
+|'fortype'
 |'fordiv'
 |'forperiod'                                   return 'SWITCH_FUNC';
 

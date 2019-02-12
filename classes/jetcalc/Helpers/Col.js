@@ -283,6 +283,7 @@ var ColHelper = (new function(){
 			var PeriodGrps = (!_.isEmpty(INFO.Period[Cx.CodePeriod])) ? INFO.Period[Cx.CodePeriod].Grps:[];
 			var ObjGrps = !_.isEmpty(INFO.Div[Cx.CodeObj]) ? INFO.Div[Cx.CodeObj].Groups:[];
 			var ObjTags = !_.isEmpty(INFO.Div[Cx.CodeObj]) ? INFO.Div[Cx.CodeObj].Tags:[];
+			var ObjType = !_.isEmpty(INFO.Div[Cx.CodeObj]) ? INFO.Div[Cx.CodeObj].CodeObjType:null;
 			for (var Code in INFO.Result){
 				var H = INFO.Result[Code];
 				if (H.Type=='col' && H.IsFormula && H.Formula.length){  
@@ -299,6 +300,7 @@ var ColHelper = (new function(){
 							MCOUNT: H.MCount,
 							DCOUNT: H.DCount,
 							coltags: H.Tags,
+							objtype: ObjType,
 							objtags: ObjTags
 						};
 						jison_prepare.setContext(J_Context);

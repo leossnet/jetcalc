@@ -260,6 +260,7 @@ var Unmaper = function(){
 		var Row = Rows[Cell.Row];
 		var Col = self.Help.AllCols[Cell.Col];
 		var Obj = self.Help.Div[Cell.Obj] || Cell.Obj; 
+		var ObjType = self.Help.Div[Obj] || null; 
 		var CellCx = {
 			grp: Obj.Groups,
 			year: Cell.Year,
@@ -274,6 +275,7 @@ var Unmaper = function(){
 			rowtags:Row.Tags,
 			treetags:Row.AllTags,
 			objtags:Obj.Tags,
+			objtype:ObjType,
 			path:Row.rowpath
 		};
 		jison_prepare.setContext(CellCx);

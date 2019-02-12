@@ -14,7 +14,8 @@
         forcol:'colin',
         forobj:'objin',
         fordiv:'divin',
-        forperiod:'periodin'
+        forperiod:'periodin',
+        fortype:'objtypein'
     }
     Cases.forEach(function(Case){
         Indexed[Case[0]] = Case[1];
@@ -118,6 +119,9 @@ var LIB = {
     objin: function(args) {
         return LIB._simpleCheck('obj',args);
     },
+    objtypein: function(args) {
+        return LIB._simpleCheck('objtype',args);
+    },
     groupin: function(args) {
         return LIB.grpin(args);
     },
@@ -162,11 +166,7 @@ var LIB = {
       args = LIB._argsNumeric(args);
       var result;
       if (args[1]){
-        if (args[1]>0){
-          result = Math.round(args[1]*args[0])/args[0];
-        } else {
-          result = Math.round(args[1]/args[0])*args[0];
-        }        
+        return Math.round(eq*Math.pow(10,n))/Math.pow(10,n);
       } else {
         result = Math.round(args[0]);
       }

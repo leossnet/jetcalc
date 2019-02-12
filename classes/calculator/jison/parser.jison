@@ -55,6 +55,7 @@ d_u_boolconst                                  return 'BOOLCONSTANTA';
 
 'forcol'
 |'forobj'
+|'fortype'
 |'fordiv'
 |'forperiod'
 |EDITOR_SWITCH                                 return 'U_SWITCH_FUNC';
