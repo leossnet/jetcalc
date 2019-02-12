@@ -276,7 +276,7 @@ var LIB = {
 /* end: can have U_ prefix */
 
 
-[A-ZА-Яa-zа-я0-9]+(?=^|$|[^\p{L}])             return 'MIXED';
+[A-ZА-Яa-zа-я0-9_]+(?=^|$|[^\p{L}])             return 'MIXED';
 
 <<EOF>>                                        return 'EOF';
 
