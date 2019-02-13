@@ -165,7 +165,7 @@ var LIB = {
     'round':function(args) {
       args = LIB._argsNumeric(args);
       var result;
-      if (args[1]){
+      if (args.length>1){
         var eq = args[1], n = args[0];
         return Math.round(eq*Math.pow(10,n))/Math.pow(10,n);
       } else {
