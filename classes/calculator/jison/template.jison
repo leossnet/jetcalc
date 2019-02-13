@@ -166,6 +166,7 @@ var LIB = {
       args = LIB._argsNumeric(args);
       var result;
       if (args[1]){
+        var eq = args[1], n = args[0];
         return Math.round(eq*Math.pow(10,n))/Math.pow(10,n);
       } else {
         result = Math.round(args[0]);
