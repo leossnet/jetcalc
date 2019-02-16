@@ -5893,7 +5893,44 @@ module.exports = {
             }
         }
     },
-    "objtypetag": {
+    "objclasstag": {
+        "tablename": "[link].[ObjClassTags]",
+        "menuplace": "Link",
+        "fields": {
+            "Value": {
+                "type": String,
+                "default": "",
+                "view": "none"
+            },
+            "CodeObjClassTag": {
+                "type": String,
+                "default": null,
+                "view": "all",
+                "role": "code",
+                "index": true,
+                "unique": true
+            },
+            "CodeObjClass": {
+                "type": String,
+                "default": "",
+                "view": "none",
+
+                "refmodel": "objclass",
+                "index": true,
+                "extended": true
+            },
+            "CodeTag": {
+                "type": String,
+                "default": "",
+                "view": "none",
+
+                "refmodel": "tag",
+                "index": true,
+                "extended": true
+            }
+        }
+    },
+	"objtypetag": {
         "tablename": "[link].[ObjTypeTags]",
         "menuplace": "Link",
         "fields": {
