@@ -124,6 +124,9 @@ var ColHelper = (new function(){
 		return function(cb){
 			var PeriodGrps = (!_.isEmpty(INFO.Period[Cx.CodePeriod])) ? INFO.Period[Cx.CodePeriod].Grps:[];
 			var ObjGrps = !_.isEmpty(INFO.Div[Cx.CodeObj])? INFO.Div[Cx.CodeObj].Groups:[];
+			if (!_.isEmpty(Cx.ChildObj) && !_.isEmpty(INFO.Div[Cx.ChildObj])){
+				ObjGrps = _.uniq(_.compact(ObjGrps.concat(INFO.Div[Cx.ChildObj].Groups)));
+			}
 			for (var Code in INFO.Result){
 				var H = INFO.Result[Code];
 				if (H.Type=='colsetcol'){
