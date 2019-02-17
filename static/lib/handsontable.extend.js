@@ -230,6 +230,65 @@
     }
 
 
+    /*var oldSetValue = Handsontable.editors.NumericEditor.prototype.setValue;
+    Handsontable.editors.NumericEditor.prototype.setValue = function(nv) {
+        if ((nv+"").indexOf("=")==0 && (nv+"").replace(/[^0-9\.]/g,"").length==((nv+"").length-1)) {
+            arguments[0] = (nv+'').substring(1);
+        }
+        console.log("Set value",arguments[0]);
+        oldSetValue.apply(this, arguments);
+    }
+    */
+
+
+/*    var oldProto = Handsontable.editors.NumericEditor.prototype.beginEditing;
+
+    Handsontable.editors.NumericEditor.prototype.beginEditing = function(initialValue){
+        console.log("initialValue 1",initialValue,arguments);
+        if (initialValue) {
+            initialValue = "="+initialValue;
+        }
+        console.log("initialValue 2",initialValue,arguments);
+        oldProto.call(this, initialValue);
+    }
+
+*/
+    var oldPrepare = Handsontable.editors.NumericEditor.prototype.prepare;
+
+    Handsontable.editors.NumericEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellProperties){
+        if (!_.isEmpty(cellProperties.CalcValue)){
+            arguments[4] = cellProperties.CalcValue;
+        } else {
+            if (originalValue && (originalValue+"").indexOf("=")==-1) arguments[4] = "="+originalValue;    
+        }
+        oldPrepare.apply(this, arguments);
+    };
+
+    /*var oldFinish = Handsontable.editors.NumericEditor.prototype.saveValue;
+
+    Handsontable.editors.NumericEditor.prototype.saveValue = function(){
+        console.log("ARGS",arguments);
+        console.log("BEFORE",arguments[0]);
+        arguments[0].forEach(function(chRow,rInd){
+            chRow.forEach(function(ch,cInd){
+                if (ch.indexOf("=")==0){
+                    var test = ch.replace(/[^0-9]/g,"").trim();
+                    console.log("test",test,"ch",ch,ch.indexOf("="),ch.replace(/[^0-9]/g,""),(test+'').length==(ch.trim().length-1),(test+'').length,(ch.trim().length-1));                    
+                    if ((test+'').length==(ch.trim().length-1)){
+
+                        ch = ch.replace("=","");
+                        alert(ch);
+                        arguments[0][rInd][cInd] = ch;
+                    }
+                }
+            })
+        })
+        console.log("AFTER",arguments[0]);
+
+        oldFinish.apply(this, arguments);  
+    }*/
+
+
     window.EditorRegistrator = new function() {
         var self = this;
 

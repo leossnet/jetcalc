@@ -19,6 +19,21 @@ var MInput = (new function() {
         }
     }
 
+    self.testIsAutoEqual = function(num){
+        if ((num+"").indexOf("=")==0 && (num+"").replace(/[^0-9\.]/g,"").length==((num+"").length-1)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    self.testIsEquation = function(num){
+        if ((num+"").indexOf("=")==0 && (num+"").replace(/[^0-9\.]/g,"").length!=((num+"").length-1)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     self.ValueChange = function(changes, source) {
         switch (source) {
             case 'Autofill.fill':
@@ -29,7 +44,14 @@ var MInput = (new function() {
                 changes.forEach(function(change) {
                     var row = change[0],
                         col = change[1];
+                    if (self.testIsAutoEqual(change[3])){
+                        change[3] = (change[3]+'').substring(1);
+                    }                   
+                    if (self.testIsAutoEqual(change[2])){
+                        change[2] = (change[2]+'').substring(1);
+                    }
                     if (change[2] != change[3]) {
+                        console.log(change[2] != change[3],change[2] , change[3])
                         self.RegisterChange("Value", row, col, change[3]);
                     }
                 })
