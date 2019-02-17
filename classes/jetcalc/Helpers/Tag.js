@@ -10,6 +10,7 @@ var TagHelper = (new function(){
 	self.Fields = {
 		tag:["-_id","CodeTag","NameTag","SNameTag"],
 		objtypetag:["-_id","CodeTag","CodeObjType","Value"],
+		objclasstag:["-_id","CodeTag","CodeObjClass","Value"],
 		rowtag:["-_id","CodeRow","CodeTag","Value"],
 		objtag:["-_id","CodeObj","CodeTag","Value"],
 		doctag:["-_id","CodeDoc","CodeTag","Value"],
@@ -17,7 +18,7 @@ var TagHelper = (new function(){
 		coltag:["-_id","CodeCol","CodeTag","Value"]
 	}
 
-	self.Links = {objtypetag:"CodeObjType",rowtag:"CodeRow",objtag:"CodeObj",doctag:"CodeDoc",coltag:"CodeCol",colsetcoltag:"CodeColsetCol"};
+	self.Links = {objtypetag:"CodeObjType",objclasstag:"CodeObjClass",rowtag:"CodeRow",objtag:"CodeObj",doctag:"CodeDoc",coltag:"CodeCol",colsetcoltag:"CodeColsetCol"};
 
 	self.SubscribeChanges(_.keys(self.Fields));
 

@@ -458,6 +458,15 @@ var Unmaper = function(){
 				}
 			})
 		}
+		if (!Value  && !_.isEmpty(TagInfo.objclasstag)){
+			var parentObjs = Obj.Parents;
+			parentObjs.forEach(function(pObj){
+				var pInfo = self.Help.Div[pObj];
+				if (!Value && TagInfo.objclasstag[pInfo.CodeObjClass]){
+					Value = TagInfo.objclasstag[pInfo.CodeObjClass];
+				}
+			})
+		}
 		if (!Value && self.DefaultTags[TagName]) Value = self.DefaultTags[TagName];
 		if (!Value) Value = "UNKNOWNTAG";
 		// Цепочка объектов ToDo

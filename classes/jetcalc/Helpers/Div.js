@@ -21,7 +21,8 @@ var Div = (new function(){
 		'obj':"-_id CodeValuta NameObj SNameObj CodeObjType CodeOrg CodeParentObj CodeObj IsFormula Formula DateBegin DateEnd",
 		'objgrp':"-_id CodeObj CodeGrp",
 		'objtag':"-_id CodeObj CodeTag Value",
-		'objtypetag':"-_id CodeObjType CodeTag Value"
+		'objtypetag':"-_id CodeObjType CodeTag Value",
+		'objclasstag':"-_id CodeObjClass CodeTag Value"
 	};
 
 	self.SubscribeChanges(_.keys(self.FieldsByModel));
@@ -96,6 +97,10 @@ var Div = (new function(){
 					return Tag.CodeTag+':'+Tag.Value
 				})
 				Data.TypeTags = _.map(_.filter(Models.objtypetag,{CodeObjType:Data.CodeObjType}),function(Tag){
+					if (!Tag.Value) Tag.Value = "*";
+					return Tag.CodeTag+':'+Tag.Value
+				})
+				Data.ClassTags = _.map(_.filter(Models.objclasstag,{CodeObjClass:Data.CodeObjClass}),function(Tag){
 					if (!Tag.Value) Tag.Value = "*";
 					return Tag.CodeTag+':'+Tag.Value
 				})
