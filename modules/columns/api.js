@@ -89,7 +89,19 @@ router.put('/colsetcol', HP.TaskAccess("IsColsetEditor"), function(req, res, nex
     M.SetModel("colset", {
         CodeColset: req.body.CodeColset
     }, function(err) {
-        M.SaveLinks("colsetcol", req.body.Cols, function(err) {
+        var filterLinks = {};
+        req.body.Cols.forEach(function(Col){
+            var indexKey = [Col.Year,Col.CodeColset,Col.CodeCol,Col.CodePeriod].join("");
+            if (filterLinks[indexKey]){
+                ;
+            } else {
+                filterLinks[indexKey] = Col;
+            }
+        })        
+        var Cols2Save = _.values(req.body.Cols);
+        M.SaveLinks("colsetcol", Cols2Save, function(err) {
+            console.log("Save links comp[leete ",err);
+            if (err) return next(err);
             return res.json({});
         })
     })

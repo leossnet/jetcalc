@@ -72,6 +72,8 @@ var MColumns = (new function() {
                 });
             })
         };
+        console.log("Data",Data);
+
         self.rPut("colsetcol", Data, function() {
             self.LoadColset();
         })

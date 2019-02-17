@@ -114,34 +114,38 @@ var ModelEdit = function(CodeUser,IsNew){
 			for (var Key in IndexedOld){
 				ToRemove.push(IndexedOld[Key]);
 			}
-			console.log("To Remove",ToRemove);
+			console.log("===========================", ToRemove.length,ToSave.length);
+
+
 			async.each(ToRemove,function(TR,cb1){
 				TR.remove(self.CodeUser,function(err){
 					cb1(err);
 				});
 			},function(err){
+				console.log("<<<<<<<<<<<<<<< remove is done");
 				if (err) return done(err);
-				console.log("To Save",ToSave);
-				async.each(ToSave,function(TR,cb2){
-					console.log("Saving ...",TR);
+				async.eachSeries(ToSave,function(TR,cb2){
+					console.log("saving TR", TR.Year);
 					TR.save(self.CodeUser,function(err){
-						console.log(TR,err);
+						console.log("saving TR --- done",TR.Year);
 						if (err) {
 							console.log("Save error ",err);
 							return done(err);
 						}
 						cb2(err);
 					});
-				},done);
+				},function(err){
+					if (err) console.log("Final err",err);
+					return done(err);
+
+				});
 			})
 		})
 	}
 
 	self.SaveLinks = function(ModelName, Links, done){
 		var Q = {};
-		console.log("Base Model ",self.BaseModel,"======");
 		Q[self.BaseModelCode] = self.BaseModel[self.BaseModelCode];
-		console.log("Save links ",Q,Links,"=== Save links");
 		self.SyncLinks(ModelName, Q, Links, done);
 	}
 

@@ -132,7 +132,7 @@
             // Формульные выражения
             if ((value + '').trim().indexOf('=') === 0) {
                 try {
-                    eval("var Calc" + value);
+                    value = parser.parse(value.replace("=",""));
                     value = Calc;
                 } catch (e) {
                     td.innerHTML = "Ошибка";
@@ -212,9 +212,11 @@
         if (value === null) {
             value = '';
         }
+        console.log(value,"BEFORE");
         if ((value + '').trim().indexOf("=") === 0) {
-            value = value.replace(/[\=\s\-\+\*\/\(\)]/g, '')
+            value = value.replace(/[\=\s\-\+\*\/\(\)\.]/g, '')
         }
+        console.log(value,"AFTER");
         var result = /^-?\d*(\.|\,)?\d*$/.test((value));
         callback(result);
     };
