@@ -560,7 +560,7 @@ module.exports = {
                 "default": false,
                 "view": "none"
             },
-            "UseFormula": {
+            "IsFixed": {
                 "type": Boolean,
                 "default": false,
                 "view": "none"
