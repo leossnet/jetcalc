@@ -260,10 +260,13 @@ var AutoFill = (new function() {
 
 
     self.MaxRound = function(V) {
-        if (_.isUndefined(V)) return 0;
-        console.log("MAX ROUND - ",V);
-
-        return Number(V.toFixed(8));
+        var r = 0;
+        try{
+            r = Number(V.toFixed(8))
+        } catch(e){
+            ;
+        }
+        return r;
     }
 
     self.LoadPrimaries = function(Cells, done) {
