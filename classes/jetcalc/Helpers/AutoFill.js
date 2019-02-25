@@ -262,9 +262,9 @@ var AutoFill = (new function() {
     self.MaxRound = function(V) {
         var r = 0;
         try{
-            r = Number(V.toFixed(8))
+            r = Number(V.toFixed(8));
         } catch(e){
-            ;
+            console.log(e);
         }
         return r;
     }
