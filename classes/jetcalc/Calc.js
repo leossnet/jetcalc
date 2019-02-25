@@ -48,7 +48,7 @@ var Calculator = function(){
 	self.Unmapper = new Unmapper();
 	self.Field  = "Value";
 	self.CRecursion = 0;
-	self.MaxRecursion = 10000;
+	self.MaxRecursion = 100000;
 	self.Result = {};
 
 	self.Timer = new TimerCreate();
@@ -126,7 +126,7 @@ var Calculator = function(){
 
 	self._calculate = function(done){
 		if ((++self.CRecursion)>=self.MaxRecursion) {
-			console.log("Рекурсия");
+			console.log("Рекурсия",self.HowToCalculate);
 			return done();
 		}
 		var keys2omit = [];
