@@ -48,7 +48,7 @@ var Calculator = function(){
 	self.Unmapper = new Unmapper();
 	self.Field  = "Value";
 	self.CRecursion = 0;
-	self.MaxRecursion = 100000;
+	self.MaxRecursion = 10000;
 	self.Result = {};
 
 	self.Timer = new TimerCreate();

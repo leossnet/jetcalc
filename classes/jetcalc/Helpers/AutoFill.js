@@ -264,7 +264,8 @@ var AutoFill = (new function() {
         try{
             r = Number(V.toFixed(8));
         } catch(e){
-            console.log(e);
+            console.log("===",V,"Error to fixed");
+            //console.log(e);
         }
         return r;
     }
