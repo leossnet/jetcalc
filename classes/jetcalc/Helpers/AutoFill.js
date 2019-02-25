@@ -260,6 +260,9 @@ var AutoFill = (new function() {
 
 
     self.MaxRound = function(V) {
+        if (_.isUndefined(V)) return 0;
+        console.log("MAX ROUND - ",V);
+
         return Number(V.toFixed(8));
     }
 

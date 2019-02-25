@@ -48,7 +48,7 @@ router.post('/modifyrows',  HP.TaskAccess("IsBiztranTuner"), function(req,res,ne
 	Saver.SyncLinks("biztranrow", {CodeDoc:CodeDoc,CodeObj:CodeObj}, Rows, function(err){
 		if (err) console.log(err,"AAAAAAAAAAAAA");
 		if (err) return next (err);
-		if (_.isEmpty(Rows)){
+		if (_.isEmpty(Rows) || true){
 			var BizHelper = require(__base+"modules/biztran/helper.js");
 			BizHelper.SyncTree(CodeDoc,CodeUser,function(err){
 				return res.end();
