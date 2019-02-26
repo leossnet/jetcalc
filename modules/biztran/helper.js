@@ -171,19 +171,23 @@ module.exports = (new function() {
                                                     CodeMeasure: SprIndexed.prod[OrgRow.CodeProd].CodeMeasure
                                                 }, PCod);
                                                 if (BDocument.UseDogovor && !_.isEmpty(OrgRow.CodeDogovor)) {
-	                                                var DCod = [OrgRow.CodeBill, OrgRow.CodeProd, OrgRow.CodeOrg, OrgRow.CodeDogovor].join("_");
-	                                                Tree.add(DCod, {
-	                                                    NumRow: OrgRow.CodeDogovor,
-	                                                    CodeRow: Root + "_" +DCod,
-	                                                    treeroot: Cod,
-	                                                    CodeProd: OrgRow.CodeProd,
-	                                                    CodeBill: OrgRow.CodeBill,
-	                                                    CodeAltOrg: OrgRow.CodeOrg,
-	                                                    CodeDogovor: OrgRow.CodeDogovor,
-	                                                    NameRow: (_.isEmpty(OrgRow.CodeDogovor)) ? OrgRow.CodeDogovor : SprIndexed.dogovor[OrgRow.CodeDogovor].NameDogovor,
-	                                                    HasFilteredChild: false,
-	                                                    CodeMeasure: SprIndexed.prod[OrgRow.CodeProd].CodeMeasure
-	                                                }, Cod);
+                                                    var _dRows = _.filter(_bRows, { CodeProd: Prod.prod.CodeProd , CodeOrg:OrgRow.CodeOrg});
+                                                    _dRows.forEach(function(dogRow){
+                                                        var DCod = [OrgRow.CodeBill, OrgRow.CodeProd, OrgRow.CodeOrg, dogRow.CodeDogovor].join("_");
+                                                        Tree.add(DCod, {
+                                                            NumRow: dogRow.CodeDogovor,
+                                                            CodeRow: Root + "_" +DCod,
+                                                            treeroot: Cod,
+                                                            CodeProd: OrgRow.CodeProd,
+                                                            CodeBill: OrgRow.CodeBill,
+                                                            CodeAltOrg: OrgRow.CodeOrg,
+                                                            CodeDogovor: dogRow.CodeDogovor,
+                                                            NameRow: (_.isEmpty(dogRow.CodeDogovor)) ? dogRow.CodeDogovor : SprIndexed.dogovor[dogRow.CodeDogovor].NameDogovor,
+                                                            HasFilteredChild: false,
+                                                            CodeMeasure: SprIndexed.prod[OrgRow.CodeProd].CodeMeasure
+                                                        }, Cod);
+
+                                                    })
                                                 }
                                             }
                                         })
