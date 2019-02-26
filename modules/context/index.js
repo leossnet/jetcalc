@@ -100,6 +100,17 @@ var CxCtrl = (new function() {
     type: -1
   };
 
+
+  self.OnHistoryForce = function(){
+    self.AfterShowUpdate.document = self.CodeDoc();
+    if (self.ChangeTimer) clearTimeout(self.ChangeTimer);
+    self.ChangeTimer = setTimeout(function() {
+      self.UpdateViewShow();
+      clearTimeout(self.ChangeTimer);
+      self.ChangeTimer = null;
+    }, 100);    
+  }
+
   self.AfterPageShow = function(CodeDoc) {
     if (CodeDoc != self.CodeDoc()) {
       self.CodeDoc(CodeDoc);
@@ -628,16 +639,14 @@ var CxCtrl = (new function() {
 
 
   self.Init = function (done) {
-
       MSite.Events.on("initialnavigate", CxCtrl.ChangeInitDocPath);
       Bus.On("params_changed",self.UpdateParams);
       Bus.On("report_loaded",self.UpdateReport);
       Bus.On("aggregate_info_loaded",self.InitValues);
-
       Bus.On("aggregate_complex",self.SetAggregateComplex);
       Bus.On("aggregate_simple",self.SetAggregateSimple);
-
       Bus.On("documentisrendered",self.UpdateDocInfo);
+      Bus.On("history-pop-state",self.OnHistoryForce);
 
       MSite.Events.on("initialnavigate", function(){
       	  self.InitValues();

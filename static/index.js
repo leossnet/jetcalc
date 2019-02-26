@@ -246,6 +246,9 @@ var MSite = (new function () {
             self.Events.emit("navigate");
             window.scrollTo(0, 0);
         });
+        window.addEventListener('popstate', function(e) {
+            Bus.Emit("history-pop-state");
+        });        
         window.onbeforeunload = function () {
             self.Events.emit("unload");
         };
