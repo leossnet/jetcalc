@@ -114,20 +114,14 @@ var ModelEdit = function(CodeUser,IsNew){
 			for (var Key in IndexedOld){
 				ToRemove.push(IndexedOld[Key]);
 			}
-			console.log("===========================", ToRemove.length,ToSave.length);
-
-
 			async.each(ToRemove,function(TR,cb1){
 				TR.remove(self.CodeUser,function(err){
 					cb1(err);
 				});
 			},function(err){
-				console.log("<<<<<<<<<<<<<<< remove is done");
 				if (err) return done(err);
 				async.eachSeries(ToSave,function(TR,cb2){
-					console.log("saving TR", TR.Year);
 					TR.save(self.CodeUser,function(err){
-						console.log("saving TR --- done",TR.Year);
 						if (err) {
 							console.log("Save error ",err);
 							return done(err);

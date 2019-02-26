@@ -67,13 +67,11 @@ var MColumns = (new function() {
         var Data = {
             CodeColset: Code,
             Cols: _.map(self.ColsetCols(), function(Model) {
-                return _.merge(_.pick(Model.toJS(), Model.EditFields), {
+                return _.merge(_.pick(Model.toJS(), Model.EditFields.concat("_id")), {
                     CodeColset: Code
                 });
             })
         };
-        console.log("Data",Data);
-
         self.rPut("colsetcol", Data, function() {
             self.LoadColset();
         })
