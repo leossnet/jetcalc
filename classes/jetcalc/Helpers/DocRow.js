@@ -33,7 +33,7 @@ var DocRowHelper = (new function(){
 
 	self.CreateInfo = function(done){
 		var Result = {}, DocsInput = {}, DocRowsGroupped = {};
-		mongoose.model("docrow").find({},self.Fields["docrow"].join(" ")).isactive().lean().exec(function(err,DocRows){
+		mongoose.model("docrow").find({CodeDoc:{$ne:null}},self.Fields["docrow"].join(" ")).isactive().lean().exec(function(err,DocRows){
 			mongoose.model("doc").find({},self.Fields["doc"].join(" ")).isactive().lean().exec(function(err,Docs){
 				mongoose.model("row").find({CodeParentRow:null},self.Fields["row"].join(" ")).isactive().lean().exec(function(err,Roots){
 					Roots.forEach(function(R){ Result[R.CodeRow] = null; });

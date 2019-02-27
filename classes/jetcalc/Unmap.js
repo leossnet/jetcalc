@@ -258,6 +258,15 @@ var Unmaper = function(){
 		var P = self.Help.Period[Cell.Period];
 		var Rows = self._rows(Cell);
 		var Row = Rows[Cell.Row];
+		if (!Row){
+			console.log("======= NO ROW IN CELL",Cell,Formula);
+			Row = {
+				Tags:[],
+				AllTags:[],
+				rowpath:""
+			};
+		}
+
 		var Col = self.Help.AllCols[Cell.Col];
 		var Obj = self.Help.Div[Cell.Obj] || Cell.Obj; 
 		var ObjType = Obj.CodeObjType || null; 
