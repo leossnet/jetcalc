@@ -237,6 +237,7 @@ var Calculator = function(){
 		try{
 			eval("EvalResult="+Formula);
 			if (isNaN(EvalResult)) throw 'IsNan';
+			if (!isFinite(EvalResult)) throw 'IsInfinit';
 		} catch (e){
 			try {
 				EvalResult = jison.parse(Formula);				
