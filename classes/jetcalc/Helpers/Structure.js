@@ -142,17 +142,18 @@ var Simple = (new function(){
             	].join("");
 
             	var setAfFormula = "";
-            	if (Col.IsAfFormula && Row.IsAFFormula){
-            		setAfFormula = Row.AfFormula;
-            	} else if (Col.IsAfFormula && !Col.IsFixed){
-            		setAfFormula = Col.AfFormula;
-            	} else if (Row.IsAfFormula){
-            		setAfFormula = Row.AfFormula;
+            	if (!Col.IsFixed){
+	            	if (Col.IsAfFormula && Row.IsAFFormula){
+	            		setAfFormula = Row.AfFormula;
+	            	} else if (Col.IsAfFormula && !Col.IsFixed){
+	            		setAfFormula = Col.AfFormula;
+	            	} else if (Row.IsAfFormula){
+	            		setAfFormula = Row.AfFormula;
+	            	}
             	}
-
                 var CellInfo = {
                     Cell:CellName,
-                    IsAFFormula:(Col.IsAfFormula && !Col.IsFixed) || Row.IsAfFormula,
+                    IsAFFormula:!Col.IsFixed && (Col.IsAfFormula || Row.IsAfFormula),
                     AfFormula:setAfFormula,
                     IsControlPoint:(Col.IsControlPoint && Row.IsControlPoint),
                     IsPrimary:(!Col.IsFormula && !Row.IsFormula && !Row.IsSum && (Row.rgt-Row.lft)==1),
