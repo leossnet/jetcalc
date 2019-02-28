@@ -115,7 +115,7 @@ var MColEditor = (new function() {
             if (R.IsFixed==false){
                 $(td).addClass("notfixedcol");
             }
-            if (R.IsAfFormula){
+            if (R.IsAfFormula && !R.IsFixed){
                 $(td).addClass("autofillcol");
             }
             if (R.IsFormula){

@@ -122,10 +122,12 @@ var AutoFill = (new function() {
         var ColHelper = require(__base + "classes/jetcalc/Helpers/Col.js");
         var RowHelper = require(__base + "classes/jetcalc/Helpers/Row.js");
         ColHelper.get(Cx, function(err, Colls) {
+            console.log(Colls);
+
             RowHelper.get(Cx, function(err, Rows) {
                 return done(err, 
-                    !_.isEmpty(_.filter(Colls, {
-                        IsAfFormula: true
+                    !_.isEmpty(_.filter(Colls, function(col){
+                        return col.IsAfFormula = true && !col.IsFixed;
                     })) 
                     || 
                     !_.isEmpty(_.filter(Rows, {

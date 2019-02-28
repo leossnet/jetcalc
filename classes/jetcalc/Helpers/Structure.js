@@ -144,7 +144,7 @@ var Simple = (new function(){
             	var setAfFormula = "";
             	if (Col.IsAfFormula && Row.IsAFFormula){
             		setAfFormula = Row.AfFormula;
-            	} else if (Col.IsAfFormula){
+            	} else if (Col.IsAfFormula && !Col.IsFixed){
             		setAfFormula = Col.AfFormula;
             	} else if (Row.IsAfFormula){
             		setAfFormula = Row.AfFormula;
@@ -152,7 +152,7 @@ var Simple = (new function(){
 
                 var CellInfo = {
                     Cell:CellName,
-                    IsAFFormula:Col.IsAfFormula || Row.IsAfFormula,
+                    IsAFFormula:(Col.IsAfFormula && !Col.IsFixed) || Row.IsAfFormula,
                     AfFormula:setAfFormula,
                     IsControlPoint:(Col.IsControlPoint && Row.IsControlPoint),
                     IsPrimary:(!Col.IsFormula && !Row.IsFormula && !Row.IsSum && (Row.rgt-Row.lft)==1),
@@ -221,8 +221,8 @@ var Agregate = (new function(){
             	].join("");
                 var CellInfo = {
                     Cell:CellName,
-                    IsAFFormula:Col.IsAfFormula,
-                    AfFormula:(Col.IsAfFormula) ? Col.AfFormula:'',
+                    IsAFFormula:(Col.IsAfFormula && !Col.IsFixed),
+                    AfFormula:(Col.IsAfFormula && !Col.IsFixed) ? Col.AfFormula:'',
                     IsControlPoint:(Col.IsControlPoint && Row.IsControlPoint),
                     IsPrimary:(!Col.IsFormula && !Row.IsFormula && !Row.IsSum && (Row.rgt-Row.lft)==1),
                     IsSum:Row.IsSum,
