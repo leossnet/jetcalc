@@ -589,12 +589,25 @@ var RowStructure = (new function() {
         var TreeArr = _.sortBy(self.Rows, 'lft');
         var RowsInfo = {};
         var Widths = [100, 50, 400];
+
+
+        var minSpareRows = 0;
+        if (self.Mode() == 'Structure'){
+            minSpareRows = 200;
+            try{
+                var dataLength = self.DataForTable().data.length;
+                minSpareRows = dataLength+200;
+            } catch(e){
+                ;
+            }
+            console.log(minSpareRows,"minSpareRows");
+        }
         var params = {
             cells: HandsonRenders.UniversalRender,
             fixedColumnsLeft: 3,
             cellsParams: {},
             levels: RowsInfo,
-            minSpareRows: (self.Mode() == 'Structure') ? 100 : 0,
+            minSpareRows: (self.Mode() == 'Structure') ? minSpareRows : 0,
             tree: {
                 data: TreeArr,
                 icon: function() {},
