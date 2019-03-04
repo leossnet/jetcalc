@@ -19,6 +19,10 @@ cd /htdocs/jetcalc
 git config core.fileMode false
 
 
+sudo apt-get install  -y software-properties-common python-software-properties
+
+
+
 #mongo
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
 echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
@@ -31,9 +35,17 @@ wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
 wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
 
+
+sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+sudo apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main'
+
 #apt-get
 sudo apt-get update
 #sudo apt-get dist-upgrade
+
+sudo apt-cache policy docker-engine
+sudo apt-get install -y docker-engine
+
 
 #nginx install
 sudo apt-get install -y nginx
@@ -99,7 +111,8 @@ cp /htdocs/jetcalc/install/config.origin /htdocs/jetcalc/config.js
 npm i --unsafe-perm
 
 node admin.js compile
-node admin.js build
+node admin.js build 
+node admin.js installgitbook 
 
 
 cd /htdocs/jetcalc
