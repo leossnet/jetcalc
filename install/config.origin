@@ -10,6 +10,7 @@ var config = {
 		 rabbitmq         : 'amqp:jet:jetparole12j@127.0.0.1'
 		,rabbitmqPort     : 15672
 		,rabbitPrefix     : main+"_"
+		,gitBookCmd       : "docker run --rm -v \"$PWD\":/gitbook -p 4000:4000 billryan/gitbook gitbook" //gitbook
 		,cookieConfig     : {
 	    	    secret            : main+" secret",
 		    	key               : main+".sid",

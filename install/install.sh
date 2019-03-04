@@ -92,7 +92,7 @@ export NVM_DIR="$HOME/.nvm"
 source ~/.nvm/nvm.sh
 
 #npm modules
-npm i -g pm2 gitbook-cli mocha grunt --unsafe-perm
+npm i -g pm2 mocha grunt --unsafe-perm
 
 cp /htdocs/jetcalc/install/config.origin /htdocs/jetcalc/config.js
 

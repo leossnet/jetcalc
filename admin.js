@@ -17,6 +17,13 @@ var Tasks = {
     	exec('mocha pgexec.js');
     	cd(__base);
 	},
+	installgitbook:function(){
+		cd(__base+"/gitbook");
+		var gitBookCmd = config.gitBookCmd;
+		exec(gitBookCmd+" build");
+		exec(gitBookCmd+" pdf");
+		exec(gitBookCmd+" epub");
+	},
 	syncsqlstructure:function(){
 		var path2file = __base+"sql/migrate/"+config.db+"/migrate.js";
 		fs.stat(path2file,function(err,stat){
@@ -96,6 +103,7 @@ if (StartTask && Tasks[StartTask]){
 	menu.write('Выбор действия\n');
 	menu.write('-------------------------\n');
 	menu.add('Компиляция парсеров');
+	menu.add('Настройка документации');
 	menu.add('Компиляция библиотек');
 	menu.add('Проверка Postgres');
 	menu.add('Актуализация структуры SQL-базы');
@@ -107,6 +115,9 @@ if (StartTask && Tasks[StartTask]){
 	    switch (label){
 	    	case 'Компиляция парсеров':
 	    		Tasks.compile();
+	    	break;
+	    	case 'Настройка документации':
+	    		Tasks.installgitbook();
 	    	break;
 	    	case 'Компиляция библиотек':
 	    		Tasks.build();

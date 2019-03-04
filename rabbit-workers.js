@@ -1,5 +1,5 @@
 var spawn = require("child_process").spawn;
-var exec = require("child_process").exec;
+var execP = require("child_process").exec;
 var base64 = require("base-64");
 var utf8 = require("utf8");
 var os = require("os");
@@ -12,6 +12,7 @@ var GFS = require(__base + "src/gfs.js");
 
 var rabbitPrefix = config.rabbitPrefix;
 
+require('shelljs/global');
 
 mongoose.Promise = global.Promise;
 
@@ -124,7 +125,7 @@ mongoose.connection.on('connected', function() {
                 var tmp = os.tmpdir();
                 GFS.ToDisk(FileFrom, tmp, function(err, filepath) {
                     var command = "soffice  --nofirststartwizard --headless --invisible --nologo --convert-to pdf " + filepath + " --outdir " + tmp;
-                    exec(command, function(err, out, code) {
+                    execP(command, function(err, out, code) {
                         var resultFile = tmp + '/' + FileFrom + '.pdf';
                         GFS.SaveFile(resultFile, function(err, info) {
                             if (err) {
@@ -179,14 +180,22 @@ mongoose.connection.on('connected', function() {
             queue_id: rabbitPrefix + "gitbook",
             worker: function(msg, done) {
                 var opts = { cwd: msg.book_path }
+				var gitBookCmd = config.gitBookCmd;
+				cd(msg.book_path);
+				exec(gitBookCmd+" build");
+				exec(gitBookCmd+" pdf");
+				exec(gitBookCmd+" epub");
+				return done();
+				/*
                 async.parallel(
                     [
-                        (done) => exec("gitbook build", opts, done),
-                        (done) => exec("gitbook pdf", opts, done),
-                        (done) => exec("gitbook epub", opts, done)
+                        (done) => exec(config.gitBookCmd+" build", opts, done),
+                        (done) => exec(config.gitBookCmd+" pdf", opts, done),
+                        (done) => exec(config.gitBookCmd+" epub", opts, done)
                     ],
                     done
                 )
+                */
             }
         })
 

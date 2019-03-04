@@ -33,7 +33,6 @@
     "express": "*",
     "express-session": "*",
     "fs-extra": "*",
-    "gitbook": "*",
     "googlediff": "*",
     "gridfs-stream": "*",
     "grunt": "*",
