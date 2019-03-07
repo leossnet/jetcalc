@@ -105,6 +105,13 @@ var RowEditor = (new function() {
 
     self.PopulateRowsFilter = function(Rows){
         Rows.forEach(function(d) {
+            if (!_.isEmpty(d.Link_rowcoloption)) {
+                console.log("AAAAAAAAAAAAAAA");
+                d.Link_rowcoloption.forEach(function(link){
+                    if (link.IsFixed) d.IsAlwaysFixed = true;
+                    if (link.IsEditable) d.IsAlwaysEditable = true;
+                })
+            }
             if (!_.isEmpty(d.Link_rowobj)) {
                 var Links = _.filter(d.Link_rowobj,function(LL){
                     return _.isEmpty(LL.CodeGrp);
@@ -116,7 +123,6 @@ var RowEditor = (new function() {
                     if (L.CodeObjType == self.ObjType()) {
                         d.ForObjType = true;
                     }
-                    console.log(L.CodeObjClass,"===",self.ObjClass());
                     if (L.CodeObjClass == self.ObjClass()) {
                         d.ForObjClass = true;
                     }
@@ -184,6 +190,8 @@ var RowEditor = (new function() {
                 R.ForObj = false;
                 R.ForObjType = false;
                 R.ForObjClass = false;
+                R.IsAlwaysFixed = false;
+                R.IsAlwaysEditable = false;
             })
             AllRows = self.PopulateRowsFilter(AllRows);
             self.AllRows = AllRows;
@@ -226,6 +234,8 @@ var RowEditor = (new function() {
                     RowCFG.CodeValuta = ["middle_select", false, 100];
                     RowCFG.IsAnalytic = ["middle_checkbox", false, 100];
                     RowCFG.IsControlPoint = ["middle_checkbox", false, 100];
+                    RowCFG.IsAlwaysFixed = ["middle_checkbox", false, 100];
+                    RowCFG.IsAlwaysEditable = ["middle_checkbox", false, 100];
                     break;
                 case 'Formula':
                     RowCFG.Link_rowtag = ["middle_link", false, 100];

@@ -1,6 +1,8 @@
 {
 	"CodeRow":"Код.Ряда",
 	"NameRow":"Нзв.Ряда",
+	"IsAlwaysFixed":"Всегда фикс",
+	"IsAlwaysEditable":"Всегда рдкт",
 	"NumRow":"Номер",
 	"IsAnalytic":"АН",
 	"IsControlPoint":"КТ",

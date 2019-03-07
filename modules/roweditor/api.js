@@ -122,15 +122,61 @@ router.put('/structure',  HP.TaskAccess("IsRowTuner"), function(req,res,next){
 var CheckToLinks = (new function(){
     var self = this;
 
-    self.Fields = ["ForObjType","ForObj","ForObjClass","Link_rowobjgrp"];
+    self.FilterFields = ["ForObjType","ForObj","ForObjClass","Link_rowobjgrp"];
+    self.OptionsFields = ["IsAlwaysEditable","IsAlwaysFixed"];
 
     self.Do = function(Context,Update,done){
-        console.log(Context);
+        console.log("DO",Update);
+        self.FilterDo(Context,Update,function(err,ModifiedUpdates){
+            console.log("FilterDo");
+            self.OptionsDo(Context,ModifiedUpdates,function(err,LastUpdates){
+                console.log("OptionsDo");
+                return done(err,LastUpdates);
+            })
+        })        
+    }
+
+    self.OptionsDo = function(Context,Update,done){
         var ToDo = {};
         for (var CodeRow in Update){
             var Changes = Update[CodeRow];
-            if (!_.isEmpty(_.intersection(_.keys(Changes),self.Fields))){
-                ToDo[CodeRow] = _.pick(Changes,self.Fields);
+            if (!_.isEmpty(_.intersection(_.keys(Changes),self.OptionsFields))){
+                ToDo[CodeRow] = _.pick(Changes,self.OptionsFields);
+            }
+        }
+        if (_.isEmpty(ToDo)) return done(null,Update);
+        mongoose.model("rowcoloption").find({CodeRow:{$in:_.keys(ToDo)}}).exec(function(err,ExistedAll){
+            var ExistedByRows = {};
+            ExistedAll.forEach(function(E){
+                ExistedByRows[E.CodeRow] = E;
+            })
+            for (var CodeRow in ToDo){
+                if (!ExistedByRows[CodeRow]){
+                    ExistedByRows[CodeRow] = {IsEditable:false,IsFixed:false,CodeRow:CodeRow};
+                }
+                var Change = ToDo[CodeRow];
+                [{Source:"IsAlwaysFixed",Target:"IsFixed"},{Source:"IsAlwaysEditable",Target:"IsEditable"}].forEach(function(Obj){
+                    if (_.isBoolean(Change[Obj.Source])){
+                        ExistedByRows[CodeRow][Obj.Target] = Change[Obj.Source];
+                    }
+                })
+                if (!ExistedByRows[CodeRow].IsFixed && !ExistedByRows[CodeRow].IsEditable){
+                    Update[CodeRow].Link_rowcoloption = [];    
+                } else {
+                    Update[CodeRow].Link_rowcoloption = [ExistedByRows[CodeRow]];    
+                }             
+                Update[CodeRow] = _.omit(Update[CodeRow],self.OptionsFields);
+            }
+            return done(err,Update);
+        })
+    }
+
+    self.FilterDo = function(Context,Update,done){
+        var ToDo = {};
+        for (var CodeRow in Update){
+            var Changes = Update[CodeRow];
+            if (!_.isEmpty(_.intersection(_.keys(Changes),self.FilterFields))){
+                ToDo[CodeRow] = _.pick(Changes,self.FilterFields);
             }
         }
         if (_.isEmpty(ToDo)) return done(null,Update);
@@ -148,9 +194,6 @@ var CheckToLinks = (new function(){
             })
             for (var CodeRow in ToDo){
                 var V = ToDo[CodeRow];
-
-                console.log("TODO !!!!!!!!!!",V,"!!!!!!!!!!!!");
-
                 if (!ExistedByRows[CodeRow]) ExistedByRows[CodeRow] = [];
                 if (_.isBoolean(V["ForObjType"])){
                     var Ex = _.find(ExistedByRows[CodeRow],{CodeObjType:Context.ObjType});
@@ -184,8 +227,6 @@ var CheckToLinks = (new function(){
                         })
                     }
                 }
-                console.log("AAAAAAAAAAA!~",V.Link_rowobjgrp)
-
                 if (!_.isEmpty(V.Link_rowobjgrp)){
                     V.Link_rowobjgrp.forEach(function(GrB){
                         ExistedByRows[CodeRow].push({CodeRow:CodeRow,CodeGrp:GrB.CodeGrp});
@@ -193,7 +234,7 @@ var CheckToLinks = (new function(){
                 } else if (!_.has(V,"Link_rowobjgrp")){
                     ExistedByRows[CodeRow] = ExistedByRows[CodeRow].concat(GrpLinks);
                 }
-                Update[CodeRow] = _.omit(Update[CodeRow],["ForObj","ForObjType","ForObjClass","Link_rowobjgrp"]);
+                Update[CodeRow] = _.omit(Update[CodeRow],self.FilterFields);
                 Update[CodeRow].Link_rowobj = ExistedByRows[CodeRow];
             }
             return done(null,Update);
@@ -237,10 +278,12 @@ router.put('/rows', HP.TaskAccess("IsRowTuner"), function(req, res,next){
                 M.SaveModel("row",Fields,function(err){
                     async.each(_.keys(Links),function(LinkName,done){
                            var ModelName = _.last(LinkName.split("Link_"));
+
                             M.SaveLinks(ModelName,Links[LinkName],done);
                     },cb);
                 })
             },function(err){
+                if (err) return next (err);
                 return res.json({});
             })
         })

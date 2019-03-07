@@ -151,12 +151,22 @@ var Simple = (new function(){
 	            		setAfFormula = Row.AfFormula;
 	            	}
             	}
+            	var IsRowFixed = false, IsRowEdit = false; 
+            	if (!_.isEmpty(Row.ColOptions)){
+            		IsRowFixed = Row.ColOptions.IsFixed;
+            		IsRowEdit = Row.ColOptions.IsEditable;
+            		console.log("Row",Row.ColOptions);
+            	}           	
+            	if (IsRowFixed){
+            		IsRowEdit = false;
+            	}
+
                 var CellInfo = {
                     Cell:CellName,
                     IsAFFormula:!Col.IsFixed && (Col.IsAfFormula || Row.IsAfFormula),
                     AfFormula:setAfFormula,
                     IsControlPoint:(Col.IsControlPoint && Row.IsControlPoint),
-                    IsPrimary:(!Col.IsFormula && !Row.IsFormula && !Row.IsSum && (Row.rgt-Row.lft)==1),
+                    IsPrimary:(!Col.IsFormula && !Row.IsFormula && !Row.IsSum && (Row.rgt-Row.lft)==1) && !IsRowFixed,
                     IsSum:Row.IsSum,
                     ColTags:Col.TagsInfo,
                     Style:_.compact([Row.CodeStyle,Col.CodeStyle])
@@ -165,7 +175,7 @@ var Simple = (new function(){
                 if (!_.isEmpty(Fs)){
                     CellInfo.Format = Fs;
                 }
-                CellInfo.IsEditablePrimary = (CellInfo.IsPrimary && !Col.IsFixed && Cx.IsInput);
+                CellInfo.IsEditablePrimary = (CellInfo.IsPrimary && (!Col.IsFixed || IsRowEdit) && Cx.IsInput);
                 EmptRow.push(CellInfo);
             })
             Answer.Cells.push(EmptRow)            

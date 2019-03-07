@@ -105,7 +105,7 @@ var RowHelper = (new function(){
 
 	var self = new Base("JROW"); 
 
-	self.Links = ['rowobj','rowsumgrp','rowtag','rowobjgrp']
+	self.Links = ['rowobj','rowsumgrp','rowtag','rowobjgrp','rowcoloption']
 
 	self.FieldsToLoad = {
 		row:['NumRow','IndexRow','NameRow','rowpath','FromObsolete','FromYear','CodeFormat',
@@ -114,13 +114,14 @@ var RowHelper = (new function(){
 			'IsSum','NoSum','NoDoSum','IsCalcSum','IsFormula','Formula','IsAfFormula','AfFormula','IsVirtual',
 			'IsAgFormula','AsAgFormula','AgFormula','UseProdSumGrps',
 			'CodeRowLink','IsMinus','IsControlPoint','CodeRow','CodeParentRow','lft','rgt',
-			'HasFilteredChild','NoFiltered','Link_rowobj','Link_rowobjgrp','Link_rowsumgrp','Link_rowtag',
+			'HasFilteredChild','NoFiltered','Link_rowobj','Link_rowobjgrp','Link_rowsumgrp','Link_rowtag','Link_rowcoloption',
 			'CodeValuta','CodeProd','CodeBill','CodeAltOrg','CodeDogovor','CodeFilteredAltGrp','CodeDogovorArt'
 		],
 		rowobj:['CodeObj','CodeObjType',"CodeObjClass",'CodeGrp','CodeRow'],
 		rowobjgrp:['CodeGrp','CodeRow'],
 		rowsumgrp:['CodeSumGrp', 'CodeRow'],
 		rowtag:['CodeTag','Value','CodeRow'],
+		rowcoloption:['CodeCol','IsEditable','IsFixed'],
 		docrow:['-_id','CodeRow','IsExpandTree'],
 		measure:["-_id","CodeMeasure","SNameMeasure"]
 	}
@@ -256,6 +257,14 @@ var RowHelper = (new function(){
 			Row.Measure = (!_.isEmpty(Row.CodeMeasure)) ? Measures[Row.CodeMeasure]:"";
 			Row.level = Math.max((Row.rowpath.split("/").length - 3),0);
 			Row.Sums = _.map(Row.Link_rowsumgrp,'CodeSumGrp');
+			Row.ColOptions = null;
+			Row.Link_rowcoloption.forEach(function(colOption){
+				if (!Row.ColOptions){
+					Row.ColOptions = {IsEditable:false,IsFixed:false};
+				}
+				Row.ColOptions.IsEditable = Row.ColOptions.IsEditable || colOption.IsEditable;
+				Row.ColOptions.IsFixed = Row.ColOptions.IsFixed || colOption.IsFixed;
+			})			
 			Row.AllFilter = [];
 			Row.Filter = _.compact(_.uniq(
 				_.map(Row.Link_rowobj,'CodeObj')
