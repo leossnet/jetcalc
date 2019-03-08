@@ -919,7 +919,12 @@ module.exports = {
                 "default": false,
                 "view": "none"
             },
-            "CodeValuta": {
+            "UseRowColOptions": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+			},
+			"CodeValuta": {
                 "type": String,
                 "default": "",
                 "view": "none",
@@ -4401,11 +4406,6 @@ module.exports = {
                 "view": "none"
             },
             "UseProdSumGrps": {
-                "type": Boolean,
-                "default": false,
-                "view": "none"
-            },
-            "UseRowColOptions": {
                 "type": Boolean,
                 "default": false,
                 "view": "none"
