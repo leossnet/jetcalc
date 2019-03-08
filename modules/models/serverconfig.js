@@ -4405,6 +4405,11 @@ module.exports = {
                 "default": false,
                 "view": "none"
             },
+            "UseRowColOptions": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+            },
             "FormulaFromYear": {
                 "type": Number,
                 "default": 0,
