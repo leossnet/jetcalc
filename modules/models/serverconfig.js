@@ -919,7 +919,12 @@ module.exports = {
                 "default": false,
                 "view": "none"
             },
-            "CodeValuta": {
+            "UseRowColOptions": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+			},
+			"CodeValuta": {
                 "type": String,
                 "default": "",
                 "view": "none",
