@@ -549,6 +549,11 @@ var ModelRestrict = (new function() {
                     $in: ["", null]
                 }
             }
+        },
+        rowcoloption: {
+            CodeCol: {
+                IsFormula: false
+            }
         }
     }
 

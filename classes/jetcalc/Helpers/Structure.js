@@ -152,9 +152,9 @@ var Simple = (new function(){
 	            	}
             	}
             	var IsRowFixed = false, IsRowEdit = false; 
-            	if (!_.isEmpty(Row.ColOptions)){
-            		IsRowFixed = Row.ColOptions.IsFixed;
-            		IsRowEdit = Row.ColOptions.IsEditable;
+            	if (!_.isEmpty(Row.ColOptions) && !_.isEmpty(Row.ColOptions[Col.CodeCol])){
+            		IsRowFixed = Row.ColOptions[Col.CodeCol].IsFixed;
+            		IsRowEdit = Row.ColOptions[Col.CodeCol].IsEditable;
             		console.log("Row",Row.ColOptions);
             	}           	
             	if (IsRowFixed){
