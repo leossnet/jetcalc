@@ -4134,7 +4134,12 @@ module.exports = {
                 "type": String,
                 "default": "",
                 "view": "none"
-            }
+			},
+            "IndexParamGrp": {
+                "type": Number,
+                "default": -1,
+                "view": "none"
+            }			
         }
     },
     "reportrow": {
