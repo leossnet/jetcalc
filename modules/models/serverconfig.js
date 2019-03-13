@@ -147,7 +147,12 @@ module.exports = {
                 "default": false,
                 "view": "none"
             },
-            "IsAgFormula": {
+            "UseRowColOptions": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+			},
+			"IsAgFormula": {
                 "type": Boolean,
                 "default": false,
                 "view": "none"
@@ -919,11 +924,6 @@ module.exports = {
                 "default": false,
                 "view": "none"
             },
-            "UseRowColOptions": {
-                "type": Boolean,
-                "default": false,
-                "view": "none"
-			},
 			"CodeValuta": {
                 "type": String,
                 "default": "",
