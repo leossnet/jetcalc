@@ -171,9 +171,18 @@ ko.components.register('combobox-editor', {
         self.Model = params.refmodel;
         self.MainModel = params.mainmodel;
         self.FieldName = params.fieldname;
+        self.ForceQuery = {};
+        try{
+            self.ForceQuery = ModelRestrict.Restrictions[self.MainModel][self.FieldName];
+        } catch(e){
+            ;
+        }
+        if (!_.isEmpty(self.ForceQuery)){
+            console.log("Restrictions "+self.MainModel,self.ForceQuery);
+        }        
         self.Show = ko.observableArray([{id:self.InitialValue,name:Catalogue.Get(self.Model,self.InitialValue)}]);
     },
-    template: '<select data-bind="valueAllowUnset: true, value:EditField,optionsText:\'name\',optionsValue:\'id\',initial:InitialValue,modelName:Model,mainModel:MainModel,fieldName:FieldName,selectize:Show"></select>',
+    template: '<select data-bind="valueAllowUnset: true, value:EditField,optionsText:\'name\',optionsValue:\'id\',initial:InitialValue,modelName:Model,mainModel:MainModel,fieldName:FieldName,filter:ForceQuery,selectize:Show"></select>',
 });
 
 ko.bindingHandlers.mask = {

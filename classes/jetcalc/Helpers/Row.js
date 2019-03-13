@@ -257,13 +257,11 @@ var RowHelper = (new function(){
 			Row.Measure = (!_.isEmpty(Row.CodeMeasure)) ? Measures[Row.CodeMeasure]:"";
 			Row.level = Math.max((Row.rowpath.split("/").length - 3),0);
 			Row.Sums = _.map(Row.Link_rowsumgrp,'CodeSumGrp');
-			Row.ColOptions = null;
+			Row.ColOptions = {};
 			Row.Link_rowcoloption.forEach(function(colOption){
-				if (!Row.ColOptions){
-					Row.ColOptions = {IsEditable:false,IsFixed:false};
-				}
-				Row.ColOptions.IsEditable = Row.ColOptions.IsEditable || colOption.IsEditable;
-				Row.ColOptions.IsFixed = Row.ColOptions.IsFixed || colOption.IsFixed;
+				Row.ColOptions[colOption.CodeCol] = {};
+				Row.ColOptions[colOption.CodeCol].IsEditable = colOption.IsEditable || false;
+				Row.ColOptions[colOption.CodeCol].IsFixed = colOption.IsFixed || false;
 			})			
 			Row.AllFilter = [];
 			Row.Filter = _.compact(_.uniq(

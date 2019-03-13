@@ -128,11 +128,13 @@ var CheckToLinks = (new function(){
     self.Do = function(Context,Update,done){
         console.log("DO",Update);
         self.FilterDo(Context,Update,function(err,ModifiedUpdates){
-            console.log("FilterDo");
+            return done(err,ModifiedUpdates);
+            /*console.log("FilterDo");
             self.OptionsDo(Context,ModifiedUpdates,function(err,LastUpdates){
                 console.log("OptionsDo");
                 return done(err,LastUpdates);
             })
+            */
         })        
     }
 

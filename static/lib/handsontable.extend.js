@@ -533,18 +533,21 @@
                 var linkModel = prop.replace("Link_", "")
                 var fieldsInfo = MModels.Config[linkModel].fields;
                 var fields = LinkEditorHelper.FilterEditFields(mainModel, linkModel);
-                var boolField = null;
+                var boolFields = [];
                 fields.forEach(function(f) {
                     if (fieldsInfo[f].type == "Boolean") {
-                        boolField = f;
+                        boolFields.push(f);
                     }
                 })
-                var showFields = fields;
-                if (boolField) showFields.remove(boolField);
+                var showFields = fields, testField = null;
+                if (!_.isEmpty(boolFields)) {
+                    showFields = _.difference(showFields,boolFields);   
+                    testField = _.first(boolFields);
+                }
                 value.forEach(function(v) {
                     var sig = "",
                         cl = "flatBack2";
-                    if (boolField && v[boolField]) {
+                    if (testField && !v[testField]) {
                         sig = "&nbsp;-&nbsp;";
                         cl = "flatBack1"
                     }

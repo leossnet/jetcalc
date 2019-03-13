@@ -105,13 +105,14 @@ var RowEditor = (new function() {
 
     self.PopulateRowsFilter = function(Rows){
         Rows.forEach(function(d) {
-            if (!_.isEmpty(d.Link_rowcoloption)) {
+            /*if (!_.isEmpty(d.Link_rowcoloption)) {
                 console.log("AAAAAAAAAAAAAAA");
                 d.Link_rowcoloption.forEach(function(link){
                     if (link.IsFixed) d.IsAlwaysFixed = true;
                     if (link.IsEditable) d.IsAlwaysEditable = true;
                 })
             }
+            */
             if (!_.isEmpty(d.Link_rowobj)) {
                 var Links = _.filter(d.Link_rowobj,function(LL){
                     return _.isEmpty(LL.CodeGrp);
@@ -234,8 +235,9 @@ var RowEditor = (new function() {
                     RowCFG.CodeValuta = ["middle_select", false, 100];
                     RowCFG.IsAnalytic = ["middle_checkbox", false, 100];
                     RowCFG.IsControlPoint = ["middle_checkbox", false, 100];
-                    RowCFG.IsAlwaysFixed = ["middle_checkbox", false, 100];
-                    RowCFG.IsAlwaysEditable = ["middle_checkbox", false, 100];
+                    //RowCFG.IsAlwaysFixed = ["middle_checkbox", false, 100];
+                    //RowCFG.IsAlwaysEditable = ["middle_checkbox", false, 100];
+                    RowCFG.Link_rowcoloption = ["middle_link", false, 200];
                     break;
                 case 'Formula':
                     RowCFG.Link_rowtag = ["middle_link", false, 100];
@@ -290,6 +292,7 @@ var RowEditor = (new function() {
                         Link_rowsumgrp: 'row',
                         Link_rowtag: 'row',
                         Link_rowobjgrp: 'row',
+                        Link_rowcoloption: 'row',
                         CodeMeasure: 'row',
                         CodeStyle: 'row',
                         CodeFormat: 'row',
