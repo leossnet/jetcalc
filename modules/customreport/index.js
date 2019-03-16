@@ -229,10 +229,10 @@ var ParamManager = (new function(){
          	Params.forEach(function(P){
          		if (!GInd[P.CodeParamGrp]) {
          			GInd[P.CodeParamGrp] = 1;
-         			Groups.push(_.pick(P,["CodeParamGrp","NameParamGrp"]));
+         			Groups.push(_.pick(P,["CodeParamGrp","NameParamGrp","IndexParamGrp"]));
          		}
          	})
-         	self.Groups(Groups);
+         	self.Groups(_.sortBy(Groups,"IndexParamGrp"));
          	self.SetParams(Params);
          	Bus.Emit("params_loaded");
          	return done && done();

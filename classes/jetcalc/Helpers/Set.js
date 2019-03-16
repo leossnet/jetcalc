@@ -27,7 +27,7 @@ var SetHelper = (new function(){
 		//Библиотека -> Объединяет Params и ParamSets
 		listdefinition:["-_id","CodeListDefinition","NameListDefinition","SNameListDefinition"],
 		//Группировки
-		paramgrp:["-_id","NameParamGrp","SNameParamGrp","CodeParamGrp"],
+		paramgrp:["-_id","NameParamGrp","SNameParamGrp","CodeParamGrp","IndexParamGrp"],
 		//Группировки
 		paramtab:["-_id","NameParamTab","SNameParamTab","CodeParamTab"],
 	}
