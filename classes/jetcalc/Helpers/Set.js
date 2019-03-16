@@ -72,9 +72,10 @@ var SetHelper = (new function(){
 							return "Select";
 						}
 						INFO.Groupped = {};
-						var ParamGroups = {};
+						var ParamGroups = {}, GroupsSort = {};;
 						INFO.paramgrp.forEach(function(PG){
 							ParamGroups[PG.CodeParamGrp] = _.isEmpty(PG.SNameParamGrp) ? PG.NameParamGrp:PG.SNameParamGrp;
+							GroupsSort[PG.CodeParamGrp] = PG.IndexParamGrp;
 						})
 						INFO.listdefinition.forEach(function(LD){
 							var Param = _.first(_.sortBy(_.map(_.filter(INFO.param,{CodeListDefinition:LD.CodeListDefinition}),function(M){
@@ -91,6 +92,7 @@ var SetHelper = (new function(){
 								INFO.Groupped[Param.CodeParam] = _.merge(Param,{ParamSets:ParamSets});
 								INFO.Groupped[Param.CodeParam].Type = guesType(ParamSets);
 								INFO.Groupped[Param.CodeParam].NameParamGrp = ParamGroups[INFO.Groupped[Param.CodeParam].CodeParamGrp];
+								INFO.Groupped[Param.CodeParam].IndexParamGrp = GroupsSort[INFO.Groupped[Param.CodeParam].CodeParamGrp];
 							}
 						})				
 						INFO.Reports = _.map(INFO.report,function(R){
