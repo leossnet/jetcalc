@@ -144,6 +144,8 @@ var MColEditor = (new function() {
             if (!_.isEmpty(test)){
                 var condition = _.first(test).ConditionHTML;
                 $(td).html(condition);
+            } else if(!_.isEmpty(value)){
+                $(td).html(value);
             }
         }
     }
