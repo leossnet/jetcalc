@@ -135,17 +135,27 @@ var MColEditor = (new function() {
             }
         }
     }
+
     self.ConditionFormatter = function(instance, td, row, col, prop, value, CellInfo) {
         if (prop=="Condition"){
-            var R = self.AllRows[row];
-            var test = _.filter(R.RemoveComment,function(v){
-                return _.has(v,"ConditionHTML");
-            })
-            if (!_.isEmpty(test)){
-                var condition = _.first(test).ConditionHTML;
-                $(td).html(condition);
-            } else if(!_.isEmpty(value)){
+            var isChanged = false;
+            if (self.ShowChanges.indexOf([row,prop].join("_"))!=-1){
+                $(td).addClass("changed_cell");
+                isChanged = true;
+            }       
+            if (isChanged){
                 $(td).html(value);
+            } else {
+                var R = self.AllRows[row];
+                var test = _.filter(R.RemoveComment,function(v){
+                    return _.has(v,"ConditionHTML");
+                })
+                if (!_.isEmpty(test)){
+                    var condition = _.first(test).ConditionHTML;
+                    $(td).html(condition);
+                } else if(!_.isEmpty(value)){
+                    $(td).html(value);
+                }
             }
         }
     }
