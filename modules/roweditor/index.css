@@ -50,6 +50,6 @@ div.actionLink a{
     position: absolute;
     right: 5px;
 }
-.handsontable td.editableCell.removed_by_filter.changed_cell, .handsontable td.editableCell.changed_cell{
+.handsontable td.editableCell.removed_by_filter.changed_cell, .handsontable td.editableCell.changed_cell,.handsontable td.changed_cell{
     background-color: #F4DAD5!important;
 }
