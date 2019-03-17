@@ -78,11 +78,22 @@ var RowEditor = (new function() {
     self.Config = ko.observable();
     self.Result = ko.observable();
     self.Changes = ko.observable();
+    self.ShowChanges = [];
     self.ChangesCount = ko.observable(0);
+
+    self.Changes.subscribe(function(v){
+        self.ShowChanges = _.keys(self.Changes());
+        self.Table().Render();
+    })
 
     self.AllRows = []; // Remove
 
     self.AddRender = function(instance, td, row, col, prop, value, CellInfo) {
+
+        if (self.ShowChanges.indexOf([row,prop].join("_"))!=-1){
+            $(td).addClass("changed_cell");
+        }
+ 
         if (self.Columns) {
             self.Columns.forEach(function(C) {
                 if (C.data === prop && !C.readOnly) {
@@ -100,6 +111,8 @@ var RowEditor = (new function() {
             }
         }
     }
+
+
 
     self.AddRenders = [self.AddRender];
 
