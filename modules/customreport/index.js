@@ -213,11 +213,20 @@ var ParamManager = (new function(){
 
     self.List = ko.observableArray();
 
+    self.LastDocContext = ko.observable();
+
  	self.Load = function(done){
+ 		 var cx = CxCtrl.CxPermDoc();
+ 		 var testKey = _.values(cx).join("_");
  		 console.log("load params");
          CustomReport.rGet("params",CxCtrl.CxPermDoc(),function(data){
          	self.List(data.List);
          	ReportManager.PrepareTree();
+         	if (self.LastDocContext()==testKey){
+         		return;
+         	} else {
+         		self.LastDocContext(testKey);
+         	}
          	if (ReportManager.CurrentReport() && ReportManager.CurrentReport()!='default'){
          		var R = _.find(data.List,{CodeReport:ReportManager.CurrentReport()});
          		if (_.isEmpty(R)){
@@ -233,6 +242,7 @@ var ParamManager = (new function(){
          		}
          	})
          	self.Groups(_.sortBy(Groups,"IndexParamGrp"));
+
          	self.SetParams(Params);
          	Bus.Emit("params_loaded");
          	return done && done();
@@ -620,7 +630,7 @@ ko.components.register('bool-param', {
     			NegativeCode = 	self.data.ParamSets[0].CodeParamSet;
     		}
     	} catch(e){
-    		console.warn("Неверная канструкция параметра:",self.data);
+    		console.warn("Неверная конструкция параметра:",self.data);
     	}
     	var Current = _.find(self.data.ParamSets,{CodeParamSet:self.data.NewCodeParamSet});
     	self.Text(_.isEmpty(Current.SNameParamSet)?Current.NameParamSet:Current.SNameParamSet);
@@ -636,6 +646,8 @@ ko.components.register('bool-param', {
     		self.Text(_.isEmpty(F.SNameParamSet)?F.NameParamSet:F.SNameParamSet);
     		self.data.IsChanged(self.data.NewCodeParamSet!=self.data.CodeParamSet);
     	})
+    	console.log("PositiveCode",PositiveCode,"NegativeCode",NegativeCode,"IsPositiveSelected",self.IsPositiveSelected());
+
 	},
     template: "<div class='select' ><label  data-bind='css:{changed:data.IsChanged}'><input class='ace ace-checkbox-1' type='checkbox' data-bind='checked:IsPositiveSelected'><span class='lbl'></span><span  data-bind='text:Text'></span></label></div>",
 })
