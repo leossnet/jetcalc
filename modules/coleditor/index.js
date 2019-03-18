@@ -263,6 +263,7 @@ var MColEditor = (new function() {
                 }
             }
             self.Config(Config);
+            return _.isFunction(done) && done();
         })
     }
 
