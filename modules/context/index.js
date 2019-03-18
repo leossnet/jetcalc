@@ -290,13 +290,16 @@ var CxCtrl = (new function() {
         Updater = null; // Полное обновление
         break;
       case "obj":
-        self.ChildObj(null);
+        console.log("update 1");
+        self.ChildObj(self.GetLastChildObj());
         self.CodeObj(value);
         Updater = ['Row', "Doc"];
         Bus.Emit("context_obj_change");
         break;
       case "childobj":
+        console.log("update 2");
         self.ChildObj(value);
+        self.UpdateStoredChildObj(value);
         Updater = ['Row'];
         Bus.Emit("context_obj_change");
         break;
@@ -413,13 +416,40 @@ var CxCtrl = (new function() {
   self.CodeDoc = ko.observable(null, {
     persist: 'cxCodeDoc'
   });
+
   self.CodeReport = ko.observable('default');
+
   self.CodeObj = ko.observable(null, {
     persist: 'cxCodeObj'
   });
-  self.ChildObj = ko.observable(null, {
-    persist: 'cxChildObj'
+
+  self.ChildObj = ko.observable();
+  
+  self.LastChildObjs = ko.observable(null, {
+    persist: 'cxLastChildObjs'
   });
+
+
+  self.UpdateStoredChildObj = function(value){
+      if (!value) return;
+      var store = self.LastChildObjs();
+      if (!store) store = {};
+      if (!_.has(store,self.CodeDoc())){
+          store[self.CodeDoc()] = {};
+      }
+      store[self.CodeDoc()][self.CodeObj()] = value;
+      self.LastChildObjs(store);
+  }
+
+  self.GetLastChildObj = function(){
+      var store = self.LastChildObjs();
+      if (store && store[CxCtrl.CodeDoc()] && store[CxCtrl.CodeDoc()][self.CodeObj()]){
+        return store[CxCtrl.CodeDoc()][self.CodeObj()];
+      } else {
+        return _.first( self.ChildObjs());
+      }
+  }
+
   self.CodeValuta = ko.observable(null, {
     persist: 'cxCodeValuta'
   });
@@ -699,6 +729,7 @@ var CxCtrl = (new function() {
   self.ParamsToSet = ['SelectedPeriod', 'ReportPeriod', 'RedirectPeriod', 'CodeObj', 'Year', 'CodeReport', 'ChildObj'];
 
   self.ParamsFromUrl = function(InitialParams) {
+    console.log("update 3");
     if (!_.isEmpty(InitialParams)) {
       self.ParamsToSet.forEach(function(param) {
         var PValue = InitialParams[param];
@@ -744,24 +775,26 @@ var CxCtrl = (new function() {
   }
 
   self.FixChildObjs = function() {
+    console.log("update 5");
     var Doc = MFolders.FindDocument(self.CodeDoc());
     if (Doc && Doc.HasChildObjs) {
       if (!Doc.SubObjs[self.CodeObj()]) {
         var NewSub = _.first(_.keys(Doc.SubObjs));
         self.CodeObj(NewSub);
-        self.ChildObj(_.first(Doc.SubObjs[NewSub]));
+        self.ChildObj(self.GetLastChildObj());
         self.ChildObjs(Doc.SubObjs[NewSub]);
       } else {
         self.ChildObjs(Doc.SubObjs[self.CodeObj()]);
         if (!self.ChildObj() || self.ChildObjs().indexOf(self.ChildObj()) == -1) {
-          self.ChildObj(_.first(self.ChildObjs()));
+          self.ChildObj(self.GetLastChildObj());
         }
       }
       if (Doc.HasChildObjs) {
-        if (!self.ChildObj() && Doc.SubObjs && Doc.SubObjs[self.CodeObj()]) {
-          self.ChildObj(_.first(Doc.SubObjs[self.CodeObj()]));
-        }
         self.ChildObjs(Doc.SubObjs[self.CodeObj()]);
+        if (!self.ChildObj() && Doc.SubObjs && Doc.SubObjs[self.CodeObj()]) {
+          self.ChildObj(self.GetLastChildObj());
+        }
+        
       }
     } else {
       self.ChildObj(null);
