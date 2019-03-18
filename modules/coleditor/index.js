@@ -6,6 +6,13 @@ var MColEditor = (new function() {
     self.Show = function() {
         if (!self.Mode()) return self.InitSetMode("Filter");
         self.LoadCols(function() {
+            try{
+                ParamManager.Load(function(){
+                    ConditionEditor.PossibleParams()
+                });
+            } catch(e){
+                console.log(e);
+            }
             //self.RenderTable();
         })
     }
@@ -164,6 +171,7 @@ var MColEditor = (new function() {
 
     self.LoadCols = function(done) {
         self.rGet("cols", CxCtrl.Context(), function(Rows) {
+
             var AllRows = _.sortBy(Rows, 'lft');
             AllRows = _.filter(AllRows, function(Branch) {
                 return Branch.Type != "colsetcol";
