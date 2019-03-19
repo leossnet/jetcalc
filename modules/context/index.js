@@ -2,6 +2,28 @@ var CxCtrl = (new function() {
 
   var self = this;
 
+
+  self.SyncContext = function(){
+      BroadCast.Emit("sync_context");
+      swal("","Контекст синхронизирован");
+  }
+
+  self.Sync = function(){
+    var Check = {CodeObj:"cxCodeObj",Year:"cxYear",SelectedPeriod:"cxCodePeriod"};
+    var isChanged = false;
+    for (var selfField in Check){
+        var data = JSON.parse(localStorage.getItem(Check[selfField]));
+        if (self[selfField]()!=data){
+            self[selfField](data);
+            isChanged = true;
+        }
+    }
+
+    if (MBreadCrumbs.CheckPath("docview") && isChanged){
+        self.AskForUpdate("document");        
+    }
+  }
+
   self.UseCache = ko.observable(true);
   self.IsKvart = ko.observable(false);
   self.IsShowMonthPlan = ko.observable(false, {
@@ -677,6 +699,7 @@ var CxCtrl = (new function() {
       Bus.On("aggregate_simple",self.SetAggregateSimple);
       Bus.On("documentisrendered",self.UpdateDocInfo);
       Bus.On("history-pop-state",self.OnHistoryForce);
+      Bus.On("broadcast_sync_context",self.Sync);
 
       MSite.Events.on("initialnavigate", function(){
       	  self.InitValues();

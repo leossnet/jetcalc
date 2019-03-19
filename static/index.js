@@ -25,6 +25,20 @@ var Bus = (new function(){
     return self;
 }) 
 
+
+var BroadCast = new BroadcastChannel('jetcalc');
+
+BroadCast.onmessage = function(message){
+    console.log("broadcast_"+message.data);
+    Bus.Emit("broadcast_"+message.data);
+}
+
+BroadCast.Emit = function(message){
+    BroadCast.postMessage(message);
+}
+
+
+
 var LeftMenu = (new function () {
     var self = this;
 

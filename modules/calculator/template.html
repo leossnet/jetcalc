@@ -88,6 +88,11 @@
 
 
 <script id="tb_period" type="text/html">
+  
+      <a class="btn btn-sm btn-white btn-warning" data-bind="title:'Синхронизация с другими вкладками',click:CxCtrl.SyncContext"  data-placement="bottom">
+        <i class="fa fa-refresh"></i>
+      </a>
+
     <a class="btn btn-sm btn-white dropdown-toggle" data-toggle="dropdown">
         <span data-bind="text:CxCtrl.SelectedPeriod()+'. '"></span>
         <!-- ko template:{name:'catalogue',data:{model:'period',id:CxCtrl.SelectedPeriod()}} --><!-- /ko -->
