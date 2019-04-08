@@ -7,29 +7,29 @@ var main = "jetcalc";
 
 var config = {
 	development: {
-		 rabbitmqstr         : 'amqp:jet:jetparole12j@127.0.0.1'
-                 ,rabbitmq:{
-                     protocol: 'amqp',
-                     hostname: 'localhost',
-                     port: 5672,
-                     username: 'jet',
-                     password: 'jetparole12j',
-                     locale: 'en_US',
-                     frameMax: 0,
-                     heartbeat: 0,
-                     vhost: '/'
-                }
-		,rabbitmqPort     : 15672
-		,rabbitPrefix     : main+"_"
-		,gitBookCmd       : "docker run --rm -v \"$PWD\":/gitbook -p 4000:4000 billryan/gitbook gitbook" //gitbook
-		,cookieConfig     : {
-	    	    secret            : main+" secret",
-		    	key               : main+".sid",
-        	    cookie            : { path:'/', httpOnly: true, maxAge: null},
-	    	    maxAge            : 24*60*60*1000,
-    		    secure            : true,
+		rabbitmqstr        	: 'amqp:jet:jetparole12j@127.0.0.1'
+        ,rabbitmq:{
+                protocol		: 'amqp',
+                hostname		: 'localhost',
+                port			: 5672,
+                username		: 'jet',
+                password		: 'jetparole12j',
+                locale			: 'en_US',
+                frameMax		: 0,
+                heartbeat		: 0,
+                vhost			: '/'
+            }
+		,rabbitmqPort     	: 15672
+		,rabbitPrefix     	: main+"_"
+		,gitBookCmd       	: "docker run --rm -v \"$PWD\":/gitbook -p 4000:4000 billryan/gitbook gitbook" //gitbook
+		,cookieConfig     	: {
+	    	    secret      	: main+" secret",
+		    	key             : main+".sid",
+        	    cookie          : { path:'/', httpOnly: true, maxAge: null},
+	    	    maxAge          : 24*60*60*1000,
+    		    secure          : true,
         	    saveUninitialized : true,
-        	    resave            : true
+        	    resave          : true
     		}
 		, staticDir        : __dirname+'/static'
 		, dir              :__dirname
@@ -47,34 +47,34 @@ var config = {
 		, dbsqlmap         : false
 		, dbconfig         : {
 			mssql:{
-				userName:'sa',
-				password:'1',
-				server:'127.0.0.1',
-				adapter:'mssql',
-				protocol:'xml',
-				debugSql:false,
-				options:{
-				    database:main,
-				    port: 1433,
-				    encrypt: true,
-			    	    connectionTimeout: 300000,
-			    	    requestTimeout: 300000
+				userName		:'sa',
+				password		:'1',
+				server			:'127.0.0.1',
+				adapter			:'mssql',
+				protocol		:'xml',
+				debugSql		:false,
+				options		:{
+				    database		: main,
+				    port			: 1433,
+				    encrypt			: true,
+			    	connectionTimeout: 300000,
+			    	requestTimeout	: 300000
 				}
 			},
-			pgsql:{
-				url:'postgres://postgres:postgres@127.0.0.1:5432/'+main,
-				userName:'postgres',
-				password:'postgres',
-				server:'127.0.0.1',
-				adapter:'postgres',
-				protocol:'json',
-				debugSql:false,
-				options:{
-				    database:'jetcalc',
-				    port: 5432,
-				    encrypt: true,
-			    	    connectionTimeout: 300000,
-			    	    requestTimeout: 300000
+			pgsql	:{
+				url				:'postgres://postgres:postgres@127.0.0.1:5432/'+main,
+				userName		:'postgres',
+				password		:'postgres',
+				server			:'127.0.0.1',
+				adapter			:'postgres',
+				protocol		:'json',
+				debugSql		:false,
+				options	:{
+				    database		:'jetcalc',
+				    port			: 5432,
+				    encrypt			: true,
+			    	connectionTimeout: 300000,
+			    	requestTimeout	: 300000
 				}
 			}
 		}
