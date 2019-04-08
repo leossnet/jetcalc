@@ -127,7 +127,7 @@ var RabbitManager =  function(){
 	}
 
 	self.rabbitCmd = function(command,done){
-		var url = config.rabbitmq.replace('amqp:',"http://")+':'+config.rabbitmqPort+'/api/'+command;
+		var url = config.rabbitmqstr.replace('amqp:',"http://")+':'+config.rabbitmqPort+'/api/'+command;
 	    request({ url : url },
 	      function(error, response, body){
 	      	  if (error || response.statusCode !== 200) return done(error)

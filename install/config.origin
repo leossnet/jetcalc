@@ -7,7 +7,18 @@ var main = "jetcalc";
 
 var config = {
 	development: {
-		 rabbitmq         : 'amqp:jet:jetparole12j@127.0.0.1'
+		 rabbitmqstr         : 'amqp:jet:jetparole12j@127.0.0.1'
+                 ,rabbitmq:{
+                     protocol: 'amqp',
+                     hostname: 'localhost',
+                     port: 5672,
+                     username: 'jet',
+                     password: 'jetparole12j',
+                     locale: 'en_US',
+                     frameMax: 0,
+                     heartbeat: 0,
+                     vhost: '/'
+                }
 		,rabbitmqPort     : 15672
 		,rabbitPrefix     : main+"_"
 		,gitBookCmd       : "docker run --rm -v \"$PWD\":/gitbook -p 4000:4000 billryan/gitbook gitbook" //gitbook
