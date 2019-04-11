@@ -107,6 +107,8 @@ var HeaderHelper = function(Context){
         })
 	}
 
+
+
 	self.LoadHeaders = function(CodeHeader,done){
         var Result = [];
         self.query('header',{CodeHeader:CodeHeader}, self.Fields['header']).sort({IndexHeader:1}).exec(function(err,Header){
@@ -116,6 +118,7 @@ var HeaderHelper = function(Context){
             Result = Result.concat(Header);
             self.query('header',{CodeParentHeader:CodeHeader},self.Fields['header']).sort({IndexHeader:1}).exec(function(err,Children){
                 if (!Children || !Children.length) return done(null,Result);
+                console.log("Children",Children,"Children");
                 var Tasks = {};
                 Children.forEach(function(Node){
                     Tasks[Node.CodeHeader] = function(CodeChildren){
