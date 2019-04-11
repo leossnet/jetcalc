@@ -5146,7 +5146,7 @@ module.exports = {
         "tablename": "[link].[UserRequests]",
         "menuplace": "Link",
         "fields": {
-            "CoreUserRequest": {
+            "CodeUserRequest": {
                 "type": String,
                 "default": null,
                 "view": "none"
