@@ -320,7 +320,6 @@ ko.components.register('period-formula-editor', {
                 result.push(Ob);
             })
         }
-
         self.ParsedArray(result);
 
         self.AddLastCellListener = function() {
@@ -346,9 +345,8 @@ ko.components.register('period-formula-editor', {
             self.ParsedArray.remove(data);
             setTimeout(self.AddLastCellListener, 200);
         }
-        ko.computed(function() {
-            return ko.toJSON(self.ParsedArray);
-        }).subscribe(function() {
+
+        self.reCalc = function(){
             var V = self.ParsedArray();
             var StrArr = [];
             V.forEach(function(sVo) {
@@ -356,14 +354,13 @@ ko.components.register('period-formula-editor', {
                 var A = "";
                 if (sV.From && sV.To) {
                     A = sV.From + "=" + sV.To;
-                    //if (sV.Year) A += ":" + sV.Year;
                     if (sV.Header) A += "!" + sV.Header;
                     if (sV.Year) A += ":" + sV.Year;
                     StrArr.push(A);
                 }
             })
             params.field(StrArr.join(","));
-        });
+        }
     },
-    template: '<table data-bind="if:ParsedArray().length" class="table table-striped table-bordered table-hover dataTable no-footer small-paddings" style="width: initial;"><theader><tr><td >Исх.Период</td><td >Цел.Период</td><td >Згл.Период</td><td >Смещ.Год</td><td ></td></tr></theader><tbody data-bind="foreach:ParsedArray()"><tr><td><input data-bind="value:$data.From" style="width: 50px;"></input></td><td><input data-bind="value:$data.To" style="width: 50px;"></input></td><td><input data-bind="value:$data.Header" style="width: 50px;"></input></td><td><input class="formula-editor-year" data-bind="value:$data.Year" style="width: 50px;"></input></td><td><a data-bind="click:$parent.RemoveFormula"><i class="fa fa-icon fa-times"></i></a></td></tr></tbody></table><a class="addLinkModel" data-bind="click:AddFormula">Добавить</a>',
+    template: '<table data-bind="if:ParsedArray().length" class="table table-striped table-bordered table-hover dataTable no-footer small-paddings" style="width: initial;"><theader><tr><td >Исх.Период</td><td >Цел.Период</td><td >Згл.Период</td><td >Смещ.Год</td><td ></td></tr></theader><tbody data-bind="foreach:ParsedArray()"><tr><td><input data-bind="value:$data.From,valueUpdate:\'keyup\',event: { keyup: $parent.reCalc}" style="width: 50px;"></input></td><td><input data-bind="value:$data.To,valueUpdate:\'keyup\',event: { keyup: $parent.reCalc}" style="width: 50px;"></input></td><td><input data-bind="value:$data.Header,valueUpdate:\'keyup\',event: { keyup: $parent.reCalc}" style="width: 50px;"></input></td><td><input class="formula-editor-year" data-bind="value:$data.Year,valueUpdate:\'keyup\',event: { keyup: $parent.reCalc}" style="width: 50px;"></input></td><td><a data-bind="click:$parent.RemoveFormula"><i class="fa fa-icon fa-times"></i></a></td></tr></tbody></table><a class="addLinkModel" data-bind="click:AddFormula">Добавить</a>',
 });
