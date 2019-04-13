@@ -403,7 +403,7 @@ var Unmaper = function(){
 		Years.forEach(function(Y,inde){
 			var t = Number(Y);
 			if (t<1000){
-				Years[inde]	 = Number(Cx.Year)+t;
+				Years[inde]	 = Number(self.Cx.Year)+t;
 			}
 		})
 
