@@ -400,6 +400,13 @@ var Unmaper = function(){
 		} else {
 			Periods = [Cx.Period];
 		}
+		Years.forEach(function(Y,inde){
+			var t = Number(Y);
+			if (t<1000){
+				Years[inde]	 = Number(Cx.Year)+t;
+			}
+		})
+
 		var Parts = [], Year = Var.Year;
 		Rows.forEach(function(R){
 			Cols.forEach(function(C){
