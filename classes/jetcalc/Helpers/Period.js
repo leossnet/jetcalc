@@ -17,7 +17,7 @@ var PeriodHelper = (new function(){
 
 	self.get = function(done){
 		self.FromCache(null,function(err,Result){
-			if (Result) {
+			if (Result && false) {
 				return done (err,Result);	
 			}
 			self.load(function(err,Data){
@@ -84,7 +84,7 @@ var PeriodHelper = (new function(){
 								periodValue = raw.split("*");
 								ArrInfo = "MULT";
 							} else {
-								periodValue = raw;
+								periodValue = name;
 							}
 						}
 					}

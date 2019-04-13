@@ -386,8 +386,9 @@ var Unmaper = function(){
 			}
 			if (!Array.isArray(Info)){
 				var Ar = Info.split(":");
+
 				if (Ar.length>1) {
-					Years.forEach(function(Y){ Y = Y+Number(Ar[1]);})	
+					Years.forEach(function(Y,inde){ Years[inde] = Number(Y)+Number(Ar[1]);})	
 				}
 				Periods = [_.first(Ar)];
 			} else {
