@@ -1,7 +1,7 @@
 #!/bin/bash
 
 now="$(date +'%Y-%m-%d-%H-%M')"
-tmp=jetcalc
+tmp=dumpjetcalc
 
 cd $HOME
 if [ ! -d $tmp ] 
