@@ -22,5 +22,5 @@ then
     mkdir backup
 fi 
 
-zip -r "backup/dump_$now.zip" $dirname
+zip -r "backup/dump_$now.zip" $tmp
 rm -R $tmp
