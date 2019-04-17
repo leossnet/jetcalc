@@ -61,8 +61,6 @@ var MColEditor = (new function() {
                 }                
             }
         }
-        console.log("ToSave",ToSave);
-
         self.rPut("savechanges", {
             Context: CxCtrl.Context(),
             Changes: JSON.stringify(ToSave)
@@ -107,7 +105,6 @@ var MColEditor = (new function() {
     self.AllRows = []; // Remove
 
     self.AddRender = function(instance, td, row, col, prop, value, CellInfo) {
-
         if (self.ShowChanges.indexOf([row,prop].join("_"))!=-1){
             $(td).addClass("changed_cell");
         }        
@@ -120,6 +117,7 @@ var MColEditor = (new function() {
         }
         if (self.Mode() == 'Filter') {
             var R = self.AllRows[row];
+            $(td).addClass(R.Type);
             if (R && R.IsRemoved) {
                 $(td).addClass("removed_by_filter");
                 if (_.includes(R.RemoveComment, prop)) {
@@ -143,6 +141,15 @@ var MColEditor = (new function() {
         }
     }
 
+
+    self.getParentConditions = function(row){
+        var node = self.AllRows[row];
+        return _.compact(_.flattenDeep(_.map(_.filter(self.AllRows,function(check){
+            return check.lft<node.lft && check.rgt>node.rgt;
+        }),"Condition")));
+
+    }
+
     self.ConditionFormatter = function(instance, td, row, col, prop, value, CellInfo) {
         if (prop=="Condition"){
             var isChanged = false;
@@ -159,6 +166,10 @@ var MColEditor = (new function() {
                 })
                 if (!_.isEmpty(test)){
                     var condition = _.first(test).ConditionHTML;
+                    var parentConditions = self.getParentConditions(row);
+                    if (!_.isEmpty(parentConditions)){
+                        condition  = condition+" <span class='parent-conditions'>[and "+parentConditions.join(" and ")+"]</span>";
+                    }
                     $(td).html(condition);
                 } else if(!_.isEmpty(value)){
                     $(td).html(value);
@@ -193,7 +204,9 @@ var MColEditor = (new function() {
             }
             switch (self.Mode()) {
                 case "Filter":
-                    ColCFG.Condition = ["condition", false, 200, {
+                    ColCFG.InitialYear = ["middle_text", false, 100];
+                    ColCFG.InitialPeriod = ["middle_text", false, 100];
+                    ColCFG.Condition = ["condition", false, 250, {
                         renderer: self.ConditionFormatter
                     }];
                     ColCFG.CodePeriodGrp = ["middle_select", true, 100];
@@ -251,6 +264,7 @@ var MColEditor = (new function() {
                         Link_colsetcolgrp: 'colsetcol',
                         Link_colsetcolperiodgrp: 'colsetcol',
                         CodeStyle: 'colsetcol',
+                        InitialPeriod: 'period',
                         CodeFormat: 'colsetcol',
                         CodePeriodGrp: 'docheader'
                     },

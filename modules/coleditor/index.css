@@ -67,3 +67,15 @@ td.nowrapped.removed_by_filter.guilty_cell logic,td.nowrapped logic{
 .handsontable td.formulacol.removed_by_filter, .handsontable td.formulacol {
     color:#546FAF!important;
 }
+span.parent-conditions{
+	font-size: 10px;
+    color: gray;
+}
+td.colset span.label.label-lg.flat.flatBack1, td.header span.label.label-lg.flat.flatBack1{
+	background-color: #fb9a0f;
+}
+
+td.colset span.label.label-lg.flat.flatBack2, td.header span.label.label-lg.flat.flatBack2{
+	background-color: #63da39;
+}
+

@@ -216,7 +216,7 @@ var ColHelper = (new function(){
 		return function(cb){
 			for (var Code in INFO.Result){
 				var H = INFO.Result[Code];
-				if (H.Type=='col'){      
+				if (H.Type=='col' || H.Type=='header'){      
 					H.InitialPeriod = H.CodePeriod;
 					H.InitialYear = H.Year;
 					if (H.CodePeriod=='0') H.CodePeriod = Cx.CodePeriod;
