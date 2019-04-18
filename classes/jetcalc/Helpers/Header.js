@@ -120,13 +120,6 @@ var HeaderHelper = (new function(){
             mongoose.model('header').find({CodeParentHeader:CodeHeader},self.Fields['header']).sort({IndexHeader:1}).isactive().lean().exec(function(err,Children){
                 if (_.isEmpty(Children)) return done(null,Result);
                 var Tasks = {};
-/*                Children.forEach(function(C){
-                	if (!_.isEmpty(C.CodeColset) && _.isEmpty(_.first(Header).Link_docheader)){
-                		["Year", "Condition", "IndexHeader", NameHeader, CodePeriod]
-                		C = _.merge(C,)
-                	}
-                })
-*/
                 Children.forEach(function(Node){
                     Tasks[Node.CodeHeader] = function(CodeChildren){
                         return function(cb){

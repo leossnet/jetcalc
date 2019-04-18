@@ -13,7 +13,7 @@ var HP = LIB.Permits;
 router.get('/cols', function(req, res, next) {
     var Context = LIB.ReqContext(req);
     var ColHelper = require(__base + 'classes/jetcalc/Helpers/Col.js');
-    ColHelper.GetAll(Context, function(err, Cols) {
+    ColHelper.GetAllRaw(Context, function(err, Cols) {
         if (err) return next(err);
         return res.json(Cols);
     })

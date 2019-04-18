@@ -37,6 +37,80 @@ var ColHelper = (new function(){
 	self.GetAll = function(Cx,done){
 		self.Init(Cx,function(err,INFO){
 			if (err) return done(err);
+			INFO.Result = self.applyOverides (INFO.Header);			
+			async.series([
+				self.PrimitiveFilter(Cx,INFO),   // CodePeriodGrp и IsInput на уровне docheader Основная фильтрация
+				self.InExectFilter(Cx,INFO),     // ForGroups и ForPeriods на уровне colsetcol Грубая фильтрация
+				self.AccurateFilter(Cx,INFO),    // Condition для colsetcol Тонкая фильтрация колонок на основании выбранных параметров
+				self.ExtendParamsToCols(Cx,INFO),// Переопределяем параметры колонок на основании colsetcol
+				self.UpdatePeriods(Cx,INFO),     // Меняем периоды и сдвигаем года
+				self.UpdateNames(Cx,INFO),       // Меняем {} на соответствующие названия
+				self.SimplifyFormula(Cx,INFO),   // Упрощаем формулы в зависимости от контекста
+				self.UpdateTags(Cx,INFO),        // Заменяем тэги на значения определенные в Link_colsetcoltag				
+			],function(err){
+				return done(err,_.values(INFO.Result));
+			})			
+		})
+	}
+
+	self.applyOverides = function(tree){
+		var _children = function(node,tree){
+			return _.filter(_.values(tree),function(check){
+				return check.lft>node.lft && check.rgt<node.rgt;
+			})
+		}
+		var _parentsWithNode =  function(node,tree){
+			return _.sortBy(_.filter(_.values(tree),function(check){
+				return check.lft <= node.lft && check.rgt >= node.rgt; 
+			}),"rgt");
+		}
+		var _overrides = function(header,tree){
+			var r = {};
+			var allheaders = _parentsWithNode(header,tree);
+			allheaders.forEach(function(check){
+				if (!_.isEmpty(check.Condition)){
+					r.Condition = check.Condition;
+				}
+				if (check.Year!=0){
+					r.Year = check.Year;
+				}
+				if (check.CodePeriod!=0){
+					r.CodePeriod = check.CodePeriod;	
+				}
+			})
+			return r;			
+		}
+		for (var code in tree){
+			var inf = tree[code];
+			if (inf.Type=='header'){
+				var ov = _overrides(inf,tree);
+				if (!_.isEmpty(_.compact(_.values(ov)))){
+					var toUpdate = _.filter(_children(inf,tree),{Type:'colsetcol'});
+					toUpdate.forEach(function(colsetCol){
+						if (ov.Condition){
+							if (!_.isEmpty(colsetCol.Condition)){
+								colsetCol.Condition += " and "+ ov.Condition;
+							} else {
+								colsetCol.Condition = ov.Condition;
+							}
+						}
+						if (ov.Year){
+							colsetCol.Year = ov.Year;
+						}
+						if (ov.CodePeriod){
+							colsetCol.CodePeriod = ov.CodePeriod;
+						}
+						tree[colsetCol.code] = colsetCol;
+					})
+				}
+			}
+		}
+		return tree;
+	}	
+
+	self.GetAllRaw = function(Cx,done){
+		self.Init(Cx,function(err,INFO){
+			if (err) return done(err);
 			INFO.Result = INFO.Header;			
 			async.series([
 				self.PrimitiveFilter(Cx,INFO),   // CodePeriodGrp и IsInput на уровне docheader Основная фильтрация
