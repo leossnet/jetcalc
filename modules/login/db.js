@@ -7,7 +7,7 @@ module.exports = {
 		user:{
 			UserPhoto  : {type : String  , default : null, extended:true, ignoresave:true, template:"form_image"},
 			MailCode   : {type : String, default : '', trim : true, select:false},
-			MobilePhone: {type : String, default : '', trim : true, mask:"+7 (999) 999-9999"},
+			MobilePhone: {type : String, default : '', trim : true},
 			PassHash   : {select:false},
 			PassSalt   : {select:false}
 		},
