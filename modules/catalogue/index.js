@@ -272,9 +272,7 @@ var ModelConnectorEdit = (new function() {
             data.MainModels.forEach(function(MM) {
                 Str[MM[self.code_source_model()]] = ko.observableArray();
             })
-            console.log("STR ",Str);
             data.LinkModels.forEach(function(LM) {
-                console.log(LM,self.source_model_field_name(),LM[self.source_model_field_name()],"<>><<<<>>");
                 if (Str[LM[self.source_model_field_name()]]) {
                     Str[LM[self.source_model_field_name()]].push(MModels.Create(self.target_model(), LM));
                 }
@@ -285,10 +283,8 @@ var ModelConnectorEdit = (new function() {
                     Str2[k] = Str[k];
                 }
             })
-            console.log("STR2 ",Str2);
             self.LinkModels(Str2);
             self.MainModels(_.filter(self.MainModels(), function(e) {
-                console.log(e,e.Code,self.LinkModels());
                 return self.LinkModels()[e[e.Code]()];
             }))
             done && done();
@@ -351,7 +347,6 @@ var ModelConnectorEdit = (new function() {
             self.get_fields(data.get_fields || self._get_get_fields());
             self.use_sync_links(data.use_sync_links || false);
             self.model_edit_fields(self._get_model_edit_fields(data.model_edit_fields));
-            console.log("Init LoadModels");
             self.LoadModels();
         }
         done && done();
@@ -776,7 +771,6 @@ var Catalogue = (new function() {
     }
 
     self.LoadModels = function(modelName, Fields, Sort, Search, limit, skip, filter, done) {
-        console.log("LOAD MODELS", arguments);
         self.Error(null);
         $.ajax({
             url: self.base + '/searchmodel',
@@ -1155,7 +1149,6 @@ var ModelTableEdit = (new function() {
         })
     }
     self.ReloadModel = function(Code, done) {
-        console.log("ReloadModel");
         self._loadModel(Code, done);
     }
 
@@ -1271,6 +1264,15 @@ var ModelTableEdit = (new function() {
         })
     }
 
+    self.InitSetMode = function(Q){
+        setTimeout(function(){
+            self.Choosed(Q.Choosed);    
+        },1000)
+        
+    }
+
+    Bus.On("init-set-module",self.InitSetMode);
+
     self.InitModel = function(ModelName, Sort, Filter, Limit) {
         Filter = Filter || {};
         self.Clear();
@@ -1361,7 +1363,6 @@ var ModelTableEdit = (new function() {
     self.LoadList = function() {
         if (!self.ModelName()) return;
         self.IsLoading(true);
-        console.log("LoadList LoadModels");
         Catalogue.LoadModels(self.ModelName(), self.TableFields(), self.Sort(), self.Search(), self.limit, self.skip, self.Filter(), function(data) {
             self.IsLoading(false);
             self.List(_.map(data.models, function(M) {
@@ -1385,7 +1386,6 @@ var ModelTableEdit = (new function() {
             self.skip += self.limit;
         self.limit = 50;
         self.IsLoading(true);
-        console.log("LoadMore LoadModels");
         Catalogue.LoadModels(self.ModelName(), self.TableFields(), self.Sort(), self.Search(), self.limit, self.skip, self.Filter(), function(data) {
             self.IsLoading(false);
             self.List(_.union(self.List(), _.map(data.models, function(M) {

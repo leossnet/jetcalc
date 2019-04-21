@@ -154,7 +154,9 @@ var MColumns = (new function() {
     }
 
     self.Show = function(done) {
-        if (!self.Mode()) return self.InitSetMode("Cols");
+        if (!self.Mode()) {
+            return self.InitSetMode("Cols");
+        }
         switch (self.Mode()) {
             case "Cols":
                 ModelTableEdit.InitModel("col");

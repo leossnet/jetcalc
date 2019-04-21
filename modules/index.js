@@ -468,16 +468,19 @@ var Module = function(id) {
     var Q = window.location.search.queryObj();
     var Init = Q.Mode || Value;
     var Choosed = Q.Choosed;
+    console.log(">>>>> 1",Q);
     if (Choosed) {
-      setTimeout(function() {
+      //setTimeout(function() {
         var Query = {};
         if (!_.isEmpty(window.location.search)) {
           Query = window.location.search.queryObj()
         }
         Query.Choosed = Choosed;
+        console.log(">>>>> 2",Query);
         var state = window.location.origin + window.location.pathname + toQueryString(Query);
         history.replaceState({}, '', state);
-      }, 500)
+        Bus.Emit("init-set-module",Query);
+      //}, 500)
     }
     self.Mode(Init);
   }
