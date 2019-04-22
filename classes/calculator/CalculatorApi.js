@@ -45,11 +45,14 @@ router.get('/api/calculator/cells', function(req, res, next) {
     var Context = lib.ReqContext(req);
     var Err = CheckConfig(Context);
     if (Err) return next("Не хватает параметров: " + Err.join(". "));
-    RabbitManager.CountConsumers(function(ConsumersCount) {
+
+     RabbitManager.CountConsumers(function(ConsumersCount) {
+        console.log("AAA");
         if (!ConsumersCount) {
             return next('Проблема с сервером. Ни одного расчетчика не запущено');
         }
         Context.Priority = 9;
+        console.log("VEVE");
         RabbitManager.CalculateDocument(Context, function(err, Result) {
             if (err) return next(err);
             return res.json(Result);
@@ -537,6 +540,10 @@ router.put('/api/cells', function(req, res) {
     var Worker = new Form.Cell(Context);
     var ToSave = req.body.Cells,
         ToSaveReparsed = {};
+
+
+	var structure = require(__base+"classes/jetcalc/Helpers/Structure.js");
+
     Worker.get(function(err, Result) {
         var TranslateCells = Result.Work;
         var RealSave = {};
@@ -1004,7 +1011,7 @@ router.post('/api/cell/history', function(req, res, next) {
         mongoose.model("col").findOne({
             CodeCol: CodeCol
         }, "CodeCol NameCol").isactive().lean().exec(function(err, Col) {
-            db.GetCellsHistory(['CodeCell', 'Value', 'CalcValue', "CodeUser", "DateEdit", "Comment"], [req.body.Cell], function(err, data) {
+            db.GetCellsHistory(['CodeCell', 'Value', 'CalcValue', "CodeUser", "DateEdit", "Comment","CodeValuta"], [req.body.Cell], function(err, data) {
                 return res.json({
                     Row: [Row.CodeRow, Row.NameRow].join(". "),
                     Col: [Col.CodeCol, Col.NameCol].join(". "),
