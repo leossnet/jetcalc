@@ -5,7 +5,7 @@ var MAFFormula = (new function(){
 	self.IsSaveAvailableFlag = ko.observable(false);
 
 	self.IsAFAvailable = function(){
-		return PermChecker.CheckPrivelege("IsAFSaveAllow") && !MAggregate.IsWrongValuta();
+		return PermChecker.CheckPrivelege("IsAFSaveAllow") && MInput.CheckValuta();
 	}
 
 	self.IsSaveAvailable = function(){
@@ -105,7 +105,7 @@ var MAFFormula = (new function(){
 	}
 
 	self.AFCellRender = function(instance, td, row, col, prop, value, CellInfo){
-		if (CellInfo.IsAFFormula && CellInfo.IsPrimary){
+		if (CellInfo.IsAFFormula && CellInfo.IsPrimary && MInput.CheckValuta()){
 			CellInfo.IsEditablePrimary = false;
 			if (CellInfo.IsCorrect){
 				$(td).addClass("IsAFCorrect");
