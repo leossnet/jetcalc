@@ -156,14 +156,15 @@ var MValuta = (new function () {
 
     self.SaveChanges = function () {
         if (self.Mode() == 'ValutaRates' || self.Mode() == 'ValutaRatesFormulas') {
-            self._humanizeRates();
             self.rPut("valutarates", {
                 CodeValuta: self.RateValuta(),
                 Year: self.Year(),
                 Rates: _.map(self.Rates(), function (R) {
                     return _.pick(R.toJS(), ["CodeValutaRate", "CodePeriod", "Value", "Value1", "Value2"])
                 })
-            }, function () {})
+            }, function () {
+                self.Editor && self.Editor.flush();
+            })
         }
     }
 

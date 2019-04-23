@@ -9,15 +9,35 @@ var HandsonComponent = function(dataobjects, columns, selector){
     self.FixedWidths = [];
     self.Editable = [];
 
+    self.foreColor = "#5a071e";
+    self.backgroundColor = "#FBCEDA";
+
+    self.changed = [];
+
+    self.flush = function(){
+        self.changed = [];        
+        self.Render();
+    }
+
+
     self.AddChange = function(changes, source){
         switch(source) {
             case 'edit':
             case 'autofill':
             case 'paste':
             case 'undo':
+                var instance = self.table.getInstance();            
                 changes.forEach(function(Change){
                     self.data[Change[0]][Change[1]](Change[3]);
                 })
+                $.each(changes, function (index, change) {
+                    var rowIndex = change[0],  columnIndex = instance.propToCol(change[1]);
+                    var ind = [rowIndex,columnIndex].join("-");
+                    if (self.changed.indexOf(ind)==-1){
+                        self.changed.push(ind);
+                    }
+                });
+                instance.render();
             default:
                 console.log(">>>",changes, source);
             break;
@@ -48,6 +68,15 @@ var HandsonComponent = function(dataobjects, columns, selector){
         };
     }
 
+    self.cellRender = function(hotInstance, td, row, column, prop, value, cellProperties){
+        Handsontable.renderers.NumericRenderer.apply(this, arguments);
+        var test = [row, column].join("-");
+        if (self.changed.indexOf(test)!=-1){
+            td.style.color = self.foreColor;
+            td.style.background = self.backgroundColor;
+        }
+    }
+
 
     self.RenderTries = 0;
     self.RenderTimeout = null;
@@ -72,6 +101,7 @@ var HandsonComponent = function(dataobjects, columns, selector){
                     if (Template.Mask[Field]){
                         D.format = Template.Mask[Field];
                     }
+                    D.renderer = self.cellRender;
                 break;
                 case "Select":
                     delete (D.type);
