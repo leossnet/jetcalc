@@ -22,12 +22,17 @@
     }
 
     Handsontable.overridePaste = function(dataRaw, coords) {
-        console.log(dataRaw, coords);
         var data;
         try{
             data = JSON.parse(_.first(dataRaw));
         } catch(e){
             data = dataRaw;
+        }
+        if (!_.isArray(data)){
+        	data = [data];
+        } 
+        if (!_.isArray(data[0])){
+        	data = [data];
         }
         var startRow = coords[0].startRow;
         var startCol = coords[0].startCol;
