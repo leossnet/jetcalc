@@ -58,7 +58,6 @@ var MValuta = (new function () {
 
     self.Init = function (done) {
         self.rGet("valuta", {}, function (data) {
-            console.log(data);
             var Vs = [],
                 Choose = ["IsReportValuta", "IsReportValuta1", "IsReportValuta2"],
                 RVS = [];
@@ -156,6 +155,7 @@ var MValuta = (new function () {
 
     self.SaveChanges = function () {
         if (self.Mode() == 'ValutaRates' || self.Mode() == 'ValutaRatesFormulas') {
+            self._humanizeRates();
             self.rPut("valutarates", {
                 CodeValuta: self.RateValuta(),
                 Year: self.Year(),
@@ -163,6 +163,7 @@ var MValuta = (new function () {
                     return _.pick(R.toJS(), ["CodeValutaRate", "CodePeriod", "Value", "Value1", "Value2"])
                 })
             }, function () {
+                self._humanizeRates();
                 self.Editor && self.Editor.flush();
             })
         }
