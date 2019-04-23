@@ -3,6 +3,7 @@
 
 
     Handsontable.overrideCopy = function(data, coords) {
+    	console.log(data, coords);
         var plugin = this.getPlugin('copyPaste');
         var _rm_empty = function(data) {
             _.keys(data).forEach(function(k) {
@@ -19,8 +20,9 @@
         plugin.textarea.setValue(JSON.stringify(data));
         plugin.textarea.select();
     }
+
     Handsontable.overridePaste = function(dataRaw, coords) {
-        console.log(dataRaw);
+        console.log(dataRaw, coords);
         var data;
         try{
             data = JSON.parse(_.first(dataRaw));

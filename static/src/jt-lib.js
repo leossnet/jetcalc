@@ -37,6 +37,8 @@ var HandsonComponent = function(dataobjects, columns, selector){
         manualColumnResize: true,
         afterChange: self.AddChange,
         trimDropdown: false,
+        afterCopy: Handsontable.overrideCopy,
+        beforePaste: Handsontable.overridePaste
     }
 
     self.GetSelectRender = function(Template){
