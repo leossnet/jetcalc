@@ -56,6 +56,8 @@
 			"MCount",
 			"IsFormula",
 			"Formula",
+			"IsRateFormula",
+			"RateFormula",
 			"IsReportPeriod",
 			"IsNone",
 			"BeginDateText",
@@ -515,12 +517,16 @@
 		"TableFields": [
 			"CodeValuta",
 			"NameValuta",
-			"IsReportValuta"
+			"IsReportValuta",
+			"IsReportValuta1",
+			"IsReportValuta2",
+			"NoConversion",
+			"IsNone"
 		],
 		"EditFields": [
 			"CodeValuta",
-			"SNameValuta",
 			"NameValuta",
+			"SNameValuta",
 			"SignValuta",
 			"IsReportValuta",
 			"IsReportValuta1",
