@@ -46,13 +46,11 @@ router.get('/api/calculator/cells', function(req, res, next) {
     var Err = CheckConfig(Context);
     if (Err) return next("Не хватает параметров: " + Err.join(". "));
 
-     RabbitManager.CountConsumers(function(ConsumersCount) {
-        console.log("AAA");
+    RabbitManager.CountConsumers(function(ConsumersCount) {
         if (!ConsumersCount) {
             return next('Проблема с сервером. Ни одного расчетчика не запущено');
         }
         Context.Priority = 9;
-        console.log("VEVE");
         RabbitManager.CalculateDocument(Context, function(err, Result) {
             if (err) return next(err);
             return res.json(Result);
@@ -137,7 +135,7 @@ router.post('/api/cell/validateformula', function(req, res, next) {
 var getContext = function(Context, SandBox, CodeUser) {
     Context.SandBox = null;
     if (SandBox.On) Context.SandBox = SandBox.CodeUser;
-    ['IsInput', 'UseCache', 'IsDebug', 'IsOlap','IsAgregate'].forEach(function(Field) {
+    ['IsInput', 'UseCache', 'IsDebug', 'IsOlap', 'IsAgregate'].forEach(function(Field) {
         Context[Field] = (Context[Field] === true || Context[Field] === "true");
     })
     Context.Year = parseInt(Context.Year);
@@ -334,11 +332,11 @@ var CalcManager = function(Context) {
                     })
                     var RecalculateCells = {};
                     /*
-						var ColCode = [CellParts[1],CellParts[2],CellParts[3]].join(";")+';';
-						if (ColColdes.indexOf(ColCode)!=-1){
-							RecalculateCells[CellName] = ColsHowTo[ColCode];
-						}
-	  			    */
+                        var ColCode = [CellParts[1],CellParts[2],CellParts[3]].join(";")+';';
+                        if (ColColdes.indexOf(ColCode)!=-1){
+                            RecalculateCells[CellName] = ColsHowTo[ColCode];
+                        }
+                    */
                     for (var CellName in AddCells) {
                         var CellParts = CellName.match(/\$(.*?)\@(.*?)\.P(.*?)\.Y(.*?)\#(.*?)\?/).splice(1);
                         if (RowCodes.indexOf(CellParts[0]) != -1) {
@@ -506,23 +504,7 @@ var CellSaveHelper = (new function() {
                 cb();
             })
         }, function(err) {
-            /*var db = require(__base+'lib/db/connector.js');
-            var info = {
-            	NameCommit:"Сохранение ячеек. Синхронизация справочников.",
-            	SNameCommit:'directsave',
-            	CodeUser:CodeUser
-            }
-            var Tasks = [];
-            for (var K in Objs){
-            	Tasks.push(function(Arr){
-            		return function(cb){
-            			db.save(info,Arr,cb);
-            		}
-            	}(Objs[K]));
-            }
-            async.series(Tasks,function(err){
-            	console.log(">>>>>>>>>>",err);
-            	*/
+
             return done();
             //})
         });
@@ -542,81 +524,82 @@ router.put('/api/cells', function(req, res) {
         ToSaveReparsed = {};
 
 
-	var structure = require(__base+"classes/jetcalc/Helpers/Structure.js");
+    var structure = require(__base + "classes/jetcalc/Helpers/Structure.js");
 
-    Worker.get(function(err, Result) {
-        var TranslateCells = Result.Work;
-        var RealSave = {};
-        for (var CellName in ToSave) {
-            var Cells = TranslateCells[CellName];
-            if (TranslateCells[CellName] && Cells.length == 1) {
-                RealSave[_.first(Cells)] = ToSave[CellName];
-            } else {
-                RealSave[CellName] = ToSave[CellName];
-            }
-        }
-        ToSave = RealSave;
-        var PossibleCells = Result.Cells;
-        var CellsMissed = [];
-        for (var CellName in ToSave) {
-            var In = CellName.match(/\$(.*?)\@(.*?)\.P(.*?)\.Y(.*?)\#(.*?)\?/).splice(1);
-            var Value = (ToSave[CellName].Value + '').trim();
-            var IsCalcValue = (Value[0] == '=');
-            var RValue = null;
-            if (IsCalcValue) {
-                try {
-                    eval("RValue" + Value);
-                } catch (e) {
-                    RValue = 0;
+
+    structure.getValutas(Context, function(err, valutaInfo) {
+        Worker.get(function(err, Result) {
+            var TranslateCells = Result.Work;
+            var RealSave = {};
+            for (var CellName in ToSave) {
+                var Cells = TranslateCells[CellName];
+                if (TranslateCells[CellName] && Cells.length == 1) {
+                    RealSave[_.first(Cells)] = ToSave[CellName];
+                } else {
+                    RealSave[CellName] = ToSave[CellName];
                 }
             }
-            if (ToSave[CellName].Comment && !Value) {
-                Value = 0;
+            ToSave = RealSave;
+            var PossibleCells = Result.Cells;
+            var CellsMissed = [];
+            for (var CellName in ToSave) {
+                var In = CellName.match(/\$(.*?)\@(.*?)\.P(.*?)\.Y(.*?)\#(.*?)\?/).splice(1);
+                var Value = (ToSave[CellName].Value + '').trim();
+                var IsCalcValue = (Value[0] == '=');
+                var RValue = null;
+                if (IsCalcValue) {
+                    try {
+                        eval("RValue" + Value);
+                    } catch (e) {
+                        RValue = 0;
+                    }
+                }
+                if (ToSave[CellName].Comment && !Value) {
+                    Value = 0;
+                }
+                ToSaveReparsed[CellName] = {
+                    CodeCell: CellName,
+                    CodeUser: req.user.CodeUser,
+                    Comment: ToSave[CellName].Comment ? ToSave[CellName].Comment : '',
+                    CalcValue: (IsCalcValue) ? Value : '',
+                    Value: (IsCalcValue) ? RValue : Value,
+                    CodeValuta: _.isEmpty(valutaInfo[CellName]) ? Context.CodeValuta:valutaInfo[CellName]
+                };
+                if (PossibleCells.indexOf(CellName) == -1) CellsMissed.push(CellName);
             }
-            ToSaveReparsed[CellName] = {
-                CodeCell: CellName,
-                CodeUser: req.user.CodeUser,
-                Comment: ToSave[CellName].Comment ? ToSave[CellName].Comment : '',
-                CalcValue: (IsCalcValue) ? Value : '',
-                Value: (IsCalcValue) ? RValue : Value,
-                CodeValuta: Context.CodeValuta
-            };
-            if (PossibleCells.indexOf(CellName) == -1) CellsMissed.push(CellName);
-        }
 
-        var setCells = function(Cells2Save, done) {
-            if (config.dbsqlmap) {
-                db.SetCells(Cells2Save, done);
-            } else {
-                db.SetCells(Cells2Save, done);
+            var setCells = function(Cells2Save, done) {
+                if (config.dbsqlmap) {
+                    db.SetCells(Cells2Save, done);
+                } else {
+                    db.SetCells(Cells2Save, done);
+                }
             }
-        }
-
-        //if (CellsMissed.length) return res.json({err:"Ячейки принадлежат другому документу:"+CellsMissed.join(', ')});
-        mongoose.model("obj").findOne({
-            "CodeObj": Context.CodeObj
-        }, "CodeObj CodeValuta").lean().exec(function(err, Obj) {
-            if (!Obj) return res.json({
-                err: 'Ошибка с выбором объекта учета'
-            });
-            if (Obj.CodeValuta != Context.CodeValuta) return res.json({
-                err: 'Ошибка в выборе валюты'
-            });
-            var Cells2Save = _.values(ToSaveReparsed);
-            //CellSaveHelper.EnsurePresence(CodeUser,Cells2Save,function(){
-            setCells(Cells2Save, function(err) {
-                var AFHelper = require(__base + 'src/afill.js');
-                var AF = require(__base + "classes/jetcalc/Helpers/AutoFill.js");
-                Context.CodeUser = req.user.CodeUser;
-                AF.Update(Context, function(err) {
-                    return res.json({
-                        err: err
-                    });
+            mongoose.model("obj").findOne({
+                "CodeObj": Context.CodeObj
+            }, "CodeObj CodeValuta").lean().exec(function(err, Obj) {
+                if (!Obj) return res.json({
+                    err: 'Ошибка с выбором объекта учета'
+                });
+                if (Obj.CodeValuta != Context.CodeValuta) return res.json({
+                    err: 'Ошибка в выборе валюты'
+                });
+                var Cells2Save = _.values(ToSaveReparsed);
+                setCells(Cells2Save, function(err) {
+                    var AFHelper = require(__base + 'src/afill.js');
+                    var AF = require(__base + "classes/jetcalc/Helpers/AutoFill.js");
+                    Context.CodeUser = req.user.CodeUser;
+                    AF.Update(Context, function(err) {
+                        return res.json({
+                            err: err
+                        });
+                    })
                 })
             })
-            //})
         })
+
     })
+
 })
 
 router.get('/api/calcinfo', api.forceCheckRole(['IsAdmin', "IsOrgAdmin"]), function(req, res, next) {
@@ -1011,7 +994,7 @@ router.post('/api/cell/history', function(req, res, next) {
         mongoose.model("col").findOne({
             CodeCol: CodeCol
         }, "CodeCol NameCol").isactive().lean().exec(function(err, Col) {
-            db.GetCellsHistory(['CodeCell', 'Value', 'CalcValue', "CodeUser", "DateEdit", "Comment","CodeValuta"], [req.body.Cell], function(err, data) {
+            db.GetCellsHistory(['CodeCell', 'Value', 'CalcValue', "CodeUser", "DateEdit", "Comment", "CodeValuta"], [req.body.Cell], function(err, data) {
                 return res.json({
                     Row: [Row.CodeRow, Row.NameRow].join(". "),
                     Col: [Col.CodeCol, Col.NameCol].join(". "),

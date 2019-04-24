@@ -26,7 +26,7 @@ var StructureHelper = (new function(){
 	}
 
 	self.ValutaInfo = function(done){
-		mongoose.model("valuta").find({},"CodeValuta NameValuta SNameValuta SignValuta").isactive().lean().exec(done);
+		mongoose.model("valuta").find({},"CodeValuta NameValuta SNameValuta SignValuta IsNone").isactive().lean().exec(done);
 	}
 
 	self.Plugin = function(Context,INFO){
@@ -42,6 +42,44 @@ var StructureHelper = (new function(){
 		}
 		return Plugin;
 	}	
+
+	self.getValutas = function(Cx,done){
+		var rxHelp = require(__base+"classes/jetcalc/RegExp.js");
+		self.LoadInfo(Cx,function(err,INFO){
+			var valutas = {
+				Rows:{},
+				Cols:{}
+			}
+			var isNone = _.find(INFO.Valuta,{IsNone:true});
+			var noneCode = "NONE";
+			if (isNone){
+				noneCode = isNone.CodeValuta;
+			}
+			INFO.Row.forEach(function(Row){
+				if (!_.isEmpty(Row.CodeValuta) && Row.CodeValuta!=noneCode){
+					valutas.Rows[Row.CodeRow] = Row.CodeValuta;
+				}
+			})
+			INFO.Col.forEach(function(Col){
+				if (!_.isEmpty(Col.CodeValuta) && Col.CodeValuta!=noneCode){
+					valutas.Cols[Col.CodeCol] = Col.CodeValuta;
+				}
+			})
+			var forcedValutas = {};
+			self.getCells(Cx,function(err,cells){
+				cells.forEach(function(cellName){
+					var info = rxHelp._toObj(cellName);
+					if (!_.isEmpty(valutas.Cols[info.Col])){
+						forcedValutas[cellName] = valutas.Cols[info.Col];
+					}
+					if (!_.isEmpty(valutas.Rows[info.Row])){
+						forcedValutas[cellName] = valutas.Rows[info.Row];
+					}
+				})
+				return done(err,forcedValutas);
+			})
+		})
+	}
 
 	self.get = function(Cx,done){
 		self.LoadInfo(Cx,function(err,INFO){
@@ -87,6 +125,8 @@ var StructureHelper = (new function(){
 		})
 	}
 
+
+
 	self.getAFCells = function(Cx,done){
 
 	}
@@ -108,6 +148,9 @@ var Simple = (new function(){
 	    if (Valuta){
 	    	ValutaSign = _.isEmpty(Valuta.SignValuta) ? Valuta.SNameValuta:Valuta.SignValuta;
 	    }
+	    var noneValuta = _.find(INFO.Valuta,{IsNone:true});
+	    var CodeNoneValuta = (noneValuta)? ["",noneValuta.CodeValuta]:[""];
+
 	    if (INFO.Doc.HasChildObjs && !_.isEmpty(Cx.ChildObj)){
 	    	CodeObj = Cx.ChildObj;
 	    }
@@ -155,7 +198,6 @@ var Simple = (new function(){
             	if (!_.isEmpty(Row.ColOptions) && !_.isEmpty(Row.ColOptions[Col.CodeCol])){
             		IsRowFixed = Row.ColOptions[Col.CodeCol].IsFixed;
             		IsRowEdit = Row.ColOptions[Col.CodeCol].IsEditable;
-            		console.log("Row",Row.ColOptions);
             	}           	
             	if (IsRowFixed){
             		IsRowEdit = false;
