@@ -32,6 +32,7 @@
         for (var i=0; i<data.length; i++){
             for (var j=0; j<data[i].length; j++){
                 var test = data[i][j];
+                if (_.isString(test)) test = test.replace(/\s/g,"");
                 if (test.indexOf(",")!=0 && !test.match(/[^0-9,]+/)){
                     data[i][j] = test.replace(/\,/,".");
                 }
