@@ -767,6 +767,7 @@ var Catalogue = (new function() {
         ModelClientConfig.Load(done);
         self.LoadObjects('format', ['CodeFormat', 'FormatValue']);
         self.LoadObjects('style', ['CodeStyle', 'CSS']);
+        self.LoadObjects('valuta', ['CodeValuta', 'NameValuta']);
 
     }
 

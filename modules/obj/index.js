@@ -33,7 +33,7 @@ var MObj = (new function() {
             self.Mode(ToSet);
         }
     })
-    self.SubMode("Orgs");
+    self.SubMode("Objs");
 
     self.BeforeShow = function(){
         self.Subscribe();

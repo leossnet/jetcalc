@@ -15,7 +15,6 @@ var ModelsLoadHelper = (new function() {
     self.NameOverrides = {
         "measure": "SNameMeasure",
         "format": "FormatValue",
-        "valuta": "SignValuta",
         "org": "SNameOrg"
     }
 
