@@ -5361,7 +5361,17 @@ module.exports = {
                 "default": "0",
                 "view": "none"
             },
-            "IsReportPeriod": {
+            "IsRateFormula": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+            },
+            "RateFormula": {
+                "type": String,
+                "default": "0",
+                "view": "none"
+            },
+			"IsReportPeriod": {
                 "type": Boolean,
                 "default": false,
                 "view": "none"
