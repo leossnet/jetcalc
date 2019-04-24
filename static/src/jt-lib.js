@@ -9,6 +9,8 @@ var HandsonComponent = function(dataobjects, columns, selector){
     self.FixedWidths = [];
     self.Editable = [];
 
+    self.ExcelCopyPaste = false;
+
     self.foreColor = "#5a071e";
     self.backgroundColor = "#FBCEDA";
 
@@ -58,7 +60,8 @@ var HandsonComponent = function(dataobjects, columns, selector){
         afterChange: self.AddChange,
         trimDropdown: false,
         afterCopy: Handsontable.overrideCopy,
-        beforePaste: Handsontable.overridePaste
+        beforePaste: Handsontable.overridePaste,
+        excelPaste:self.ExcelCopyPaste        
     }
 
     self.GetSelectRender = function(Template){

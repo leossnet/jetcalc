@@ -134,6 +134,7 @@ var MValuta = (new function () {
             } else {
                 self.Editor.data = self.Rates();
             }
+            self.Editor.ExcelCopyPaste = true;
             self.Editor.Render();
         })
     }

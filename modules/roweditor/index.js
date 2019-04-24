@@ -243,7 +243,8 @@ var RowEditor = (new function() {
                     break;
                 case 'MainFields':
                     RowCFG.CodeMeasure = ["middle_select", false, 100];
-                    RowCFG.CodeStyle = ["middle_select", false, 100];
+                    RowCFG.CodeValuta = ["middle_select", false, 100];
+                    RowCFG.CodeStyle = ["middle_select", false, 100];                    
                     RowCFG.CodeFormat = ["middle_select", false, 100];
                     RowCFG.CodeValuta = ["middle_select", false, 100];
                     RowCFG.IsAnalytic = ["middle_checkbox", false, 100];
@@ -307,6 +308,7 @@ var RowEditor = (new function() {
                         Link_rowobjgrp: 'row',
                         Link_rowcoloption: 'row',
                         CodeMeasure: 'row',
+                        CodeValuta: 'row',
                         CodeStyle: 'row',
                         CodeFormat: 'row',
                         CodeValuta: 'row',

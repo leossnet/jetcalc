@@ -21,6 +21,25 @@
         plugin.textarea.select();
     }
 
+
+    var fromExcel = function(data){
+        if (!_.isArray(data)){
+            data = [data];
+        }
+        if (!_.isArray(_.first(data))){
+            data = [data];   
+        }
+        for (var i=0; i<data.length; i++){
+            for (var j=0; j<data[i].length; j++){
+                var test = data[i][j];
+                if (test.indexOf(",")!=0 && !test.match(/[^0-9,]+/)){
+                    data[i][j] = test.replace(/\,/,".");
+                }
+            }
+        }
+        return data;
+    } 
+
     Handsontable.overridePaste = function(dataRaw, coords) {
         var data;
         try{
@@ -28,12 +47,10 @@
         } catch(e){
             data = dataRaw;
         }
-        if (!_.isArray(data)){
-        	data = [data];
-        } 
-        if (!_.isArray(data[0])){
-        	data = [data];
-        }
+
+
+      	data = fromExcel(data);
+        
         var startRow = coords[0].startRow;
         var startCol = coords[0].startCol;
         var selfTable = this;

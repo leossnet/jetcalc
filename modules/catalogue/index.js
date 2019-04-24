@@ -545,6 +545,15 @@ var ModelRestrict = (new function() {
                 }
             }
         },
+        obj: {
+            CodeValuta: {
+                $and: [{
+                    IsNone: false
+                },{
+                   NoConversion: false
+                }]
+            }
+        },
         rowcoloption: {
             CodeCol: {
                 IsFormula: false
