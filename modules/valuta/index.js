@@ -135,6 +135,7 @@ var MValuta = (new function () {
                 self.Editor.data = self.Rates();
             }
             self.Editor.ExcelCopyPaste = true;
+            self.Editor.flush();
             self.Editor.Render();
         })
     }
@@ -143,6 +144,7 @@ var MValuta = (new function () {
         self.Subscribe();
         MSite.Events.off("save", self.SaveChanges);
         MSite.Events.on("save", self.SaveChanges);
+        MSite.Events.on("refresh", self.ForceLoadValutaRates);
         self.Show();
     }
 
@@ -151,6 +153,7 @@ var MValuta = (new function () {
             delete self.Editor
         }
         MSite.Events.off("save", self.SaveChanges);
+        MSite.Events.off("refresh", self.ForceLoadValutaRates);
         self.UnSubscribe();
     }
 
