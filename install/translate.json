@@ -421,7 +421,9 @@
 		"IsNone": "ПоУмолчанию",
 		"BeginDateText": "ДеньМес.Начала",
 		"EndDateText": "ДеньМес.Оконч.",
-		"Periods": "Список"
+		"Periods": "Список",
+		"IsRateFormula": "Вкл.Валют.Формулу",
+		"RateFormula": "Валют.Формула"
 	},
 	"param": {
 		"CodeParam": "Код параметра",
