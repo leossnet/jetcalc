@@ -10,7 +10,7 @@ var HP = LIB.Permits;
 
 
 
-router.get('/cols', function(req, res, next) {
+router.get('/cols', HP.TaskAccess("IsColsetTuner"), function(req, res, next) {
     var Context = LIB.ReqContext(req);
     var ColHelper = require(__base + 'classes/jetcalc/Helpers/Col.js');
     ColHelper.GetAllRaw(Context, function(err, Cols) {

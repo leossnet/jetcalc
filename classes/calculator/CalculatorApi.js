@@ -514,9 +514,10 @@ var CellSaveHelper = (new function() {
     return self;
 })
 
+var LIB = require(__base + 'lib/helpers/lib.js');
+var HP = LIB.Permits;
 
-
-router.put('/api/cells', function(req, res) {
+router.put('/api/cells', HP.DocAccess("DoWrite"), function(req, res) {
     var CodeUser = req.user.CodeUser,
         Context = getContext(req.body.Context, req.session.sandbox, CodeUser);
     var Worker = new Form.Cell(Context);
@@ -602,7 +603,7 @@ router.put('/api/cells', function(req, res) {
 
 })
 
-router.get('/api/calcinfo', api.forceCheckRole(['IsAdmin', "IsOrgAdmin"]), function(req, res, next) {
+router.get('/api/calcinfo',  function(req, res, next) {
     RabbitManager.Inform();
     res.end();
 });
