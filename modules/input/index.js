@@ -4,7 +4,7 @@ var MInput = (new function() {
 
     self.IsAvailable = function() {
         var Doc = MFolders.FindDocument(CxCtrl.CodeDoc());
-        return Doc && Doc.IsInput;
+        return Doc && Doc.IsInput && PermChecker.CheckDocAccess("DoWrite",CxCtrl.Context());
     }
 
     self.BeforeHide = function() {

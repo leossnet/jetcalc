@@ -2,6 +2,9 @@ var MColEditor = (new function() {
 
     var self = new Module("coleditor");
 
+    self.IsAvailable = function(CodeDoc){
+        return PermChecker.CheckPrivelege("IsColsetTuner",CxCtrl.CxPermDoc());
+    }
 
     self.Show = function() {
         if (!self.Mode()) return self.InitSetMode("Filter");
