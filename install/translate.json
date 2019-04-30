@@ -437,7 +437,8 @@
 		"DocBills": "Бухгалтерские счета документов",
 		"BillRelations": "Проводки",
 		"IsNotGrpSource": "НеВГр.Источ.",
-		"IsNotGrpTarget": "НеВГр.Назнач."
+		"IsNotGrpTarget": "НеВГр.Назнач.",
+		"IsProd": "ДляПрод."
 	},
 	"param": {
 		"CodeParam": "Код параметра",
@@ -611,7 +612,8 @@
 		"IsObj": "ДляОб.Учета",
 		"IsList": "ДляФильтров",
 		"IsCol": "ДляКолонок",
-		"IsOrg": "ДляОрган."
+		"IsOrg": "ДляОрган.",
+		"IsProd": "ДляПрод."
 	},
 	"col": {
 		"IsFormula": "Вкл.Формулу",

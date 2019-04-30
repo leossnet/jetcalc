@@ -173,6 +173,7 @@
 			"IsObj",
 			"IsOrg",
 			"IsRow",
+			"IsProd",
 			"IsCol",
 			"IsObjType"
 		],
@@ -184,6 +185,7 @@
 			"IsObj",
 			"IsOrg",
 			"IsRow",
+			"IsProd",
 			"IsCol",
 			"IsObjType"
 		],
