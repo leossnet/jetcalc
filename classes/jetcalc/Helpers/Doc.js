@@ -23,6 +23,7 @@ var DocHelper = (new function(){
 
 	self.get = function(CodeDoc,done){
 		self.LoadInfo(function(err,INFO){
+			console.log("err",err);
 			return done(err,INFO[CodeDoc]);
 		})
 	};
@@ -77,6 +78,7 @@ var DocHelper = (new function(){
 				}
 				self.CreateInfo(function(err,Data){
 					self.ToCache(null, Data, function(err){
+						if (err) console.log("set cache err",err);
 						return done(err,self.UpdateObjFilter(_.merge(Data,{Div:DivInfo})));
 					})
 				})

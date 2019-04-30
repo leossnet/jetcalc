@@ -142,6 +142,7 @@ var AutoFill = (new function() {
         var StrWorker = require(__base + "classes/jetcalc/Helpers/Structure.js");
         var CalcApi = require(__base + "classes/jetcalc/CalcApi.js");
         StrWorker.get(Cx, function(err, Str) {
+	    if (!Str) return done();
             var AFCells = _.filter(_.flatten(Str.Cells), {
                 IsAFFormula: true,
                 IsPrimary: true
@@ -194,6 +195,7 @@ var AutoFill = (new function() {
         }, function(err, Result) {
             var Objs = [],
                 IsChildObj = false;
+	    if (!Result.Doc) return done();
             if (Result.Doc.HasChildObjs) {
                 Objs = Result.Doc.SubObjs[Cx.CodeObj];
                 IsChildObj = true;

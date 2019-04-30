@@ -11,6 +11,7 @@ module.exports = function(Name){
 	self.FromCache = function(CodeDoc, done){
 		var CK = _.compact([self.Name,CodeDoc]).join("_")
 		redis.mget([CK], function (err, res) {
+			if (err) console.log("err get cache",err);
 			if (err) return done(err);
 			if (res && res[0]){
 				var Answer = null;
@@ -21,6 +22,7 @@ module.exports = function(Name){
 					return done(e)
 				}
 			} else {
+				
 				return done(null,null);
 			}
 		})
