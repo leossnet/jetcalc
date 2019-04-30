@@ -5033,7 +5033,42 @@ module.exports = {
             }
         }
     },
-    "course": {
+    "prodtag": {
+        "tablename": "[link].[ProdTags]",
+        "menuplace": "Link",
+        "fields": {
+            "Value": {
+                "type": String,
+                "default": "",
+                "view": "none"
+            },
+            "CodeProdTag": {
+                "type": String,
+                "default": null,
+                "view": "all",
+                "role": "code",
+                "index": true,
+                "unique": true
+            },
+            "CodeProd": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "prod",
+                "index": true,
+                "extended": true
+            },
+            "CodeTag": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "tag",
+                "index": true,
+                "extended": true
+            }
+        }
+    },
+	"course": {
         "tablename": "[spr].[Courses]",
         "menuplace": "Service",
         "fields": {
