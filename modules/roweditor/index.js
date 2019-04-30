@@ -8,7 +8,7 @@ var RowEditor = (new function() {
     self.ObjGrps = ko.observableArray();
 
     self.IsAvailable = function(CodeDoc){
-        return PermChecker.CheckPrivelege("IsRowEditor",CxCtrl.CxPermDoc());
+        return PermChecker.CheckPrivelege("IsRowTuner",CxCtrl.CxPermDoc());
     }
 
     self.UpdateObjInfo = function() {
