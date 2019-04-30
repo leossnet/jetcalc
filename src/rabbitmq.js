@@ -31,6 +31,10 @@ var RabbitManager =  function(){
 
 	self.init = function(){
   		amqp.connect(config.rabbitmq, function(err, conn) {
+
+  			conn.on("error", function(e) { console.log(e); setInterval(restart, 5000); })
+
+
 	   		if (err) console.log(err);
 	   		conn.createChannel(function(err, log_ch){
 	   			var ex = rabbitPrefix+'log';

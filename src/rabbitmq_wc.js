@@ -15,6 +15,8 @@ var RabbitMQWorker = function(params) {
 
     self.connect = function(done) {
        amqp.connect(config.rabbitmq, function(err, conn) {
+          if (err) console.log(err);
+          conn.on("error", function(e) { console.log(e); setInterval(restart, 5000); })
           conn.createChannel(function(err, ch) {
             console.log("[*] Ожидаю задачу "+self.queue_id);
             self.channel = ch;

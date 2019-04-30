@@ -9,7 +9,7 @@ DECLARE
 BEGIN
    
 CREATE TEMP table temp_cell (
-  "IdCell" int,
+  "IdCell" int default -1,
   "CodeCell" varchar(900),
   "CodePeriod" varchar(900),
   "Year" int,
@@ -43,12 +43,11 @@ FROM json_to_recordset(data) as x(
   "CodeObj" varchar(900)
 );
 
-UPDATE temp_cell  
+UPDATE temp_cell 
 SET 
-  "IdCell" = coalesce(c."IdCell", 0),
-  "DateEdit"=(now())
-FROM temp_cell tc
-LEFT JOIN public.cells c ON c."CodeCell" = tc."CodeCell";
+  "IdCell" = coalesce((SELECT "IdCell" FROM public.cells WHERE "CodeCell"=temp_cell."CodeCell"), 0),
+  "DateEdit"=(now());
+
 
 UPDATE temp_cell tempc
 SET
@@ -83,7 +82,6 @@ SET
   "CodeCol" = tc."CodeCol",
   "Comment" = tc."Comment",
   "CodeObj" = tc."CodeObj"
-
 FROM public.cells AS cell
 INNER JOIN temp_cell AS tc ON tc."CodeCell" = cell."CodeCell"
 WHERE pubcel."CodeCell"=cell."CodeCell";
@@ -92,13 +90,16 @@ INSERT into public.cells ("CodeCell", "CodePeriod", "Year", "CodeUser", "CodeVal
 SELECT "CodeCell", "CodePeriod", "Year", "CodeUser", "CodeValuta", "Value", "CalcValue", "ReportValue", "ReportValue1", "ReportValue2", "Comment", "DateEdit", "CodeRow", "CodeCol", "CodeObj"
 FROM temp_cell WHERE "IdCell"=0;
 
-SELECT to_json(json_agg(r)) FROM  (SELECT "CodeCell","Value","ReportValue2" FROM temp_cell) r INTO t_json; 
+
 
 DROP TABLE temp_cell;
 
+SELECT to_json(json_agg(r)) FROM  (SELECT "IdCell","CodeCell" FROM temp_cell) r INTO t_json; 
 RETURN t_json; 
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
+ALTER FUNCTION public."SetCellsJSON"(json, integer)
+  OWNER TO postgres;
