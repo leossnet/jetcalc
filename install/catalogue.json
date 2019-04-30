@@ -169,11 +169,13 @@
 		"TableFields": [
 			"CodeTag",
 			"NameTag",
-			"IsObjType",
-			"IsRow",
-			"IsObj",
 			"IsList",
-			"IsCol"
+			"IsObj",
+			"IsOrg",
+			"IsRow",
+			"IsProd",
+			"IsCol",
+			"IsObjType"
 		],
 		"EditFields": [
 			"CodeTag",
@@ -181,7 +183,9 @@
 			"SNameTag",
 			"IsList",
 			"IsObj",
+			"IsOrg",
 			"IsRow",
+			"IsProd",
 			"IsCol",
 			"IsObjType"
 		],
@@ -722,14 +726,13 @@
 		"EditFields": [
 			"CodeBill",
 			"NameBill",
-			"NumBill",
 			"SNameBill",
+			"NumBill",
 			"Comment",
 			"UseAltOrg"
 		],
 		"Links": [
-			"docbill",
-			"billrelation"
+			"docbill"
 		]
 	},
 	"docrelation": {
@@ -782,21 +785,24 @@
 			"CodeProd",
 			"NameProd",
 			"NumProd",
+			"IsCalcSum",
 			"CodeMeasure",
-			"CodeParentProd",
-			"IsCalcSum"
+			"CodeParentProd"
 		],
 		"EditFields": [
 			"CodeProd",
 			"NameProd",
-			"CodeParentProd",
-			"IsCalcSum",
-			"NumProd",
 			"SNameProd",
+			"NumProd",
 			"Comment",
-			"CodeMeasure"
+			"IsCalcSum",
+			"CodeMeasure",
+			"CodeParentProd"
 		],
-		"Links": []
+		"Links": [
+			"prodtag",
+			"prodsumgrp"
+		]
 	},
 	"objtype": {
 		"TableFields": [
