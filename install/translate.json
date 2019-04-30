@@ -423,7 +423,21 @@
 		"EndDateText": "ДеньМес.Оконч.",
 		"Periods": "Список",
 		"IsRateFormula": "Вкл.Валют.Формулу",
-		"RateFormula": "Валют.Формула"
+		"RateFormula": "Валют.Формула",
+		"IsOrg": "ДляОрг.",
+		"prodtag": "Теги",
+		"prodsumgrp": "Суммовые метки",
+		"Prods": "Продукция",
+		"Link_prodtag": "Теги",
+		"Link_prodsumgrp": "Суммовые метки",
+		"Bills": "Бухгалтерские счета",
+		"Link_docbill": "Документы",
+		"Dogovors": "Договоры",
+		"DocRelations": "Связи документов",
+		"DocBills": "Бухгалтерские счета документов",
+		"BillRelations": "Проводки",
+		"IsNotGrpSource": "НеВГр.Источ.",
+		"IsNotGrpTarget": "НеВГр.Назнач."
 	},
 	"param": {
 		"CodeParam": "Код параметра",
@@ -563,10 +577,10 @@
 	"prod": {
 		"CodeProd": "Код.Прд",
 		"NameProd": "Название",
-		"NumProd": "NumProd",
+		"NumProd": "НомерПрод.",
 		"CodeMeasure": "Код.Ед.Изм",
 		"CodeParentProd": "CodeParentProd",
-		"IsCalcSum": "IsCalcSum"
+		"IsCalcSum": "Принуд.Суммир-е"
 	},
 	"dogovor": {
 		"NameDogovor": "Название",
@@ -579,13 +593,13 @@
 		"NameDogovorType": "NameDogovorType"
 	},
 	"billrelation": {
-		"CodeBillRelation": "CodeBillRelation",
-		"IsMirror": "IsMirror",
-		"CodeBillSource": "CodeBillSource",
-		"CodeBillTarget": "CodeBillTarget"
+		"CodeBillRelation": "КодПроводки",
+		"IsMirror": "Зерк.Контраг.",
+		"CodeBillSource": "КодСчетаИсточ.",
+		"CodeBillTarget": "КодСчетаНазн."
 	},
 	"docbill": {
-		"CodeDocBill": "CodeDocBill",
+		"CodeDocBill": "КодСчетаДок.",
 		"CodeDoc": "Код.Док",
 		"CodeBill": "КодСчета"
 	},
@@ -596,7 +610,8 @@
 		"IsRow": "ДляСтрок",
 		"IsObj": "ДляОб.Учета",
 		"IsList": "ДляФильтров",
-		"IsCol": "ДляКолонок"
+		"IsCol": "ДляКолонок",
+		"IsOrg": "ДляОрган."
 	},
 	"col": {
 		"IsFormula": "Вкл.Формулу",
@@ -633,7 +648,7 @@
 		"CodeDocRelation": "КодСвязиДок.",
 		"DoSetTree": "Настр.Структ.Док.",
 		"DoFillCell": "Прокач.Значений",
-		"IsOuterLink": "IsOuterLink",
+		"IsOuterLink": "Внеш.Связь",
 		"IsMirror": "Зерк.Контраг.",
 		"CodeDocSourse": "Док.-Источник",
 		"CodeDocTarget": "Док.-Назначение"
@@ -693,5 +708,8 @@
 		"IndexPeriod": "Индекс",
 		"IsFormula": "Вкл.Формулу",
 		"IsReportPeriod": "Отч.Период"
+	},
+	"colrelation": {
+		"CodeColRelation": "CodeColRelation"
 	}
 }
