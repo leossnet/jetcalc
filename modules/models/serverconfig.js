@@ -5653,7 +5653,12 @@ module.exports = {
                 "type": Boolean,
                 "default": false,
                 "view": "none"
-            },
+			},
+			"IsProd": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+			},
             "IsCol": {
                 "type": Boolean,
                 "default": false,
