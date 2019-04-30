@@ -5644,7 +5644,12 @@ module.exports = {
                 "default": false,
                 "view": "none"
             },
-            "IsRow": {
+            "IsOrg": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+            },
+			"IsRow": {
                 "type": Boolean,
                 "default": false,
                 "view": "none"
