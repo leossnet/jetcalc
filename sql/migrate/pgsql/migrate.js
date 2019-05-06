@@ -56,8 +56,9 @@ var Migrate = (new function(){
 		  cwd: base,
 		  env: {'PGPASSWORD': 'postgres'}
 		}, function(error, stdout, stderr) {
+			if (error) console.log(error);
+			if (stderr) console.log(stderr);
 			return done();
-			console.log(error, stdout, stderr);
 		});	
 	}
 
@@ -66,6 +67,7 @@ var Migrate = (new function(){
     	var dir = __base+"sql/migrate/pgsql/procedures";
 		fs.readdir(dir, function(err, files){
   			async.eachSeries(files,function(FileName,cb){
+  				console.log("Синхронизация процедуры: "+FileName);
   				var command = "psql -h 127.0.0.1 -U postgres -w -f ./"+FileName+" -d jetcalc";
   				self.callPsql(dir,command,done);
   				//console.log("psql -h 127.0.0.1 -U postgres -w -f ./"+FileName+" -d jetcalc");
