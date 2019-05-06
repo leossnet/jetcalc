@@ -50,13 +50,31 @@ var Migrate = (new function(){
 		],done)
 	}
 
+	self.callPsql = function(base,command, done){
+		var exec = require('child_process').exec;
+		exec(command, {
+		  cwd: base,
+		  env: {'PGPASSWORD': 'postgres'}
+		}, function(error, stdout, stderr) {
+			console.log(error, stdout, stderr);
+		});	
+	}
+
+
 	self.SyncProcedures = function(done){
-		var dir = __base+"sql/migrate/pgsql/procedures";
+    	var dir = __base+"sql/migrate/pgsql/procedures";
 		fs.readdir(dir, function(err, files){
-  			async.each(files,function(FileName,cb){
-  				fs.readFile(dir+"/"+FileName,function(err,content){
+  			async.eachSeries(files,function(FileName,cb){
+  				var command = "psql -h 127.0.0.1 -U postgres -w -f ./"+FileName+" -d jetcalc";
+  				self.callPsql(dir,command,done);
+  				//console.log("psql -h 127.0.0.1 -U postgres -w -f ./"+FileName+" -d jetcalc");
+  				//var ex = exec();
+  				//console.log(ex);
+  				//return done();
+  				/*fs.readFile(dir+"/"+FileName,function(err,content){
 					Pg.DB.Exec(content+'',cb);
   				})
+  				*/
   			},function(err){
   				if (err) return done(err);
   				console.log("Обновлены хранимые процедуры");

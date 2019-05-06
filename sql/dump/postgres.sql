@@ -218,12 +218,10 @@ FROM json_to_recordset(data) as x(
   "CodeObj" varchar(900)
 );
 
-UPDATE temp_cell  
+UPDATE temp_cell 
 SET 
-  "IdCell" = coalesce(c."IdCell", 0),
-  "DateEdit"=(now())
-FROM temp_cell tc
-LEFT JOIN public.cells c ON c."CodeCell" = tc."CodeCell";
+  "IdCell" = coalesce((SELECT "IdCell" FROM public.cells WHERE "CodeCell"=temp_cell."CodeCell"), 0),
+  "DateEdit"=(now());
 
 UPDATE temp_cell tempc
 SET
