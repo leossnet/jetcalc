@@ -56,6 +56,7 @@ var Migrate = (new function(){
 		  cwd: base,
 		  env: {'PGPASSWORD': 'postgres'}
 		}, function(error, stdout, stderr) {
+			return done();
 			console.log(error, stdout, stderr);
 		});	
 	}
