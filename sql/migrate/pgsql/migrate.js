@@ -69,7 +69,7 @@ var Migrate = (new function(){
   			async.eachSeries(files,function(FileName,cb){
   				console.log("Синхронизация процедуры: "+FileName);
   				var command = "psql -h 127.0.0.1 -U postgres -w -f ./"+FileName+" -d jetcalc";
-  				self.callPsql(dir,command,done);
+  				self.callPsql(dir,command,cb);
   				//console.log("psql -h 127.0.0.1 -U postgres -w -f ./"+FileName+" -d jetcalc");
   				//var ex = exec();
   				//console.log(ex);
