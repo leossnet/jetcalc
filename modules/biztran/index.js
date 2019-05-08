@@ -7,6 +7,13 @@ var MBiztran = (new function() {
 		return MFolders.FindDocument(CxCtrl.CodeDoc()).IsBiztranDoc && PermChecker.CheckPrivelege("IsBiztranTuner",CxCtrl.CxPermDoc());
 	}
 
+	self.ForceSync = function(){
+		self.rPost("sync",CxCtrl.CxPermDoc(),function(){
+			
+		})
+
+	}
+
     self.BeforeShow = function(){
     	self.SubscribeDoc();
   		MSite.Events.off("refresh",self.RollBack);

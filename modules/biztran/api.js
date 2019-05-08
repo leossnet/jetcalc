@@ -5,12 +5,20 @@ var async      = require('async');
 var LIB        = require(__base+'lib/helpers/lib.js');
 var HP = LIB.Permits;  
 var BizHelper = require(__base+"modules/biztran/helper.js");
+var BizSync = require(__base+"modules/biztran/sync.js");
 
 
 
 
 
 
+
+router.post('/sync',  HP.TaskAccess("IsBiztranTuner"), function(req,res,next){
+	BizSync.Sync(req.body.CodeDoc,function(err,Result){
+		if (err) return next (err);
+		return res.json(Result);
+	})	
+})
 
 router.get('/biztraninfo',  HP.TaskAccess("IsBiztranTuner"), function(req,res,next){
 	BizHelper.Load(req.query.CodeDoc,function(err,Result){
