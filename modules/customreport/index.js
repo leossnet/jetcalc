@@ -506,6 +506,7 @@ var CustomReport = (new function() {
 			}
             self.EditConfig(Config);	
             self.SubscribeChanges();
+            Bus.Emit("documentloaded");
 		})
 	}
 

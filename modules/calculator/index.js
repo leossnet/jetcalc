@@ -474,6 +474,7 @@ var BaseDocPlugin = function() {
                 return self.Error(err);
             }
             self.RenderCells(done);
+            Bus.Emit("documentloaded");
         });
     }
 

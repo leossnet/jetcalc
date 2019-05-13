@@ -25,6 +25,8 @@ var MBreadCrumbs = (new function(){
 	self.Init = function(done){
 		MSite.Events.on("initialnavigate",self.BreadcrumbsCompute);
 		MSite.Events.on("navigate",self.BreadcrumbsCompute);
+		MSite.Events.on("initialload",self.BreadcrumbsCompute);
+		Bus.On("documentloaded", self._pages);
 		return done();
 	}
 
@@ -50,8 +52,7 @@ var MBreadCrumbs = (new function(){
 		return self.CurrentRoute().indexOf(path)!=-1;
 	}
 	
-	self._breadcrumbsFromPages = function(){
-		self.Css(null); self.PreLabels([]); self.PostLabels([]);
+	self._pages = function(){
 		var pages = [];
 		var page = pager.activePage$();
 		var maxStack = 20;
@@ -63,8 +64,14 @@ var MBreadCrumbs = (new function(){
 			page = page.parentPage;
 			if (--maxStack<0)  break;
 		}
+		console.log("_breadcrumbsFromPages",pages);
 		self.Pages(pages);
 		self.Events.emit("pagechanged");
+	}
+
+	self._breadcrumbsFromPages = function(){
+		self.Css(null); self.PreLabels([]); self.PostLabels([]);
+		self._pages();
 	}
 
 	

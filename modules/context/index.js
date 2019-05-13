@@ -612,7 +612,7 @@ var CxCtrl = (new function() {
       if (self.PrintNameDoc() && self.PrintNameDoc().length) {
         return self.PrintNameDoc() + ' за ' + Catalogue.GetHtml('period', p) + ' ' + y + s  + k + r;
       }
-      MSite._breadcrumbsFromPages();
+      MBreadCrumbs._breadcrumbsFromPages();
     } else {
       return '';
     }
@@ -623,8 +623,8 @@ var CxCtrl = (new function() {
     var Info = MFolders.FindDocument(Doc);
     if (Info) {
       if (!_.isEmpty(Info.SNameDoc)) return Info.SNameDoc;
-      if (Info.PrintNameDoc) return Info.PrintNameDoc;
-      if (Info.NameDoc) return Info.NameDoc;
+      if (!_.isEmpty(Info.PrintNameDoc)) return Info.PrintNameDoc;
+      if (!_.isEmpty(Info.NameDoc)) return Info.NameDoc;
     }
     return "";
   }
@@ -656,6 +656,7 @@ var CxCtrl = (new function() {
     } else {
       self.KolEd(null)
     };
+    MBreadCrumbs._pages();
   }
 
   self.InitValues = function(){
