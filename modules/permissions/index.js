@@ -1,21 +1,25 @@
 var MPermissions = (new function() {
 
-    var self = this;
-
-    self.base = "/api/modules/permissions/";
+    var self = new Module("permissions");
 
     self.LoadUserPermissions = function(done) {
-        $.getJSON(self.base + "current", function(data) {
+        self.rGet("current", {},function(data) {
             PermChecker.P = data;
             return done && done();
         })
     }
 
     self.RefreshPermissions = function() {
-        console.log("permissions_refresh");
+        self.rPost("refresh",{},function(){
+            self.LoadUserPermissions(function() {
+                Bus.Emit("permissions_refresh");
+            })
+        })
     }
 
     self.Events = new EventEmitter();
+
+
 
     self.Init = function(done) {
         self.LoadUserPermissions(function() {

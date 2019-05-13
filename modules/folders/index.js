@@ -85,6 +85,7 @@ var MFolders = (new function() {
       Workflow.Events.on("statuschange", self.LoadStates);
       MSocket.RegisterEvent('docfolder_refresh',self.LoadTree);
       MSocket.Start('docfolder_refresh');
+      Bus.On("permissions_refresh",self.LoadTree);
       return done && done();
     })
   }

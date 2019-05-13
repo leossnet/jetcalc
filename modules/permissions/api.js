@@ -9,5 +9,16 @@ router.get('/current', function(req, res, next) {
     return res.json(req.session.permissions || {});
 })
 
+router.post('/refresh', function(req, res, next) {
+     var PL = require(__base + '/src/permloader.js');
+     var P = new PL(req.user.CodeUser);
+     P.Load(function (err, Perms) {
+        req.session.permissions = Perms;
+        req.session.save(function (err) {
+            return res.json({});
+        });
+     })
+})
+
 
 module.exports = router;
