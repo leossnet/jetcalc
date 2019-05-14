@@ -49,7 +49,7 @@ module.exports = {
 			  TechMail          : {type: String, default:''}
   			, PortalName        : {type: String, default:''}
   			, SubName           : {type: String, default:''}
-  			, SystemName        : {type: String, default:'JetCalc v1.5'}
+  			, SystemName        : {type: String, default:'JetCalc v0.9.1'}
   			, TechPhone         : {type: String, default:'',mask:"+7 (999) 999-9999"}
   			, Logo              : {type: String, default:'',template:"form_image"}
   			, Icon 				: {type: String, default:'',template:"form_image"}
