@@ -20,7 +20,15 @@ var Sql = (new function(){
 	self.SetCellsJSON = function(JSON_A,done){
 		self.DB.Exec(
 			"SELECT public.\"SetCellsJSON\" ('"+JSON_A+"',0)",
-			done
+			function(err, result){
+				if(result){
+					console.log("ROWS >>> ",JSON.stringify(result.rows));
+				}
+				if (err) {
+					console.log(err,"err");
+				}
+				return done();
+			}
 		)		
 	}
 

@@ -220,7 +220,7 @@ FROM json_to_recordset(data) as x(
 
 UPDATE temp_cell 
 SET 
-  "IdCell" = coalesce((SELECT "IdCell" FROM public.cells WHERE "CodeCell"=temp_cell."CodeCell"), 0),
+  "IdCell" = coalesce((SELECT "IdCell" FROM public.cells WHERE "CodeCell"=temp_cell."CodeCell" LIMIT 1), 0),
   "DateEdit"=(now());
 
 UPDATE temp_cell tempc
