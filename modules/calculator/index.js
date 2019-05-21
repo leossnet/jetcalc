@@ -92,7 +92,6 @@ var BlankDocument = (new function() {
                 if (!Info.IsPrimary && Info.Value){
                     Formula = Formula + " = "+Info.Value;
                 }
-                console.log("UP ",Info);
                 self.LastCellFormula(Formula);
                 self.Events.emit("LastCellUpdate");
             }
@@ -360,6 +359,22 @@ var BaseDocPlugin = function() {
     self.Columns = ko.observableArray();
     self.FL = 0;
 
+    self.oldCodes = ko.observableArray();
+    self.collapsed = ko.observableArray();
+
+
+    self.updateCollapsed = function(tree){
+        var codes = _.values(_.map(tree,"CodeRow")).concat([CxCtrl.CodeDoc()]);
+        if (!_.isEqual(self.oldCodes(),codes)){
+            self.collapsed([]);
+            self.oldCodes(codes);
+        } else {
+            if (self.table && _.isEmpty(self.collapsed()) && !_.isEmpty(self.table.collapsedRows())){
+                self.collapsed(self.table.collapsedRows());
+            } 
+        }
+    }
+
     self.RenderStructure = function(done) {
         self.SetContext();
         self.Timer.Start("stage1");
@@ -370,6 +385,7 @@ var BaseDocPlugin = function() {
             },
             method: 'get',
             success: function(Info) {
+                self.updateCollapsed(Info.Tree);                
                 self.Timer.End("stage1");
                 self.Timer.Start("stage2");
                 if (Info.err) return done(Info.err);
@@ -399,6 +415,9 @@ var BaseDocPlugin = function() {
                 self.RenderStructureAfterLoad(function() {
                     self.Timer.End("stage2");
                     self.Events.emit("renderstructure");
+                    if (!_.isEmpty(self.collapsed())){
+                        self.table.collapsedRows(self.collapsed());
+                    }
                     return done();
                 });
             }
