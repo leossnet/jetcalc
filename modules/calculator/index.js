@@ -375,6 +375,19 @@ var BaseDocPlugin = function() {
         }
     }
 
+    self.doUpdateCollapsed = function(){
+        if (!_.isEmpty(self.collapsed())){
+            self.table.collapsedRows(self.collapsed());
+        }
+    }
+
+    self.planUpdateCollapsed = function(){
+    	Bus.Off("documentisrendered",self.doUpdateCollapsed);
+    	Bus.On("documentisrendered",self.doUpdateCollapsed);
+    }
+
+
+
     self.RenderStructure = function(done) {
         self.SetContext();
         self.Timer.Start("stage1");
@@ -415,9 +428,7 @@ var BaseDocPlugin = function() {
                 self.RenderStructureAfterLoad(function() {
                     self.Timer.End("stage2");
                     self.Events.emit("renderstructure");
-                    if (!_.isEmpty(self.collapsed())){
-                        self.table.collapsedRows(self.collapsed());
-                    }
+                    self.planUpdateCollapsed();
                     return done();
                 });
             }
