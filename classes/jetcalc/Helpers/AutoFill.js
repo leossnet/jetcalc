@@ -164,6 +164,7 @@ var AutoFill = (new function() {
 
     self.Update = function(Cx, done) {
         self.SaveAF(Cx, done);
+        return;
         Rabbit.sendMessage(Cx, function(err) {
             console.log("All Is Done");
         });
@@ -322,7 +323,9 @@ var AutoFill = (new function() {
                 CodeValuta: Context.CodeValuta
             })
         }
+        console.log(Arr);
         db.SetCells(Arr, function(err) {
+            console.log(err,"err");
             return done(err);
         })
     }

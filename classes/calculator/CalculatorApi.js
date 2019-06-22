@@ -527,6 +527,8 @@ router.put('/api/cells', HP.DocAccess("DoWrite"), function(req, res) {
 
     var structure = require(__base + "classes/jetcalc/Helpers/Structure.js");
 
+    console.log(">>> ToSave",ToSave);
+
 
     structure.getValutas(Context, function(err, valutaInfo) {
         Worker.get(function(err, Result) {
@@ -569,6 +571,8 @@ router.put('/api/cells', HP.DocAccess("DoWrite"), function(req, res) {
                 if (PossibleCells.indexOf(CellName) == -1) CellsMissed.push(CellName);
             }
 
+            console.log(">>> CellsMissed",CellsMissed);
+
             var setCells = function(Cells2Save, done) {
                 if (config.dbsqlmap) {
                     db.SetCells(Cells2Save, done);
@@ -576,6 +580,8 @@ router.put('/api/cells', HP.DocAccess("DoWrite"), function(req, res) {
                     db.SetCells(Cells2Save, done);
                 }
             }
+
+            
             mongoose.model("obj").findOne({
                 "CodeObj": Context.CodeObj
             }, "CodeObj CodeValuta").lean().exec(function(err, Obj) {

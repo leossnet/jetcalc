@@ -256,7 +256,7 @@ var MSite = (new function () {
             moment.locale('ru');
         });
         History.Adapter.bind(window, 'statechange', function () {
-            console.log("navigarte History.Adapter.bind");
+            console.log("navigate History.Adapter.bind");
             self.Events.emit("navigate");
             window.scrollTo(0, 0);
         });
@@ -266,6 +266,9 @@ var MSite = (new function () {
         window.onbeforeunload = function () {
             self.Events.emit("unload");
         };
+        setTimeout(function(){
+            self.Events.emit("initialload");    
+        },0);        
     }
 })
 

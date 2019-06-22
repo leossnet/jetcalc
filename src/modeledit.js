@@ -88,7 +88,6 @@ var ModelEdit = function(CodeUser,IsNew){
 	self.SyncLinks = function(ModelName, Query, Links, done){
 		var M = mongoose.model(ModelName), CFG = M.cfg(), EditFields = CFG.EditFields, ToSave = [], ToRemove = [];
 		Links = Links || [];
-		console.log("Existed search ",Query);
 		M.find(Query).isactive().exec(function(err,Existed){
 			if (err) return done(err);
 			var IndexedOld = {};
@@ -116,6 +115,7 @@ var ModelEdit = function(CodeUser,IsNew){
 			}
 			async.each(ToRemove,function(TR,cb1){
 				TR.remove(self.CodeUser,function(err){
+					if (err) console.log("remove err",err);
 					cb1(err);
 				});
 			},function(err){

@@ -51,29 +51,82 @@ module.exports = (new function() {
             if (_.isEmpty(bills)) return done("Не определены счета для документа");
             mongoose.model("billrelation").find({CodeBillTarget:{$in:bills}}).lean().exec(function(err, relations){
                 relations.forEach(function(rel){
-                    mapBills[rel.CodeBillTarget] = rel.CodeBillSource;
+                    mapBills[rel.CodeBillSource] = {
+                        billTo:rel.CodeBillTarget,
+                        isMirror:rel.IsMirror
+                    };
                 })
                 return done(err,mapBills);
             })            
         })
     }
 
+
+
+    self.FullCopy = function(source, target, bills, done){
+        var bRowModel = mongoose.model("biztranrow");
+        bRowModel.find({ CodeDoc: source.CodeDoc }).isactive().lean().sort({ Index: 1 }).exec(function(err, MustBe) {
+            bRowModel.find({ CodeDoc: target.CodeDoc }).exec(function(err,toRemove) {
+                async.each(toRemove,function(rRow,next){
+                    rRow.remove(rRow.UserEdit,next);
+                },function(err){
+                    if (err) console.log("removing err",err);
+                    console.log("remove is done");
+                    var toAdd = [];
+                    MustBe.forEach(function(mB){
+                        var billInfo = bills[mB.CodeBill];
+                        var p = {CodeDoc:target.CodeDoc,CodeBill:billInfo.billTo,CodeObj:mB.CodeObj,CodeUser:mB.CodeUser};
+                        if (target.Lines.indexOf("UseProd")!=-1){
+                            p.CodeProd = mB.CodeProd;
+                        }
+                        if (target.Lines.indexOf("UseOrg")!=-1){
+                            if (billInfo.isMirror){
+                                p.CodeOrg = mB.CodeAltOrg;
+                            } else {
+                                p.CodeOrg = mB.CodeOrg;
+                            }
+                        }
+                        if (target.Lines.indexOf("UseDogovor")!=-1){
+                            p.CodeDogovor = mB.CodeDogovor;
+                        }
+                        toAdd.push(JSON.stringify(p));
+                    })
+                    toAdd = _.uniq(toAdd);
+                    async.each(toAdd,function(bRowJSON,next){
+                        var bRow = JSON.parse(bRowJSON);
+                        var n = new bRowModel(bRow);
+                        n.save(bRow.UserEdit,function(err){
+                            console.log(err);
+                        });
+                    },done);
+
+                })
+
+               
+            })
+
+        })
+        
+    }
     
 
     self.Sync = function(CodeDoc, done){
-
         self.getTargetDoc(CodeDoc,function(err,target){
             if (err) return done(err);
             console.log("TARGET",target,"<<<<");
             self.getSourceDoc(CodeDoc,function(err,source){
                 if (err) return done(err);
                 console.log("SOURCE",source,"<<<<");
-
+                if (target.Lines.length>source.Lines.length){
+                    return done("Число уровней аналитики в документе-назначении больше числа уровней аналитики документа-источника");
+                }
+                var needed = _.difference(target.Lines,source.Lines);
+                if (!_.isEmpty(needed)){
+                    return done("Все аналитики в документе-назначении должны присутствовать в документе-источнике. Не хватает: "+needed.join(", "));
+                }                
                 self.loadBills(CodeDoc,function(err, bills){
                     if (err) return done(err);                
-                    console.log("BILLS",bills,"<<<");
-
-
+                    return self.FullCopy(source, target, bills, done);
                 })
             })
         })

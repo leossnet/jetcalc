@@ -92,13 +92,13 @@ module.exports = {
 				AddLinker.Adders(self,function(err,Links){
 					if (err) return done(err);
 					if (_.isEmpty(Links)) {
-						Planner.AddPlan(self.CodeDoc,CodeUser);
+						//Planner.AddPlan(self.CodeDoc,CodeUser);
 						return next();
 					} 
 					async.each(Links,function(L,cb){
 						L.save(CodeUser,cb);
 					},function(){
-						Planner.AddPlan(self.CodeDoc,CodeUser);
+						//Planner.AddPlan(self.CodeDoc,CodeUser);
 						return next();
 					})
 				})
@@ -115,7 +115,7 @@ module.exports = {
 							Current.remove(CodeUser,cb);
 						})
 					},function(){
-						Planner.AddPlan(self.CodeDoc,CodeUser);
+						//Planner.AddPlan(self.CodeDoc,CodeUser);
 						return next();
 					})
 				})

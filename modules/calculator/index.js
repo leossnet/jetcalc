@@ -35,7 +35,7 @@ var BlankDocument = (new function() {
         if (MPrint.IsPrint()) {
             MPrint.PrintInterface().reDraw();
         }
-        setTimeout(self.table.render, 0);
+        self.table.render();
     }
 
     self.DebugLabels = ko.observableArray();
@@ -194,6 +194,17 @@ var BaseDocPlugin = function() {
     self.Structure = {};
     self.Calculate = {};
 
+
+    self.plannedRender = null;
+    self.callForRender = function(func){
+    	if (!self.table) return;
+    	if (self.plannedRender) clearTimeout(self.plannedRender);
+    	self.plannedRender = setTimeout(function(){
+    		console.log("... render");
+    		func();
+    	},100);
+    }
+
     self.CacheIsUsed = ko.observable(false);
 
     self.CurrentCell = function() {
@@ -310,6 +321,11 @@ var BaseDocPlugin = function() {
             contextMenu: self.ContextMenu()
         });
         self.table = new Handsontable(DomEl, HandsonConfig);
+        var oldRender = self.table.render;
+        self.table.render = function(){
+        	console.log("... delayed render");
+        	self.callForRender(oldRender);
+        }
         BlankDocument.table = self.table;
         BlankDocument.TableInterface(self);
         return done();

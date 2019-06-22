@@ -18,6 +18,8 @@ var Base = function(config){
 			var passed = [];
 			(typeof params=='function') ? done = params:passed = params;
 			done = done || function(){};
+			console.log(this.Pool.query);
+
 			this.Pool.query(sql, passed, done);
 		},
 		Connect:function(done){
