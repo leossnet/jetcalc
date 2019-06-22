@@ -92,14 +92,14 @@ module.exports = (new function() {
                         toAdd.push(JSON.stringify(p));
                     })
                     toAdd = _.uniq(toAdd);
-                    async.each(toAdd,function(bRowJSON,next){
+                    async.eachSeries(toAdd,function(bRowJSON,next){
                         var bRow = JSON.parse(bRowJSON);
                         var n = new bRowModel(bRow);
-                        n.save(bRow.UserEdit,function(err){
-                            console.log(err);
+                        n.save("",function(err){
+                            if (err) console.log(err);
+                            return next();
                         });
                     },done);
-
                 })
 
                

@@ -43,9 +43,6 @@ var AddLinker = (new function(){
 				return cb(err);
 			})
 		},function(err){
-			console.log("LIST");
-			console.log(List);
-			console.log("LIST");
 			if (err) return done(err);
 			var Docs = _.map(_.filter(List.docrelation,{CodeDocSourse:BiztranRow.CodeDoc}),"CodeDocTarget");
 			if (_.isEmpty(Docs)) return done(err,[]);
@@ -57,13 +54,6 @@ var AddLinker = (new function(){
 			Docs.forEach(function(CodeDoc){
 				var UsedBills = _.map(_.filter(List.docbill,{CodeDoc:CodeDoc}),"CodeBill") || [];
 				var NewBill = Bills[BiztranRow.CodeBill];
-				console.log("======");
-				console.log("Bills",Bills,"Bills");
-				console.log("======");
-				console.log("UsedBills",UsedBills,"UsedBills");
-				console.log("NewBill",NewBill,"NewBill");
-				console.log("BiztranRow",BiztranRow,"BiztranRow");
-				console.log("======");
 				if (_.isEmpty(NewBill)) return done("Не настроена модель billrelation для "+BiztranRow.CodeBill);
 				if (UsedBills.indexOf(NewBill.CodeBill)!=-1){
 					var Add = new BR({
@@ -95,11 +85,15 @@ module.exports = {
 						//Planner.AddPlan(self.CodeDoc,CodeUser);
 						return next();
 					} 
-					async.each(Links,function(L,cb){
-						L.save(CodeUser,cb);
-					},function(){
+					async.eachSeries(Links,function(L,cb){
+						console.log("will save link ");
+						L.save(CodeUser,function(err){
+							if (err) console.log("================ ERR ",err);
+							return cb(err);
+						});
+					},function(err){
 						//Planner.AddPlan(self.CodeDoc,CodeUser);
-						return next();
+						return next(err);
 					})
 				})
 			})
@@ -109,7 +103,7 @@ module.exports = {
 				AddLinker.Adders(self,function(err,Links){
 					if (err) return done(err);
 					if (_.isEmpty(Links)) return next();
-					async.each(Links,function(L,cb){
+					async.eachSeries(Links,function(L,cb){
 						mongoose.model("biztranrow").findOne(_.pick(L,["CodeDoc","CodeBill","CodeProd","CodeObj","CodeOrg"])).isactive().exec(function(err,Current){
 							if (!Current) return cb();
 							Current.remove(CodeUser,cb);

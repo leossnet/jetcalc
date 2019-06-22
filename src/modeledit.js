@@ -69,13 +69,15 @@ var ModelEdit = function(CodeUser,IsNew){
 					ToSave.push(NewM);
 				}
 			});
-			async.each(ToRemove,function(TR,cb1){
+			async.eachSeries(ToRemove,function(TR,cb1){
 				TR.remove(self.CodeUser,function(err){
+					if (err) console.log("err",err);
 					cb1();
 				});
 			},function(err){
-				async.each(ToSave,function(TR,cb2){
+				async.eachSeries(ToSave,function(TR,cb2){
 					TR.save(self.CodeUser,function(err){
+						if (err) console.log("err",err);
 						cb2();
 					});
 				},done);
@@ -113,17 +115,19 @@ var ModelEdit = function(CodeUser,IsNew){
 			for (var Key in IndexedOld){
 				ToRemove.push(IndexedOld[Key]);
 			}
-			async.each(ToRemove,function(TR,cb1){
+			async.eachSeries(ToRemove,function(TR,cb1){
+				console.log(" REMOVE ");
 				TR.remove(self.CodeUser,function(err){
-					if (err) console.log("remove err",err);
+					if (err) console.log(" ============ remove err",err);
 					cb1(err);
 				});
 			},function(err){
 				if (err) return done(err);
 				async.eachSeries(ToSave,function(TR,cb2){
+					console.log(" LINK SAVE ");
 					TR.save(self.CodeUser,function(err){
 						if (err) {
-							console.log("Save error ",err);
+							console.log(" ================ Save error ",err);
 							return done(err);
 						}
 						cb2(err);

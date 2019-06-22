@@ -16,8 +16,11 @@ var BizSync = require(__base+"modules/biztran/sync.js");
 
 router.post('/sync',  HP.TaskAccess("IsBiztranTuner"), function(req,res,next){
 	BizSync.Sync(req.body.CodeDoc,function(err,Result){
-		if (err) return next (err);
-		return res.json(Result);
+		if (err) return next(err);
+		BizHelper.SyncTree(req.body.CodeDoc,req.user.CodeUser,function(err){
+			if (err) return next (err);
+			return res.json(Result);
+		})
 	})	
 })
 
