@@ -133,31 +133,39 @@ module.exports = (new function() {
                                     var Prod = _.find(Sprs.prod, function(PInfo) {
                                         return PInfo.prod.CodeProd == BizRow.CodeProd;
                                     })
-                                    _.reverse(Prod.tree).concat(Prod.prod).forEach(function(Pr) {
-                                        var Cod = [BizRow.CodeBill, Pr.CodeProd].join("_");
-                                        var PCode = _.isEmpty(Pr.CodeParentProd) ? CodeBill : [BizRow.CodeBill, Pr.CodeParentProd].join("_")
-                                        if (AlreadyAdded.indexOf(Cod) == -1) {
-                                            AlreadyAdded.push(Cod);
-                                            Tree.add(Cod, {
-                                                NumRow: Pr.CodeProd,
-                                                CodeRow: Root + "_" + Cod,
-                                                treeroot: Root,
-                                                NameRow: Pr.NameProd,
-                                                CodeBill: BizRow.CodeBill,
-                                                CodeProd: Pr.CodeProd,
-                                                CodeMeasure: AllProds[Pr.CodeProd].CodeMeasure,
-                                                HasFilteredChild: false,
-                                                IsSum: AllProds[Pr.CodeProd].IsCalcSum
-                                            }, PCode);
-                                        }
-                                    })
+									if (BDocument.UseProd) {                                    
+	                                    _.reverse(Prod.tree).concat(Prod.prod).forEach(function(Pr) {
+	                                        var Cod = [BizRow.CodeBill, Pr.CodeProd].join("_");
+	                                        var PCode = _.isEmpty(Pr.CodeParentProd) ? CodeBill : [BizRow.CodeBill, Pr.CodeParentProd].join("_")
+	                                        if (AlreadyAdded.indexOf(Cod) == -1) {
+	                                            AlreadyAdded.push(Cod);
+	                                            Tree.add(Cod, {
+	                                                NumRow: Pr.CodeProd,
+	                                                CodeRow: Root + "_" + Cod,
+	                                                treeroot: Root,
+	                                                NameRow: Pr.NameProd,
+	                                                CodeBill: BizRow.CodeBill,
+	                                                CodeProd: Pr.CodeProd,
+	                                                CodeMeasure: AllProds[Pr.CodeProd].CodeMeasure,
+	                                                HasFilteredChild: false,
+	                                                IsSum: AllProds[Pr.CodeProd].IsCalcSum
+	                                            }, PCode);
+	                                        }
+	                                    })
+                                	}
 
                                     if (BDocument.UseOrg) {
-                                        var _pRows = _.filter(_bRows, { CodeProd: Prod.prod.CodeProd });
+                                    	var _pRows = [];
+                                    	if (BDocument.UseProd) {
+                                    		_pRows = _.filter(_bRows, { CodeProd: Prod.prod.CodeProd });
+                                    	} else {
+											_pRows = _bRows;
+                                    	}
                                         _pRows.forEach(function(OrgRow) {
-                                            var Cod = [OrgRow.CodeBill, OrgRow.CodeProd, OrgRow.CodeOrg].join("_");
+                                            var Cod = _.compact([OrgRow.CodeBill,BDocument.UseProd?OrgRow.CodeProd:null,OrgRow.CodeOrg]).join("_");
                                             if (AlreadyAdded.indexOf(Cod) == -1) {
-                                                var PCod = [OrgRow.CodeBill, OrgRow.CodeProd].join("_");
+
+                                                var PCod = _.compact([OrgRow.CodeBill,BDocument.UseProd? OrgRow.CodeProd:null]).join("_");
                                                 AlreadyAdded.push(Cod);
                                                 Tree.add(Cod, {
                                                     NumRow: OrgRow.CodeOrg,
@@ -168,7 +176,7 @@ module.exports = (new function() {
                                                     CodeAltOrg: OrgRow.CodeOrg,
                                                     NameRow: (_.isEmpty(OrgRow.CodeOrg)) ? OrgRow.CodeProd : SprIndexed.org[OrgRow.CodeOrg].NameOrg,
                                                     HasFilteredChild: false,
-                                                    CodeMeasure: SprIndexed.prod[OrgRow.CodeProd].CodeMeasure
+                                                    CodeMeasure: OrgRow.CodeProd ? SprIndexed.prod[OrgRow.CodeProd].CodeMeasure:""
                                                 }, PCod);
                                                 if (BDocument.UseDogovor && !_.isEmpty(OrgRow.CodeDogovor)) {
                                                     var _dRows = _.filter(_bRows, { CodeProd: Prod.prod.CodeProd , CodeOrg:OrgRow.CodeOrg});
@@ -195,7 +203,9 @@ module.exports = (new function() {
                                     }
                                 })
                             })
+							
                             var FlatTree = Tree.getFlat();
+                            console.log(FlatTree);
                             FlatTree = self.SetParams(FlatTree);
                             return done(err, FlatTree);
                         })
