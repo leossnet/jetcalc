@@ -2341,6 +2341,15 @@ module.exports = {
                 "refmodel": "grp",
                 "index": true,
                 "extended": true
+            },
+            "CodeAltGrpFilter": {
+                "type": String,
+                "default": "",
+                "view": "none",
+
+                "refmodel": "grp",
+                "index": true,
+                "extended": true
             }
         }
     },
