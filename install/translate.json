@@ -438,7 +438,8 @@
 		"BillRelations": "Проводки",
 		"IsNotGrpSource": "НеВГр.Источ.",
 		"IsNotGrpTarget": "НеВГр.Назнач.",
-		"IsProd": "ДляПрод."
+		"IsProd": "ДляПрод.",
+		"CodeAltGrpFilter": "ФильтрКонтраг."
 	},
 	"param": {
 		"CodeParam": "Код параметра",
