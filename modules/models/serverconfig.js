@@ -162,6 +162,16 @@ module.exports = {
                 "default": "",
                 "view": "none"
             },
+			"IsInputFormula": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+            },
+            "InputFormula": {
+                "type": String,
+                "default": "",
+                "view": "none"
+            },
             "AfIndex": {
                 "type": Number,
                 "default": 0,
