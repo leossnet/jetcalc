@@ -1848,6 +1848,37 @@ module.exports = {
             }
         }
     },
+    "headerperiodgrp": {
+        "tablename": "[link].[HeaderPeriodGrps]",
+        "menuplace": "Link",
+        "fields": {
+            "HeaderPeriodGrp": {
+                "type": String,
+                "default": null,
+                "view": "all",
+                "role": "code",
+                "index": true,
+                "unique": true
+            },
+            "CodeHeader": {
+                "type": String,
+                "default": "",
+                "view": "none",
+
+                "refmodel": "header",
+                "index": true,
+                "extended": true
+            },
+            "CodePeriodGrp": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "periodgrp",
+                "index": true,
+                "extended": true
+            }
+        }
+    },
     "doc": {
         "tablename": "[core].[Docs]",
         "menuplace": "Core",
@@ -2771,6 +2802,43 @@ module.exports = {
                 "view": "none",
 
                 "refmodel": "colsetcol",
+                "index": true,
+                "extended": true
+            },
+            "CodeGrp": {
+                "type": String,
+                "default": "",
+                "view": "none",
+
+                "refmodel": "grp",
+                "index": true,
+                "extended": true
+            }
+        }
+    },
+    "headergrp": {
+        "tablename": "[link].[HeaderGrps]",
+        "menuplace": "Link",
+        "fields": {
+            "NotInGrp": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+            },
+            "CodeHeaderGrp": {
+                "type": String,
+                "default": null,
+                "view": "all",
+                "role": "code",
+                "index": true,
+                "unique": true
+            },
+            "CodeHeader": {
+                "type": String,
+                "default": "",
+                "view": "none",
+
+                "refmodel": "header",
                 "index": true,
                 "extended": true
             },
