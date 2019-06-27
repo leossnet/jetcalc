@@ -439,7 +439,9 @@
 		"IsNotGrpSource": "НеВГр.Источ.",
 		"IsNotGrpTarget": "НеВГр.Назнач.",
 		"IsProd": "ДляПрод.",
-		"CodeAltGrpFilter": "ФильтрКонтраг."
+		"CodeAltGrpFilter": "ФильтрКонтраг.",
+		"Link_prodinputgrp": "Потребители",
+		"Link_prodoutputgrp": "Производители"
 	},
 	"param": {
 		"CodeParam": "Код параметра",

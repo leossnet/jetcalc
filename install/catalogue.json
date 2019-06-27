@@ -801,6 +801,8 @@
 			"CodeParentProd"
 		],
 		"Links": [
+			"prodinputgrp",
+			"prodoutputgrp",
 			"prodtag",
 			"prodsumgrp"
 		]
@@ -945,6 +947,18 @@
 		],
 		"EditFields": [
 			"CodeReportPeriods"
+		],
+		"Links": []
+	},
+	"colrelation": {
+		"TableFields": [
+			"CodeDocRelation",
+			"CodeColSource"
+		],
+		"EditFields": [
+			"CodeColRelation",
+			"CodeDocRelation",
+			"CodeColSource"
 		],
 		"Links": []
 	}
