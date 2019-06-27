@@ -4803,6 +4803,70 @@ module.exports = {
             }
         }
     },
+    "prodinputgrp": {
+        "tablename": "[link].[ProdInputGrps]",
+        "menuplace": "Link",
+        "fields": {
+            "CodeProdInputGrp": {
+                "type": String,
+                "default": null,
+                "view": "all",
+                "role": "code",
+                "index": true,
+                "unique": true
+            },
+            "CodeProd": {
+                "type": String,
+                "default": "",
+                "view": "none",
+
+                "refmodel": "prod",
+                "index": true,
+                "extended": true
+            },
+            "CodeGrp": {
+                "type": String,
+                "default": "",
+                "view": "none",
+
+                "refmodel": "grp",
+                "index": true,
+                "extended": true
+            }
+        }
+    },
+    "prodoutputgrp": {
+        "tablename": "[link].[ProdOutputGrps]",
+        "menuplace": "Link",
+        "fields": {
+            "CodeProdOutputGrp": {
+                "type": String,
+                "default": null,
+                "view": "all",
+                "role": "code",
+                "index": true,
+                "unique": true
+            },
+            "CodeProd": {
+                "type": String,
+                "default": "",
+                "view": "none",
+
+                "refmodel": "prod",
+                "index": true,
+                "extended": true
+            },
+            "CodeGrp": {
+                "type": String,
+                "default": "",
+                "view": "none",
+
+                "refmodel": "grp",
+                "index": true,
+                "extended": true
+            }
+        }
+    },
     "model": {
         "tablename": "[core].[Models]",
         "menuplace": "Core",
