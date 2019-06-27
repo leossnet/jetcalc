@@ -729,7 +729,9 @@
 			"SNameBill",
 			"NumBill",
 			"Comment",
-			"UseAltOrg"
+			"UseAltOrg",
+			"UseProdInput",
+			"UseProdOutput"
 		],
 		"Links": [
 			"docbill"

@@ -441,7 +441,9 @@
 		"IsProd": "ДляПрод.",
 		"CodeAltGrpFilter": "ФильтрКонтраг.",
 		"Link_prodinputgrp": "Потребители",
-		"Link_prodoutputgrp": "Производители"
+		"Link_prodoutputgrp": "Производители",
+		"UseProdInput": "Потреб.Прод.",
+		"UseProdOutput": "Произв.Прод."
 	},
 	"param": {
 		"CodeParam": "Код параметра",
