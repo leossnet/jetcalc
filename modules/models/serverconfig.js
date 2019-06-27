@@ -2307,6 +2307,16 @@ module.exports = {
                 "type": Boolean,
                 "default": false,
                 "view": "none"
+            },
+            "UseProdInput": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+            },
+            "UseProdOutput": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
             }
         }
     },
