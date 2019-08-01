@@ -1194,6 +1194,81 @@ module.exports = {
             }
         }
     },
+    "language": {
+        "tablename": "[spr].[Languages]",
+        "menuplace": "Service",
+        "fields": {
+            "CodeLanguage": {
+                "type": String,
+                "default": null,
+                "view": "all",
+                "role": "code",
+                "index": true,
+                "unique": true
+            },
+            "NameLanguage": {
+                "type": String,
+                "default": "Noname Language",
+                "view": "all",
+                "role": "name"
+            },
+            "SNameLanguage": {
+                "type": String,
+                "default": "",
+                "view": "none"
+            },
+            "URL": {
+                "type": String,
+                "default": "",
+                "view": "none"
+            },
+            "IsDefault": {
+                "type": Boolean,
+                "default": false,
+                "view": "none"
+            },            
+            "Comment": {
+                "type": String,
+                "default": "",
+                "view": "none"
+            }
+        }
+    },
+    "langhub": {
+        "tablename": "[spr].[Langhubs]",
+        "menuplace": "Service",
+        "fields": {
+            "CodeLanghub": {
+                "type": String,
+                "default": null,
+                "view": "all",
+                "role": "code",
+                "index": true,
+                "unique": true
+            },
+            "NameLanghub": {
+                "type": String,
+                "default": "Noname Langhub",
+                "view": "all",
+                "role": "name"
+            },
+            "SNameLanghub": {
+                "type": String,
+                "default": "",
+                "view": "none"
+            },
+            "URL": {
+                "type": String,
+                "default": "",
+                "view": "none"
+            },
+            "Comment": {
+                "type": String,
+                "default": "",
+                "view": "none"
+            }
+        }
+    },
     "role": {
         "tablename": "[spr].[Roles]",
         "menuplace": "Service",
@@ -2226,6 +2301,14 @@ module.exports = {
                 "type": String,
                 "default": "",
                 "view": "none"
+            },
+            "CodeLanguage": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "language",
+                "index": true,
+                "extended": true
             }
         }
     },
@@ -6004,6 +6087,14 @@ module.exports = {
                 "view": "none",
 
                 "refmodel": "obj",
+                "index": true,
+                "extended": true
+            },
+            "CodeLanguage": {
+                "type": String,
+                "default": "",
+                "view": "none",
+                "refmodel": "language",
                 "index": true,
                 "extended": true
             }
