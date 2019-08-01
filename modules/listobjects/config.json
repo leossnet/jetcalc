@@ -12,7 +12,7 @@
   		"IsListobjectsEditor"
   ],
    "permissionsModels":{
-      "IsListobjectsEditor":["measure","format","tag","style","sumgrp","model"]
+      "IsListobjectsEditor":["measure","format","tag","style","sumgrp","model","language","langhub"]
   },
   "sort_index":50
 }

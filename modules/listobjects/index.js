@@ -37,6 +37,12 @@ var MListobjects = (new function() {
             case "Models":
                 ModelTableEdit.InitModel("model");
             break;            
+            case "Languages":
+                ModelTableEdit.InitModel("language");
+            break;            
+            case "Langhubs":
+                ModelTableEdit.InitModel("langhub");
+            break;            
         }
         return done && done()
     }  
