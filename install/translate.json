@@ -79,9 +79,6 @@
 		"ChildObjs": "Объекты учета",
 		"Responsables": "Атрибуты",
 		"Placement": "Зависимости",
-		"Список ключей": "Параметры фильтрации",
-		"Счета документа": "Бухгалтерские счета",
-		"БизТран документ": "Параметры транзакций",
 		"Structure": "Структура",
 		"MainFields": "Параметры",
 		"Filter": "Фильтры",
@@ -443,7 +440,12 @@
 		"Link_prodinputgrp": "Потребители",
 		"Link_prodoutputgrp": "Производители",
 		"UseProdInput": "Потреб.Прод.",
-		"UseProdOutput": "Произв.Прод."
+		"UseProdOutput": "Произв.Прод.",
+		"CodeLanguage": "Язык",
+		"Languages": "Язык",
+		"CodeLanghub": "КодХаба",
+		"NameLanghub": "Наим.Хаба",
+		"SNameLanghub": "Крат.Наим.Хаба"
 	},
 	"param": {
 		"CodeParam": "Код параметра",
@@ -560,7 +562,8 @@
 	},
 	"country": {
 		"CodeCountry": "Код.Страны",
-		"NameCountry": "Назв.Страны"
+		"NameCountry": "Назв.Страны",
+		"CodeLanguage": "Язык"
 	},
 	"row": {
 		"CodeRow": "Код.Ряда",
@@ -680,7 +683,8 @@
 		"NameUser": "ФИО",
 		"LoginUser": "Логин",
 		"JobTitle": "Должность",
-		"MobilePhone": "Телефон(моб)"
+		"MobilePhone": "Телефон(моб)",
+		"CodeObj": "CodeObj"
 	},
 	"state": {
 		"CodeState": "Статусы",
@@ -718,5 +722,16 @@
 	},
 	"colrelation": {
 		"CodeColRelation": "CodeColRelation"
+	},
+	"language": {
+		"CodeLanguage": "КодЯзыка",
+		"NameLanguage": "НазваниеЗзыка",
+		"SNameLanguage": "Крат.Назв.Языка",
+		"IsDefault": "СтатусПоУмолчанию"
+	},
+	"langhub": {
+		"CodeLanghub": "КодХаба",
+		"NameLanghub": "ИмяХаба",
+		"URL": "URL"
 	}
 }

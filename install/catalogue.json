@@ -321,25 +321,24 @@
 			"CodeObj"
 		],
 		"EditFields": [
-			"CodeUser",
 			"NameUser",
-			"TabNum",
+			"CodeUser",
 			"LoginUser",
 			"JobTitle",
 			"WorkPhone",
-			"MobilePhone",
-			"Birthday",
 			"Mail",
-			"CodeObj",
-			"InAttentive",
-			"IsConfirmed",
 			"IsAdmin",
 			"IsDepAdmin",
-			"IsOrgAdmin",
 			"IsDivAdmin",
-			"Server",
+			"IsOrgAdmin",
 			"IsTester",
-			"IsDesigner"
+			"IsDesigner",
+			"TabNum",
+			"Birthday",
+			"MobilePhone",
+			"IsConfirmed",
+			"CodeObj",
+			"CodeLanguage"
 		],
 		"Links": [
 			"labeluser"
@@ -877,12 +876,14 @@
 	"country": {
 		"TableFields": [
 			"CodeCountry",
-			"NameCountry"
+			"NameCountry",
+			"CodeLanguage"
 		],
 		"EditFields": [
 			"CodeCountry",
 			"NameCountry",
-			"SNameCountry"
+			"SNameCountry",
+			"CodeLanguage"
 		],
 		"Links": []
 	},
@@ -961,6 +962,38 @@
 			"CodeColRelation",
 			"CodeDocRelation",
 			"CodeColSource"
+		],
+		"Links": []
+	},
+	"language": {
+		"TableFields": [
+			"CodeLanguage",
+			"NameLanguage",
+			"SNameLanguage",
+			"IsDefault"
+		],
+		"EditFields": [
+			"CodeLanguage",
+			"NameLanguage",
+			"SNameLanguage",
+			"URL",
+			"IsDefault",
+			"Comment"
+		],
+		"Links": []
+	},
+	"langhub": {
+		"TableFields": [
+			"CodeLanghub",
+			"NameLanghub",
+			"URL"
+		],
+		"EditFields": [
+			"CodeLanghub",
+			"NameLanghub",
+			"SNameLanghub",
+			"URL",
+			"Comment"
 		],
 		"Links": []
 	}
