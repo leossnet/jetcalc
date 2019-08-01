@@ -13,6 +13,7 @@ dirname="$HOME/$tmp"
 cd $tmp
 
 mongodump -d jetcalc
+mongodump -d jetcalc_files
 export PGPASSWORD="postgres"
 pg_dump -h localhost -p 5432 -U postgres -F c -b -v -f $dirname/sql.backup jetcalc
 
