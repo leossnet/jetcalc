@@ -11,8 +11,8 @@
  * В открывшемся меню выбрать нужный пункт.
  */
 
-var shell = require('shelljs');
-var Menu = require('terminal-menu');
+var shell = require('shelljs'); // https://www.npmjs.com/package/shelljs
+var Menu = require('terminal-menu'); // https://www.npmjs.com/package/terminal-menu
 //global.__base = __dirname + "/";
 
 /**
@@ -35,8 +35,7 @@ var Tasks = {
 };
 
 /**
- * Отрисовка меню выбора операций в соответствии с шаблоном:
- * https://www.npmjs.com/package/terminal-menu
+ * Отрисовка меню выбора операций в соответствии с шаблоном shelljs
  * После завершения выбранной операции нужно нажать Ctrl+C
  */
 function start () {
