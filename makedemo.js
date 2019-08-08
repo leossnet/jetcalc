@@ -13,13 +13,16 @@
 
 var shell = require('shelljs'); // https://www.npmjs.com/package/shelljs
 var Menu = require('terminal-menu'); // https://www.npmjs.com/package/terminal-menu
+var Config  = require("./config.js");
 
 var anyDB = require('any-db'); // https://www.npmjs.com/package/any-db
-var Config  = require("./config.js");
 var pg = Config.dbconfig.pgsql;
 var ConnectURL = [
     pg.adapter,"://",pg.userName,":",pg.password,"@",pg.server,":",pg.options.port,"/",pg.options.database
 ].join("");
+
+var mongoose = require('mongoose'); // https://www.npmjs.com/package/mongoose
+
 
 /**
  * Метки пунктов меню
@@ -29,44 +32,14 @@ var Headers = {
     heder_line      : "-------------------------\n",
 };
 var Labels = {
+    setadminmongo   : "Замена кодов пользователей в mongo",
     setadminsql     : "Замена кодов пользователей в sql",
-    setadmincode    : "Замена кодов пользователей в mongo",
     setadminuser    : "Удаление пользователей кроме admin",
     exit            : "Выход",
 };
 
 var bye = "\n------------------------------\nPress Ctrl+C or Enter to exit.\n";
 var dstr = "\n==============================";
-
-/**
- * Задачи
- */ 
-var Tasks = {
-    makedemo: function(){
-        console.log(Labels.makedemo);
-    },
-    setadminsql: function(done){
-        console.log(Labels.setadminsql+dstr);
-        var queryes = [
-            "alter table cells disable trigger trigger_on_cells;"
-            ,"update cells set \"CodeUser\" = 'admin' where \"CodeUser\" != 'admin'"
-            ,"alter table cells enable trigger trigger_on_cells;"
-            ,"update cells_h set \"CodeUser\" = 'admin' where \"CodeUser\" != 'admin'"
-            ,"alter table valuta_rates disable trigger trigger_on_valuta_rates;"
-            ,"update valuta_rates set \"CodeUser\" = 'admin' where \"CodeUser\" != 'admin'"
-            ,"alter table valuta_rates enable trigger trigger_on_valuta_rates;"
-            ,"update valuta_rates_h set \"CodeUser\" = 'admin' where \"CodeUser\" != 'admin'"
-        ];
-        var pool = anyDB.createPool(ConnectURL, {min: 4, max: 10});
-        runQueryes(pool, queryes);
-    },
-    setadminuser: function(){
-        console.log(Labels.setadminuser);
-    },
-    setadmincode: function(){
-        console.log(Labels.setadmincode);
-    }
-};
 
 /**
  * Отрисовка меню выбора операций в соответствии с шаблоном shelljs
@@ -85,15 +58,15 @@ function start () {
         menu.close();
         shell.exec('clear');
         switch (label){
+            case Labels.setadminmongo:
+                Tasks.setadminmongo();
+                break;
             case Labels.setadminsql:
                 Tasks.setadminsql();
-            break;
+                break;
             case Labels.setadminuser:
                 Tasks.setadminuser();
-            break;
-            case Labels.setadmincode:
-                Tasks.setadmincode();
-            break;
+                break;
         }
     });
     process.stdin.pipe(menu.createStream()).pipe(process.stdout);
@@ -102,6 +75,48 @@ function start () {
         process.stdin.setRawMode(false);
         process.stdin.end();
     });
+};
+
+/**
+ * Задачи
+ */ 
+var Tasks = {
+    makedemo: function(){
+        console.log(Labels.makedemo);
+    },
+    setadminsql: function(){
+        console.log(Labels.setadminsql+dstr);
+        var queryes = [
+            "alter table cells disable trigger trigger_on_cells;"
+            ,"update cells set \"CodeUser\" = 'admin' where \"CodeUser\" != 'admin'"
+            ,"alter table cells enable trigger trigger_on_cells;"
+            ,"update cells_h set \"CodeUser\" = 'admin' where \"CodeUser\" != 'admin'"
+            ,"alter table valuta_rates disable trigger trigger_on_valuta_rates;"
+            ,"update valuta_rates set \"CodeUser\" = 'admin' where \"CodeUser\" != 'admin'"
+            ,"alter table valuta_rates enable trigger trigger_on_valuta_rates;"
+            ,"update valuta_rates_h set \"CodeUser\" = 'admin' where \"CodeUser\" != 'admin'"
+        ];
+        var pool = anyDB.createPool(ConnectURL, {min: 4, max: 10});
+        runQueryes(pool, queryes);
+    },
+    setadminmongo: function(){
+        console.log(Labels.setadminmongo);
+        mongoose.connect(Config.mongoUrl,{ useMongoClient: true });
+        mongoose.connection.on('connected', function(){
+            console.log("mongodb sconnected...");
+            var ModelInit = require('./classes/InitModels.js');
+            ModelInit(function(){
+                var models = mongoose.models;
+                var modelKeysArray = Object.keys(models).filter(function(modelKey){
+                    return models[modelKey].schema.tree.hasOwnProperty('UserEdit');
+                });                
+                updateModel(models, modelKeysArray);            
+            });
+        });
+    },
+    setadminuser: function(){
+        console.log(Labels.setadminuser);
+    }
 };
 
 /**
@@ -120,19 +135,19 @@ if (StartTask && Tasks[StartTask]){
 /**
  * Последовательное выполнение sql-запросов из массива queryes 
  * с завершающим закрытием пула соединений с базой данных
- * @param {*} pool 
- * @param {*} queryes 
+ * @param {Object} pool 
+ * @param {Array of String} queryes 
  */
 function runQueryes(pool, queryes){
     var sql = queryes.shift();
-    pool.query(sql, function(error, result){
-        if (error){
-            console.log("Error: "+error.message+"\npool close."+bye);
+    pool.query(sql, function(err, res){
+        if (err){
+            console.log("Error: "+err.message+"\npool close."+bye);
             pool.close();
         }
         else {
             console.log(sql);
-            if (result.command == "UPDATE") console.log("Обновлено "+result.rowCount+" строк.");
+            if (res.command == "UPDATE") console.log("Обновлено "+res.rowCount+" строк.");
             if ( queryes.length == 0) {
                 console.log("pool close."+bye);
                 pool.close();
@@ -143,3 +158,34 @@ function runQueryes(pool, queryes){
         }
     });
 }
+
+/**
+ * Замена значений атрибута UserEdit на 'admin' в докуметах текущей модели
+ * @param {Object} model 
+ * @param {Array of String} modelKeysArray 
+ */
+function updateModel(models, modelKeysArray) {
+    var modelKey = modelKeysArray.shift();
+
+    models[modelKey].updateMany( { UserEdit: { $not: /admin/ } }, { UserEdit: "admin" }, function(err, res) {
+        if (err) {
+            console.log("Error: "+err);
+            mongoose.disconnect(function(){
+                console.log(bye);
+            });
+        }
+        else {
+            console.log(modelKey+":");
+            console.log(res);
+            if ( modelKeysArray.length == 0) {
+                mongoose.disconnect(function(){
+                    console.log(bye);
+                });
+                }
+            else {
+                updateModel(models, modelKeysArray);
+            }
+        }
+    });
+}
+
