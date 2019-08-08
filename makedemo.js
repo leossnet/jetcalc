@@ -34,7 +34,8 @@ var Headers = {
 var Labels = {
     setadminmongo   : "Замена кодов пользователей в mongo",
     setadminsql     : "Замена кодов пользователей в sql",
-    setadminuser    : "Удаление пользователей кроме admin",
+    setonlyadmin    : "Удаление пользователей кроме admin",
+    clearfiles      : "Удаление лишних файлов",
     exit            : "Выход",
 };
 
@@ -64,10 +65,13 @@ function start () {
             case Labels.setadminsql:
                 Tasks.setadminsql();
                 break;
-            case Labels.setadminuser:
-                Tasks.setadminuser();
+            case Labels.setonlyadmin:
+                Tasks.setonlyadmin();
                 break;
-        }
+            case Labels.clearfiles:
+                Tasks.clearfiles();
+                break;
+            }
     });
     process.stdin.pipe(menu.createStream()).pipe(process.stdout);
     process.stdin.setRawMode(true);
@@ -78,7 +82,7 @@ function start () {
 };
 
 /**
- * Задачи
+ * Функции админки, вызываемые через меню
  */ 
 var Tasks = {
     makedemo: function(){
@@ -100,27 +104,31 @@ var Tasks = {
         runQueryes(pool, queryes);
     },
     setadminmongo: function(){
-        console.log(Labels.setadminmongo);
-        mongoose.connect(Config.mongoUrl,{ useMongoClient: true });
-        mongoose.connection.on('connected', function(){
-            console.log("mongodb sconnected...");
-            var ModelInit = require('./classes/InitModels.js');
-            ModelInit(function(){
-                var models = mongoose.models;
-                var modelKeysArray = Object.keys(models).filter(function(modelKey){
-                    return models[modelKey].schema.tree.hasOwnProperty('UserEdit');
-                });                
-                updateModel(models, modelKeysArray);            
+        onConnectMongo(function(){
+            var modelKeysArray = getModelKeysArray(mongoose.models, "UserEdit");
+            updateModel(mongoose.models, modelKeysArray);            
+        });
+    },
+    setonlyadmin: function(){
+        onConnectMongo(function(){
+            var modelKeysArray = getModelKeysArray(mongoose.models, "CodeUser");
+            clearUsers(mongoose.models, modelKeysArray);
+        });
+    },
+    clearfiles: function(){
+        onConnectMongo(function(){
+            // заглушка
+            mongoose.disconnect(function(){
+                console.log(bye);
             });
         });
     },
-    setadminuser: function(){
-        console.log(Labels.setadminuser);
-    }
 };
 
 /**
- * Запуск скрипта
+ * =====================================================================
+ * Запуск скрипта makedemo.js
+ * =====================================================================
  */
 var StartTask = "";
 process.argv.forEach(function (val, index, array) {
@@ -133,10 +141,42 @@ if (StartTask && Tasks[StartTask]){
 }
 
 /**
+ * =====================================================================
+ * Вспомогательные функции
+ * =====================================================================
+ */
+
+/**
+ * Стандартная обертка для специализированных функций работы с mongoose
+ * @param {Function} callback 
+ */
+ function onConnectMongo(callback) {
+    console.log(Labels.clearfiles);
+    mongoose.connect(Config.mongoUrl, { useMongoClient: true });
+    mongoose.connection.on('connected', function () {
+        console.log("mongodb sconnected...");
+        var ModelInit = require('./classes/InitModels.js');
+        ModelInit(callback);
+    });
+}
+
+/**
+ * Возвращает список кодов моделей mongoose, содержащих атрибут field
+ * @param {Object} models 
+ * @param {String} field 
+ * @returns {Array<String>}
+ */
+function getModelKeysArray(models, field) {
+    return Object.keys(models).filter(function (key) {
+        return models[key].schema.tree.hasOwnProperty(field);
+    });
+}
+
+/**
  * Последовательное выполнение sql-запросов из массива queryes 
  * с завершающим закрытием пула соединений с базой данных
  * @param {Object} pool 
- * @param {Array of String} queryes 
+ * @param {Array<String>} queryes 
  */
 function runQueryes(pool, queryes){
     var sql = queryes.shift();
@@ -162,14 +202,13 @@ function runQueryes(pool, queryes){
 /**
  * Замена значений атрибута UserEdit на 'admin' в докуметах текущей модели
  * @param {Object} model 
- * @param {Array of String} modelKeysArray 
+ * @param {Array<String>} modelKeysArray 
  */
 function updateModel(models, modelKeysArray) {
     var modelKey = modelKeysArray.shift();
-
     models[modelKey].updateMany( { UserEdit: { $not: /admin/ } }, { UserEdit: "admin" }, function(err, res) {
         if (err) {
-            console.log("Error: "+err);
+            console.log("Error: "+err.message+"\npool close."+bye);
             mongoose.disconnect(function(){
                 console.log(bye);
             });
@@ -184,6 +223,35 @@ function updateModel(models, modelKeysArray) {
                 }
             else {
                 updateModel(models, modelKeysArray);
+            }
+        }
+    });
+}
+
+/**
+ * Удаление всех пользователей, кроме admin, и связанных с ними данных
+ * @param {Object} model 
+ * @param {Array<String>} modelKeysArray 
+ */
+function clearUsers(models, modelKeysArray) {
+    var modelKey = modelKeysArray.shift();
+    models[modelKey].remove( { CodeUser: { $not: /admin/ } }, function(err, res) {
+        if (err) {
+            console.log("Error: "+err.message+"\npool close."+bye);
+            mongoose.disconnect(function(){
+                console.log(bye);
+            });
+        }
+        else {
+            console.log(modelKey+":");
+            console.log(res.result);
+            if ( modelKeysArray.length == 0) {
+                mongoose.disconnect(function(){
+                    console.log(bye);
+                });
+                }
+            else {
+                clearUsers(models, modelKeysArray);
             }
         }
     });
