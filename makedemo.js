@@ -35,6 +35,7 @@ var Labels = {
     setadminmongo   : "Замена кодов пользователей в mongo",
     setadminsql     : "Замена кодов пользователей в sql",
     setonlyadmin    : "Удаление пользователей кроме admin",
+    clearsearch     : "Удаление кеша поиска",
     clearfiles      : "Удаление лишних файлов",
     exit            : "Выход",
 };
@@ -68,7 +69,10 @@ function start () {
             case Labels.setonlyadmin:
                 Tasks.setonlyadmin();
                 break;
-            case Labels.clearfiles:
+                case Labels.clearsearch:
+                    Tasks.clearsearch();
+                    break;
+                case Labels.clearfiles:
                 Tasks.clearfiles();
                 break;
             }
@@ -113,6 +117,12 @@ var Tasks = {
         onConnectMongo(function(){
             var modelKeysArray = getModelKeysArray(mongoose.models, "CodeUser");
             clearUsers(mongoose.models, modelKeysArray);
+        });
+    },
+    clearsearch: function(){
+        onConnectMongo(function(){
+            var modelKeysArray = getModelKeysArray(mongoose.models, "search");
+            clearSearch(mongoose.models, modelKeysArray);
         });
     },
     clearfiles: function(){
@@ -257,3 +267,31 @@ function clearUsers(models, modelKeysArray) {
     });
 }
 
+/**
+ * Очистка кеша поиска во всех коллекциях
+ * @param {Object} models 
+ * @param {Array<String>} modelKeysArray 
+ */
+function clearSearch(models, modelKeysArray) {
+    var modelKey = modelKeysArray.shift();
+    models[modelKey].updateMany( {}, { UserEdit: "admin" }, function(err, res) {
+        if (err) {
+            console.log("Error: "+err.message+"\npool close."+bye);
+            mongoose.disconnect(function(){
+                console.log(bye);
+            });
+        }
+        else {
+            console.log(modelKey+":");
+            console.log(res);
+            if ( modelKeysArray.length == 0) {
+                mongoose.disconnect(function(){
+                    console.log(bye);
+                });
+                }
+            else {
+                clearSearch(models, modelKeysArray);
+            }
+        }
+    });
+}
