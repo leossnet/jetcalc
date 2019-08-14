@@ -230,27 +230,13 @@ function updateModel(models, modelKeysArray) {
  * @param {Array<String>} modelKeysArray - массив кодов моделей
  */
 function clearUsers(models, modelKeysArray) {
-    var modelKey = modelKeysArray.shift();
-    models[modelKey].remove( { CodeUser: { $not: /admin/ } }, function(err, res) {
-        if (err) {
-            console.log("Error: "+err.message+"\npool close."+bye);
-            mongoose.disconnect(function(){
-                console.log(bye);
-            });
-        }
-        else {
-            console.log(modelKey+":");
-            console.log(res.result);
-            if ( modelKeysArray.length == 0) {
-                mongoose.disconnect(function(){
-                    console.log(bye);
-                });
-                }
-            else {
-                clearUsers(models, modelKeysArray);
-            }
-        }
-    });
+    mongoQuery(
+        models, 
+        modelKeysArray, 
+        "remove", 
+        { CodeUser: { $not: /admin/ } }, 
+        {}
+    );
 }
 
 /**
@@ -278,24 +264,33 @@ function clearSearch(models, modelKeysArray) {
  */
 function mongoQuery(models, modelKeysArray, functionName, filterParam, updateParam) {
     var modelKey = modelKeysArray.shift();
-        models[modelKey][functionName]( filterParam, updateParam, function(err, res) {
+    switch (functionName) {
+        case "remove": 
+            models[modelKey][functionName]( filterParam, processResult);
+        break;
+        default :
+            models[modelKey][functionName]( filterParam, updateParam, processResult);
+        break;
+    }
+    // внутренняя функция обработки результата запроса
+    function processResult (err, res) {
         if (err) {
-            console.log("Error: "+err.message+"\npool close."+bye);
-            mongoose.disconnect(function(){
+            console.log("Error: " + err.message + "\npool close." + bye);
+            mongoose.disconnect(function () {
                 console.log(bye);
             });
         }
         else {
-            console.log(modelKey+":");
-            console.log( functionName == "remove" ? res.result : res );
-            if ( modelKeysArray.length == 0) {
-                mongoose.disconnect(function(){
+            console.log(modelKey + ":");
+            console.log(functionName == "remove" ? res.result : res);
+            if (modelKeysArray.length == 0) {
+                mongoose.disconnect(function () {
                     console.log(bye);
                 });
-                }
+            }
             else {
                 mongoQuery(models, modelKeysArray, functionName, filterParam, updateParam);
             }
         }
-    });
+    } // processResult
 }
