@@ -105,7 +105,7 @@ var Tasks = {
             ,"update valuta_rates_h set \"CodeUser\" = 'admin' where \"CodeUser\" != 'admin'"
         ];
         var pool = anyDB.createPool(ConnectURL, {min: 4, max: 10});
-        runQueryes(pool, queryes);
+        sqlQueryes(pool, queryes);
     },
     setadminmongo: function(){
         onConnectMongo(function(){
@@ -185,10 +185,10 @@ function getModelKeysArray(models, field) {
 /**
  * Последовательное выполнение sql-запросов из массива queryes 
  * с завершающим закрытием пула соединений с базой данных
- * @param {Object} pool 
- * @param {Array<String>} queryes 
+ * @param {Object} pool - пул подключений postgres
+ * @param {Array<String>} queryes - массив запросов к базе данных
  */
-function runQueryes(pool, queryes){
+function sqlQueryes(pool, queryes){
     var sql = queryes.shift();
     pool.query(sql, function(err, res){
         if (err){
@@ -203,7 +203,7 @@ function runQueryes(pool, queryes){
                 pool.close();
             }
             else {
-                runQueryes(pool, queryes);
+                sqlQueryes(pool, queryes);
             }
         }
     });
@@ -211,8 +211,8 @@ function runQueryes(pool, queryes){
 
 /**
  * Замена значений атрибута UserEdit на 'admin' в докуметах текущей модели
- * @param {Object} model 
- * @param {Array<String>} modelKeysArray 
+ * @param {Object} model - объект с полями в виде моделей документов
+ * @param {Array<String>} modelKeysArray - массив кодов моделей
  */
 function updateModel(models, modelKeysArray) {
     mongoQuery(
@@ -226,8 +226,8 @@ function updateModel(models, modelKeysArray) {
 
 /**
  * Удаление всех пользователей, кроме admin, и связанных с ними данных
- * @param {Object} model 
- * @param {Array<String>} modelKeysArray 
+ * @param {Object} model - объект с полями в виде моделей документов
+ * @param {Array<String>} modelKeysArray - массив кодов моделей
  */
 function clearUsers(models, modelKeysArray) {
     var modelKey = modelKeysArray.shift();
@@ -255,8 +255,8 @@ function clearUsers(models, modelKeysArray) {
 
 /**
  * Очистка кеша поиска во всех коллекциях
- * @param {Object} models 
- * @param {Array<String>} modelKeysArray 
+ * @param {Object} model - объект с полями в виде моделей документов
+ * @param {Array<String>} modelKeysArray - массив кодов моделей
  */
 function clearSearch(models, modelKeysArray) {
     mongoQuery(
@@ -270,11 +270,11 @@ function clearSearch(models, modelKeysArray) {
 
 /**
  * Настраиваемый запрос к MongoDB, выполняемый синхронно
- * @param {Object} models 
- * @param {Array<String>} modelKeysArray 
- * @param {String} functionName 
- * @param {Object} filterParam 
- * @param {Object} updateParam 
+ * @param {Object} model - объект с полями в виде моделей документов
+ * @param {Array<String>} modelKeysArray - массив кодов моделей
+ * @param {String} functionName - наименование функции 
+ * @param {Object} filterParam - параметры фильтрации выборки в запросе
+ * @param {Object} updateParam - параметры обновления данных
  */
 function mongoQuery(models, modelKeysArray, functionName, filterParam, updateParam) {
     var modelKey = modelKeysArray.shift();
