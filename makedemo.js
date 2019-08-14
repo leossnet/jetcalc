@@ -215,7 +215,7 @@ function sqlQueryes(pool, queryes){
  * @param {Array<String>} modelKeysArray - массив кодов моделей
  */
 function updateModel(models, modelKeysArray) {
-    mongoQuery(
+    mongoQuerys(
         models, 
         modelKeysArray, 
         "updateMany", 
@@ -230,7 +230,7 @@ function updateModel(models, modelKeysArray) {
  * @param {Array<String>} modelKeysArray - массив кодов моделей
  */
 function clearUsers(models, modelKeysArray) {
-    mongoQuery(
+    mongoQuerys(
         models, 
         modelKeysArray, 
         "remove", 
@@ -245,7 +245,7 @@ function clearUsers(models, modelKeysArray) {
  * @param {Array<String>} modelKeysArray - массив кодов моделей
  */
 function clearSearch(models, modelKeysArray) {
-    mongoQuery(
+    mongoQuerys(
         models, 
         modelKeysArray, 
         "updateMany", 
@@ -255,14 +255,14 @@ function clearSearch(models, modelKeysArray) {
 }
 
 /**
- * Настраиваемый запрос к MongoDB, выполняемый синхронно
+ * Синхровнный запрос к массиву коллекций MongoDB
  * @param {Object} model - объект с полями в виде моделей документов
  * @param {Array<String>} modelKeysArray - массив кодов моделей
  * @param {String} functionName - наименование функции 
  * @param {Object} filterParam - параметры фильтрации выборки в запросе
  * @param {Object} updateParam - параметры обновления данных
  */
-function mongoQuery(models, modelKeysArray, functionName, filterParam, updateParam) {
+function mongoQuerys(models, modelKeysArray, functionName, filterParam, updateParam) {
     var modelKey = modelKeysArray.shift();
     switch (functionName) {
         case "remove": 
@@ -289,7 +289,7 @@ function mongoQuery(models, modelKeysArray, functionName, filterParam, updatePar
                 });
             }
             else {
-                mongoQuery(models, modelKeysArray, functionName, filterParam, updateParam);
+                mongoQuerys(models, modelKeysArray, functionName, filterParam, updateParam);
             }
         }
     } // processResult
