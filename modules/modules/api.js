@@ -54,7 +54,7 @@ var ModulesHelper = (new function(){
         mongoose.model("msmodule").findOne({ModuleName:moduleName}).exec(function(err,Mod){ 
             if (!Mod) return done("Модуль не найден");
             ModulesHelper.MSSettingsComplete(function(err,Set){
-                console.log("./gitmanager.sh "+[command,cleared,Set.RepoOwner,Set.GitLogin,encodeURIComponent(Set.Password)].join(" "));
+                console.log("./gitmanager.sh "+[command,cleared,Set.RepoOwner,Set.GitLogin,Set.Password].join(" "));
                 exec("./gitmanager.sh "+[command, cleared,Set.RepoOwner,Set.GitLogin,Set.Password].join(" "),{cwd: __base+'modules/modules'},function(err,result,info){
                     console.log(err,result,info);
                     if (err) return done(err);
