@@ -11,6 +11,10 @@
   "bugs": {
     "url": "https://github.com/leossnet/jetcalc/issues"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leossnet/jetcalc.git"
+  },
   "dependencies": {
     "agenda": "*",
     "amqplib": "*",
@@ -53,7 +57,7 @@
     "moment": "*",
     "mongodb": "*",
     "mongoosastic": "*",
-    "mongoose": "^4.5.0",
+    "mongoose": "^4.13.0",
     "mongoose-construct": "*",
     "mongoose-createdmodified": "*",
     "mongoose-nested-set": "*",
