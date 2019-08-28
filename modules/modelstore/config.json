@@ -1,0 +1,18 @@
+{
+  "id": "modelstore",
+  "title": "Модели",
+  "icon": "fa-list-ul",
+  "class_name": "ModelStore",
+  "is_enabled": true,
+  "type":"adminpage",
+  "places":{
+      "adminpage"  : true
+  },
+  "permissions" : [
+  		"IsMakedemo"
+  ],
+   "permissionsModels":{
+      "IsListobjectsEditor":["makedemo"]
+  },
+  "sort_index":1000
+}
