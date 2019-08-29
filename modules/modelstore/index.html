@@ -1,19 +1,43 @@
 <div class="wysiwyg-toolbar btn-toolbar toolH" data-bind='with:MModelStore'>
-    <!-- ko template:'tb_simple_loader' --><!-- /ko -->
-    <!-- ko template:'model_edit_buttons' --><!-- /ko -->
-	<!-- ko template:'model_edit_search' --><!-- /ko -->        
+    <!-- ko template:'tb_simple_loader' -->
+    <!-- /ko -->
+    <!-- ko if:$data.Mode()=='MakeDemo' -->
+        <!-- ko template:'modelstore_makedemo_buttons' -->
+        <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if:$data.Mode()=='Settings' -->
+        <!-- ko template:'modelstore_settings_buttons' -->
+        <!-- /ko -->
+    <!-- /ko -->
 </div>
 
 <div class="row adminbody" data-bind="with:MModelStore">
-	<div  class='scrollable_page admin_page' >
-		<div class='row'><!-- ko template: 'inline_error' --><!-- /ko --></div>
-		<!-- ko template:'model_edit' --><!-- /ko -->
-
-	</div>
+    <div class='scrollable_page admin_page'>
+        <div class='row'>
+            <!-- ko template: 'inline_error' -->
+            <!-- /ko -->
+        </div>
+        <!-- ko if:$data.Mode()=='Settings' -->
+        <div class='row'>
+            <div class='col-sm-6'>
+                <!-- ko template:{
+                        name:'small_form_with_header',
+                        data:{Name:'Настройки модуля',Fields:['PortalName','SystemName','TechPhone'],Model:MModules.Requizites}
+                    } -->
+                <!-- /ko -->
+            </div>
+        
+        </div>
+        <!-- /ko -->
+    </div>
 </div>
 
+
 <div class="bottomPannel" data-bind="with:MModelStore">
-	<ul class="toolPanel nav nav-tabs background-blue">
-		<!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-thumb-tack',title:'Демо-данные',mode:'MakeDemo'}} --><!-- /ko -->    	
-	</ul>
+    <ul class="toolPanel nav nav-tabs background-blue">
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-database',title:'Демо-данные',mode:'MakeDemo'}} -->
+        <!-- /ko -->
+        <!-- ko template:{name:'tb_mode_switch_li',data:{icon:'fa-wrench',title:'Настройки',mode:'Settings'}} -->
+        <!-- /ko -->
+    </ul>
 </div>

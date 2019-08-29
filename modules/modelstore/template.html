@@ -1,0 +1,30 @@
+<script id="modelstore_setadmin_mongo" type="text/html">
+    <a class='btn btn-sm btn-warning btn-white ' data-bind="title:'Замена кодов в Mongo',click:function(){console.log('test!!!')}">
+        <i class="ace-icon fa fa-object-ungroup"></i>
+    </a>
+</script>
+
+<script id="modelstore_setadmin_sql" type="text/html">
+    <a class='btn btn-sm btn-warning btn-white ' data-bind="title:'Замена кодов в SQL'">
+        <i class="ace-icon fa fa-database"></i>
+    </a>
+</script>
+
+<script id="modelstore_makedemo_buttons" type="text/html">
+    <div class="btn-group">
+        <!-- ko template:'modelstore_setadmin_mongo' -->
+        <!-- /ko -->
+        <!-- ko template:'modelstore_setadmin_sql' -->
+        <!-- /ko -->
+    </div>
+</script>
+
+<script id="modelstore_settings_buttons" type="text/html">
+    <div class="btn-group">
+        <!-- ko template:'model_edit_save' -->
+        <!-- /ko -->
+        <!-- ko template:'model_edit_settings' -->
+        <!-- /ko -->
+    </div>
+</script>
+

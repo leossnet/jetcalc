@@ -18,13 +18,17 @@ var MModelStore = (new function() {
 
     self.Show = function(done){
         if (!self.Mode()) return self.InitSetMode("MakeDemo");
-        switch (self.Mode()){
-            case "MakeDemo":
-                ModelTableEdit.InitModel("sumgrp");
-            break;            
-        }
+        // switch (self.Mode()){
+        //     case "MakeDemo":
+        //         ModelTableEdit.InitModel("sumgrp");
+        //     break;            
+        // }
         return done && done()
-    }  
+    } 
+
+    self.Test = function(done){
+        self.console.log("Это тест!");
+    }
 
     
     return self;
