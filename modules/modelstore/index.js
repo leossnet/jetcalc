@@ -1,6 +1,8 @@
 var MModelStore = (new function() {
     
     var self = new Module("modelstore");
+    self.InputString = ko.observable();
+    
 
     self.IsAvailable = function(){
         return PermChecker.CheckPrivelege("IsMakedemo");
@@ -18,16 +20,17 @@ var MModelStore = (new function() {
 
     self.Show = function(done){
         if (!self.Mode()) return self.InitSetMode("MakeDemo");
-        // switch (self.Mode()){
-        //     case "MakeDemo":
-        //         ModelTableEdit.InitModel("sumgrp");
-        //     break;            
-        // }
+        switch (self.Mode()){
+            case "MakeDemo":
+                //ModelTableEdit.InitModel("sumgrp");
+                self.InputString("Строка, выводимая в консоль браузера");
+            break;            
+        }
         return done && done()
-    } 
+    }
 
-    self.Test = function(done){
-        self.console.log("Это тест!");
+    self.LogTest = function(){
+        console.log("Строка в поле ввода: '"+self.InputString()+"'");
     }
 
     

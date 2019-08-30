@@ -17,12 +17,20 @@
             <!-- ko template: 'inline_error' -->
             <!-- /ko -->
         </div>
+        <!-- ko if:$data.Mode()=='MakeDemo' -->
+        <div class='row'>
+            <div class="col-sm-6">
+                <!-- ko template: 'modelstore_console' -->
+                <!-- /ko -->
+            </div>
+        </div>
+        <!-- /ko -->
         <!-- ko if:$data.Mode()=='Settings' -->
         <div class='row'>
             <div class='col-sm-6'>
                 <!-- ko template:{
                         name:'small_form_with_header',
-                        data:{Name:'Настройки модуля',Fields:['PortalName','SystemName','TechPhone'],Model:MModules.Requizites}
+                        data:{Name:'Настройки модуля',Fields:['PortalName','TechPhone'],Model:MModules.Requizites}
                     } -->
                 <!-- /ko -->
             </div>
