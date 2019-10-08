@@ -4,5 +4,6 @@
 	"ParamSets" : "Значения",
 	"ListDefinitions" : "Списки значений",
 	"ParamGrp" : "Группы",
-	"ParamTab" : "удалить вкладку"
+    "ParamTab" : "удалить вкладку",
+    "IsParamSetTunner":"Настройка параметров"
 }

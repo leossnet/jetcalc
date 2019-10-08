@@ -40,6 +40,7 @@
 	"IsAfFormula":"Вкл.Формула Автозаполнения",
 	"AfFormula":"Формула Автозаполнения",
 	"IsVirtual":"Виртуальная",
+    "IsRowTuner":"Настройка рядов",
 	"CodeProd":"Код.Прд",
 	"CodeAltOrg":"Код.Кнтрг",
 	"CodeDogovor":"Код.Дгвр",
@@ -48,7 +49,6 @@
     "Link_rowtag":"Тэги",
     "Link_rowobj":"Фильтры",
     "CodeSumGrp":"Код.Сум.Грп",
-    "IsRowTuner":"Настройка рядов",
     "CodeObjType":"Код.Тип.Об.Уч",
     "level":"Вложенность",
     "CodeRowLink":"Ссылка.Ряд",
@@ -58,5 +58,6 @@
     "docview.roweditor":"Настройка рядов",
     "ForObjType":"Тек.Тип",
     "ForObjClass":"Тек.Класс",
-    "Link_rowobjgrp":"По группам"
+    "Link_rowobjgrp":"По группам",
+    "rowstructure":"Настройка строк"
 }
