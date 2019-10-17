@@ -18,20 +18,17 @@ chmod -R 777 /htdocs
 cd /htdocs/jetcalc
 git config core.fileMode false
 
-
 sudo apt-get install  -y software-properties-common python-software-properties
 
-
-
-#mongo
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
-echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+#mongo 3.2 for ubuntu 16.04 xenial
+wget -qO - https://www.mongodb.org/static/pgp/server-3.2.asc | sudo apt-key add -
+echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
 
 #rabbitmq
 echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
 wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | apt-key add -
 
-#postgresql
+#postgresql 9.6
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
 wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
 
@@ -45,7 +42,6 @@ sudo apt-get update
 
 sudo apt-cache policy docker-engine
 sudo apt-get install -y docker-engine
-
 
 #nginx install
 sudo apt-get install -y nginx
@@ -114,7 +110,6 @@ node admin.js compile
 node admin.js build 
 node admin.js installgitbook 
 
-
 cd /htdocs/jetcalc
 cp /htdocs/jetcalc/install/start.json /htdocs/jetcalc/start.json
 cp /htdocs/jetcalc/install/catalogue.json /htdocs/jetcalc/static/custom/catalogue.json
@@ -126,4 +121,3 @@ pm2 save
 
 #тест posgresql
 node admin.js postgress
-
