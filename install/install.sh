@@ -20,9 +20,9 @@ git config core.fileMode false
 
 sudo apt-get install  -y software-properties-common python-software-properties
 
-#mongo 3.6 for ubuntu 18.04 bionic
-wget -qO - https://www.mongodb.org/static/pgp/server-3.6.asc | sudo apt-key add -
-echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
+#mongo 3.2 for ubuntu 16.04 xenial
+wget -qO - https://www.mongodb.org/static/pgp/server-3.2.asc | sudo apt-key add -
+echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
 
 #rabbitmq
 echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list

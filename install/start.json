@@ -32,7 +32,7 @@
             "script": "rabbit-workers.js",
             "args": ["rabbit-workers.js"],
             "node_args": "--expose-gc",
-            "instances": 2,
+            "instances": 1,
             "env": {
                 "NODE_ENV": "development"
             },            
