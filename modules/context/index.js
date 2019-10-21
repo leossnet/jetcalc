@@ -313,8 +313,9 @@ var CxCtrl = (new function() {
         break;
       case "obj":
         console.log("update 1");
-        self.ChildObj(self.GetLastChildObj());
         self.CodeObj(value);
+
+        self.ChildObj(self.GetLastChildObj());
         Updater = ['Row', "Doc"];
         Bus.Emit("context_obj_change");
         break;
