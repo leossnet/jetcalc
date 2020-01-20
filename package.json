@@ -1,7 +1,7 @@
 {
   "name": "jetcalc",
   "version": "0.9.1",
-  "description": "Платформа для моделирования сложных экономических систем",
+  "description": "Облачная платформа экономического моделирования с системой обратной связи",
   "homepage": "https://github.com/leossnet/jetcalc",
   "author": {
     "name": "Dmitry Koviazin",
