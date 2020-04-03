@@ -81,7 +81,7 @@ var ImportHelper = (new function () {
         Q.remove().exec(function () {
             var M = mongoose.model(obj2save.model);
             var Obj = new M(obj2save.data);
-            Obj.save(CodeUser, function () {
+            Obj.userSave(CodeUser, function () {
                 self.import_no_links_works -= 1;
             });
         });

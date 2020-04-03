@@ -53,7 +53,7 @@ var Helper = (new function(){
 			if (Data) {
 				if (!Data.CodeState){
 					self.SetDefaultState(Data,function(err,Updated){
-						Updated.save(CodeUser,function(err){
+						Updated.userSave(CodeUser,function(err){
 							if (err) console.log(err);
 							return done (null,Updated);
 						})
@@ -66,7 +66,7 @@ var Helper = (new function(){
 				self.SetDefaultState(Data,function(err,Updated){
 					if (err) console.log(err);
 					if (!Updated) return done();
-					Updated.save(CodeUser,function(err){
+					Updated.userSave(CodeUser,function(err){
 						if (err) console.log(err);
 						return done (null,Updated);
 					})

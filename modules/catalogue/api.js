@@ -392,7 +392,7 @@ router.delete('/model', HP.ModelAccessM(), function(req, res, next) {
                 });
             }
             var CodeUser = req.user.CodeUser;
-            C.remove(CodeUser, function(err) {
+            C.userRemove(CodeUser, function(err) {
                 if (err) return next(err);
                 if (M.IsSandBox) socket.emitTo(CodeUser, "sandboxchange", {});
                 return res.json({});

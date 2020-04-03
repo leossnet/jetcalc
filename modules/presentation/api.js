@@ -529,7 +529,7 @@ PresenationDBHelper = new function () {
             if (obj2save.action == "add") {
                 var M = mongoose.model(obj2save.model);
                 var Obj = new M(obj2save.data);
-                Obj.save(CodeUser, function () {
+                Obj.userSave(CodeUser, function () {
                     saveFlatStructure(i + 1)
                 });
             }
@@ -539,7 +539,7 @@ PresenationDBHelper = new function () {
                     if (!U) {
                         var M = mongoose.model(obj2save.model);
                         var Obj = new M(obj2save.data);
-                        Obj.save(CodeUser, function () {
+                        Obj.userSave(CodeUser, function () {
                             saveFlatStructure(i + 1)
                         });
                     } else {
@@ -548,7 +548,7 @@ PresenationDBHelper = new function () {
                                 U[field] = obj2save.data[field];
                             }
                         })
-                        U.save(CodeUser, function () {
+                        U.userSave(CodeUser, function () {
                             saveFlatStructure(i + 1)
                         });
                     }
@@ -568,14 +568,14 @@ PresenationDBHelper = new function () {
             if (!dbPresent) {
                 var M = mongoose.model('present');
                 var Obj = new M(Present);
-                Obj.save(CodeUser, done);
+                Obj.userSave(CodeUser, done);
             } else {
                 dbPresent.cfg().EditFields.forEach(function (field) {
                     if (dbPresent[field] != Present[field]) {
                         dbPresent[field] = Present[field];
                     }
                 })
-                dbPresent.save(CodeUser, function () {
+                dbPresent.userSave(CodeUser, function () {
                     saveFlatStructure(0)
                 });
             }

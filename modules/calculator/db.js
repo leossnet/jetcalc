@@ -26,13 +26,13 @@ module.exports = {
 		                async.forEachSeries(children, function(item, cb) {
 		                  self.RebuildTree(item, parent.rgt, CodeUser, function() {
 		                    parent.rgt = item.rgt + 1;
-		                    parent.save(CodeUser,cb);
+		                    parent.userSave(CodeUser,cb);
 		                  });
 		                }, function(err) {
 		                  	callback();
 		                });
 	              	} else {
-	              		parent.save(CodeUser,callback);
+	              		parent.userSave(CodeUser,callback);
             		}
 				})
 		  	}
@@ -92,7 +92,7 @@ module.exports = {
 						ToSave.push(new Row(R));
 					})
 					async.each(ToSave,function(M,cb){
-						M.save(CodeUser,cb);
+						M.userSave(CodeUser,cb);
 					},function(err){
 						RootNode.BuildTree(CodeUser,function(err){
 							return final();

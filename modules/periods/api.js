@@ -266,7 +266,7 @@ router.put('/update', HP.TaskAccess("IsPeriodEditTunner"), function(req, res, ne
         })
         if (!ToSave.length) return res.json({});
         async.each(ToSave, function(O, cb) {
-            O.save(CodeUser, cb);
+            O.userSave(CodeUser, cb);
         }, function(err) {
             if (err) return next(err);
             return res.json({});

@@ -57,7 +57,7 @@
     "moment": "*",
     "mongodb": "*",
     "mongoosastic": "*",
-    "mongoose": "^4.13.0",
+    "mongoose": "^5.9.5",
     "mongoose-construct": "*",
     "mongoose-createdmodified": "*",
     "mongoose-nested-set": "*",

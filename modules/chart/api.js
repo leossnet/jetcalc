@@ -100,7 +100,7 @@ var ChartDBHelper = (new function () {
                 if (!U) {
                     var M = mongoose.model(obj2save.model);
                     var Obj = new M(obj2save.data);
-                    Obj.save(CodeUser, function () {
+                    Obj.userSave(CodeUser, function () {
                         saveFlatStructure(i + 1)
                     });
                 } else {
@@ -109,7 +109,7 @@ var ChartDBHelper = (new function () {
                             U[field] = obj2save.data[field];
                         }
                     })
-                    U.save(CodeUser, function () {
+                    U.userSave(CodeUser, function () {
                         saveFlatStructure(i + 1)
                     });
                 }

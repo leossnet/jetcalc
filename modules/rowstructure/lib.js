@@ -120,10 +120,10 @@ var Struct =  (new function(){
 					return done(error.join("<br/>"));
 				}
 				async.each(ToRemove,function(R,cb){
-					R.remove(CodeUser,cb);
+					R.userRemove(CodeUser,cb);
 				},function(err){
 					async.each(ToUpdate,function(U,cb){ // Обновляем существующие
-						U.save(CodeUser,cb)
+						U.userSave(CodeUser,cb)
 					},function(err){
 						RootNode.IndexNewTree(CodeUser,done);
 					})
@@ -148,13 +148,13 @@ var Struct =  (new function(){
 				Root.rowpath = ["/",Code,"/"].join("");
 				Root.CodeParentRow = null;
 				Root.level = 0;
-				Root.save(CodeUser,function(err){
+				Root.userSave(CodeUser,function(err){
 					if (err) return cb(err);
 					var Q = {CodeRow:Code,CodeDoc:CodeDoc};
 					RowLink.findOne(Q).isactive().exec(function(err,Link){
 						if (!Link) {
 							Link = new RowLink(_.merge(Q,{IsExpandTree:true}));
-							Link.save(CodeUser,cb);
+							Link.userSave(CodeUser,cb);
 						} else {
 							return cb();
 						}

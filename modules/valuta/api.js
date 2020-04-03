@@ -247,7 +247,7 @@ var ValutaHelper = (new function () {
 
     self._update = function (Arr, CodeUser, done) {
         async.each(Arr, function (T, cb) {
-            T.save(CodeUser, cb);
+            T.userSave(CodeUser, cb);
         }, function (err) {
             if (err) return done(err);
             self._toDb(Arr, CodeUser, done);

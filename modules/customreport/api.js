@@ -49,7 +49,7 @@ var CustomReportHelper = (new function(){
 			} else {
 				for (var K in UpdateReport) ExReport[K] = UpdateReport[K];
 			}
-			ExReport.save(CodeUser,function(err){
+			ExReport.userSave(CodeUser,function(err){
 				if (err) return done(err);
 				var ParamsUpdate = [];
 				for (var CodeParam in Params){
@@ -122,10 +122,10 @@ router.delete('/report', function(req,res,next){
 			mongoose.model("reportrow").find({CodeReport:CodeReport}).isactive().exec(function(err,ReportRows){
 				ToDelete = ToDelete.concat(ReportParams).concat(ReportRows);
 				async.each(ToDelete,function(O,cb){
-					O.remove(CodeUser,cb);
+					O.userRemove(CodeUser,cb);
 				},function(err){
 					if (err) return next (err);
-					Report.remove(CodeUser,function(err){
+					Report.userRemove(CodeUser,function(err){
 						if (err) return next (err);
 						return res.json({});
 					})

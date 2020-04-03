@@ -77,8 +77,9 @@ module.exports = {
 	models:{},
 	schema: {
 		biztranrow: function(schema){
-			schema.pre('save',function(next, CodeUser, done){
+			schema.pre('save',function(next, done){
 				var self = this, Docs = [];
+				var CodeUser = self.UserEdit
 				AddLinker.Adders(self,function(err,Links){
 					if (err) return done(err);
 					if (_.isEmpty(Links)) {
@@ -87,7 +88,7 @@ module.exports = {
 					} 
 					async.eachSeries(Links,function(L,cb){
 						console.log("will save link ");
-						L.save(CodeUser,function(err){
+						L.userSave(CodeUser,function(err){
 							if (err) console.log("================ ERR ",err);
 							return cb(err);
 						});
@@ -106,7 +107,7 @@ module.exports = {
 					async.eachSeries(Links,function(L,cb){
 						mongoose.model("biztranrow").findOne(_.pick(L,["CodeDoc","CodeBill","CodeProd","CodeObj","CodeOrg"])).isactive().exec(function(err,Current){
 							if (!Current) return cb();
-							Current.remove(CodeUser,cb);
+							Current.userRemove(CodeUser,cb);
 						})
 					},function(){
 						//Planner.AddPlan(self.CodeDoc,CodeUser);
