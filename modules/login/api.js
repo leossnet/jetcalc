@@ -1,12 +1,38 @@
-var _ = require('lodash');
-var async = require('async');
-var router   = require('express').Router();
-var passport = require(__base+'src/passport.js');
-var mongoose = require("mongoose");
-var config = require(__base+"config.js");
-var LIB = require(__base+'lib/helpers/lib.js');
-var Mailer   =  require(__base+'src/mailer.js');
-var SocketManager =  require(__base+'src/socket.js');
+'use strict'
+
+const _ = require('lodash')
+const router = require('express').Router()
+const passport = require(__base+'src/passport.js')
+const mongoose = require('mongoose')
+const LIB = require(__base + 'lib/helpers/lib.js')
+const Mailer = require(__base + 'src/mailer.js')
+const SocketManager = require(__base + 'src/socket.js')
+
+router.post('/setpassword', async (req, res, next) => {
+  if (!req.body.password) {
+    return next('passwordisempty')
+  }
+  const user = await mongoose.model('user').findOne({ _id: req.user._id }).isactive().exec()
+  if (!user) {
+    return next('usernotfound')
+  }
+  user.password = req.body.password
+  user.DoResetPass = false
+  try {
+    await user.userSaveAsync(req.user.CodeUser)
+    return res.end()
+  } catch (error) {
+    return next(error)
+  }
+})
+
+router.get('/logout', (req, res) => {
+  req.session.destroy()
+  return res.end()
+})
+
+
+
 
 
 var AlienDeviceGuard = (new function(){
@@ -133,18 +159,6 @@ router.post('/bypassword', function(req, res, next) {
 	})(req, res, next);
 });
 
-router.post('/setpassword',   function(req, res, next) {
-	if (!req.body.password) return next('passwordisempty');
-	mongoose.model('user').findOne({_id: req.user._id}).isactive().exec(function (err,U){
-		if (!U) return next("usernotfound")
-		U.password = req.body.password;
-		U.DoResetPass = false;
-		U.save(req.user.CodeUser,function(err){
-			if (err) return next(err);
-			return res.end();
-		})
-	});
-});
 
 router.post('/byemail', function(req, res, next) {
 	var email = (req.body['username']+'').toLowerCase().trim();
@@ -166,10 +180,6 @@ router.post('/byemail', function(req, res, next) {
 });  
 
 
-router.get('/logout',function(req,res){
-	req.session.destroy();
-	return res.end();
-});
 
 
 router.get('/me',  function(req,res){

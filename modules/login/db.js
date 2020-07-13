@@ -33,7 +33,8 @@ module.exports = {
 	},
 	schema: {
 		user: function(schema){
-			schema.pre('save',function(next, CodeUser, done){
+			schema.pre('save',function(next, done){
+				console.log('user pre save login')
 				var self = this;
 				var SimilarQ = [];
 				if (!_.isEmpty(self.LoginUser)){
@@ -48,6 +49,7 @@ module.exports = {
 						if (!_.isEmpty(Similar.Mail) && Similar.Mail==self.Mail)return done("почта "+Similar.Mail+' уже используется');
 						if (!_.isEmpty(Similar.LoginUser) && Similar.LoginUser==self.LoginUser) return done("логин "+Similar.LoginUser+' уже используется');
 					}
+					console.log('user pre save login - done')
 					return next();
 				})
 			});

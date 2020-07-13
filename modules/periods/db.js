@@ -32,7 +32,8 @@ module.exports = {
     },
     schema: {
         period: function (schema) {
-            schema.pre('save', function (next, userBy, done) {
+            schema.pre('save', function (next, done) {
+                console.log('pre save from periods')
                 var rep = function (st) {
                     var sta = st.split("-");
                     return [sta[1], sta[0]].join("-");
@@ -41,6 +42,7 @@ module.exports = {
                 this.EndDate = new Date("1978-" + rep(this.EndDateText) + " 12:00:00");
                 console.log(this.BeginDate, " = ", this.BeginDateText);
                 console.log(this.EndDate, " = ", this.EndDateText);
+                console.log('pre save from periods - done')
                 return next(null, this);
             })
             return schema;

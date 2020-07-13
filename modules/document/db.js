@@ -8,8 +8,10 @@ module.exports = {
 	},
 	schema: {
 		doc: function(schema){
-			schema.pre('save',function(next, CodeUser, done){
- 				this.wasNew = this.isNew;
+			schema.pre('save',function(next, done){
+				console.log('pre save from document')
+				 this.wasNew = this.isNew;
+				 console.log('pre save from document - done')
   				next();
 			});
 

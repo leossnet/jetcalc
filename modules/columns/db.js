@@ -5,7 +5,7 @@ module.exports = {
     models: {},
     schema: {
         header: function(schema) {
-            schema.pre('save', function(next, CodeUser, done) {
+            schema.pre('save', function(next, done) {
                 var self = this;
                 mongoose.model("header").find({}).isactive().lean().exec(function(err, Headers) {
                     var max = 20,

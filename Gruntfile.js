@@ -51,7 +51,7 @@ module.exports = function(grunt) {
                     "static/lib/moment-range.js",
                     "static/lib/hitch.js"
                 ],
-                dest: 'static/build/lib.js'
+                dest: 'static/build/lib.min.js'
             },
             jetcalc_lib_css: {
                 src: [
@@ -119,6 +119,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-shell');
     //grunt.loadNpmTasks('grunt-babel');
-    grunt.registerTask('default', ['concat', 'cssmin', 'uglify']);
+    grunt.registerTask('default', ['concat', 'cssmin']);
     grunt.registerTask('hookmeup', ['clean:hooks', 'shell:hooks']);
 };

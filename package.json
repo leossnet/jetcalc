@@ -7,6 +7,11 @@
     "name": "Dmitry Koviazin",
     "email": "dkoviazin@gmail.com"
   },
+ "nodemonConfig": {
+    "ignore": [
+      "static/*"
+    ]
+    },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/leossnet/jetcalc/issues"
@@ -57,7 +62,7 @@
     "moment": "*",
     "mongodb": "*",
     "mongoosastic": "*",
-    "mongoose": "^5.9.5",
+    "mongoose": "^5.9.24",
     "mongoose-construct": "*",
     "mongoose-createdmodified": "*",
     "mongoose-nested-set": "*",
